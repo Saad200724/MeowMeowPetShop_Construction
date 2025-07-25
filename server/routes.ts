@@ -1,144 +1,213 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCartItemSchema } from "@shared/schema";
-import { z } from "zod";
+import { insertProductSchema, insertCategorySchema, insertBrandSchema, insertBlogPostSchema, insertTestimonialSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Categories
+  // Categories API
   app.get("/api/categories", async (req, res) => {
     try {
-      const categories = await storage.getFeaturedCategories();
+      const categories = await storage.getCategories();
       res.json(categories);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch categories" });
     }
   });
 
-  // Products
+  app.get("/api/categories/:id", async (req, res) => {
+    try {
+      const category = await storage.getCategory(req.params.id);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch category" });
+    }
+  });
+
+  app.post("/api/categories", async (req, res) => {
+    try {
+      const validatedData = insertCategorySchema.parse(req.body);
+      const category = await storage.createCategory(validatedData);
+      res.status(201).json(category);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid category data" });
+    }
+  });
+
+  // Brands API
+  app.get("/api/brands", async (req, res) => {
+    try {
+      const brands = await storage.getBrands();
+      res.json(brands);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch brands" });
+    }
+  });
+
+  app.get("/api/brands/:id", async (req, res) => {
+    try {
+      const brand = await storage.getBrand(req.params.id);
+      if (!brand) {
+        return res.status(404).json({ message: "Brand not found" });
+      }
+      res.json(brand);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch brand" });
+    }
+  });
+
+  app.post("/api/brands", async (req, res) => {
+    try {
+      const validatedData = insertBrandSchema.parse(req.body);
+      const brand = await storage.createBrand(validatedData);
+      res.status(201).json(brand);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid brand data" });
+    }
+  });
+
+  // Products API
   app.get("/api/products", async (req, res) => {
     try {
-      const products = await storage.getProducts();
+      const filters = {
+        categoryId: req.query.categoryId as string,
+        brandId: req.query.brandId as string,
+        isNew: req.query.isNew === 'true' ? true : req.query.isNew === 'false' ? false : undefined,
+        isBestseller: req.query.isBestseller === 'true' ? true : req.query.isBestseller === 'false' ? false : undefined,
+        isOnSale: req.query.isOnSale === 'true' ? true : req.query.isOnSale === 'false' ? false : undefined,
+        search: req.query.search as string,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
+        offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
+      };
+
+      // Remove undefined values
+      Object.keys(filters).forEach(key => {
+        if (filters[key as keyof typeof filters] === undefined) {
+          delete filters[key as keyof typeof filters];
+        }
+      });
+
+      const products = await storage.getProducts(filters);
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch products" });
     }
   });
 
-  app.get("/api/products/featured", async (req, res) => {
+  app.get("/api/products/:id", async (req, res) => {
     try {
-      const products = await storage.getFeaturedProducts();
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch featured products" });
-    }
-  });
-
-  app.get("/api/products/flash-sale", async (req, res) => {
-    try {
-      const products = await storage.getFlashSaleProducts();
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch flash sale products" });
-    }
-  });
-
-  app.get("/api/products/best-sellers", async (req, res) => {
-    try {
-      const products = await storage.getBestSellerProducts();
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch best seller products" });
-    }
-  });
-
-  // Reviews
-  app.get("/api/reviews", async (req, res) => {
-    try {
-      const reviews = await storage.getReviews();
-      res.json(reviews);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch reviews" });
-    }
-  });
-
-  // Cart
-  app.get("/api/cart/:sessionId", async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      const cartItems = await storage.getCartItems(sessionId);
-      res.json(cartItems);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch cart items" });
-    }
-  });
-
-  app.post("/api/cart", async (req, res) => {
-    try {
-      const cartItemData = insertCartItemSchema.parse(req.body);
-      const cartItem = await storage.addToCart(cartItemData);
-      res.json(cartItem);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid cart item data", errors: error.errors });
-      } else {
-        res.status(500).json({ message: "Failed to add item to cart" });
+      const product = await storage.getProduct(req.params.id);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
       }
+      res.json(product);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch product" });
     }
   });
 
-  app.put("/api/cart/:id", async (req, res) => {
+  app.post("/api/products", async (req, res) => {
     try {
-      const { id } = req.params;
-      const { quantity } = req.body;
-      
-      if (typeof quantity !== 'number' || quantity < 1) {
-        return res.status(400).json({ message: "Invalid quantity" });
+      const validatedData = insertProductSchema.parse(req.body);
+      const product = await storage.createProduct(validatedData);
+      res.status(201).json(product);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid product data" });
+    }
+  });
+
+  // Blog Posts API
+  app.get("/api/blog", async (req, res) => {
+    try {
+      const published = req.query.published === 'true' ? true : req.query.published === 'false' ? false : undefined;
+      const posts = await storage.getBlogPosts(published);
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get("/api/blog/:id", async (req, res) => {
+    try {
+      const post = await storage.getBlogPost(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  app.get("/api/blog/slug/:slug", async (req, res) => {
+    try {
+      const post = await storage.getBlogPostBySlug(req.params.slug);
+      if (!post) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  app.post("/api/blog", async (req, res) => {
+    try {
+      const validatedData = insertBlogPostSchema.parse(req.body);
+      const post = await storage.createBlogPost(validatedData);
+      res.status(201).json(post);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid blog post data" });
+    }
+  });
+
+  // Testimonials API
+  app.get("/api/testimonials", async (req, res) => {
+    try {
+      const approved = req.query.approved === 'true' ? true : req.query.approved === 'false' ? false : undefined;
+      const testimonials = await storage.getTestimonials(approved);
+      res.json(testimonials);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch testimonials" });
+    }
+  });
+
+  app.get("/api/testimonials/:id", async (req, res) => {
+    try {
+      const testimonial = await storage.getTestimonial(req.params.id);
+      if (!testimonial) {
+        return res.status(404).json({ message: "Testimonial not found" });
+      }
+      res.json(testimonial);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch testimonial" });
+    }
+  });
+
+  app.post("/api/testimonials", async (req, res) => {
+    try {
+      const validatedData = insertTestimonialSchema.parse(req.body);
+      const testimonial = await storage.createTestimonial(validatedData);
+      res.status(201).json(testimonial);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid testimonial data" });
+    }
+  });
+
+  // Search API
+  app.get("/api/search", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ message: "Search query is required" });
       }
 
-      const cartItem = await storage.updateCartItem(id, quantity);
-      if (!cartItem) {
-        return res.status(404).json({ message: "Cart item not found" });
-      }
-      
-      res.json(cartItem);
+      const products = await storage.getProducts({ search: query, limit: 20 });
+      res.json({ products });
     } catch (error) {
-      res.status(500).json({ message: "Failed to update cart item" });
-    }
-  });
-
-  app.delete("/api/cart/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      await storage.removeFromCart(id);
-      res.json({ message: "Item removed from cart" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to remove item from cart" });
-    }
-  });
-
-  app.delete("/api/cart/session/:sessionId", async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      await storage.clearCart(sessionId);
-      res.json({ message: "Cart cleared" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to clear cart" });
-    }
-  });
-
-  // Newsletter subscription
-  app.post("/api/newsletter", async (req, res) => {
-    try {
-      const { email } = req.body;
-      if (!email || !email.includes('@')) {
-        return res.status(400).json({ message: "Invalid email address" });
-      }
-      
-      // In a real app, this would integrate with an email service
-      res.json({ message: "Successfully subscribed to newsletter!" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to subscribe to newsletter" });
+      res.status(500).json({ message: "Search failed" });
     }
   });
 

@@ -1,0 +1,168 @@
+1. 🔝 Header (Top Strip)
+Features:
+
+📞 Phone number
+
+🚚 Track order
+
+✅ Quality guarantee
+
+🌐 Social icons (FB, IG, etc.)
+
+✅ Must-have for Meow Meow for trust & utility.
+
+✅ Tor site e “Helpline”, “Return Policy”, “Location Map” add korle aro value.
+
+2. 🧭 Main Header
+Components:
+
+Logo (left aligned)
+
+Mega Navigation (with subcategories)
+
+🔍 Search Bar (center)
+
+👤 Login/User + 🛒 Cart (right)
+
+✅ UX: Familiar, easy access.
+
+💡 Suggested for tor site:
+
+Sticky Header on scroll
+
+Hover dropdown for mega-menu
+
+3. 🏷️ Left Sidebar (Category Nav)
+Static vertical menu
+
+Easily discoverable
+
+Separate links: Cat Food, Dog Food, Toys, Accessories
+
+✅ Tor site e responsive sidebar drawer for mobile suggested.
+
+4. 🖼️ Hero Banner
+Full-width promotional banner
+
+Offer/Discount in Bangla
+
+CTA included
+
+✅ Required:
+
+Dynamic image carousel (React Swiper)
+
+Highlight: “5% off 1st order” CTA
+
+5. 📂 Featured Categories (Cards)
+Grid with icons
+
+Adult Food, Collar, Grooming, etc.
+
+✅ Must-have. Tailwind grid with icon & title below image. Hover effect optional.
+
+6. 🕒 Flash Sale Section
+Timer-based deal
+
+Carousel of discounted items
+
+Highlighted with "SALE" badge
+
+✅ Killer section for conversions. Add countdown timer (use react-countdown)
+
+7. 🐱 Bestsellers (Cats)
+Product cards with:
+
+Heart (wishlist)
+
+Cart icon
+
+Price
+
+Hover zoom or alt image
+
+✅ Add:
+
+Quick add-to-cart
+
+Stock status
+
+8. 🐶 Bestsellers (Dogs)
+Same format as cats, just different product batch.
+
+✅ Needed:
+
+Product tag (e.g. NEW, BESTSELLER)
+
+9. 🍖 Repack Food
+Brown sack-style packaging
+
+Bulk buying appeal
+
+✅ For tor site:
+
+Add tags: “Bulk Save”, “Combo Deal”
+
+Quantity selector inside card (optional)
+
+10. 🧾 Featured Brands Strip
+Scrollable horizontal brand logos
+
+✅ Use Swiper horizontal scroll.
+✅ Add click-to-filter-by-brand option (UX bonus)
+
+11. 🆕 Newly Launched
+Similar layout to regular products
+
+Shows freshness of catalog
+
+✅ Needed for “Just In” section
+
+12. 🎟️ Promo Membership Banner
+5000 Tk card with call to action
+
+✅ For Meow Meow:
+
+“Platinum Meow Club”?
+
+Discount perks, badge access
+
+13. 📝 Blog Preview
+Horizontal cards with blog thumbnails
+
+CTA: "Read More"
+
+✅ Add slugs, structured URLs for SEO
+✅ Use CMS or internal blog manager from admin
+
+14. 🧡 Testimonials
+With star rating, quote, name, and image
+
+✅ Social proof = trust
+✅ Add in review schema for SEO
+
+15. 🔗 Footer
+Columns:
+
+Company Info
+
+Contact
+
+Policies
+
+Quick links
+
+Social icons
+
+✅ Critical for legal & SEO
+✅ Add: “Payment Methods” logo strip
+
+💥 Additional UX Wins to Add:
+Feature	Justification
+Sticky Add to Cart	Helps conversions
+Live Chat (Facebook/WhatsApp)	User support + social proof
+Recently Viewed Items	Engage repeat buyers
+Product Filters (multi)	Advanced UX on /shop
+Category Slugs for SEO	Google-friendly URLs
+Product Schema + Reviews	Boost Google results
+Mobile-first testing	75%+ traffic comes from phones
