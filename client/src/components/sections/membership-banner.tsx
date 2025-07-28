@@ -4,47 +4,51 @@ import logoPath from '@assets/logo_1753447667081.png';
 
 export default function MembershipBanner() {
   return (
-    <section className="py-12 bg-gradient-to-r from-purple-600 to-purple-800">
-      <div className="container mx-auto px-4">
-        <div className="bg-white rounded-2xl p-8 text-center max-w-4xl mx-auto shadow-2xl">
-          <div className="flex items-center justify-center mb-6">
-            <img src={logoPath} alt="Platinum Meow Club" className="h-16 w-16 mr-4" />
+    <section className="section-spacing bg-gradient-to-r from-purple-600 to-purple-800">
+      <div className="responsive-container">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 text-center max-w-4xl mx-auto shadow-2xl animate-scale-up">
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-6">
+            <img src={logoPath} alt="Platinum Meow Club" className="h-12 w-12 sm:h-16 sm:w-16 sm:mr-4 mb-3 sm:mb-0" />
             <div>
-              <h3 className="text-3xl font-bold text-meow-green">Platinum Meow Club</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#26732d]">Platinum Meow Club</h3>
               <p className="text-gray-600">Exclusive Membership Program</p>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="text-center">
-              <div className="meow-yellow w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Percent size={24} className="text-meow-green" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div className="text-center animate-fade-in">
+              <div className="bg-[#ffde59] w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 hover:scale-110 transition-transform duration-300">
+                <Percent size={24} className="text-[#26732d]" />
               </div>
-              <h4 className="font-bold text-meow-green">15% Discount</h4>
+              <h4 className="font-bold text-[#26732d]">15% Discount</h4>
               <p className="text-sm text-gray-600">On all purchases</p>
             </div>
-            <div className="text-center">
-              <div className="meow-yellow w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Truck size={24} className="text-meow-green" />
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="bg-[#ffde59] w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 hover:scale-110 transition-transform duration-300">
+                <Truck size={24} className="text-[#26732d]" />
               </div>
-              <h4 className="font-bold text-meow-green">Free Delivery</h4>
+              <h4 className="font-bold text-[#26732d]">Free Delivery</h4>
               <p className="text-sm text-gray-600">On orders above ৳1000</p>
             </div>
-            <div className="text-center">
-              <div className="meow-yellow w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Star size={24} className="text-meow-green" />
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="bg-[#ffde59] w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 hover:scale-110 transition-transform duration-300">
+                <Star size={24} className="text-[#26732d]" />
               </div>
-              <h4 className="font-bold text-meow-green">Priority Support</h4>
+              <h4 className="font-bold text-[#26732d]">Priority Support</h4>
               <p className="text-sm text-gray-600">24/7 dedicated support</p>
             </div>
           </div>
           
-          <div className="meow-green text-white p-6 rounded-xl mb-6">
-            <div className="text-4xl font-bold mb-2">৳5,000</div>
-            <div className="text-lg">Lifetime Membership</div>
+          <div className="bg-[#26732d] text-white p-6 rounded-xl mb-6 animate-scale-up">
+            <div className="text-3xl sm:text-4xl font-bold mb-2">৳5,000</div>
+            <div className="text-base sm:text-lg">Lifetime Membership</div>
           </div>
           
-          <Button className="meow-yellow text-black px-8 py-3 rounded-lg hover-meow-yellow font-semibold text-lg">
+          <Button 
+            variant="meow" 
+            size="lg" 
+            className="px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg btn-bounce"
+          >
             Join Platinum Meow Club
           </Button>
         </div>

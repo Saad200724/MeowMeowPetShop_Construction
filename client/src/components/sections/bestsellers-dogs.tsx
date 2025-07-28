@@ -46,15 +46,19 @@ export default function BestsellersDogs() {
   ];
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-[#26732d] mb-8 flex items-center justify-center gap-3">
+    <section className="section-spacing bg-white">
+      <div className="responsive-container">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#26732d] mb-8 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in">
           <Dog size={32} className="text-[#26732d]" />
           Bestsellers for Dogs
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map(product => (
-            <div key={product.id} className="transform hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out">
+        <div className="responsive-grid">
+          {products.map((product, index) => (
+            <div 
+              key={product.id} 
+              className="hover-lift animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <ProductCard product={product} />
             </div>
           ))}

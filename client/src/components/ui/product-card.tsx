@@ -71,15 +71,15 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+    <div className="bg-white rounded-xl shadow-md hover-lift relative overflow-hidden group animate-fade-in">
       {product.badge && (
-        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-bold ${getBadgeStyles(product.badgeColor)} z-10`}>
+        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-bold ${getBadgeStyles(product.badgeColor)} z-10 animate-scale-up`}>
           {product.badge}
         </div>
       )}
       
       <div className="absolute top-3 right-3 z-10">
-        <button className="bg-white bg-opacity-80 p-2 rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm">
+        <button className="bg-white bg-opacity-80 p-2 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
           <Heart size={18} />
         </button>
       </div>
@@ -89,6 +89,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={product.image} 
           alt={product.name} 
           className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105" 
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
       </div>
@@ -120,8 +122,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
           
           <Button 
+            variant="meow"
             size="sm"
-            className="bg-[#ffde59] text-[#26732d] px-3 py-2 rounded-lg hover:bg-[#ffd73e] transition-colors font-medium shadow-sm"
+            className="px-3 py-2 rounded-lg shadow-sm btn-bounce"
           >
             <ShoppingCart size={16} />
           </Button>

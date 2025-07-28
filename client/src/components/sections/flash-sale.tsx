@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Flame } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
-import CountdownTimer from '@/components/ui/countdown-timer';
 
 export default function FlashSale() {
   const flashSaleProducts = [
@@ -48,21 +46,23 @@ export default function FlashSale() {
   ];
 
   return (
-    <section className="py-12 bg-red-50">
-      <div className="container mx-auto px-4">
+    <section className="section-spacing bg-red-50">
+      <div className="responsive-container">
         <div className="text-center mb-8">
-          <div className="flex items-center gap-4 bg-red-100 px-6 py-3 rounded-lg mb-6 w-fit mx-auto border-2 border-red-200">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-red-100 px-4 sm:px-6 py-3 rounded-lg mb-6 w-fit mx-auto border-2 border-red-200 animate-scale-up">
             <Flame className="text-red-600" size={24} />
             <span className="text-red-600 font-bold text-lg">Flash Sale</span>
-            <div className="text-sm text-gray-800 font-medium">
-              <CountdownTimer initialHours={23} initialMinutes={45} initialSeconds={30} />
-            </div>
+            <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {flashSaleProducts.map(product => (
-            <div key={product.id} className="transform hover:scale-105 transition-all duration-300">
+        <div className="responsive-grid">
+          {flashSaleProducts.map((product, index) => (
+            <div 
+              key={product.id} 
+              className="hover-lift animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <ProductCard product={product} />
             </div>
           ))}

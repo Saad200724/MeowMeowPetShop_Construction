@@ -27,18 +27,24 @@ export default function FeaturedCategories() {
   ];
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h3 className="text-3xl font-bold text-center text-meow-green mb-8">Shop by Category</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+    <section className="section-spacing bg-gray-50">
+      <div className="responsive-container">
+        <h3 className="text-2xl sm:text-3xl font-bold text-center text-[#26732d] mb-8 animate-fade-in">Shop by Category</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
           {categories.map((category, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 text-center group cursor-pointer">
+            <div 
+              key={index} 
+              className="bg-white rounded-lg shadow-md hover-lift p-4 sm:p-6 text-center group cursor-pointer animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <img 
                 src={category.image} 
                 alt={category.name} 
-                className="w-16 h-16 mx-auto mb-3 rounded-lg object-cover group-hover:scale-110 transition-transform" 
+                className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 rounded-lg object-cover group-hover:scale-110 transition-transform duration-300" 
+                loading="lazy"
+                decoding="async"
               />
-              <h4 className="font-semibold text-meow-green">{category.name}</h4>
+              <h4 className="font-semibold text-[#26732d] text-sm sm:text-base">{category.name}</h4>
             </div>
           ))}
         </div>

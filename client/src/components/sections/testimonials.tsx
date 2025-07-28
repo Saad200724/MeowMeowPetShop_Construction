@@ -39,19 +39,25 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-12">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-[#26732d] mb-8 flex items-center justify-center gap-3">
+    <section className="section-spacing bg-gray-50">
+      <div className="responsive-container">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#26732d] mb-8 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in">
           <MessageCircle size={32} className="text-[#26732d]" />
           What Our Customers Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map(testimonial => (
-            <div key={testimonial.id} className="flex flex-col items-center text-center bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+          {testimonials.map((testimonial, index) => (
+            <div 
+              key={testimonial.id} 
+              className="flex flex-col items-center text-center bg-white rounded-xl p-6 hover-lift animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <img 
                 src={testimonial.image} 
                 alt={testimonial.name} 
-                className="w-16 h-16 rounded-full mb-4 object-cover border-4 border-yellow-200" 
+                className="w-16 h-16 rounded-full mb-4 object-cover border-4 border-[#ffde59] hover:scale-110 transition-transform duration-300" 
+                loading="lazy"
+                decoding="async"
               />
               <div className="flex justify-center mb-3">
                 {renderStars(testimonial.rating)}

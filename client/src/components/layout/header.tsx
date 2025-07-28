@@ -1,11 +1,35 @@
 import { useState } from 'react';
-import { Search, User, ShoppingCart, Phone, Truck, Shield, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Search, User, ShoppingCart, Phone, Truck, Shield, Facebook, Instagram, Youtube, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/hooks/use-auth';
+import { signOut } from '@/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
+import AuthModal from '@/components/auth/auth-modal';
+import { Link } from 'wouter';
 import logoPath from '@assets/logo_1753447667081.png';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, loading } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Signed out successfully',
+        description: 'Come back soon!',
+      });
+    }
+  };
 
   return (
     <>
@@ -44,7 +68,7 @@ export default function Header() {
       </div>
 
       {/* Main Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
             {/* Logo */}
@@ -59,9 +83,25 @@ export default function Header() {
               
               {/* Mobile User Actions */}
               <div className="flex items-center space-x-2 lg:hidden">
-                <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d]">
-                  <User size={18} />
-                </Button>
+                {user ? (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-gray-700 hover:text-[#26732d]"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut size={18} />
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-gray-700 hover:text-[#26732d]"
+                    onClick={() => setShowAuthModal(true)}
+                  >
+                    <User size={18} />
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d] relative">
                   <ShoppingCart size={18} />
                   <span className="absolute -top-1 -right-1 bg-[#ffde59] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">3</span>
@@ -90,10 +130,28 @@ export default function Header() {
 
             {/* Desktop User Actions */}
             <div className="hidden lg:flex items-center space-x-4">
-              <Button variant="ghost" className="flex items-center text-gray-700 hover:text-[#26732d] transition-colors">
-                <User size={16} className="mr-2" />
-                <span>Login</span>
-              </Button>
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-gray-700">Hello, {user.email}</span>
+                  <Button 
+                    variant="ghost" 
+                    className="flex items-center text-gray-700 hover:text-[#26732d] transition-colors"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    <span>Sign Out</span>
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center text-gray-700 hover:text-[#26732d] transition-colors"
+                  onClick={() => setShowAuthModal(true)}
+                >
+                  <User size={16} className="mr-2" />
+                  <span>Sign In</span>
+                </Button>
+              )}
               <Button variant="ghost" className="flex items-center text-gray-700 hover:text-[#26732d] relative transition-colors">
                 <ShoppingCart size={16} className="mr-2" />
                 <span>Cart</span>
@@ -105,28 +163,22 @@ export default function Header() {
       </header>
 
       {/* Main Navigation */}
-      <nav className="bg-gray-50 border-b">
+      <nav className="bg-[#26732d] text-white py-3 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center space-x-8 py-3">
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Home</a>
-            <div className="relative group">
-              <a href="#" className="text-gray-700 hover:text-meow-green font-medium flex items-center transition-colors">
-                Cat Food <span className="ml-1">▼</span>
-              </a>
+          <div className="flex items-center justify-center lg:justify-start">
+            <div className="flex items-center space-x-6 lg:space-x-8 text-sm lg:text-base overflow-x-auto">
+              <Link href="/" className="hover:bg-[#1e5d26] px-3 py-2 rounded-md transition-colors whitespace-nowrap">Home</Link>
+              <Link href="/products" className="hover:bg-[#1e5d26] px-3 py-2 rounded-md transition-colors whitespace-nowrap">Products</Link>
+              <a href="#" className="hover:bg-[#1e5d26] px-3 py-2 rounded-md transition-colors whitespace-nowrap">About</a>
+              <a href="#" className="hover:bg-[#1e5d26] px-3 py-2 rounded-md transition-colors whitespace-nowrap">Contact</a>
+              <a href="#" className="hover:bg-[#1e5d26] px-3 py-2 rounded-md transition-colors whitespace-nowrap">Sale</a>
             </div>
-            <div className="relative group">
-              <a href="#" className="text-gray-700 hover:text-meow-green font-medium flex items-center transition-colors">
-                Dog Food <span className="ml-1">▼</span>
-              </a>
-            </div>
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Toys & Accessories</a>
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Grooming</a>
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Health Care</a>
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Brands</a>
-            <a href="#" className="text-gray-700 hover:text-meow-green font-medium transition-colors">Contact</a>
           </div>
         </div>
       </nav>
+
+      {/* Auth Modal */}
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   );
 }
