@@ -23,18 +23,20 @@ export default function Home() {
         <Sidebar />
         
         <main className="flex-1 w-full lg:w-auto">
-          <HeroBanner />
-          <CategoriesGrid />
-          <FeaturedCategories />
-          <FlashSale />
-          <BestsellersCats />
-          <BestsellersDogs />
-          <RepackFood />
-          <FeaturedBrands />
-          <NewlyLaunched />
-          <MembershipBanner />
-          <BlogPreview />
-          <Testimonials />
+          <div className="space-y-8 md:space-y-12">
+            <HeroBanner />
+            <CategoriesGrid />
+            <FeaturedCategories />
+            <FlashSale />
+            <BestsellersCats />
+            <BestsellersDogs />
+            <RepackFood />
+            <FeaturedBrands />
+            <NewlyLaunched />
+            <MembershipBanner />
+            <BlogPreview />
+            <Testimonials />
+          </div>
         </main>
       </div>
       
