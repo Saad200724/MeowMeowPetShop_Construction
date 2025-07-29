@@ -1,3 +1,4 @@
+
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Sidebar from "@/components/layout/sidebar";
@@ -22,20 +23,22 @@ export default function Home() {
       <div className="flex flex-col lg:flex-row">
         <Sidebar />
         
-        <main className="flex-1 w-full lg:w-auto">
+        <main className="flex-1 w-full lg:w-auto transition-all duration-300 ease-in-out">
           <div className="space-y-8 md:space-y-12">
             <HeroBanner />
-            <CategoriesGrid />
-            <FeaturedCategories />
-            <FlashSale />
-            <BestsellersCats />
-            <BestsellersDogs />
-            <RepackFood />
-            <FeaturedBrands />
-            <NewlyLaunched />
-            <MembershipBanner />
-            <BlogPreview />
-            <Testimonials />
+            <div className="px-4 lg:px-6">
+              <CategoriesGrid />
+              <FeaturedCategories />
+              <FlashSale />
+              <BestsellersCats />
+              <BestsellersDogs />
+              <RepackFood />
+              <FeaturedBrands />
+              <NewlyLaunched />
+              <MembershipBanner />
+              <BlogPreview />
+              <Testimonials />
+            </div>
           </div>
         </main>
       </div>
