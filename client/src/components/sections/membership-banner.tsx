@@ -8,9 +8,9 @@ export default function MembershipBanner() {
       <div className="responsive-container">
         <div className="bg-white rounded-2xl p-6 sm:p-8 text-center max-w-4xl mx-auto shadow-2xl animate-scale-up">
           <div className="flex flex-col sm:flex-row items-center justify-center mb-6">
-            <img src={logoPath} alt="Platinum Meow Club" className="h-12 w-12 sm:h-16 sm:w-16 sm:mr-4 mb-3 sm:mb-0" />
+            <img src={logoPath} alt="Privilege Meow Club" className="h-12 w-12 sm:h-16 sm:w-16 sm:mr-4 mb-3 sm:mb-0" />
             <div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-[#26732d]">Platinum Meow Club</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#26732d]">Privilege Meow Club</h3>
               <p className="text-gray-600">Exclusive Membership Program</p>
             </div>
           </div>
@@ -49,7 +49,7 @@ export default function MembershipBanner() {
             size="lg" 
             className="px-6 sm:px-8 py-3 rounded-lg text-base sm:text-lg btn-bounce"
           >
-            Join Platinum Meow Club
+            Join Privilege Meow Club
           </Button>
         </div>
       </div>
