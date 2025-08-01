@@ -1,13 +1,35 @@
 import { useState } from "react";
-import { Search, ShoppingCart, User, Menu, Phone, MapPin, Truck } from "lucide-react";
+import { Link } from "wouter";
+import { Search, ShoppingCart, User, Menu, Phone, MapPin, Truck, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/use-cart";
+import { useAuth } from "@/hooks/use-auth";
+import { signOut } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartCount } = useCart();
+  const { user, loading } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: 'Sign Out Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Signed Out',
+        description: 'You have been successfully signed out.',
+      });
+    }
+  };
 
   return (
     <div>
@@ -50,7 +72,7 @@ export default function Header() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <img 
                 src="/logo.png" 
                 alt="Meow Meow Pet Shop Logo" 
@@ -59,7 +81,7 @@ export default function Header() {
               <h1 className="text-2xl font-bold text-accent-green hidden sm:block">
                 Meow Meow Pet Shop
               </h1>
-            </div>
+            </Link>
 
             {/* Search Bar */}
             <div className="flex-1 max-w-md mx-8 hidden md:block">
@@ -81,10 +103,39 @@ export default function Header() {
 
             {/* User Actions */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-accent-green">
-                <User className="w-4 h-4" />
-                <span>Hello User</span>
-              </Button>
+              {!loading && (
+                user ? (
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-accent-green">
+                      <User className="w-4 h-4" />
+                      <span>Hello, {user.email?.split('@')[0]}</span>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      onClick={handleSignOut}
+                      className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-red-600"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <Link href="/sign-in">
+                      <Button variant="ghost" className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-accent-green">
+                        <LogIn className="w-4 h-4" />
+                        <span>Sign In</span>
+                      </Button>
+                    </Link>
+                    <Link href="/sign-up">
+                      <Button variant="outline" className="hidden md:flex items-center space-x-2 border-accent-green text-accent-green hover:bg-green-50">
+                        <User className="w-4 h-4" />
+                        <span>Sign Up</span>
+                      </Button>
+                    </Link>
+                  </div>
+                )
+              )}
               <Button className="relative bg-primary-yellow hover:bg-yellow-400 text-gray-900">
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">My Basket</span>
@@ -110,44 +161,44 @@ export default function Header() {
               </Button>
               <ul className="hidden md:flex space-x-8">
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/privilege-club" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Privilege Club
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/cat-food" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Cat Food
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/dog-food" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Dog Food
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/cat-toys" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Cat Toys
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/cat-litter" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Cat Litter
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/reflex" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Reflex
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                  <Link href="/blog" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Blog
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

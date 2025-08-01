@@ -14,6 +14,10 @@ import CatToysPage from "@/pages/cat-toys";
 import CatLitterPage from "@/pages/cat-litter";
 import ReflexPage from "@/pages/reflex";
 import BlogPage from "@/pages/blog";
+import SignInPage from "@/pages/sign-in";
+import SignUpPage from "@/pages/sign-up";
+import ForgotPasswordPage from "@/pages/forgot-password";
+import ResetPasswordPage from "@/pages/reset-password";
 
 function Router() {
   return (
@@ -27,6 +31,10 @@ function Router() {
       <Route path="/cat-litter" component={CatLitterPage} />
       <Route path="/reflex" component={ReflexPage} />
       <Route path="/blog" component={BlogPage} />
+      <Route path="/sign-in" component={SignInPage} />
+      <Route path="/sign-up" component={SignUpPage} />
+      <Route path="/forgot-password" component={ForgotPasswordPage} />
+      <Route path="/reset-password" component={ResetPasswordPage} />
       <Route component={NotFound} />
     </Switch>
   );

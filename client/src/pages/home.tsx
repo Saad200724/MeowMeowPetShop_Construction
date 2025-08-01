@@ -17,13 +17,13 @@ import Testimonials from "@/components/sections/testimonials";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-white">
       <Header />
       
       <div className="flex flex-col lg:flex-row">
         <Sidebar />
         
-        <main className="flex-1 w-full lg:w-auto transition-all duration-300 ease-in-out">
+        <main className="flex-1 w-full lg:w-auto">
           <div className="space-y-8 md:space-y-12">
             <HeroBanner />
             <div className="px-4 lg:px-6">

@@ -6,14 +6,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
-import AuthModal from '@/components/auth/auth-modal';
 import { Link, useLocation } from 'wouter';
 import { searchProducts, type SearchableProduct } from '@/lib/search-data';
 import logoPath from '@assets/logo_1753447667081.png';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchableProduct[]>([]);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -76,19 +74,20 @@ export default function Header() {
 
   return (
     <>
-      <div className="bg-[#26732d] text-white py-2 text-sm overflow-hidden">
+      {/* Top Announcement Bar - Will scroll away */}
+      <div className="bg-[#38603d] text-white py-2 text-sm overflow-hidden relative z-30">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2">
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center bg-[#1e5d26] px-3 py-1 rounded-full text-xs">
+              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
                 <Phone size={12} className="mr-1" />
                 <span>+880-1234-567890</span>
               </div>
-              <div className="flex items-center bg-[#1e5d26] px-3 py-1 rounded-full text-xs">
+              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
                 <Truck size={12} className="mr-1" />
                 <span>Free delivery over ৳2000</span>
               </div>
-              <div className="flex items-center bg-[#1e5d26] px-3 py-1 rounded-full text-xs">
+              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
                 <Shield size={12} className="mr-1" />
                 <span>Quality guarantee</span>
               </div>
@@ -106,7 +105,8 @@ export default function Header() {
         </div>
       </div>
 
-      <header className="bg-white shadow-md">
+      {/* Main Header - Fixed position below announcement bar */}
+      <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8">
             {/* Logo + Search */}
@@ -167,10 +167,19 @@ export default function Header() {
                   </Button>
                 </div>
               ) : (
-                <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d]" onClick={() => setShowAuthModal(true)} data-testid="button-sign-in-desktop">
-                  <User size={18} />
-                  <span className="ml-1">Sign In</span>
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Link href="/sign-in">
+                    <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d]" data-testid="button-sign-in-desktop">
+                      <User size={18} />
+                      <span className="ml-1">Sign In</span>
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button variant="outline" size="sm" className="text-[#26732d] border-[#26732d] hover:bg-green-50" data-testid="button-sign-up-desktop">
+                      <span>Sign Up</span>
+                    </Button>
+                  </Link>
+                </div>
               )}
               <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d] relative">
                 <ShoppingCart size={18} />
@@ -212,7 +221,7 @@ export default function Header() {
         </div>
       </header>
 
-      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+
     </>
   );
 }

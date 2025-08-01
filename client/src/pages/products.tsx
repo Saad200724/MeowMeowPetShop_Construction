@@ -55,10 +55,7 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-50 bg-white shadow-sm">
-        <Header />
-      </div>
+      <Header />
 
       <div className="flex">
         {/* Sidebar */}
