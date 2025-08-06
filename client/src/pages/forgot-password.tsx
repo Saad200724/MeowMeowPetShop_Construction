@@ -11,26 +11,26 @@ import { Mail, ArrowLeft, PawPrint, CheckCircle } from 'lucide-react'
 // Function to get the correct password reset URL for different environments
 function getPasswordResetUrl(): string {
   const currentOrigin = window.location.origin;
-  
+
   // For production domains, use the current origin
   if (!currentOrigin.includes('localhost') && !currentOrigin.includes('127.0.0.1')) {
     return `${currentOrigin}/reset-password`;
   }
-  
+
   // For development, try to detect Replit environment
   const hostname = window.location.hostname;
   const href = window.location.href;
   const referrer = document.referrer;
-  
+
   // Check if we can find a replit.dev domain
-  const replitMatch = 
+  const replitMatch =
     href.match(/https?:\/\/([^\/]+\.replit\.dev)/) ||
     referrer.match(/https?:\/\/([^\/]+\.replit\.dev)/);
-    
+
   if (replitMatch) {
     return `https://${replitMatch[1]}/reset-password`;
   }
-  
+
   // Fallback: use current origin (will work when deployed to your domain)
   return `${currentOrigin}/reset-password`;
 }
@@ -42,9 +42,11 @@ export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { toast } = useToast()
 
+  const logoPath = "/logo.png"; // Assuming logo.png is in the public directory
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!email.trim()) {
       toast({
         title: 'Email Required',
@@ -59,13 +61,13 @@ export default function ForgotPasswordPage() {
     try {
       // Get the correct redirect URL for password reset
       const redirectUrl = getPasswordResetUrl();
-      
+
       console.log('Password reset redirect URL:', redirectUrl);
-        
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectUrl,
       })
-      
+
       if (error) {
         toast({
           title: 'Reset Failed',
@@ -94,16 +96,20 @@ export default function ForgotPasswordPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(38,115,45,0.1),transparent_50%)]" />
-        
+
         <div className="w-full max-w-md relative z-10">
           <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-green-500 shadow-lg">
+                  <img
+                    src={logoPath}
+                    alt="Meow Meow Pet Shop Logo"
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
                 </div>
               </div>
-              
+
               <CardTitle className="text-3xl font-bold text-meow-green">
                 Check Your Email
               </CardTitle>
@@ -138,7 +144,7 @@ export default function ForgotPasswordPage() {
                     Back to Sign In
                   </Button>
                 </Link>
-                
+
                 <Button
                   variant="outline"
                   onClick={() => setIsSubmitted(false)}
@@ -157,7 +163,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(38,115,45,0.1),transparent_50%)]" />
-      
+
       <div className="w-full max-w-md relative z-10">
         <div className="mb-6">
           <Link href="/sign-in">
@@ -171,11 +177,15 @@ export default function ForgotPasswordPage() {
         <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center pb-6">
             <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-meow-green to-meow-green-dark rounded-full flex items-center justify-center">
-                <PawPrint className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-green-500 shadow-lg">
+                <img
+                  src={logoPath}
+                  alt="Meow Meow Pet Shop Logo"
+                  className="h-16 w-16 rounded-full object-cover"
+                />
               </div>
             </div>
-            
+
             <CardTitle className="text-3xl font-bold text-meow-green">
               Forgot Password?
             </CardTitle>
