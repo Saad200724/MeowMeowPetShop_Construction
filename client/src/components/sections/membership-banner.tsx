@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Percent, Truck, Star } from 'lucide-react';
-import logoPath from '@assets/logo.svg';
+const logoPath = '/logo.png';
 
 export default function MembershipBanner() {
   return (

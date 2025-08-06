@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { signUp } from '@/lib/supabase'
 import { useToast } from '@/hooks/use-toast'
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, PawPrint, User, Check } from 'lucide-react'
-import logoPath from '@assets/logo.svg'
+const logoPath = '/logo.png'
 
 export default function SignUpPage() {
   const [, setLocation] = useLocation()
