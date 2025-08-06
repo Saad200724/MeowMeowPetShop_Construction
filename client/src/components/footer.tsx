@@ -31,7 +31,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <img
-                src="https://media.mewmewshopbd.com/uploads/media-manager/2024/12/Mew-Mew-Shop-1733387993.png"
+                src="/logo.png"
                 alt="Meow Meow Pet Shop Logo"
                 className="h-10 w-auto"
               />

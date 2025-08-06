@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Youtube, MessageCircle, MapPin, Phone, Mail, Clock } from 'lucide-react';
-import logoPath from '@assets/logo.svg';
+const logoPath = '/logo.png';
 
 export default function Footer() {
   return (
