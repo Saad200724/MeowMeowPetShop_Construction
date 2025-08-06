@@ -1,17 +1,27 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+// Initialize Supabase client safely
+let supabase: any = null
 
-// Validate that we have the required credentials
-if (!supabaseUrl) {
-  throw new Error('VITE_SUPABASE_URL environment variable is required. Please set it in your Replit secrets.')
-}
-if (!supabaseAnonKey) {
-  throw new Error('VITE_SUPABASE_ANON_KEY environment variable is required. Please set it in your Replit secrets.')
+try {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+
+  // Check if Supabase credentials are available
+  const hasSupabaseCredentials = supabaseUrl && supabaseAnonKey
+
+  // Create supabase client if credentials are available
+  if (hasSupabaseCredentials) {
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
+  } else {
+    console.warn('Supabase credentials not configured. Authentication features will show appropriate messages.')
+  }
+} catch (error) {
+  console.warn('Supabase configuration error:', error)
+  supabase = null
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export { supabase }
 
 export type AuthUser = {
   id: string
@@ -20,6 +30,9 @@ export type AuthUser = {
 }
 
 export async function signUp(email: string, password: string) {
+  if (!supabase) {
+    return { data: null, error: { message: 'Authentication service not configured. Please contact support to set up your account.' } }
+  }
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -28,6 +41,9 @@ export async function signUp(email: string, password: string) {
 }
 
 export async function signIn(email: string, password: string) {
+  if (!supabase) {
+    return { data: null, error: { message: 'Authentication service not configured. Please contact support to sign in.' } }
+  }
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -36,17 +52,27 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
+  if (!supabase) {
+    return { error: { message: 'Authentication service not configured.' } }
+  }
   const { error } = await supabase.auth.signOut()
   return { error }
 }
 
 export async function getCurrentUser() {
+  if (!supabase) {
+    return null
+  }
   const { data: { user } } = await supabase.auth.getUser()
   return user
 }
 
 export function onAuthStateChange(callback: (user: any) => void) {
-  return supabase.auth.onAuthStateChange((_event, session) => {
+  if (!supabase) {
+    callback(null)
+    return { data: { subscription: { unsubscribe: () => {} } } }
+  }
+  return supabase.auth.onAuthStateChange((_event: any, session: any) => {
     callback(session?.user ?? null)
   })
 }

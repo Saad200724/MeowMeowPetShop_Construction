@@ -8,7 +8,7 @@ import { signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation } from 'wouter';
 import { searchProducts, type SearchableProduct } from '@/lib/search-data';
-import logoPath from '@assets/logo_1753447667081.png';
+import logoPath from '@assets/logo.svg';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');

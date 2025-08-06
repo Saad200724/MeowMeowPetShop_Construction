@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { signIn } from '@/lib/supabase'
 import { useToast } from '@/hooks/use-toast'
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, PawPrint } from 'lucide-react'
-import logoPath from '@assets/logo_1753447667081.png'
+import logoPath from '@assets/logo.svg'
 
 export default function SignInPage() {
   const [, setLocation] = useLocation()
