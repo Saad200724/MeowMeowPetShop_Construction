@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Heart, ShoppingCart, Star } from 'lucide-react'
+import { Heart, ShoppingCart, Star, Check } from 'lucide-react'
 import { Product } from '@/lib/product-data'
+import { useCart } from '@/contexts/cart-context'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
@@ -13,6 +15,41 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, className }: ProductCardProps) {
   const [isLiked, setIsLiked] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const { addItem, getItemQuantity } = useCart()
+  const { toast } = useToast()
+  
+  const itemQuantity = getItemQuantity(product.id)
+  const isInCart = itemQuantity > 0
+
+  const handleAddToCart = async () => {
+    if (product.stock === 0) return
+    
+    setIsAddingToCart(true)
+    
+    try {
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        maxStock: product.stock
+      })
+      
+      toast({
+        title: "Added to cart",
+        description: `${product.name} has been added to your cart.`,
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -128,12 +165,19 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           </div>
           
           <Button 
-            variant="meow"
+            variant={isInCart ? "default" : "meow"}
             size="sm"
             className="px-3 py-2 rounded-lg shadow-sm btn-bounce"
-            disabled={product.stock === 0}
+            disabled={product.stock === 0 || isAddingToCart}
+            onClick={handleAddToCart}
           >
-            <ShoppingCart size={16} />
+            {isAddingToCart ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : isInCart ? (
+              <Check size={16} />
+            ) : (
+              <ShoppingCart size={16} />
+            )}
           </Button>
         </div>
       </CardContent>

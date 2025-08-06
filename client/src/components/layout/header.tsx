@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/cart-context';
 import { Link, useLocation } from 'wouter';
 import { searchProducts, type SearchableProduct } from '@/lib/search-data';
 const logoPath = '/logo.png';
@@ -18,6 +19,7 @@ export default function Header() {
   const searchRef = useRef<HTMLDivElement>(null);
   const { user, loading } = useAuth();
   const { toast } = useToast();
+  const { state: cartState } = useCart();
   const [, setLocation] = useLocation();
 
   const handleSignOut = async () => {
@@ -181,11 +183,17 @@ export default function Header() {
                   </Link>
                 </div>
               )}
-              <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d] relative">
-                <ShoppingCart size={18} />
-                <span className="ml-1">Cart</span>
-                <span className="absolute -top-1 -right-1 bg-[#ffde59] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">3</span>
-              </Button>
+              <Link href="/cart">
+                <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d] relative" data-testid="button-cart">
+                  <ShoppingCart size={18} />
+                  <span className="ml-1">Cart</span>
+                  {cartState.itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#ffde59] text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                      {cartState.itemCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
             </div>
           </div>
 
