@@ -161,8 +161,24 @@ export default function Header() {
             {/* Account + Cart */}
             <div className="flex items-center space-x-4">
               {user ? (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-700">Welcome, {user.email?.split('@')[0]}</span>
+                <div className="flex items-center space-x-3">
+                  {/* Circular Avatar */}
+                  <div className="relative group">
+                    <Link href={(user as any).role === 'admin' ? '/admin' : '/profile'}>
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#26732d] to-[#1d5624] flex items-center justify-center text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
+                        {(user.firstName?.[0] || user.username?.[0] || user.email?.[0] || 'U').toUpperCase()}
+                      </div>
+                    </Link>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                      {user.firstName && user.lastName 
+                        ? `${user.firstName} ${user.lastName}` 
+                        : user.username || user.email?.split('@')[0]}
+                      <div className="text-xs opacity-75 mt-1">
+                        {(user as any).role === 'admin' ? 'Click for admin panel' : 'Click to view profile'}
+                      </div>
+                    </div>
+                  </div>
                   <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d]" onClick={handleSignOut}>
                     <LogOut size={18} />
                     <span className="ml-1">Sign Out</span>

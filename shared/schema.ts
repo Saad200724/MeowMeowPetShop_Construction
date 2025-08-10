@@ -12,6 +12,8 @@ export const users = pgTable("users", {
   lastName: text("last_name"),
   phone: text("phone"),
   address: jsonb("address"),
+  profilePicture: text("profile_picture"),
+  role: text("role").notNull().default("user"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -94,6 +96,19 @@ export const testimonials = pgTable("testimonials", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const orders = pgTable("orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  status: text("status").notNull().default("Processing"),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  items: jsonb("items").notNull(),
+  shippingAddress: jsonb("shipping_address"),
+  paymentMethod: text("payment_method"),
+  paymentStatus: text("payment_status").default("Pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -131,6 +146,12 @@ export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
   updatedAt: true,
 });
 
+export const insertOrderSchema = createInsertSchema(orders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -149,3 +170,6 @@ export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
 
 export type Testimonial = typeof testimonials.$inferSelect;
 export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = z.infer<typeof insertOrderSchema>;

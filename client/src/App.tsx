@@ -20,7 +20,9 @@ import SignUpPage from "@/pages/sign-up";
 import ForgotPasswordPage from "@/pages/forgot-password";
 import ResetPasswordPage from "@/pages/reset-password";
 import AdminProductsPage from "@/pages/admin/products";
+import AdminPage from "@/pages/admin";
 import CartPage from "@/pages/cart";
+import ProfilePage from "@/pages/profile";
 
 function Router() {
   return (
@@ -39,7 +41,9 @@ function Router() {
       <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route path="/reset-password" component={ResetPasswordPage} />
       <Route path="/admin/products" component={AdminProductsPage} />
+      <Route path="/admin" component={AdminPage} />
       <Route path="/cart" component={CartPage} />
+      <Route path="/profile" component={ProfilePage} />
       <Route component={NotFound} />
     </Switch>
   );

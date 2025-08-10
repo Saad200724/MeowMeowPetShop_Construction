@@ -1,7 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProductSchema, insertCategorySchema, insertBrandSchema, insertBlogPostSchema, insertTestimonialSchema } from "@shared/schema";
+import { insertUserSchema, users } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcrypt";
+import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Categories API
@@ -14,228 +18,274 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/categories/:id", async (req, res) => {
-    try {
-      const category = await storage.getCategory(req.params.id);
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-      res.json(category);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch category" });
-    }
-  });
-
-  app.post("/api/categories", async (req, res) => {
-    try {
-      const validatedData = insertCategorySchema.parse(req.body);
-      const category = await storage.createCategory(validatedData);
-      res.status(201).json(category);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid category data" });
-    }
-  });
-
-  // Brands API
-  app.get("/api/brands", async (req, res) => {
-    try {
-      const brands = await storage.getBrands();
-      res.json(brands);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch brands" });
-    }
-  });
-
-  app.get("/api/brands/:id", async (req, res) => {
-    try {
-      const brand = await storage.getBrand(req.params.id);
-      if (!brand) {
-        return res.status(404).json({ message: "Brand not found" });
-      }
-      res.json(brand);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch brand" });
-    }
-  });
-
-  app.post("/api/brands", async (req, res) => {
-    try {
-      const validatedData = insertBrandSchema.parse(req.body);
-      const brand = await storage.createBrand(validatedData);
-      res.status(201).json(brand);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid brand data" });
-    }
-  });
-
   // Products API
   app.get("/api/products", async (req, res) => {
     try {
-      const filters = {
-        categoryId: req.query.categoryId as string,
-        brandId: req.query.brandId as string,
-        isNew: req.query.isNew === 'true' ? true : req.query.isNew === 'false' ? false : undefined,
-        isBestseller: req.query.isBestseller === 'true' ? true : req.query.isBestseller === 'false' ? false : undefined,
-        isOnSale: req.query.isOnSale === 'true' ? true : req.query.isOnSale === 'false' ? false : undefined,
-        search: req.query.search as string,
-        limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-        offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
-      };
-
-      // Remove undefined values
-      Object.keys(filters).forEach(key => {
-        if (filters[key as keyof typeof filters] === undefined) {
-          delete filters[key as keyof typeof filters];
-        }
-      });
-
-      const products = await storage.getProducts(filters);
+      const products = await storage.getProducts();
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch products" });
     }
   });
 
-  app.get("/api/products/:id", async (req, res) => {
-    try {
-      const product = await storage.getProduct(req.params.id);
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-      res.json(product);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch product" });
+  // Middleware to check admin access
+  const requireAdmin = async (req: any, res: any, next: any) => {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-  });
 
-  app.post("/api/products", async (req, res) => {
     try {
-      const validatedData = insertProductSchema.parse(req.body);
-      const product = await storage.createProduct(validatedData);
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid product data" });
-    }
-  });
-
-  app.put("/api/products/:id", async (req, res) => {
-    try {
-      const validatedData = insertProductSchema.partial().parse(req.body);
-      const product = await storage.updateProduct(req.params.id, validatedData);
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-      res.json(product);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid product data" });
-    }
-  });
-
-  app.delete("/api/products/:id", async (req, res) => {
-    try {
-      const deleted = await storage.deleteProduct(req.params.id);
-      if (!deleted) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-      res.status(204).send();
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete product" });
-    }
-  });
-
-  // Blog Posts API
-  app.get("/api/blog", async (req, res) => {
-    try {
-      const published = req.query.published === 'true' ? true : req.query.published === 'false' ? false : undefined;
-      const posts = await storage.getBlogPosts(published);
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch blog posts" });
-    }
-  });
-
-  app.get("/api/blog/:id", async (req, res) => {
-    try {
-      const post = await storage.getBlogPost(req.params.id);
-      if (!post) {
-        return res.status(404).json({ message: "Blog post not found" });
-      }
-      res.json(post);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch blog post" });
-    }
-  });
-
-  app.get("/api/blog/slug/:slug", async (req, res) => {
-    try {
-      const post = await storage.getBlogPostBySlug(req.params.slug);
-      if (!post) {
-        return res.status(404).json({ message: "Blog post not found" });
-      }
-      res.json(post);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch blog post" });
-    }
-  });
-
-  app.post("/api/blog", async (req, res) => {
-    try {
-      const validatedData = insertBlogPostSchema.parse(req.body);
-      const post = await storage.createBlogPost(validatedData);
-      res.status(201).json(post);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid blog post data" });
-    }
-  });
-
-  // Testimonials API
-  app.get("/api/testimonials", async (req, res) => {
-    try {
-      const approved = req.query.approved === 'true' ? true : req.query.approved === 'false' ? false : undefined;
-      const testimonials = await storage.getTestimonials(approved);
-      res.json(testimonials);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch testimonials" });
-    }
-  });
-
-  app.get("/api/testimonials/:id", async (req, res) => {
-    try {
-      const testimonial = await storage.getTestimonial(req.params.id);
-      if (!testimonial) {
-        return res.status(404).json({ message: "Testimonial not found" });
-      }
-      res.json(testimonial);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch testimonial" });
-    }
-  });
-
-  app.post("/api/testimonials", async (req, res) => {
-    try {
-      const validatedData = insertTestimonialSchema.parse(req.body);
-      const testimonial = await storage.createTestimonial(validatedData);
-      res.status(201).json(testimonial);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid testimonial data" });
-    }
-  });
-
-  // Search API
-  app.get("/api/search", async (req, res) => {
-    try {
-      const query = req.query.q as string;
-      if (!query) {
-        return res.status(400).json({ message: "Search query is required" });
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
       }
 
-      const products = await storage.getProducts({ search: query, limit: 20 });
-      res.json({ products });
+      req.adminUser = user;
+      next();
     } catch (error) {
-      res.status(500).json({ message: "Search failed" });
+      res.status(500).json({ message: "Server error" });
+    }
+  };
+
+  // Authentication Routes
+  const registerSchema = insertUserSchema.extend({
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+  const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+  });
+
+  // Register new user
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const result = registerSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: result.error.flatten().fieldErrors 
+        });
+      }
+
+      const { confirmPassword, ...userData } = result.data;
+
+      // Check if user already exists
+      const existingUser = userData.email ? await storage.getUserByEmail(userData.email) : null;
+      if (existingUser) {
+        return res.status(409).json({ message: "User already exists with this email" });
+      }
+
+      // Check if username is taken
+      const existingUsername = await storage.getUserByUsername(userData.username);
+      if (existingUsername) {
+        return res.status(409).json({ message: "Username is already taken" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(userData.password, 12);
+
+      // Create user
+      const user = await storage.createUser({
+        ...userData,
+        password: hashedPassword,
+      });
+
+      // Remove password from response
+      const { password, ...userResponse } = user;
+
+      res.status(201).json({ 
+        message: "User created successfully", 
+        user: userResponse 
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
+  // Login user
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const result = loginSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: result.error.flatten().fieldErrors 
+        });
+      }
+
+      const { email, password } = result.data;
+
+      // Find user by email or username (for admin account)
+      let user = await storage.getUserByEmail(email);
+      
+      // If not found by email, try username (for admin login)
+      if (!user) {
+        const [userByUsername] = await db.select().from(users).where(eq(users.username, email));
+        user = userByUsername;
+      }
+      
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Check password
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Remove password from response
+      const { password: _, ...userResponse } = user;
+
+      res.json({ 
+        message: "Login successful", 
+        user: userResponse 
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get user profile
+  app.get("/api/auth/profile/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await storage.getUser(id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Remove password from response
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error) {
+      console.error("Profile error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update user profile
+  app.patch("/api/auth/profile/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      // Don't allow password updates through this endpoint
+      delete updateData.password;
+      delete updateData.id;
+
+      const user = await storage.updateUser(id, updateData);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Remove password from response
+      const { password, ...userResponse } = user;
+      res.json({ 
+        message: "Profile updated successfully", 
+        user: userResponse 
+      });
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Admin Routes
+  app.post("/api/admin/stats", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const allUsers = await db.select().from(users);
+      
+      res.json({
+        totalUsers: allUsers.length,
+        totalOrders: 0,
+        totalRevenue: 0,
+        totalProducts: 4
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch admin stats" });
+    }
+  });
+
+  app.post("/api/admin/users", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const allUsers = await db.select().from(users);
+      const usersWithoutPasswords = allUsers.map(({ password, ...user }) => user);
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.delete("/api/admin/users/:userId", async (req, res) => {
+    try {
+      const { userId: targetUserId } = req.params;
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const [adminUser] = await db.select().from(users).where(eq(users.id, userId));
+      
+      if (!adminUser || adminUser.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      // Prevent deleting admin account
+      const [userToDelete] = await db.select().from(users).where(eq(users.id, targetUserId));
+      if (userToDelete?.role === "admin") {
+        return res.status(403).json({ message: "Cannot delete admin account" });
+      }
+
+      await db.delete(users).where(eq(users.id, targetUserId));
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+
+  // Image placeholder API
+  app.get("/api/placeholder/:width/:height", (req, res) => {
+    const { width, height } = req.params;
+    const imageUrl = `https://via.placeholder.com/${width}x${height}/26732d/ffffff?text=Pet+Shop`;
+    res.redirect(imageUrl);
+  });
+
+  const server = createServer(app);
+  return server;
 }

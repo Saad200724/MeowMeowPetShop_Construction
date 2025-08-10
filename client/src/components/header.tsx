@@ -108,7 +108,7 @@ export default function Header() {
                   <div className="flex items-center space-x-2">
                     <Button variant="ghost" className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-accent-green">
                       <User className="w-4 h-4" />
-                      <span>Hello, {user.email?.split('@')[0]}</span>
+                      <span>Hello, {user.firstName || user.username || user.email?.split('@')[0]}</span>
                     </Button>
                     <Button 
                       variant="ghost" 

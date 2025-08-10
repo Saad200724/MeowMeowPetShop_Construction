@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { categories, getProductsByCategory } from '@/lib/product-data'
-import { Menu, X, Cat, Dog, Heart, Gift, ShoppingBag, Stethoscope } from 'lucide-react'
+import { Menu, X, Cat, Dog, Heart, Gift, ShoppingBag, Stethoscope, Gamepad2, Package, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface CollapsibleSidebarProps {
@@ -14,10 +14,13 @@ interface CollapsibleSidebarProps {
 const categoryIcons = {
   'cat-food': Cat,
   'dog-food': Dog,
+  'cat-toys': Gamepad2,
+  'cat-litter': Package,
   'toys-treats': Gift,
   'grooming': ShoppingBag,
   'health-care': Stethoscope,
   'accessories': Heart,
+  'reflex': Star,
 }
 
 export default function CollapsibleSidebar({ selectedCategory, onCategorySelect }: CollapsibleSidebarProps) {
