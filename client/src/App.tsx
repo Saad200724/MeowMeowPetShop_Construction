@@ -21,6 +21,7 @@ import ForgotPasswordPage from "@/pages/forgot-password";
 import ResetPasswordPage from "@/pages/reset-password";
 import AdminProductsPage from "@/pages/admin/products";
 import AdminPage from "@/pages/admin";
+import DashboardPage from "@/pages/dashboard";
 import CartPage from "@/pages/cart";
 import ProfilePage from "@/pages/profile";
 
@@ -42,6 +43,7 @@ function Router() {
       <Route path="/reset-password" component={ResetPasswordPage} />
       <Route path="/admin/products" component={AdminProductsPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/dashboard" component={DashboardPage} />
       <Route path="/cart" component={CartPage} />
       <Route path="/profile" component={ProfilePage} />
       <Route component={NotFound} />

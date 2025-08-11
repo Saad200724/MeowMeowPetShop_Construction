@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, User, ShoppingCart, Phone, Truck, Shield, Facebook, Instagram, LogOut, Menu, ChevronDown } from 'lucide-react';
+import { Search, User, ShoppingCart, Phone, Truck, Shield, Facebook, Instagram, LogOut, Menu, ChevronDown, LogIn } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,6 +24,16 @@ export default function Header() {
   const [, setLocation] = useLocation();
 
   const handleSignOut = async () => {
+    // Check if it's an admin user (stored in localStorage)
+    const storedUser = localStorage.getItem('auth_user');
+    if (storedUser) {
+      localStorage.removeItem('auth_user');
+      window.location.reload(); // Refresh to update auth state
+      toast({ title: 'Signed out successfully', description: 'Come back soon!' });
+      return;
+    }
+
+    // Regular Supabase sign out
     const { error } = await signOut();
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
@@ -160,22 +171,22 @@ export default function Header() {
 
             {/* Account + Cart */}
             <div className="flex items-center space-x-4">
-              {user ? (
+              {!loading && user ? (
                 <div className="flex items-center space-x-3">
                   {/* Circular Avatar */}
                   <div className="relative group">
-                    <Link href={(user as any).role === 'admin' ? '/admin' : '/profile'}>
+                    <Link href="/dashboard">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#26732d] to-[#1d5624] flex items-center justify-center text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
-                        {(user.firstName?.[0] || user.username?.[0] || user.email?.[0] || 'U').toUpperCase()}
+                        {(user.firstName?.[0] || user.name?.[0] || user.email?.[0] || 'U').toUpperCase()}
                       </div>
                     </Link>
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
                       {user.firstName && user.lastName 
                         ? `${user.firstName} ${user.lastName}` 
-                        : user.username || user.email?.split('@')[0]}
+                        : user.name || user.email?.split('@')[0]}
                       <div className="text-xs opacity-75 mt-1">
-                        {(user as any).role === 'admin' ? 'Click for admin panel' : 'Click to view profile'}
+                        Click to view dashboard
                       </div>
                     </div>
                   </div>
@@ -184,7 +195,7 @@ export default function Header() {
                     <span className="ml-1">Sign Out</span>
                   </Button>
                 </div>
-              ) : (
+              ) : !loading ? (
                 <div className="flex items-center space-x-2">
                   <Link href="/sign-in">
                     <Button variant="ghost" size="sm" className="text-gray-700 hover:text-[#26732d]" data-testid="button-sign-in-desktop">
@@ -197,6 +208,10 @@ export default function Header() {
                       <span>Sign Up</span>
                     </Button>
                   </Link>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse"></div>
                 </div>
               )}
               <Link href="/cart">

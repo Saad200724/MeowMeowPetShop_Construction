@@ -110,7 +110,7 @@ export default function Footer() {
               <div className="flex items-center gap-2">
               <span className="text-white font-medium text-xs">Follow:</span>
             </div>
-              <p>&copy; 2024 Meow Meow Pet Shop. All rights reserved.</p>
+              <p>&copy; 2025 Meow Meow Pet Shop. All rights reserved.</p>
               <img src={logoPath} alt="Meow Meow" className="h-8 w-8" />
             </div>
             <p>Developed with ❤️ for pet lovers in Bangladesh</p>
