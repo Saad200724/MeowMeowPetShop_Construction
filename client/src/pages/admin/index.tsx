@@ -90,12 +90,12 @@ export default function AdminPage() {
   // Function to parse bold text formatting
   const parseAnnouncementText = (text: string) => {
     if (!text) return text;
-    
+
     // Replace **text** with bold
     let parsed = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // Replace *text* with bold
     parsed = parsed.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
-    
+
     return parsed;
   };
 
@@ -398,7 +398,7 @@ export default function AdminPage() {
 
   const handleSaveBlog = () => {
     if (!editingBlog) return;
-    
+
     if (editingBlog.id === 'new') {
       const newBlog = { ...editingBlog, id: Date.now().toString() };
       setBlogPosts([...blogPosts, newBlog]);
@@ -407,7 +407,7 @@ export default function AdminPage() {
       setBlogPosts(blogPosts.map(b => b.id === editingBlog.id ? editingBlog : b));
       toast({ title: 'Success', description: 'Blog post updated successfully!' });
     }
-    
+
     setEditingBlog(null);
     setShowBlogDialog(false);
   };
@@ -517,18 +517,16 @@ export default function AdminPage() {
               </Select>
               <div className="flex border rounded-lg">
                 <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('list')}
-                  className="rounded-r-none"
+                  className={`rounded-r-none border ${viewMode === 'list' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
                 >
                   <List className="w-4 h-4" />
                 </Button>
                 <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className="rounded-l-none"
+                  className={`rounded-l-none border ${viewMode === 'grid' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
                 >
                   <Grid className="w-4 h-4" />
                 </Button>
@@ -582,8 +580,8 @@ export default function AdminPage() {
                                 {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.category}
                               </Badge>
                             </td>
-                            <td className="px-4 py-4 font-medium">৳{product.price}</td>
-                            <td className="px-4 py-4">{product.stockQuantity || product.stock || 0}</td>
+                            <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
+                            <td className="px-4 py-4 text-gray-900">{product.stockQuantity || product.stock || 0}</td>
                             <td className="px-4 py-4">
                               <div className="flex flex-wrap gap-1">
                                 {product.isActive !== false && (
@@ -607,15 +605,16 @@ export default function AdminPage() {
                               <div className="flex items-center justify-end space-x-2">
                                 <Button
                                   size="sm"
-                                  variant="ghost"
+                                  variant="outline"
+                                  className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
                                   onClick={() => handleEditProduct(product)}
                                 >
                                   <Edit className="w-4 h-4" />
                                 </Button>
                                 <Button
                                   size="sm"
-                                  variant="ghost"
-                                  className="text-red-600 hover:text-red-900"
+                                  variant="outline"
+                                  className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900"
                                   onClick={() => handleDeleteProduct(product.id)}
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -645,13 +644,13 @@ export default function AdminPage() {
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-500">Stock: {product.stock}</span>
                           <div className="flex space-x-1">
-                            <Button size="sm" variant="ghost" onClick={() => {
+                            <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => {
                               setEditingProduct(product);
                               setShowProductDialog(true);
                             }}>
                               <Edit className="w-4 h-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleDeleteProduct(product.id)}>
+                            <Button size="sm" variant="outline" className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" onClick={() => handleDeleteProduct(product.id)}>
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
@@ -966,8 +965,8 @@ export default function AdminPage() {
                                 {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.category}
                               </Badge>
                             </td>
-                            <td className="px-4 py-4 font-medium">৳{product.price}</td>
-                            <td className="px-4 py-4">{product.stockQuantity || product.stock || 0}</td>
+                            <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
+                            <td className="px-4 py-4 text-gray-900">{product.stockQuantity || product.stock || 0}</td>
                             <td className="px-4 py-4">
                               <div className="flex flex-wrap gap-1">
                                 {product.isActive !== false && (
@@ -989,14 +988,14 @@ export default function AdminPage() {
                             </td>
                             <td className="px-4 py-4 text-right">
                               <div className="flex justify-end space-x-2">
-                                <Button size="sm" variant="ghost" onClick={() => handleEditProduct(product)}>
+                                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => handleEditProduct(product)}>
                                   <Edit className="w-4 h-4" />
                                 </Button>
                                 <Button 
                                   size="sm" 
-                                  variant="ghost" 
+                                  variant="outline" 
                                   onClick={() => handleDeleteProduct(product.id)}
-                                  className="text-red-600 hover:text-red-700"
+                                  className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
@@ -1147,7 +1146,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost" onClick={() => {
+                        <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => {
                           setEditingAnnouncement(announcement);
                           announcementForm.reset({
                             text: announcement.text,
@@ -1159,8 +1158,8 @@ export default function AdminPage() {
                         </Button>
                         <Button 
                           size="sm" 
-                          variant="ghost" 
-                          className="text-red-600" 
+                          variant="outline" 
+                          className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" 
                           onClick={() => deleteAnnouncementMutation.mutate(announcement._id)}
                           disabled={deleteAnnouncementMutation.isPending}
                         >
@@ -1240,13 +1239,13 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost" onClick={() => {
+                        <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => {
                           setEditingBlog(blog);
                           setShowBlogDialog(true);
                         }}>
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleDeleteBlog(blog.id)}>
+                        <Button size="sm" variant="outline" className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" onClick={() => handleDeleteBlog(blog.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -1270,7 +1269,7 @@ export default function AdminPage() {
               {editingProduct ? 'Update product information' : 'Create a new product for your store'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(editingProduct ? handleUpdateProduct : handleCreateProduct)} 
@@ -1282,9 +1281,9 @@ export default function AdminPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Product Name</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter product name" className="text-gray-900 bg-white border-gray-300" style={{ color: '#1f2937', backgroundColor: '#ffffff' }} {...field} />
+                        <Input placeholder="Enter product name" className="text-gray-900 bg-white border-gray-300" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1295,9 +1294,9 @@ export default function AdminPage() {
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Price (৳)</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Price (৳)</FormLabel>
                       <FormControl>
-                        <Input placeholder="0" className="text-gray-900 bg-white border-gray-300" style={{ color: '#1f2937', backgroundColor: '#ffffff' }} {...field} />
+                        <Input placeholder="Enter price" className="text-gray-900 bg-white border-gray-300" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1310,13 +1309,12 @@ export default function AdminPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Description</FormLabel>
                     <FormControl>
                       <Textarea 
                         placeholder="Enter product description" 
                         rows={3} 
                         className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
-                        style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                         {...field} 
                       />
                     </FormControl>
@@ -1331,16 +1329,16 @@ export default function AdminPage() {
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Category</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
+                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                            <SelectValue placeholder="Select category" className="text-gray-900" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-white border-gray-300">
                           {categories.map((category: any) => (
-                            <SelectItem key={category.id} value={category.id}>
+                            <SelectItem key={category.id} value={category.id} className="text-gray-900 hover:bg-gray-100">
                               {category.name}
                             </SelectItem>
                           ))}
@@ -1355,16 +1353,16 @@ export default function AdminPage() {
                   name="brandId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Brand</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Brand</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select brand" />
+                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                            <SelectValue placeholder="Select brand" className="text-gray-900" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-white border-gray-300">
                           {brands.map((brand: any) => (
-                            <SelectItem key={brand.id} value={brand.id}>
+                            <SelectItem key={brand.id} value={brand.id} className="text-gray-900 hover:bg-gray-100">
                               {brand.name}
                             </SelectItem>
                           ))}
@@ -1379,13 +1377,12 @@ export default function AdminPage() {
                   name="stockQuantity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Stock</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Stock Quantity</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
                           placeholder="0" 
                           className="text-gray-900 bg-white border-gray-300"
-                          style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                         />
@@ -1402,9 +1399,9 @@ export default function AdminPage() {
                   name="originalPrice"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Original Price (৳) - Optional</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Original Price (৳) - Optional</FormLabel>
                       <FormControl>
-                        <Input placeholder="0" className="text-gray-900 bg-white border-gray-300" style={{ color: '#1f2937', backgroundColor: '#ffffff' }} {...field} />
+                        <Input placeholder="Enter original price (if on sale)" className="text-gray-900 bg-white border-gray-300" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1415,9 +1412,9 @@ export default function AdminPage() {
                   name="tags"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tags (comma separated)</FormLabel>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Tags (comma separated)</FormLabel>
                       <FormControl>
-                        <Input placeholder="premium, adult, dry food" className="text-gray-900 bg-white border-gray-300" style={{ color: '#1f2937', backgroundColor: '#ffffff' }} {...field} />
+                        <Input placeholder="premium, adult, dry food" className="text-gray-900 bg-white border-gray-300" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1430,7 +1427,7 @@ export default function AdminPage() {
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Image</FormLabel>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Image</FormLabel>
                     <FormControl>
                       <ImageUpload
                         value={field.value}
@@ -1532,6 +1529,7 @@ export default function AdminPage() {
                 <Button 
                   type="button" 
                   variant="outline" 
+                  className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                   onClick={() => setShowProductDialog(false)}
                 >
                   Cancel
@@ -1564,7 +1562,7 @@ export default function AdminPage() {
               {editingBlog?.id === 'new' ? 'Create a new blog post' : 'Update blog post'}
             </DialogDescription>
           </DialogHeader>
-          
+
           {editingBlog && (
             <div className="space-y-4">
               <div>
@@ -1578,7 +1576,7 @@ export default function AdminPage() {
                   style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="blog-excerpt">Excerpt</Label>
                 <Input
@@ -1630,12 +1628,12 @@ export default function AdminPage() {
                 <div>
                   <Label htmlFor="blog-status">Status</Label>
                   <Select value={editingBlog.status} onValueChange={(value) => setEditingBlog({...editingBlog, status: value as any})}>
-                    <SelectTrigger>
-                      <SelectValue />
+                    <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                      <SelectValue className="text-gray-900" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
+                    <SelectContent className="bg-white border-gray-300">
+                      <SelectItem value="draft" className="text-gray-900 hover:bg-gray-100">Draft</SelectItem>
+                      <SelectItem value="published" className="text-gray-900 hover:bg-gray-100">Published</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1644,7 +1642,7 @@ export default function AdminPage() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowBlogDialog(false)}>
+            <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={() => setShowBlogDialog(false)}>
               Cancel
             </Button>
             <Button onClick={handleSaveBlog} className="bg-purple-600 hover:bg-purple-700">
@@ -1666,7 +1664,7 @@ export default function AdminPage() {
               {editingAnnouncement ? 'Update announcement' : 'Create a new announcement for the top bar'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <Form {...announcementForm}>
             <form onSubmit={announcementForm.handleSubmit((data) => {
               if (editingAnnouncement) {
@@ -1716,7 +1714,8 @@ export default function AdminPage() {
               <DialogFooter>
                 <Button 
                   type="button" 
-                  variant="outline" 
+                  variant="secondary" 
+                  className="bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200"
                   onClick={() => setShowAnnouncementDialog(false)}
                 >
                   Cancel

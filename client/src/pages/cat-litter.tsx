@@ -85,8 +85,8 @@ export default function CatLitterPage() {
               <CardContent>
                 <div className="space-y-2">
                   <Button
-                    variant={selectedCategory === 'All' ? 'default' : 'ghost'}
-                    className="w-full justify-start"
+                    variant={selectedCategory === 'All' ? 'default' : 'outline'}
+                    className={`w-full justify-start ${selectedCategory === 'All' ? '' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
                     onClick={() => handleCategoryFilter('All')}
                     data-testid="button-category-all"
                   >
@@ -95,8 +95,8 @@ export default function CatLitterPage() {
                   {catLitterCategories.map((category) => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? 'default' : 'ghost'}
-                      className="w-full justify-start"
+                      variant={selectedCategory === category ? 'default' : 'outline'}
+                      className={`w-full justify-start ${selectedCategory === category ? '' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
                       onClick={() => handleCategoryFilter(category)}
                       data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, '-')}`}
                     >
@@ -132,7 +132,7 @@ export default function CatLitterPage() {
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
                 <Button
                   variant="outline"
-                  className="mt-4"
+                  className="mt-4 bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory('All');

@@ -267,7 +267,7 @@ export default function SignInPage() {
             <Button
               onClick={() => setShowAdminLogin(!showAdminLogin)}
               variant="outline"
-              className="w-full h-12 border-2 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-semibold"
+              className="w-full h-12 border-2 border-red-200 text-red-600 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-600 focus:!bg-white focus:!border-red-200 focus:!text-red-600 active:!bg-white active:!text-red-600 font-semibold"
             >
               <Shield className="w-5 h-5 mr-2" />
               {showAdminLogin ? 'Hide Admin Login' : 'Admin Login'}
