@@ -49,21 +49,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const webpFilename = `${req.file.fieldname}-${uniqueSuffix}.webp`;
       const outputPath = path.join(uploadDir, webpFilename);
 
-      // Convert image to WebP format using Sharp
+      // Convert image to WebP format using Sharp with optimized compression
       await sharp(req.file.buffer)
+        .resize(800, 600, { 
+          fit: 'inside',
+          withoutEnlargement: true
+        })
         .webp({ 
-          quality: 85, // High quality WebP
-          effort: 4    // Good compression effort
+          quality: 75,    // Optimized quality for smaller size
+          effort: 6,      // Maximum compression effort
+          lossless: false // Use lossy compression for smaller files
         })
         .toFile(outputPath);
 
+      // Get file size information
+      const stats = await fs.stat(outputPath);
+      
       const imageUrl = `/api/uploads/${webpFilename}`;
       res.json({ 
         message: 'Image uploaded and converted to WebP successfully',
         imageUrl: imageUrl,
         filename: webpFilename,
         originalFormat: req.file.mimetype,
-        convertedFormat: 'image/webp'
+        convertedFormat: 'image/webp',
+        originalSize: req.file.size,
+        compressedSize: stats.size,
+        compressionRatio: `${Math.round((1 - stats.size / req.file.size) * 100)}%`
       });
     } catch (error) {
       console.error('Upload error:', error);
