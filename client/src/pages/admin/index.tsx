@@ -1432,11 +1432,6 @@ export default function AdminPage() {
                       <ImageUpload
                         value={field.value}
                         onChange={field.onChange}
-                        onError={(error) => toast({
-                          title: 'Upload Error',
-                          description: error,
-                          variant: 'destructive',
-                        })}
                       />
                     </FormControl>
                     <FormMessage />
