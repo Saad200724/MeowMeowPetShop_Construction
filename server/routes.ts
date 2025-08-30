@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
+import sharp from "sharp";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
@@ -20,18 +21,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     await fs.mkdir(uploadDir, { recursive: true });
   }
 
-  const storage_multer = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-  });
-
+  // Use memory storage for Sharp processing
   const upload = multer({ 
-    storage: storage_multer,
+    storage: multer.memoryStorage(),
     limits: {
       fileSize: 5 * 1024 * 1024 // 5MB limit
     },
@@ -45,18 +37,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Image upload endpoint
-  app.post('/api/upload/image', upload.single('image'), (req, res) => {
+  // Image upload endpoint with WebP conversion
+  app.post('/api/upload/image', upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
 
-      const imageUrl = `/api/uploads/${req.file.filename}`;
+      // Generate unique filename with .webp extension
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const webpFilename = `${req.file.fieldname}-${uniqueSuffix}.webp`;
+      const outputPath = path.join(uploadDir, webpFilename);
+
+      // Convert image to WebP format using Sharp
+      await sharp(req.file.buffer)
+        .webp({ 
+          quality: 85, // High quality WebP
+          effort: 4    // Good compression effort
+        })
+        .toFile(outputPath);
+
+      const imageUrl = `/api/uploads/${webpFilename}`;
       res.json({ 
-        message: 'Image uploaded successfully',
+        message: 'Image uploaded and converted to WebP successfully',
         imageUrl: imageUrl,
-        filename: req.file.filename
+        filename: webpFilename,
+        originalFormat: req.file.mimetype,
+        convertedFormat: 'image/webp'
       });
     } catch (error) {
       console.error('Upload error:', error);
@@ -64,10 +71,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve uploaded images
+  // Serve uploaded images with proper WebP headers
   app.get('/api/uploads/:filename', (req, res) => {
     const filename = req.params.filename;
     const filepath = path.join(uploadDir, filename);
+    
+    // Set proper content type for WebP images
+    if (filename.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/webp');
+    }
+    
     res.sendFile(filepath);
   });
 
