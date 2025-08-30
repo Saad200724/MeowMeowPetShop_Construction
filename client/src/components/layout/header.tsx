@@ -253,7 +253,7 @@ export default function Header() {
                 <div className="flex items-center space-x-3">
                   {/* Circular Avatar */}
                   <div className="relative group">
-                    <Link href="/dashboard">
+                    <Link href={user.email === 'admin@meowmeowpetshop.com' ? '/admin' : '/dashboard'}>
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#26732d] to-[#1d5624] flex items-center justify-center text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
                         {(user.firstName?.[0] || user.name?.[0] || user.email?.[0] || 'U').toUpperCase()}
                       </div>
@@ -264,7 +264,7 @@ export default function Header() {
                         ? `${user.firstName} ${user.lastName}` 
                         : user.name || user.email?.split('@')[0]}
                       <div className="text-xs opacity-75 mt-1">
-                        Click to view dashboard
+                        {user.email === 'admin@meowmeowpetshop.com' ? 'Click to view admin panel' : 'Click to view dashboard'}
                       </div>
                     </div>
                   </div>
