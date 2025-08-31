@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -23,39 +24,44 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      // Initialize EmailJS (you can also do this once in your app initialization)
+      emailjs.init("pulic-4_2EJeuoHymsGSC0t"); // Your public key
+
+      const templateParams = {
+        from_name: formData.name,
+        from_phone: formData.phone,
+        from_email: formData.email || 'Not provided',
+        subject: formData.subject,
+        message: formData.message,
+        to_name: 'Meow Meow Pet Shop',
+      };
+
+      await emailjs.send(
+        'service_lygzcpc', // Your service ID
+        'template_j90cwmp', // Your template ID
+        templateParams
+      );
+
+      toast({
+        title: "Message Sent Successfully!",
+        description: "We'll get back to you within 24 hours.",
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "Message sent successfully!",
-          description: result.message || "We'll get back to you within 24 hours.",
-        });
-        
-        setFormData({
-          name: '',
-          phone: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
-      } else {
-        throw new Error(result.message || 'Failed to send message');
-      }
+      // Reset form
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
     } catch (error) {
-      console.error('Contact form error:', error);
+      console.error('EmailJS error:', error);
       toast({
-        title: "Failed to send message",
-        description: "Please try again later or call us directly.",
+        title: "Failed to Send Message",
+        description: "Please try again later or contact us directly.",
         variant: "destructive",
       });
     } finally {
@@ -70,7 +76,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -84,7 +90,7 @@ export default function ContactPage() {
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h2>
-            
+
             {/* Store Address */}
             <Card className="border-0 shadow-md">
               <CardContent className="p-6">
@@ -129,7 +135,7 @@ export default function ContactPage() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-2">Facebook Messenger</h3>
                     <p className="text-gray-600 text-sm mb-3">Meow.meow.pet.shop</p>
-                    <Button 
+                    <Button
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                       onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
                     >
@@ -163,22 +169,22 @@ export default function ContactPage() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Follow Us</h3>
               <div className="flex space-x-3">
-                <a 
-                  href="https://facebook.com/meow.meow.pet.shop1" 
-                  target="_blank" 
+                <a
+                  href="https://facebook.com/meow.meow.pet.shop1"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
                 >
                   <Facebook size={20} />
                 </a>
-                <a 
-                  href="#" 
+                <a
+                  href="#"
                   className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors"
                 >
                   <Instagram size={20} />
                 </a>
-                <a 
-                  href="/messenger" 
+                <a
+                  href="/messenger"
                   className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors"
                 >
                   <MessageCircle size={20} />
@@ -273,8 +279,8 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 text-lg font-medium"
                     data-testid="button-send-message"
@@ -315,7 +321,7 @@ export default function ContactPage() {
               />
             </div>
           </Card>
-          
+
           {/* Quick Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
