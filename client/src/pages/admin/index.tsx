@@ -348,9 +348,13 @@ export default function AdminPage() {
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    
+    const stockQuantity = product.stockQuantity || product.stock || 0;
     const matchesStock = stockFilter === 'all' || 
-      (stockFilter === 'in-stock' && (product.stockQuantity > 0 || product.stock > 0)) ||
-      (stockFilter === 'out-of-stock' && (product.stockQuantity === 0 || product.stock === 0 || !product.stockQuantity));
+      (stockFilter === 'out-of-stock' && stockQuantity === 0) ||
+      (stockFilter === 'low-stock' && stockQuantity > 0 && stockQuantity < 10) ||
+      (stockFilter === 'high-stock' && stockQuantity >= 10);
+    
     return matchesSearch && matchesCategory && matchesStock;
   });
 
@@ -525,8 +529,9 @@ export default function AdminPage() {
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   <SelectItem value="all" className="text-black hover:bg-gray-100">All Stock</SelectItem>
-                  <SelectItem value="in-stock" className="text-black hover:bg-gray-100">In Stock</SelectItem>
                   <SelectItem value="out-of-stock" className="text-black hover:bg-gray-100">Out of Stock</SelectItem>
+                  <SelectItem value="low-stock" className="text-black hover:bg-gray-100">Low Stock (&lt;10)</SelectItem>
+                  <SelectItem value="high-stock" className="text-black hover:bg-gray-100">High Stock (≥10)</SelectItem>
                 </SelectContent>
               </Select>
               <div className="flex border rounded-lg">
