@@ -24,6 +24,7 @@ import BirdPage from "@/pages/bird";
 import ReflexPage from "@/pages/reflex";
 import BlogPage from "@/pages/blog";
 import BulkProductsPage from "@/pages/bulk-products";
+import BulkDiscountsPage from "@/pages/bulk-discounts";
 import NekkoPage from "@/pages/brands/nekko";
 import PurinaPage from "@/pages/brands/purina";
 import OnePage from "@/pages/brands/one";
@@ -73,6 +74,7 @@ function Router() {
         <Route path="/brands/sheba" component={ShebaPage} />
         <Route path="/blog" component={BlogPage} />
         <Route path="/bulk-products" component={BulkProductsPage} />
+        <Route path="/bulk-discounts" component={BulkDiscountsPage} />
         <Route path="/sign-in" component={SignInPage} />
         <Route path="/sign-up" component={SignUpPage} />
         <Route path="/forgot-password" component={ForgotPasswordPage} />

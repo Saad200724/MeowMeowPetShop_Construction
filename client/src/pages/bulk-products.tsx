@@ -142,7 +142,7 @@ export default function BulkProducts() {
                   placeholder="Search bulk products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 text-black placeholder:text-gray-400"
                 />
                 <Package className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               </div>
@@ -154,8 +154,8 @@ export default function BulkProducts() {
                 <span className="text-sm text-gray-600">Sort by:</span>
               </div>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48">
-                  <SelectValue />
+                <SelectTrigger className="w-48 text-black">
+                  <SelectValue className="text-black" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="name">Name A-Z</SelectItem>
@@ -319,12 +319,16 @@ export default function BulkProducts() {
             Purchase in bulk and enjoy significant savings on premium pet food. Perfect for pet shelters, multiple pet owners, or long-term savings.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-yellow-400 text-[#26732d] hover:bg-yellow-300 font-bold">
-              Contact for Custom Orders
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#26732d]">
-              Learn About Bulk Discounts
-            </Button>
+            <a href="/contact">
+              <Button size="lg" className="bg-yellow-400 text-[#26732d] hover:bg-yellow-300 font-bold w-full sm:w-auto">
+                Contact for Custom Orders
+              </Button>
+            </a>
+            <a href="/bulk-discounts">
+              <Button size="lg" className="bg-[#26732d] text-white hover:bg-[#1e5d26] border-[#26732d] w-full sm:w-auto">
+                Learn About Bulk Discounts
+              </Button>
+            </a>
           </div>
         </div>
       </div>
