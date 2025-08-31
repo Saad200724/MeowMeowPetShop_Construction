@@ -87,10 +87,6 @@ export default function ReflexPlusPage() {
     setSelectedCategory(category);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
