@@ -140,24 +140,21 @@ export default function RepackFood() {
                         )}
                       </div>
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center space-x-1 bg-gray-50 rounded-lg p-1">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="h-8 w-8 p-0 border-gray-300 hover:bg-gray-100"
-                            onClick={() => updateQuantity(productId, -1)}
-                          >
-                            <Minus size={14} />
-                          </Button>
-                          <span className="font-medium px-3 min-w-[2.5rem] text-center text-gray-900 bg-white rounded">{quantities[productId] || 1}</span>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="h-8 w-8 p-0 border-gray-300 hover:bg-gray-100"
-                            onClick={() => updateQuantity(productId, 1)}
-                          >
-                            <Plus size={14} />
-                          </Button>
+                        <div className="flex items-center bg-gray-50 rounded-lg px-2 py-1">
+                          <input
+                            type="number"
+                            min="1"
+                            max={product.stockQuantity || product.stock || 0}
+                            value={quantities[productId] || 1}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value) || 1;
+                              const maxStock = product.stockQuantity || product.stock || 0;
+                              const validValue = Math.max(1, Math.min(value, maxStock));
+                              setQuantities(prev => ({ ...prev, [productId]: validValue }));
+                            }}
+                            className="w-16 text-center border-0 bg-transparent font-medium text-gray-900 focus:outline-none"
+                            disabled={(product.stockQuantity || product.stock || 0) === 0}
+                          />
                         </div>
                         <Button 
                           className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium flex-1 max-w-[130px] shadow-sm"

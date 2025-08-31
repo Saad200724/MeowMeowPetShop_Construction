@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Plus, Minus, Package, Star, ShoppingCart, Filter, Home, ArrowLeft } from 'lucide-react';
+import { Heart, Package, Star, ShoppingCart, Filter, Home, ArrowLeft } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { useCart } from '@/contexts/cart-context';
+import { useToast } from '@/hooks/use-toast';
 
 export default function BulkProducts() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
@@ -219,7 +223,19 @@ export default function BulkProducts() {
                     </div>
                     <div className="p-5 flex-1 flex flex-col">
                       <h3 className="font-bold mb-2 text-lg text-[#26732d] leading-tight">{product.name}</h3>
-                      <p className="text-sm text-gray-700 mb-4 flex-1 leading-relaxed">{product.description}</p>
+                      <p className="text-sm text-gray-700 mb-2 flex-1 leading-relaxed">{product.description}</p>
+                      <div className="text-sm text-gray-600 mb-4">
+                        <span className="font-medium">Stock: </span>
+                        <span className={`font-semibold ${
+                          (product.stockQuantity || product.stock || 0) === 0 
+                            ? 'text-red-600' 
+                            : (product.stockQuantity || product.stock || 0) < 10 
+                            ? 'text-orange-600' 
+                            : 'text-green-600'
+                        }`}>
+                          {(product.stockQuantity || product.stock || 0)} available
+                        </span>
+                      </div>
                       
                       {/* Rating */}
                       <div className="flex items-center mb-3">
@@ -251,34 +267,76 @@ export default function BulkProducts() {
                         </div>
                         
                         <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center space-x-2 bg-gray-50 rounded-lg p-1">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-100"
-                              onClick={() => updateQuantity(productId, -1)}
-                            >
-                              <Minus size={14} />
-                            </Button>
-                            <span className="font-medium px-3 min-w-[3rem] text-center text-gray-900 bg-white rounded">{quantities[productId] || 1}</span>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-100"
-                              onClick={() => updateQuantity(productId, 1)}
-                            >
-                              <Plus size={14} />
-                            </Button>
+                          <div className="flex items-center bg-gray-50 rounded-lg px-2 py-1">
+                            <input
+                              type="number"
+                              min="1"
+                              max={product.stockQuantity || product.stock || 0}
+                              value={quantities[productId] || 1}
+                              onChange={(e) => {
+                                const value = parseInt(e.target.value) || 1;
+                                const maxStock = product.stockQuantity || product.stock || 0;
+                                const validValue = Math.max(1, Math.min(value, maxStock));
+                                setQuantities(prev => ({ ...prev, [productId]: validValue }));
+                              }}
+                              className="w-16 text-center border-0 bg-transparent font-medium text-gray-900 focus:outline-none"
+                              disabled={(product.stockQuantity || product.stock || 0) === 0}
+                            />
                           </div>
                           <Button 
                             className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm flex-1 max-w-[140px] flex items-center gap-2 font-medium shadow-sm"
                             onClick={() => {
-                              // Add to cart functionality
-                              console.log(`Adding ${quantities[productId] || 1} of ${product.name} to cart`);
+                              const quantity = quantities[productId] || 1;
+                              const stockAvailable = product.stockQuantity || product.stock || 0;
+                              
+                              if (stockAvailable === 0) {
+                                toast({
+                                  title: 'Out of Stock',
+                                  description: 'This item is currently out of stock.',
+                                  variant: 'destructive'
+                                });
+                                return;
+                              }
+                              
+                              if (quantity > stockAvailable) {
+                                toast({
+                                  title: 'Insufficient Stock',
+                                  description: `Only ${stockAvailable} items available.`,
+                                  variant: 'destructive'
+                                });
+                                return;
+                              }
+                              
+                              addItem({
+                                id: productId,
+                                name: product.name,
+                                price: product.price,
+                                image: product.image,
+                                maxStock: stockAvailable
+                              });
+                              
+                              // Add the remaining quantity if more than 1
+                              if (quantity > 1) {
+                                for (let i = 1; i < quantity; i++) {
+                                  addItem({
+                                    id: productId,
+                                    name: product.name,
+                                    price: product.price,
+                                    image: product.image,
+                                    maxStock: stockAvailable
+                                  });
+                                }
+                              }
+                              
+                              toast({
+                                title: 'Added to Cart',
+                                description: `${quantity} × ${product.name} added to your cart.`
+                              });
                             }}
+                            disabled={(product.stockQuantity || product.stock || 0) === 0}
                           >
                             <ShoppingCart size={16} />
-                            Add to Cart
+                            {(product.stockQuantity || product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
                           </Button>
                         </div>
                       </div>
