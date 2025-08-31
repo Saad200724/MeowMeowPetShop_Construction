@@ -500,18 +500,18 @@ export default function AdminPage() {
                     placeholder="Search products..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 text-black placeholder:text-gray-500"
                   />
                 </div>
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Category" />
+                <SelectTrigger className="w-full sm:w-48 text-black">
+                  <SelectValue placeholder="Category" className="text-black" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="all" className="text-black hover:bg-gray-100">All Categories</SelectItem>
                   {(categories as any[]).map((cat: any) => (
-                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                    <SelectItem key={cat.id} value={cat.id} className="text-black hover:bg-gray-100">{cat.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
