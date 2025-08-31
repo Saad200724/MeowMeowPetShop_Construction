@@ -18,11 +18,13 @@ export default function BulkProducts() {
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['/api/repack-products'],
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   // Initialize quantities when products are loaded
   useEffect(() => {
-    if (products.length > 0) {
+    if (Array.isArray(products) && products.length > 0) {
       const initialQuantities: { [key: string]: number } = {};
       products.forEach((product: any) => {
         initialQuantities[product.id || product._id] = 1;
@@ -49,26 +51,26 @@ export default function BulkProducts() {
     return Math.round(((originalPrice - price) / originalPrice) * 100);
   };
 
-  const filteredAndSortedProducts = products
+  const filteredAndSortedProducts = Array.isArray(products) ? products
     .filter((product: any) => 
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product?.description?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a: any, b: any) => {
       switch (sortBy) {
         case 'price-low':
-          return a.price - b.price;
+          return (a?.price || 0) - (b?.price || 0);
         case 'price-high':
-          return b.price - a.price;
+          return (b?.price || 0) - (a?.price || 0);
         case 'savings':
-          const savingsA = calculateSavings(a.price, a.originalPrice);
-          const savingsB = calculateSavings(b.price, b.originalPrice);
+          const savingsA = calculateSavings(a?.price || 0, a?.originalPrice || 0);
+          const savingsB = calculateSavings(b?.price || 0, b?.originalPrice || 0);
           return savingsB - savingsA;
         case 'name':
         default:
-          return a.name.localeCompare(b.name);
+          return (a?.name || '').localeCompare(b?.name || '');
       }
-    });
+    }) : [];
 
   if (isLoading) {
     return (
@@ -92,7 +94,9 @@ export default function BulkProducts() {
                 <div className="p-4 space-y-3">
                   <div className="bg-gray-200 h-4 rounded w-3/4"></div>
                   <div className="bg-gray-200 h-3 rounded w-full"></div>
+                  <div className="bg-gray-200 h-3 rounded w-5/6"></div>
                   <div className="bg-gray-200 h-6 rounded w-1/2"></div>
+                  <div className="bg-gray-200 h-10 rounded w-full mt-4"></div>
                 </div>
               </div>
             ))}
@@ -180,7 +184,7 @@ export default function BulkProducts() {
           </Badge>
         </div>
 
-        {filteredAndSortedProducts.length === 0 ? (
+        {!isLoading && filteredAndSortedProducts.length === 0 ? (
           <div className="text-center py-16">
             <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
@@ -218,7 +222,9 @@ export default function BulkProducts() {
                       <img 
                         src={product.image} 
                         alt={product.name} 
-                        className="w-full h-56 object-cover rounded-t-lg" 
+                        className="w-full h-56 object-cover rounded-t-lg"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="p-5 flex-1 flex flex-col">
