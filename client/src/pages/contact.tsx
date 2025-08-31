@@ -74,8 +74,8 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">Store Address</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Savar, Dhaka, Bangladesh<br />
-                      Near Bus Stand
+                      Pakiza Bus Stand, Chapra Mosjid Road<br />
+                      Bank Colony, Savar, Dhaka
                     </p>
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
-                    <p className="text-gray-600 text-sm">+880 172-345678</p>
+                    <p className="text-gray-600 text-sm">+880 1405-045023</p>
                     <p className="text-gray-500 text-xs mt-1">Call us for orders and inquiries</p>
                   </div>
                 </div>
@@ -283,14 +283,14 @@ export default function ContactPage() {
             <div className="aspect-video bg-gray-200 relative">
               {/* Embedded Google Map */}
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d233668.38888812088!2d90.2792382!3d23.7808875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b087026b81%3A0x8fa563bbdd5904c2!2sSavar%2C%20Bangladesh!5e0!3m2!1sen!2sus!4v1625097600000!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d912.3297468964263!2d90.25490467115716!3d23.842804035630493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755eb2ecda85ab9%3A0x1aada17efba5882e!2sMeow%20Meow%20Pet%20shop!5e0!3m2!1sen!2sbd!4v1756620179156!5m2!1sen!2sbd"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Meow Meow Pet Shop Location - Savar, Bangladesh"
+                title="Meow Meow Pet Shop Location - Pakiza Bus Stand, Savar, Dhaka"
               />
             </div>
           </Card>
@@ -303,8 +303,8 @@ export default function ContactPage() {
                   <MapPin className="w-8 h-8 text-yellow-600" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">Visit Our Store</h3>
-                <p className="text-gray-600 text-sm">Savar, Dhaka</p>
-                <p className="text-gray-500 text-xs">Near Bus Stand</p>
+                <p className="text-gray-600 text-sm">Bank Colony, Savar</p>
+                <p className="text-gray-500 text-xs">Pakiza Bus Stand</p>
               </CardContent>
             </Card>
 
@@ -314,8 +314,8 @@ export default function ContactPage() {
                   <Phone className="w-8 h-8 text-green-600" />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2">Call Us</h3>
-                <p className="text-gray-600 text-sm">+880 172-345678</p>
-                <p className="text-gray-500 text-xs">Daily 24/7 AM</p>
+                <p className="text-gray-600 text-sm">+880 1405-045023</p>
+                <p className="text-gray-500 text-xs">Daily 10 AM - 10 PM</p>
               </CardContent>
             </Card>
 
