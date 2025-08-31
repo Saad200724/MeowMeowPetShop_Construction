@@ -219,7 +219,7 @@ export default function BulkProducts() {
                     </div>
                     <div className="p-5 flex-1 flex flex-col">
                       <h3 className="font-bold mb-2 text-lg text-[#26732d] leading-tight">{product.name}</h3>
-                      <p className="text-sm text-gray-600 mb-4 flex-1">{product.description}</p>
+                      <p className="text-sm text-gray-700 mb-4 flex-1 leading-relaxed">{product.description}</p>
                       
                       {/* Rating */}
                       <div className="flex items-center mb-3">
@@ -236,41 +236,47 @@ export default function BulkProducts() {
                       </div>
 
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mb-4">
                           <div className="flex flex-col">
                             <span className="text-xl font-bold text-[#26732d]">৳{product.price?.toLocaleString()}</span>
                             {product.originalPrice && (
-                              <span className="text-sm text-gray-500 line-through">৳{product.originalPrice?.toLocaleString()}</span>
+                              <span className="text-sm text-gray-600 line-through">৳{product.originalPrice?.toLocaleString()}</span>
                             )}
                           </div>
                           {savings > 0 && (
-                            <span className="bg-yellow-400 text-[#26732d] font-bold text-sm px-3 py-1 rounded-full">
+                            <span className="bg-yellow-400 text-[#26732d] font-bold text-sm px-3 py-1 rounded-full shadow-sm">
                               Save {savings}%
                             </span>
                           )}
                         </div>
                         
                         <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-2 bg-gray-50 rounded-lg p-1">
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="h-9 w-9 p-0"
+                              className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-100"
                               onClick={() => updateQuantity(productId, -1)}
                             >
                               <Minus size={14} />
                             </Button>
-                            <span className="font-medium px-3 min-w-[3rem] text-center">{quantities[productId] || 1}</span>
+                            <span className="font-medium px-3 min-w-[3rem] text-center text-gray-900 bg-white rounded">{quantities[productId] || 1}</span>
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="h-9 w-9 p-0"
+                              className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-100"
                               onClick={() => updateQuantity(productId, 1)}
                             >
                               <Plus size={14} />
                             </Button>
                           </div>
-                          <Button className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm flex-1 max-w-[140px] flex items-center gap-2">
+                          <Button 
+                            className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm flex-1 max-w-[140px] flex items-center gap-2 font-medium shadow-sm"
+                            onClick={() => {
+                              // Add to cart functionality
+                              console.log(`Adding ${quantities[productId] || 1} of ${product.name} to cart`);
+                            }}
+                          >
                             <ShoppingCart size={16} />
                             Add to Cart
                           </Button>
