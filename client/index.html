@@ -64,8 +64,51 @@
       }
     </script>
   </head>
-  <body>
+  <body style="margin: 0; background: white;">
     <div id="root"></div>
+    
+    <!-- Instant footer to prevent black screen -->
+    <div id="instant-footer" style="
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #1f2937;
+      color: white;
+      padding: 20px;
+      z-index: 100;
+      font-family: Inter, system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      font-size: 14px;
+    ">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <img src="/logo.png" alt="Logo" style="height: 24px; width: 24px;">
+        <span style="color: #fbbf24; font-weight: 600;">Meow Meow Pet Shop</span>
+      </div>
+      <span style="color: #9ca3af;">|</span>
+      <span style="color: #d1d5db;">Your trusted partner for premium pet supplies</span>
+    </div>
+    
+    <!-- Instant announcement bar -->
+    <div id="instant-announcement" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fbbf24;
+      color: #1f2937;
+      padding: 8px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 14px;
+      z-index: 100;
+      font-family: Inter, system-ui, sans-serif;
+    ">
+      🚚 Free delivery on orders over ৳1500 | ☎️ Call: 01405-045023 | 📍 Savar, Dhaka
+    </div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script
