@@ -1,45 +1,52 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
+import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
 import { getProductsByCategory, type Product } from '@/lib/product-data';
 
-const catLitterCategories = [
-  'Clumping Cat Litter',
-  'Clay Litter',
-  'Scented Litter',
-  'Cat Litter Accessories',
-  'Litter Scoop',
-  'Litter Mat',
-  'Cat Litter Box',
-  'Covered Litter Box',
-  'Self-Cleaning Box'
-];
-
 export default function CatLitterPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({
+    priceRange: [1, 13000],
+    sortBy: 'relevance'
+  });
   
   // Get dynamic products from centralized data
   const allProducts = getProductsByCategory('cat-litter');
   
-  // Filter products based on search and category
-  const filteredProducts = allProducts.filter(product => {
-    const matchesCategory = selectedCategory === 'All';
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  // Filter and sort products based on search, price range, and sort option
+  const filteredProducts = allProducts
+    .filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchesPrice = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
+      return matchesSearch && matchesPrice;
+    })
+    .sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'latest':
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        case 'a-z':
+          return a.name.localeCompare(b.name);
+        case 'z-a':
+          return b.name.localeCompare(a.name);
+        case 'price-high-low':
+          return b.price - a.price;
+        case 'price-low-high':
+          return a.price - b.price;
+        default:
+          return 0;
+      }
+    });
 
-  const handleCategoryFilter = (category: string) => {
-    setSelectedCategory(category);
+  const handleFilterChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
   };
 
   const handleSearch = (query: string) => {
@@ -73,39 +80,12 @@ export default function CatLitterPage() {
       {/* Main Content */}
       <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto lg:flex lg:gap-8">
-          {/* Sidebar */}
+          {/* Modern Filter Sidebar */}
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-5 w-5" />
-                  Categories
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Button
-                    variant={selectedCategory === 'All' ? 'default' : 'outline'}
-                    className={`w-full justify-start ${selectedCategory === 'All' ? '' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
-                    onClick={() => handleCategoryFilter('All')}
-                    data-testid="button-category-all"
-                  >
-                    All Categories
-                  </Button>
-                  {catLitterCategories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? 'default' : 'outline'}
-                      className={`w-full justify-start ${selectedCategory === category ? '' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
-                      onClick={() => handleCategoryFilter(category)}
-                      data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <ModernFilter 
+              onFilterChange={handleFilterChange}
+              maxPrice={5000}
+            />
           </aside>
 
           {/* Products Grid */}
@@ -114,9 +94,7 @@ export default function CatLitterPage() {
             <AnalyticsBar categoryId="cat-litter" className="mb-6" />
             
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">
-                {selectedCategory === 'All' ? 'All Cat Litter Products' : selectedCategory}
-              </h2>
+              <h2 className="text-2xl font-bold">Cat Litter & Accessories</h2>
               <p className="text-gray-600">{filteredProducts.length} products found</p>
             </div>
 
@@ -135,7 +113,7 @@ export default function CatLitterPage() {
                   className="mt-4 bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                   onClick={() => {
                     setSearchQuery('');
-                    setSelectedCategory('All');
+                    setFilters({ priceRange: [1, 13000], sortBy: 'relevance' });
                   }}
                 >
                   Clear Filters

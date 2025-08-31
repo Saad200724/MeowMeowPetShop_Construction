@@ -1,50 +1,54 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
+import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
 import { useProducts, type Product } from '@/hooks/use-products';
 
-const birdCategories = [
-  'Bird Seeds',
-  'Bird Pellets',
-  'Bird Treats',
-  'Bird Cages',
-  'Bird Perches',
-  'Bird Toys',
-  'Bird Water Dispensers',
-  'Bird Food Bowls',
-  'Bird Nests',
-  'Bird Health Supplements',
-  'Bird Grooming',
-  'Bird Carriers'
-];
-
 export default function BirdPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({
+    priceRange: [1, 13000],
+    sortBy: 'relevance'
+  });
   
   const { loading, error, getProductsByCategory } = useProducts()
   
   // Get dynamic products from API
   const allProducts = getProductsByCategory('bird');
   
-  // Filter products based on search and category
-  const filteredProducts = allProducts.filter(product => {
-    const matchesCategory = selectedCategory === 'All';
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (product.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  // Filter and sort products based on search, price range, and sort option
+  const filteredProducts = allProducts
+    .filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           (product.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchesPrice = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
+      return matchesSearch && matchesPrice;
+    })
+    .sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'latest':
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        case 'a-z':
+          return a.name.localeCompare(b.name);
+        case 'z-a':
+          return b.name.localeCompare(a.name);
+        case 'price-high-low':
+          return b.price - a.price;
+        case 'price-low-high':
+          return a.price - b.price;
+        default:
+          return 0;
+      }
+    });
 
-  const handleCategoryFilter = (category: string) => {
-    setSelectedCategory(category);
+  const handleFilterChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
   };
 
   const handleSearch = (query: string) => {
@@ -106,39 +110,12 @@ export default function BirdPage() {
       {/* Main Content */}
       <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto lg:flex lg:gap-8">
-          {/* Sidebar */}
+          {/* Modern Filter Sidebar */}
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-5 w-5" />
-                  Categories
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Button
-                    variant={selectedCategory === 'All' ? 'default' : 'ghost'}
-                    className="w-full justify-start"
-                    onClick={() => handleCategoryFilter('All')}
-                    data-testid="button-category-all"
-                  >
-                    All Categories
-                  </Button>
-                  {birdCategories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? 'default' : 'ghost'}
-                      className="w-full justify-start"
-                      onClick={() => handleCategoryFilter(category)}
-                      data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, '-')}`}
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <ModernFilter 
+              onFilterChange={handleFilterChange}
+              maxPrice={1500}
+            />
           </aside>
 
           {/* Main Content Area */}
@@ -149,12 +126,8 @@ export default function BirdPage() {
             {/* Products Grid */}
             <div className="mt-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {selectedCategory === 'All' ? 'All Bird Products' : selectedCategory}
-                </h2>
-                <Badge variant="secondary">
-                  {filteredProducts.length} Products
-                </Badge>
+                <h2 className="text-2xl font-bold text-gray-900">Bird Food & Accessories</h2>
+                <p className="text-gray-600">{filteredProducts.length} products found</p>
               </div>
 
               {filteredProducts.length === 0 ? (
