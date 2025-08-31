@@ -274,7 +274,7 @@ export default function Header() {
                     variant="outline" 
                     size="sm" 
                     onClick={handleSignOut} 
-                    className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 transition-colors"
+                    className="text-red-600 border-red-200 hover:bg-gray-100 hover:text-black hover:border-gray-300 transition-colors"
                     data-testid="button-sign-out"
                   >
                     <LogOut size={14} className="mr-1" />
