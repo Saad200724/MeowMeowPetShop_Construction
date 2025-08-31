@@ -4,7 +4,7 @@ import { useCart } from '@/contexts/cart-context';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 
 interface Message {
   id: string;
@@ -29,6 +29,15 @@ export function FloatingCart() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { state, removeItem, updateQuantity } = useCart();
   const { items, total, itemCount } = state;
+  const [location] = useLocation();
+
+  // Hide floating buttons on auth and admin pages
+  const shouldHideFloatingButtons = [
+    '/sign-in',
+    '/sign-up', 
+    '/forgot-password',
+    '/admin'
+  ].some(path => location.startsWith(path));
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -83,6 +92,11 @@ export function FloatingCart() {
   const formatPrice = (price: number) => {
     return `৳${price.toFixed(2)}`;
   };
+
+  // Don't render floating buttons on auth and admin pages
+  if (shouldHideFloatingButtons) {
+    return null;
+  }
 
   return (
     <>
