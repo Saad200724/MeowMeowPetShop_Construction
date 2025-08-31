@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Cat, Dog, Rabbit, Bird, Plus, Heart, Package, Stethoscope, Shirt, Gem, UtensilsCrossed, Gamepad2, ChevronRight } from 'lucide-react';
+import { Cat, Dog, Rabbit, Bird, Plus, Heart, Package, Stethoscope, Shirt, Gem, Bone, Gamepad2, ChevronRight } from 'lucide-react';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '@/contexts/sidebar-context';
@@ -8,14 +8,14 @@ export default function NavigationSidebar() {
   const { isVisible } = useSidebar();
 
   const categories = [
-    { icon: UtensilsCrossed, label: 'Cat Food', href: '/cat-food', hasSubCategories: true },
-    { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
+    { icon: Cat, label: 'Cat Food', href: '/cat-food', hasSubCategories: true },
+    { icon: Bone, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
     { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
     { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: true },
     { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
     { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/cat-accessories', hasSubCategories: true },
     { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: true },
-    { icon: Heart, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: true },
+    { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: true },
     { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: true },
     { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: true },
   ];
