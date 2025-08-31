@@ -9,7 +9,7 @@ export default function NavigationSidebar() {
 
   const categories = [
     { icon: Cat, label: 'Cat Food', href: '/cat-food', hasSubCategories: true },
-    { icon: Bone, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
+    { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
     { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
     { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: true },
     { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
