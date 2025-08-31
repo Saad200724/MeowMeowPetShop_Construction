@@ -49,12 +49,25 @@ const productFormSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+// Simplified schema for repack food products
+const repackFormSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  description: z.string().min(1, 'Description is required'),
+  price: z.string().min(1, 'Price is required'),
+  originalPrice: z.string().optional(),
+  categoryId: z.string().min(1, 'Category is required'),
+  brandId: z.string().min(1, 'Brand is required'),
+  image: z.string().min(1, 'Product image is required'),
+  stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
+});
+
 const announcementFormSchema = z.object({
   text: z.string().min(1, 'Announcement text is required'),
   isActive: z.boolean().optional(),
 });
 
 type ProductFormData = z.infer<typeof productFormSchema>;
+type RepackFormData = z.infer<typeof repackFormSchema>;
 type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
 
 interface BlogPost {
@@ -87,6 +100,8 @@ export default function AdminPage() {
   const [showBlogDialog, setShowBlogDialog] = useState(false);
   const [selectedShopCategory, setSelectedShopCategory] = useState<string>('adult-food');
   const [repackSearchTerm, setRepackSearchTerm] = useState('');
+  const [editingRepackProduct, setEditingRepackProduct] = useState<any>(null);
+  const [showRepackDialog, setShowRepackDialog] = useState(false);
 
   // Function to parse bold text formatting
   const parseAnnouncementText = (text: string) => {
@@ -224,6 +239,21 @@ export default function AdminPage() {
     },
   });
 
+  // Form for repack food creation/editing
+  const repackForm = useForm<RepackFormData>({
+    resolver: zodResolver(repackFormSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      originalPrice: '',
+      categoryId: '',
+      brandId: '',
+      image: '',
+      stockQuantity: 0,
+    },
+  });
+
   const announcementForm = useForm<AnnouncementFormData>({
     resolver: zodResolver(announcementFormSchema),
     defaultValues: {
@@ -299,6 +329,67 @@ export default function AdminPage() {
       toast({
         title: 'Error',
         description: error.message || 'Failed to delete product',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Repack food mutations
+  const createRepackMutation = useMutation({
+    mutationFn: async (data: RepackFormData) => {
+      // Add repack-food tag automatically
+      const repackData = {
+        ...data,
+        tags: 'repack-food',
+        isActive: true,
+      };
+      const response = await apiRequest('POST', '/api/products', repackData);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      setShowRepackDialog(false);
+      repackForm.reset();
+      toast({
+        title: 'Success',
+        description: 'Repack food product created successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create repack food product',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const updateRepackMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: RepackFormData }) => {
+      // Ensure repack-food tag is maintained
+      const repackData = {
+        ...data,
+        tags: 'repack-food',
+      };
+      const response = await apiRequest('PUT', `/api/products/${id}`, repackData);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      setEditingRepackProduct(null);
+      setShowRepackDialog(false);
+      repackForm.reset();
+      toast({
+        title: 'Success',
+        description: 'Repack food product updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update repack food product',
         variant: 'destructive',
       });
     },
@@ -410,6 +501,32 @@ export default function AdminPage() {
     if (confirm('Are you sure you want to delete this product?')) {
       deleteProductMutation.mutate(id);
     }
+  };
+
+  // Repack food handlers
+  const handleCreateRepack = (data: RepackFormData) => {
+    createRepackMutation.mutate(data);
+  };
+
+  const handleUpdateRepack = (data: RepackFormData) => {
+    if (editingRepackProduct) {
+      updateRepackMutation.mutate({ id: editingRepackProduct.id, data });
+    }
+  };
+
+  const handleEditRepack = (product: any) => {
+    setEditingRepackProduct(product);
+    repackForm.reset({
+      name: product.name,
+      description: product.description || '',
+      price: product.price.toString(),
+      originalPrice: product.originalPrice?.toString() || '',
+      categoryId: product.category || product.categoryId || '',
+      brandId: product.brandSlug || product.brandId || '',
+      image: product.image,
+      stockQuantity: product.stock || product.stockQuantity || 0,
+    });
+    setShowRepackDialog(true);
   };
 
   const handleSaveBlog = () => {
@@ -893,12 +1010,9 @@ export default function AdminPage() {
               </div>
               <Button 
                 onClick={() => {
-                  setEditingProduct(null);
-                  form.reset({
-                    ...form.getValues(),
-                    tags: 'repack-food',
-                  });
-                  setShowProductDialog(true);
+                  setEditingRepackProduct(null);
+                  repackForm.reset();
+                  setShowRepackDialog(true);
                 }}
                 className="bg-orange-600 hover:bg-orange-700"
               >
@@ -1011,7 +1125,7 @@ export default function AdminPage() {
                             </td>
                             <td className="px-4 py-4 text-right">
                               <div className="flex justify-end space-x-2">
-                                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => handleEditProduct(product)}>
+                                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => handleEditRepack(product)}>
                                   <Edit className="w-4 h-4" />
                                 </Button>
                                 <Button 
@@ -1070,12 +1184,7 @@ export default function AdminPage() {
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-orange-600">
-                    {(products as any[]).filter((p: any) => 
-                      p.tags?.includes('repack-food') || 
-                      p.tags?.includes('repack') ||
-                      p.name.toLowerCase().includes('repack') ||
-                      p.description?.toLowerCase().includes('repack')
-                    ).length}
+                    {repackProducts.length}
                   </div>
                   <div className="text-sm text-gray-600">Total Repack Products</div>
                 </CardContent>
@@ -1083,13 +1192,7 @@ export default function AdminPage() {
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {(products as any[]).filter((p: any) => 
-                      (p.tags?.includes('repack-food') || 
-                       p.tags?.includes('repack') ||
-                       p.name.toLowerCase().includes('repack') ||
-                       p.description?.toLowerCase().includes('repack')) &&
-                      p.isActive !== false
-                    ).length}
+                    {(repackProducts as any[]).filter((p: any) => p.isActive !== false).length}
                   </div>
                   <div className="text-sm text-gray-600">Active Products</div>
                 </CardContent>
@@ -1097,13 +1200,7 @@ export default function AdminPage() {
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-blue-600">
-                    {(products as any[]).filter((p: any) => 
-                      (p.tags?.includes('repack-food') || 
-                       p.tags?.includes('repack') ||
-                       p.name.toLowerCase().includes('repack') ||
-                       p.description?.toLowerCase().includes('repack')) &&
-                      (p.stockQuantity || p.stock || 0) > 0
-                    ).length}
+                    {(repackProducts as any[]).filter((p: any) => (p.stockQuantity || p.stock || 0) > 0).length}
                   </div>
                   <div className="text-sm text-gray-600">In Stock</div>
                 </CardContent>
@@ -1111,13 +1208,7 @@ export default function AdminPage() {
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-red-600">
-                    {(products as any[]).filter((p: any) => 
-                      (p.tags?.includes('repack-food') || 
-                       p.tags?.includes('repack') ||
-                       p.name.toLowerCase().includes('repack') ||
-                       p.description?.toLowerCase().includes('repack')) &&
-                      (p.stockQuantity || p.stock || 0) === 0
-                    ).length}
+                    {(repackProducts as any[]).filter((p: any) => (p.stockQuantity || p.stock || 0) === 0).length}
                   </div>
                   <div className="text-sm text-gray-600">Out of Stock</div>
                 </CardContent>
@@ -1561,6 +1652,205 @@ export default function AdminPage() {
                   {createProductMutation.isPending || updateProductMutation.isPending 
                     ? 'Saving...' 
                     : editingProduct ? 'Update Product' : 'Save Product'
+                  }
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Repack Food Dialog */}
+      <Dialog open={showRepackDialog} onOpenChange={setShowRepackDialog}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingRepackProduct ? 'Edit Repack Food' : 'Add New Repack Food'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingRepackProduct ? 'Update repack food product information' : 'Create a new repack food product for your store'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <Form {...repackForm}>
+            <form 
+              onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : handleCreateRepack)} 
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={repackForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter product name" className="text-gray-900 bg-white border-gray-300" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={repackForm.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Price (৳)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter price" className="text-gray-900 bg-white border-gray-300" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={repackForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Description</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Enter product description" 
+                        rows={3} 
+                        className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={repackForm.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Category</FormLabel>
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                          {categories.map((category: any) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={repackForm.control}
+                  name="brandId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Brand</FormLabel>
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
+                            <SelectValue placeholder="Select brand" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                          {brands.map((brand: any) => (
+                            <SelectItem key={brand.id} value={brand.id}>
+                              {brand.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={repackForm.control}
+                  name="stockQuantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Stock Quantity</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="0" 
+                          className="text-gray-900 bg-white border-gray-300"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={repackForm.control}
+                  name="originalPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Original Price (৳) - Optional</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter original price (if on sale)" className="text-gray-900 bg-white border-gray-300" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={repackForm.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Image</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter image URL" className="text-gray-900 bg-white border-gray-300" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <p className="text-sm text-orange-800">
+                  <strong>Note:</strong> This product will automatically be tagged as "repack-food" and appear in the bulk/repack sections only.
+                </p>
+              </div>
+
+              <DialogFooter>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  onClick={() => setShowRepackDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="bg-orange-600 hover:bg-orange-700"
+                  disabled={createRepackMutation.isPending || updateRepackMutation.isPending}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {createRepackMutation.isPending || updateRepackMutation.isPending 
+                    ? 'Saving...' 
+                    : editingRepackProduct ? 'Update Repack Food' : 'Save Repack Food'
                   }
                 </Button>
               </DialogFooter>
