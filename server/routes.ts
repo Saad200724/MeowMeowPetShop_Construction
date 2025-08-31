@@ -135,11 +135,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Products API
+  // Products API - Excludes bulk/repack products from general listings
   app.get("/api/products", async (req, res) => {
     try {
       // Get products directly from MongoDB to avoid storage layer issues
-      const dbProducts = await Product.find({ isActive: true });
+      // Exclude bulk/repack products from general product listings
+      const dbProducts = await Product.find({ 
+        isActive: true,
+        tags: { 
+          $not: { 
+            $in: ['repack-food', 'repack', 'bulk-save', 'bulk'] 
+          } 
+        }
+      });
       const products = [];
 
       for (const product of dbProducts) {
@@ -200,12 +208,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             specifications: product.specifications || {}
           });
         } catch (err: any) {
-          // Skip products with invalid data but log the specific product name
+          // Skip products with invalid data or bulk products that might have slipped through
           console.warn('Skipping product with invalid data:', product.name || 'Unknown', err.message);
         }
       }
 
-      console.log(`Successfully fetched ${products.length} products`);
+      console.log(`Successfully fetched ${products.length} products (excluding bulk/repack products)`);
       res.json(products);
     } catch (error) {
       console.error('Error fetching products:', error);

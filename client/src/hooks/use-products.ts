@@ -56,12 +56,27 @@ export function useProducts() {
   }, []);
 
   const getProductsByCategory = (categoryId: string) => {
-    if (categoryId === 'all' || !categoryId) return products;
-    return products.filter(product => product.category === categoryId);
+    // Filter out bulk/repack products from all category listings
+    const filteredProducts = products.filter(product => {
+      const isBulkProduct = product.tags?.some(tag => 
+        ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
+      );
+      return !isBulkProduct;
+    });
+    
+    if (categoryId === 'all' || !categoryId) return filteredProducts;
+    return filteredProducts.filter(product => product.category === categoryId);
   };
 
   const getProductsByBrand = (brandSlug: string) => {
     return products.filter(product => {
+      // Exclude bulk/repack products from brand listings
+      const isBulkProduct = product.tags?.some(tag => 
+        ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
+      );
+      
+      if (isBulkProduct) return false;
+      
       // Match by brand name or slug
       const brandMatches = product.brandName?.toLowerCase() === brandSlug.toLowerCase() ||
                           product.brandSlug?.toLowerCase() === brandSlug.toLowerCase();
@@ -77,11 +92,18 @@ export function useProducts() {
   };
 
   const searchProducts = (query: string) => {
-    return products.filter(product =>
-      product.name.toLowerCase().includes(query.toLowerCase()) ||
-      product.description?.toLowerCase().includes(query.toLowerCase()) ||
-      product.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
-    );
+    return products.filter(product => {
+      // Exclude bulk/repack products from search results
+      const isBulkProduct = product.tags?.some(tag => 
+        ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
+      );
+      
+      if (isBulkProduct) return false;
+      
+      return product.name.toLowerCase().includes(query.toLowerCase()) ||
+             product.description?.toLowerCase().includes(query.toLowerCase()) ||
+             product.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+    });
   };
 
   return {
