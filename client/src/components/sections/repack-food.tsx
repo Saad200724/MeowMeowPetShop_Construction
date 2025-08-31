@@ -139,42 +139,16 @@ export default function RepackFood() {
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center bg-gray-50 rounded-lg px-2 py-1">
-                          <input
-                            type="number"
-                            min="1"
-                            max={product.stockQuantity || product.stock || 0}
-                            value={quantities[productId] || 1}
-                            onChange={(e) => {
-                              const value = parseInt(e.target.value) || 1;
-                              const maxStock = product.stockQuantity || product.stock || 0;
-                              const validValue = Math.max(1, Math.min(value, maxStock));
-                              setQuantities(prev => ({ ...prev, [productId]: validValue }));
-                            }}
-                            className="w-16 text-center border-0 bg-transparent font-medium text-gray-900 focus:outline-none"
-                            disabled={(product.stockQuantity || product.stock || 0) === 0}
-                          />
-                        </div>
+                      <div className="w-full">
                         <Button 
-                          className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium flex-1 max-w-[130px] shadow-sm"
+                          className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium w-full shadow-sm"
                           onClick={() => {
-                            const quantity = quantities[productId] || 1;
                             const stockAvailable = product.stockQuantity || product.stock || 0;
                             
                             if (stockAvailable === 0) {
                               toast({
                                 title: 'Out of Stock',
                                 description: 'This item is currently out of stock.',
-                                variant: 'destructive'
-                              });
-                              return;
-                            }
-                            
-                            if (quantity > stockAvailable) {
-                              toast({
-                                title: 'Insufficient Stock',
-                                description: `Only ${stockAvailable} items available.`,
                                 variant: 'destructive'
                               });
                               return;
@@ -188,22 +162,9 @@ export default function RepackFood() {
                               maxStock: stockAvailable
                             });
                             
-                            // Add the remaining quantity if more than 1
-                            if (quantity > 1) {
-                              for (let i = 1; i < quantity; i++) {
-                                addItem({
-                                  id: productId,
-                                  name: product.name,
-                                  price: product.price,
-                                  image: product.image,
-                                  maxStock: stockAvailable
-                                });
-                              }
-                            }
-                            
                             toast({
                               title: 'Added to Cart',
-                              description: `${quantity} × ${product.name} added to your cart.`
+                              description: `${product.name} added to your cart.`
                             });
                           }}
                           disabled={(product.stockQuantity || product.stock || 0) === 0}
