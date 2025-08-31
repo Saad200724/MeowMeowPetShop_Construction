@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Heart, Plus, Minus, Package } from 'lucide-react';
+import { useCart } from '@/contexts/cart-context';
+import { useToast } from '@/hooks/use-toast';
 
 export default function RepackFood() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
@@ -108,7 +112,19 @@ export default function RepackFood() {
                   </div>
                   <div className="p-4 flex-1 flex flex-col">
                     <h4 className="font-bold mb-2 text-base text-[#26732d] leading-tight">{product.name}</h4>
-                    <p className="text-sm text-gray-700 mb-3 flex-1 leading-relaxed">{product.description}</p>
+                    <p className="text-sm text-gray-700 mb-2 flex-1 leading-relaxed">{product.description}</p>
+                    <div className="text-sm text-gray-600 mb-3">
+                      <span className="font-medium">Stock: </span>
+                      <span className={`font-semibold ${
+                        (product.stockQuantity || product.stock || 0) === 0 
+                          ? 'text-red-600' 
+                          : (product.stockQuantity || product.stock || 0) < 10 
+                          ? 'text-orange-600' 
+                          : 'text-green-600'
+                      }`}>
+                        {(product.stockQuantity || product.stock || 0)} available
+                      </span>
+                    </div>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex flex-col">
@@ -146,11 +162,56 @@ export default function RepackFood() {
                         <Button 
                           className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium flex-1 max-w-[130px] shadow-sm"
                           onClick={() => {
-                            // Add to cart functionality
-                            console.log(`Adding ${quantities[productId] || 1} of ${product.name} to cart`);
+                            const quantity = quantities[productId] || 1;
+                            const stockAvailable = product.stockQuantity || product.stock || 0;
+                            
+                            if (stockAvailable === 0) {
+                              toast({
+                                title: 'Out of Stock',
+                                description: 'This item is currently out of stock.',
+                                variant: 'destructive'
+                              });
+                              return;
+                            }
+                            
+                            if (quantity > stockAvailable) {
+                              toast({
+                                title: 'Insufficient Stock',
+                                description: `Only ${stockAvailable} items available.`,
+                                variant: 'destructive'
+                              });
+                              return;
+                            }
+                            
+                            addItem({
+                              id: productId,
+                              name: product.name,
+                              price: product.price,
+                              image: product.image,
+                              maxStock: stockAvailable
+                            });
+                            
+                            // Add the remaining quantity if more than 1
+                            if (quantity > 1) {
+                              for (let i = 1; i < quantity; i++) {
+                                addItem({
+                                  id: productId,
+                                  name: product.name,
+                                  price: product.price,
+                                  image: product.image,
+                                  maxStock: stockAvailable
+                                });
+                              }
+                            }
+                            
+                            toast({
+                              title: 'Added to Cart',
+                              description: `${quantity} × ${product.name} added to your cart.`
+                            });
                           }}
+                          disabled={(product.stockQuantity || product.stock || 0) === 0}
                         >
-                          Add to Cart
+                          {(product.stockQuantity || product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
                         </Button>
                       </div>
                     </div>
