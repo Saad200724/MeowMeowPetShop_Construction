@@ -522,6 +522,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get repack food products specifically
   app.get("/api/repack-products", async (req, res) => {
     try {
+      // Set cache headers for better performance
+      res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache
+      
       const repackProducts = await Product.find({
         $or: [
           { tags: { $in: ['repack-food', 'repack'] } },
@@ -529,7 +532,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           { description: { $regex: /repack/i } }
         ],
         isActive: true
-      }).populate('categoryId').populate('brandId');
+      }).select('name price originalPrice image rating stockQuantity tags description isNew isBestseller isOnSale discount').lean();
 
       console.log(`Successfully fetched ${repackProducts.length} repack products`);
       res.json(repackProducts);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,14 +12,26 @@ export default function BulkProducts() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [sortBy, setSortBy] = useState('name');
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const { addItem } = useCart();
   const { toast } = useToast();
+
+  // Debounce search term to improve performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['/api/repack-products'],
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 10 * 60 * 1000, // Cache for 10 minutes
+    cacheTime: 15 * 60 * 1000, // Keep in cache for 15 minutes
     refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: false, // Don't refetch on component mount if data exists
   });
 
   // Initialize quantities when products are loaded
@@ -33,44 +45,48 @@ export default function BulkProducts() {
     }
   }, [products]);
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = useCallback((id: string, delta: number) => {
     setQuantities(prev => ({
       ...prev,
       [id]: Math.max(1, (prev[id] || 1) + delta)
     }));
-  };
+  }, []);
 
-  const getBadgeFromTags = (tags: string[]) => {
+  const getBadgeFromTags = useCallback((tags: string[]) => {
     if (tags?.includes('combo-deal')) return 'COMBO DEAL';
     if (tags?.includes('bulk-save')) return 'BULK SAVE';
     return 'REPACK';
-  };
+  }, []);
 
-  const calculateSavings = (price: number, originalPrice: number) => {
+  const calculateSavings = useCallback((price: number, originalPrice: number) => {
     if (!originalPrice || originalPrice <= price) return 0;
     return Math.round(((originalPrice - price) / originalPrice) * 100);
-  };
+  }, []);
 
-  const filteredAndSortedProducts = Array.isArray(products) ? products
-    .filter((product: any) => 
-      product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product?.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a: any, b: any) => {
-      switch (sortBy) {
-        case 'price-low':
-          return (a?.price || 0) - (b?.price || 0);
-        case 'price-high':
-          return (b?.price || 0) - (a?.price || 0);
-        case 'savings':
-          const savingsA = calculateSavings(a?.price || 0, a?.originalPrice || 0);
-          const savingsB = calculateSavings(b?.price || 0, b?.originalPrice || 0);
-          return savingsB - savingsA;
-        case 'name':
-        default:
-          return (a?.name || '').localeCompare(b?.name || '');
-      }
-    }) : [];
+  const filteredAndSortedProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
+    
+    return products
+      .filter((product: any) => 
+        product?.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        product?.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+      )
+      .sort((a: any, b: any) => {
+        switch (sortBy) {
+          case 'price-low':
+            return (a?.price || 0) - (b?.price || 0);
+          case 'price-high':
+            return (b?.price || 0) - (a?.price || 0);
+          case 'savings':
+            const savingsA = calculateSavings(a?.price || 0, a?.originalPrice || 0);
+            const savingsB = calculateSavings(b?.price || 0, b?.originalPrice || 0);
+            return savingsB - savingsA;
+          case 'name':
+          default:
+            return (a?.name || '').localeCompare(b?.name || '');
+        }
+      });
+  }, [products, debouncedSearchTerm, sortBy, calculateSavings]);
 
   if (isLoading) {
     return (
