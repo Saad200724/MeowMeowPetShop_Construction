@@ -9,7 +9,7 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
-import nodemailer from "nodemailer";
+// EmailJS handles email sending on the client side
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
@@ -1042,7 +1042,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Contact form submission endpoint
+  // Contact form submission endpoint (EmailJS handles email sending)
   app.post("/api/contact", async (req, res) => {
     try {
       const { name, phone, email, subject, message } = req.body;
@@ -1052,52 +1052,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      // Create email content
-      const emailHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-          <h2 style="color: #26732d; text-align: center; margin-bottom: 30px;">
-            New Contact Form Submission - Meow Meow Pet Shop
-          </h2>
-
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
-            <h3 style="color: #333; margin-top: 0;">Contact Details</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Email:</strong> ${email || 'Not provided'}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
-          </div>
-
-          <div style="background-color: #f0f8f0; padding: 20px; border-radius: 6px; border-left: 4px solid #26732d;">
-            <h3 style="color: #26732d; margin-top: 0;">Message</h3>
-            <p style="line-height: 1.6; color: #333;">${message}</p>
-          </div>
-
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-            <p style="color: #666; font-size: 14px;">
-              This message was sent from the Meow Meow Pet Shop contact form
-            </p>
-            <p style="color: #666; font-size: 12px;">
-              Received on: ${new Date().toLocaleString('en-US', { 
-                timeZone: 'Asia/Dhaka',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })} (Bangladesh Time)
-            </p>
-          </div>
-        </div>
-      `;
-
-      // Send email
-      // await emailTransporter.sendMail({
-      //   from: `"Meow Meow Pet Shop" <${process.env.EMAIL_USER}>`,
-      //   to: process.env.EMAIL_TO,
-      //   subject: `Contact Form: ${subject} - From ${name}`,
-      //   html: emailHtml,
-      //   replyTo: email || undefined,
-      // });
+      // Log the contact submission for record keeping
+      console.log('Contact form submission:', {
+        name,
+        phone,
+        email: email || 'Not provided',
+        subject,
+        timestamp: new Date().toISOString()
+      });
 
       res.json({ 
         message: "Message sent successfully! We'll get back to you within 24 hours.",

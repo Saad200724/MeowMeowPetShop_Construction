@@ -27,7 +27,7 @@ export default function ContactPage() {
 
     try {
       // Initialize EmailJS (you can also do this once in your app initialization)
-      emailjs.init("pulic-4_2EJeuoHymsGSC0t"); // Your public key
+      emailjs.init("public-4_2EJeuoHymsGSC0t"); // Your public key
 
       const templateParams = {
         from_name: formData.name,
@@ -36,6 +36,14 @@ export default function ContactPage() {
         subject: formData.subject,
         message: formData.message,
         to_name: 'Meow Meow Pet Shop',
+        time: new Date().toLocaleString('en-US', { 
+          timeZone: 'Asia/Dhaka',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) + ' (Bangladesh Time)',
       };
 
       await emailjs.send(
