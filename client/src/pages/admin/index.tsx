@@ -105,6 +105,11 @@ export default function AdminPage() {
     queryKey: ['/api/products'],
   });
 
+  // Fetch repack products separately for admin management
+  const { data: repackProducts = [], isLoading: isLoadingRepackProducts, refetch: refetchRepackProducts } = useQuery({
+    queryKey: ['/api/admin/repack-products'],
+  });
+
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories'],
   });
@@ -235,6 +240,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setShowProductDialog(false);
       form.reset();
       toast({
@@ -258,6 +264,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setEditingProduct(null);
       setShowProductDialog(false);
       form.reset();
@@ -282,6 +289,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       toast({
         title: 'Success',
         description: 'Product deleted successfully',
@@ -939,7 +947,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {isLoadingProducts ? (
+                    {isLoadingRepackProducts ? (
                       <tr>
                         <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                           Loading repack food products...
@@ -947,16 +955,12 @@ export default function AdminPage() {
                       </tr>
                     ) : (
                       (() => {
-                        const repackProducts = (products as any[]).filter((product: any) => {
-                          const matchesRepack = product.tags?.includes('repack-food') || 
-                                              product.tags?.includes('repack') ||
-                                              product.name.toLowerCase().includes('repack') ||
-                                              product.description?.toLowerCase().includes('repack');
+                        const filteredRepackProducts = (repackProducts as any[]).filter((product: any) => {
                           const matchesSearch = product.name.toLowerCase().includes(repackSearchTerm.toLowerCase());
-                          return matchesRepack && matchesSearch;
+                          return matchesSearch;
                         });
 
-                        return repackProducts.length === 0 ? (
+                        return filteredRepackProducts.length === 0 ? (
                           <tr>
                             <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                               <Coffee className="w-12 h-12 mx-auto mb-3 text-gray-300" />
@@ -966,7 +970,7 @@ export default function AdminPage() {
                               </p>
                             </td>
                           </tr>
-                        ) : repackProducts.map((product: any) => (
+                        ) : filteredRepackProducts.map((product: any) => (
                           <tr key={product.id} className="hover:bg-orange-50">
                             <td className="px-4 py-4">
                               <div className="flex items-center">

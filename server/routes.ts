@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get repack food products specifically
+  // Get repack food products specifically (for public display)
   app.get("/api/repack-products", async (req, res) => {
     try {
       // Set cache headers for better performance
@@ -547,6 +547,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get repack products error:', error);
       res.status(500).json({ message: "Failed to fetch repack products" });
+    }
+  });
+
+  // Get repack food products for admin management (includes all fields and inactive products)
+  app.get("/api/admin/repack-products", async (req, res) => {
+    try {
+      const repackProducts = await Product.find({
+        $or: [
+          { tags: { $in: ['repack-food', 'repack', 'bulk-save', 'bulk'] } },
+          { name: { $regex: /repack/i } },
+          { description: { $regex: /repack/i } }
+        ]
+        // Note: Don't filter by isActive for admin - they need to see all products
+      });
+
+      // Resolve category and brand information for admin display
+      const productsWithDetails = [];
+      for (const product of repackProducts) {
+        try {
+          let category = null;
+          if (product.categoryId) {
+            try {
+              category = await Category.findById(product.categoryId);
+            } catch (categoryError) {
+              category = await Category.findOne({ slug: product.categoryId });
+            }
+            if (!category) {
+              category = await Category.findOne({ name: product.categoryId });
+            }
+          }
+
+          let brand = null;
+          if (product.brandId) {
+            try {
+              brand = await Brand.findById(product.brandId);
+            } catch (brandError) {
+              brand = await Brand.findOne({ slug: product.brandId });
+            }
+            if (!brand) {
+              brand = await Brand.findOne({ name: product.brandId });
+            }
+          }
+
+          productsWithDetails.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice || null,
+            category: category?.slug || 'uncategorized',
+            categoryName: category?.name || 'Uncategorized',
+            brandId: product.brandId,
+            brandName: brand?.name || 'No Brand',
+            brandSlug: brand?.slug || 'no-brand',
+            image: product.image,
+            images: product.images || [],
+            rating: product.rating || 0,
+            reviews: product.reviews || 0,
+            stock: product.stockQuantity || 0,
+            stockStatus: product.stockStatus || 'In Stock',
+            tags: product.tags || [],
+            features: product.features || [],
+            isNew: product.isNew || false,
+            isBestseller: product.isBestseller || false,
+            isOnSale: product.isOnSale || false,
+            discount: product.discount || 0,
+            description: product.description || '',
+            specifications: product.specifications || {},
+            isActive: product.isActive
+          });
+        } catch (err) {
+          console.warn('Error processing repack product:', product.name || 'Unknown', err.message);
+        }
+      }
+
+      console.log(`Successfully fetched ${productsWithDetails.length} repack products for admin`);
+      res.json(productsWithDetails);
+    } catch (error) {
+      console.error('Get admin repack products error:', error);
+      res.status(500).json({ message: "Failed to fetch repack products for admin" });
     }
   });
 
