@@ -77,6 +77,7 @@ export default function AdminPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [stockFilter, setStockFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState<any>(null);
@@ -347,7 +348,10 @@ export default function AdminPage() {
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesStock = stockFilter === 'all' || 
+      (stockFilter === 'in-stock' && (product.stockQuantity > 0 || product.stock > 0)) ||
+      (stockFilter === 'out-of-stock' && (product.stockQuantity === 0 || product.stock === 0 || !product.stockQuantity));
+    return matchesSearch && matchesCategory && matchesStock;
   });
 
   const handleCreateProduct = (data: ProductFormData) => {
@@ -513,6 +517,16 @@ export default function AdminPage() {
                   {(categories as any[]).map((cat: any) => (
                     <SelectItem key={cat.id} value={cat.id} className="text-black hover:bg-gray-100">{cat.name}</SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+              <Select value={stockFilter} onValueChange={setStockFilter}>
+                <SelectTrigger className="w-full sm:w-48 text-black">
+                  <SelectValue placeholder="Stock Status" className="text-black" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="all" className="text-black hover:bg-gray-100">All Stock</SelectItem>
+                  <SelectItem value="in-stock" className="text-black hover:bg-gray-100">In Stock</SelectItem>
+                  <SelectItem value="out-of-stock" className="text-black hover:bg-gray-100">Out of Stock</SelectItem>
                 </SelectContent>
               </Select>
               <div className="flex border rounded-lg">
