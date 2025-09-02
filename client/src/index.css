@@ -14,7 +14,12 @@
 }
 
 .animate-marquee {
-  animation: marqueeScroll 20s linear infinite;
+  animation: marqueeScroll 12s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marqueeScroll 12s linear infinite;
+  animation-delay: 6s;
 }
 
 /* Simplified scrollbar styling that doesn't interfere with positioning */
