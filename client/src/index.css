@@ -4,31 +4,95 @@
 @tailwind utilities;
 
 /* Scrolling announcement animation */
-@keyframes marquee {
+@keyframes marqueeReveal {
   0% {
     transform: translateX(100%);
+  }
+  15% {
+    transform: translateX(20%);
+  }
+  85% {
+    transform: translateX(-20%);
   }
   100% {
     transform: translateX(-100vw);
   }
 }
 
-@keyframes marquee2 {
+@keyframes textRevealLeft {
   0% {
-    transform: translateX(100%);
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    width: 0;
+    opacity: 1;
+  }
+  80% {
+    width: 100%;
+    opacity: 1;
   }
   100% {
-    transform: translateX(-100vw);
+    width: 100%;
+    opacity: 1;
   }
 }
 
 .animate-marquee {
-  animation: marquee 15s linear infinite;
+  animation: marqueeReveal 12s ease-in-out infinite;
+  overflow: hidden;
 }
 
 .animate-marquee2 {
-  animation: marquee2 15s linear infinite;
-  animation-delay: 7.5s;
+  animation: marqueeReveal 12s ease-in-out infinite;
+  animation-delay: 6s;
+  overflow: hidden;
+}
+
+.animate-marquee2 .inline-flex {
+  animation-delay: 6s;
+}
+
+.text-reveal-content {
+  display: inline-block;
+  overflow: hidden;
+  width: 0;
+  animation: textRevealAnimation 12s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+.animate-marquee2 .text-reveal-content {
+  animation-delay: 6s;
+}
+
+@keyframes textRevealAnimation {
+  0% {
+    width: 0;
+  }
+  15% {
+    width: 0;
+  }
+  25% {
+    width: 20%;
+  }
+  35% {
+    width: 40%;
+  }
+  45% {
+    width: 60%;
+  }
+  55% {
+    width: 80%;
+  }
+  65% {
+    width: 100%;
+  }
+  85% {
+    width: 100%;
+  }
+  100% {
+    width: 100%;
+  }
 }
 
 /* Simplified scrollbar styling that doesn't interfere with positioning */
