@@ -4,22 +4,31 @@
 @tailwind utilities;
 
 /* Scrolling announcement animation */
-@keyframes marqueeScroll {
+@keyframes marquee {
   0% {
-    transform: translateX(80%);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(-80%);
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 
 .animate-marquee {
-  animation: marqueeScroll 12s linear infinite;
+  animation: marquee 15s linear infinite;
 }
 
 .animate-marquee2 {
-  animation: marqueeScroll 12s linear infinite;
-  animation-delay: 6s;
+  animation: marquee2 15s linear infinite;
+  animation-delay: 7.5s;
 }
 
 /* Simplified scrollbar styling that doesn't interfere with positioning */
