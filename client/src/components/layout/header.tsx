@@ -176,35 +176,6 @@ export default function Header() {
               </a>
             </div>
           </div>
-                <span>01405-045023</span>
-              </div>
-              <Link href="/contact">
-                <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
-                  <Truck size={12} className="mr-1" />
-                  <span>Our location</span>
-                </div>
-              </Link>
-              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
-                <Shield size={12} className="mr-1" />
-                <span>Track Your Order</span>
-              </div>
-            </div>
-
-            {/* Visible Area for Announcement */}
-            <div className="flex-1 flex justify-center items-center relative min-h-[24px]">
-              {/* This area shows the scrolling text */}
-            </div>
-
-            <div className="flex items-center gap-2 relative z-10">
-              <span className="text-white font-medium text-xs">Follow:</span>
-              <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
-                <Facebook size={14} />
-              </a>
-              <a href="#" className="text-white hover:text-black transition-colors p-1 rounded">
-                <Instagram size={14} />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 
