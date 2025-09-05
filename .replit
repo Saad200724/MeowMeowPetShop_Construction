@@ -48,4 +48,3 @@ task = "shell.exec"
 args = "npm run dev"
 
 [agent]
-integrations = ["javascript_log_in_with_replit==1.0.0", "javascript_database==1.0.0"]
