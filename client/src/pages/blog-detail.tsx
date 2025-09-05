@@ -154,60 +154,66 @@ export default function BlogDetailPage() {
         </div>
 
         {/* Article Header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="secondary" className="text-indigo-600">
-              {blogPost.tags?.[0] || 'General'}
-            </Badge>
-          </div>
-          
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            {blogPost.title}
-          </h1>
-          
-          {blogPost.excerpt && (
-            <p className="text-xl text-gray-600 mb-6 leading-relaxed">
-              {blogPost.excerpt}
-            </p>
-          )}
-          
-          <div className="flex items-center justify-between border-b border-gray-200 pb-6">
-            <div className="flex items-center gap-6 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span className="font-medium">{blogPost.author}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>{new Date(blogPost.publishedAt || blogPost.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                <span>5 min read</span>
-              </div>
+        <Card className="mb-8">
+          <CardContent className="p-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="secondary" className="text-indigo-600">
+                {blogPost.tags?.[0] || 'General'}
+              </Badge>
             </div>
             
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
-                <Heart className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Share2 className="h-4 w-4" />
-              </Button>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight break-words">
+              {blogPost.title}
+            </h1>
+            
+            {blogPost.excerpt && (
+              <p className="text-lg md:text-xl text-gray-600 mb-6 leading-relaxed">
+                {blogPost.excerpt}
+              </p>
+            )}
+            
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 pt-6 gap-4">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span className="font-medium">{blogPost.author}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>{new Date(blogPost.publishedAt || blogPost.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <span>5 min read</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm">
+                  <Heart className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
-        </header>
+          </CardContent>
+        </Card>
 
         {/* Article Content */}
-        <div className="prose prose-lg max-w-none">
-          <div className="text-lg leading-relaxed">
-            {formatContent(blogPost.content)}
-          </div>
-        </div>
+        <Card className="mb-8">
+          <CardContent className="p-8">
+            <div className="prose prose-lg max-w-none">
+              <div className="text-base md:text-lg leading-relaxed">
+                {formatContent(blogPost.content)}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Tags */}
         {blogPost.tags && blogPost.tags.length > 0 && (
@@ -226,21 +232,16 @@ export default function BlogDetailPage() {
         {/* Call to Action */}
         <div className="mt-12 bg-indigo-50 rounded-lg p-8 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Stay Updated on Pet Care
+            Have Questions About Pet Care?
           </h3>
           <p className="text-gray-600 mb-6">
-            Get the latest tips, advice, and product updates delivered to your inbox.
+            Contact our experts for personalized advice and support for your pet's needs.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+          <Link href="/contact">
             <Button className="bg-indigo-600 hover:bg-indigo-700">
-              Subscribe
+              Contact Us
             </Button>
-          </div>
+          </Link>
         </div>
       </article>
       

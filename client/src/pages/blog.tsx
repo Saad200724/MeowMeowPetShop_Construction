@@ -207,21 +207,20 @@ export default function BlogPage() {
               </CardContent>
             </Card>
 
-            {/* Newsletter Signup */}
+            {/* Contact Us */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Stay Updated</CardTitle>
+                <CardTitle>Need Pet Care Advice?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-4">
-                  Get the latest pet care tips and product updates delivered to your inbox.
+                  Have questions about your pet's health or need personalized advice? Our experts are here to help.
                 </p>
-                <div className="space-y-2">
-                  <Input placeholder="Your email address" type="email" />
+                <Link href="/contact">
                   <Button className="w-full" size="sm">
-                    Subscribe
+                    Contact Our Experts
                   </Button>
-                </div>
+                </Link>
               </CardContent>
             </Card>
           </aside>
