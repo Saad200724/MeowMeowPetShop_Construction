@@ -162,7 +162,7 @@ export default function Header() {
             </div>
 
             {/* Visible Area for Announcement */}
-            <div className="flex-1 flex justify-center items-center relative min-h-[24px]">
+            <div className="flex-none w-48 lg:w-64 flex justify-center items-center relative min-h-[24px]">
               {/* This area shows the scrolling text */}
             </div>
 
