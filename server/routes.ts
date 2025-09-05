@@ -23,7 +23,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
 
   // Use memory storage for Sharp processing
-  const upload = multer({ 
+  const upload = multer({
     storage:multer.memoryStorage(),
     limits: {
       fileSize: 5 * 1024 * 1024 // 5MB limit
@@ -52,11 +52,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Convert image to WebP format using Sharp with optimized compression
       await sharp(req.file.buffer)
-        .resize(800, 600, { 
+        .resize(800, 600, {
           fit: 'inside',
           withoutEnlargement: true
         })
-        .webp({ 
+        .webp({
           quality: 75,    // Optimized quality for smaller size
           effort: 6,      // Maximum compression effort
           lossless: false // Use lossy compression for smaller files
@@ -67,7 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const stats = await fs.stat(outputPath);
 
       const imageUrl = `/api/uploads/${webpFilename}`;
-      res.json({ 
+      res.json({
         message: 'Image uploaded and converted to WebP successfully',
         imageUrl: imageUrl,
         filename: webpFilename,
@@ -132,10 +132,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      res.json({ 
-        message: "Categories seeded successfully", 
+      res.json({
+        message: "Categories seeded successfully",
         created: createdCategories.length,
-        categories: createdCategories 
+        categories: createdCategories
       });
     } catch (error) {
       console.error("Error seeding categories:", error);
@@ -177,12 +177,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Get products directly from MongoDB to avoid storage layer issues
       // Exclude bulk/repack products from general product listings
-      const dbProducts = await Product.find({ 
+      const dbProducts = await Product.find({
         isActive: true,
-        tags: { 
-          $not: { 
-            $in: ['repack-food', 'repack', 'bulk-save', 'bulk'] 
-          } 
+        tags: {
+          $not: {
+            $in: ['repack-food', 'repack', 'bulk-save', 'bulk']
+          }
         }
       });
       const products = [];
@@ -334,7 +334,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'default-brand': { name: 'Default Brand', slug: 'default-brand' },
         'nekko': { name: 'Nekko', slug: 'nekko' },
         'purina': { name: 'Purina', slug: 'purina' },
-        'purina-one': { name: 'Purina One', slug: 'purina-one' },
+        'purina-one': { name: 'Purina One', slug: 'one' },
+        'one': { name: 'Purina One', slug: 'one' },
         'reflex': { name: 'Reflex', slug: 'reflex' },
         'reflex-plus': { name: 'Reflex Plus', slug: 'reflex-plus' },
         'royal-canin': { name: 'Royal Canin', slug: 'royal-canin' },
@@ -342,7 +343,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Find category and brand by their IDs/names
-      let categoryRecord = await Category.findOne({ 
+      let categoryRecord = await Category.findOne({
         $or: [
           { slug: productData.categoryId },
           { name: productData.categoryId }
@@ -359,7 +360,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await categoryRecord.save();
       }
 
-      let brandRecord = await Brand.findOne({ 
+      let brandRecord = await Brand.findOne({
         $or: [
           { slug: productData.brandId },
           { name: productData.brandId }
@@ -432,7 +433,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'default-brand': { name: 'Default Brand', slug: 'default-brand' },
         'nekko': { name: 'Nekko', slug: 'nekko' },
         'purina': { name: 'Purina', slug: 'purina' },
-        'purina-one': { name: 'Purina One', slug: 'purina-one' },
+        'purina-one': { name: 'Purina One', slug: 'one' },
+        'one': { name: 'Purina One', slug: 'one' },
         'reflex': { name: 'Reflex', slug: 'reflex' },
         'reflex-plus': { name: 'Reflex Plus', slug: 'reflex-plus' },
         'royal-canin': { name: 'Royal Canin', slug: 'royal-canin' },
@@ -440,7 +442,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Find category and brand by their IDs/names
-      let categoryRecord = await Category.findOne({ 
+      let categoryRecord = await Category.findOne({
         $or: [
           { slug: productData.categoryId },
           { name: productData.categoryId }
@@ -457,7 +459,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await categoryRecord.save();
       }
 
-      let brandRecord = await Brand.findOne({ 
+      let brandRecord = await Brand.findOne({
         $or: [
           { slug: productData.brandId },
           { name: productData.brandId }
@@ -609,8 +611,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const createdProducts = await Product.insertMany(repackProducts);
       console.log('Created repack products:', createdProducts.length);
 
-      res.status(201).json({ 
-        message: "Repack products initialized successfully", 
+      res.status(201).json({
+        message: "Repack products initialized successfully",
         count: createdProducts.length,
         products: createdProducts
       });
@@ -768,9 +770,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const result = registerSchema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).json({ 
-          message: "Validation failed", 
-          errors: result.error.flatten().fieldErrors 
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: result.error.flatten().fieldErrors
         });
       }
 
@@ -800,9 +802,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Remove password from response
       const { password, ...userResponse } = user;
 
-      res.status(201).json({ 
-        message: "User created successfully", 
-        user: userResponse 
+      res.status(201).json({
+        message: "User created successfully",
+        user: userResponse
       });
     } catch (error) {
       console.error("Registration error:", error);
@@ -815,9 +817,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const result = loginSchema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).json({ 
-          message: "Validation failed", 
-          errors: result.error.flatten().fieldErrors 
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: result.error.flatten().fieldErrors
         });
       }
 
@@ -844,9 +846,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Remove password from response
       const { password: _, ...userResponse } = user;
 
-      res.json({ 
-        message: "Login successful", 
-        user: userResponse 
+      res.json({
+        message: "Login successful",
+        user: userResponse
       });
     } catch (error) {
       console.error("Login error:", error);
@@ -890,9 +892,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Remove password from response
       const { password, ...userResponse } = user;
-      res.json({ 
-        message: "Profile updated successfully", 
-        user: userResponse 
+      res.json({
+        message: "Profile updated successfully",
+        user: userResponse
       });
     } catch (error) {
       console.error("Profile update error:", error);
@@ -1146,14 +1148,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Order API endpoints
   app.post("/api/orders", async (req, res) => {
     try {
-      const { 
-        userId, 
-        customerInfo, 
-        items, 
-        subtotal, 
-        total, 
+      const {
+        userId,
+        customerInfo,
+        items,
+        subtotal,
+        total,
         paymentMethod,
-        shippingAddress 
+        shippingAddress
       } = req.body;
 
       // Generate unique invoice number
@@ -1244,15 +1246,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timestamp: new Date().toISOString()
       });
 
-      res.json({ 
+      res.json({
         message: "Message sent successfully! We'll get back to you within 24 hours.",
-        success: true 
+        success: true
       });
     } catch (error) {
       console.error('Contact form error:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Failed to send message. Please try again later.",
-        success: false 
+        success: false
       });
     }
   });
@@ -1395,7 +1397,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Filter by category if provided
       if (category && category !== 'All') {
-        publishedPosts = publishedPosts.filter(post => 
+        publishedPosts = publishedPosts.filter(post =>
           post.category && post.category === category
         );
       }

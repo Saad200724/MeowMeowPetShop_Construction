@@ -1603,7 +1603,7 @@ export default function AdminPage() {
                           <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="purina-one">Purina One</SelectItem>
+                          <SelectItem value="one">Purina One</SelectItem>
                           <SelectItem value="reflex">Reflex</SelectItem>
                           <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
                           <SelectItem value="royal-canin">Royal Canin</SelectItem>
@@ -1900,7 +1900,7 @@ export default function AdminPage() {
                           <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="purina-one">Purina One</SelectItem>
+                          <SelectItem value="one">Purina One</SelectItem>
                           <SelectItem value="reflex">Reflex</SelectItem>
                           <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
                           <SelectItem value="royal-canin">Royal Canin</SelectItem>

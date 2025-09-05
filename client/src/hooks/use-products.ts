@@ -78,15 +78,39 @@ export function useProducts() {
 
       if (isBulkProduct) return false;
 
-      // Match by brand name or slug
-      const brandMatches = product.brandName?.toLowerCase() === brandSlug.toLowerCase() ||
-                          product.brandSlug?.toLowerCase() === brandSlug.toLowerCase();
+      // Brand mapping for proper filtering
+      const brandMappings: { [key: string]: string[] } = {
+        'nekko': ['nekko'],
+        'purina': ['purina'],
+        'one': ['purina-one', 'purina one', 'one'],
+        'reflex': ['reflex'],
+        'reflex-plus': ['reflex-plus', 'reflex plus'],
+        'royal-canin': ['royal-canin', 'royal canin'],
+        'sheba': ['sheba'],
+        'default-brand': ['default-brand', 'default brand']
+      };
 
-      // Also check tags and product name for brand matches
-      const tagMatches = product.tags?.some(tag => 
-        tag.toLowerCase().includes(brandSlug.toLowerCase())
+      // Get valid brand identifiers for this brand slug
+      const validBrandIdentifiers = brandMappings[brandSlug.toLowerCase()] || [brandSlug];
+
+      // Match by brand name, slug, or brandId
+      const brandMatches = validBrandIdentifiers.some(identifier => 
+        product.brandName?.toLowerCase() === identifier.toLowerCase() ||
+        product.brandSlug?.toLowerCase() === identifier.toLowerCase() ||
+        product.brandId?.toLowerCase() === identifier.toLowerCase()
       );
-      const nameMatches = product.name.toLowerCase().includes(brandSlug.toLowerCase());
+
+      // Also check tags for brand matches
+      const tagMatches = product.tags?.some(tag => 
+        validBrandIdentifiers.some(identifier => 
+          tag.toLowerCase().includes(identifier.toLowerCase())
+        )
+      );
+
+      // Check product name for brand matches
+      const nameMatches = validBrandIdentifiers.some(identifier =>
+        product.name.toLowerCase().includes(identifier.toLowerCase())
+      );
 
       return brandMatches || tagMatches || nameMatches;
     });
