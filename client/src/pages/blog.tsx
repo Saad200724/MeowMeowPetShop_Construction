@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,98 +18,56 @@ const blogCategories = [
   'Product Reviews'
 ];
 
-const blogPosts = [
-  {
-    id: 1,
-    title: '10 Essential Cat Care Tips Every Owner Should Know',
-    excerpt: 'Discover the fundamental aspects of cat care that will keep your feline friend happy and healthy throughout their life.',
-    content: 'Complete guide covering nutrition, health, grooming, and behavioral aspects...',
-    category: 'Cat Health',
-    author: 'Dr. Sarah Rahman',
-    date: '2025-01-25',
-    readTime: 8,
-    image: '/api/placeholder/400/250',
-    featured: true,
-    tags: ['cat care', 'health', 'tips']
-  },
-  {
-    id: 2,
-    title: 'The Ultimate Guide to Dog Training: From Puppy to Adult',
-    excerpt: 'Learn effective training techniques that work for dogs of all ages and breeds.',
-    content: 'Comprehensive training guide including basic commands, house training, and behavioral correction...',
-    category: 'Training',
-    author: 'Ahmed Khan',
-    date: '2025-01-22',
-    readTime: 12,
-    image: '/api/placeholder/400/250',
-    featured: false,
-    tags: ['dog training', 'puppy', 'behavior']
-  },
-  {
-    id: 3,
-    title: 'Choosing the Right Food for Your Pet: A Complete Nutrition Guide',
-    excerpt: 'Understanding pet nutrition labels and making informed decisions about your pet\'s diet.',
-    content: 'Detailed nutrition guide covering ingredients, feeding schedules, and dietary requirements...',
-    category: 'Nutrition',
-    author: 'Dr. Fatima Ali',
-    date: '2025-01-20',
-    readTime: 10,
-    image: '/api/placeholder/400/250',
-    featured: true,
-    tags: ['nutrition', 'pet food', 'health']
-  },
-  {
-    id: 4,
-    title: 'Professional Grooming at Home: Tools and Techniques',
-    excerpt: 'Learn how to groom your pets like a professional with the right tools and techniques.',
-    content: 'Step-by-step grooming guide with professional tips and tool recommendations...',
-    category: 'Grooming',
-    author: 'Rashida Begum',
-    date: '2025-01-18',
-    readTime: 6,
-    image: '/api/placeholder/400/250',
-    featured: false,
-    tags: ['grooming', 'tools', 'diy']
-  },
-  {
-    id: 5,
-    title: 'Understanding Your Cat\'s Behavior: Signs and Solutions',
-    excerpt: 'Decode your cat\'s behavior patterns and learn how to address common issues.',
-    content: 'Behavioral guide covering communication, stress signs, and environmental enrichment...',
-    category: 'Behavior',
-    author: 'Dr. Karim Hassan',
-    date: '2025-01-15',
-    readTime: 9,
-    image: '/api/placeholder/400/250',
-    featured: false,
-    tags: ['cat behavior', 'psychology', 'solutions']
-  },
-  {
-    id: 6,
-    title: 'Product Review: Best Cat Litters of 2025',
-    excerpt: 'Comprehensive review and comparison of the top cat litter brands available in Bangladesh.',
-    content: 'Detailed product reviews with pros, cons, and recommendations...',
-    category: 'Product Reviews',
-    author: 'Meow Meow Team',
-    date: '2025-01-12',
-    readTime: 7,
-    image: '/api/placeholder/400/250',
-    featured: false,
-    tags: ['product review', 'cat litter', '2025']
-  }
-];
+interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  image?: string;
+  author: string;
+  publishedAt?: Date;
+  tags?: string[];
+  isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState(blogPosts);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch blogs from API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch('/api/blog/published');
+        const blogs = await response.json();
+        setBlogPosts(blogs);
+        setFilteredPosts(blogs);
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+        setBlogPosts([]);
+        setFilteredPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBlogs();
+  }, []);
 
   const handleCategoryFilter = (category: string) => {
     setSelectedCategory(category);
     if (category === 'All') {
       setFilteredPosts(blogPosts);
     } else {
-      setFilteredPosts(blogPosts.filter(post => post.category === category));
+      setFilteredPosts(blogPosts.filter(post => 
+        post.tags?.some(tag => tag.toLowerCase().includes(category.toLowerCase()))
+      ));
     }
   };
 
@@ -117,14 +75,13 @@ export default function BlogPage() {
     setSearchQuery(query);
     const filtered = blogPosts.filter(post =>
       post.title.toLowerCase().includes(query.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(query.toLowerCase()) ||
-      post.category.toLowerCase().includes(query.toLowerCase()) ||
-      post.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+      (post.excerpt?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
+      (post.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ?? false)
     );
     setFilteredPosts(filtered);
   };
 
-  const featuredPosts = blogPosts.filter(post => post.featured);
+  const featuredPosts = blogPosts.slice(0, 2); // Show first 2 as featured
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -159,11 +116,11 @@ export default function BlogPage() {
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">Featured Articles</h2>
             <div className="grid md:grid-cols-2 gap-8">
-              {featuredPosts.slice(0, 2).map((post) => (
-                <Card key={post.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden">
+              {featuredPosts.map((post) => (
+                <Card key={post._id} className="hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <div className="relative">
                     <img
-                      src={post.image}
+                      src={post.image || '/api/placeholder/400/250'}
                       alt={post.title}
                       className="w-full h-56 object-cover"
                     />
@@ -173,7 +130,7 @@ export default function BlogPage() {
                   </div>
                   <CardContent className="p-6">
                     <Badge variant="secondary" className="mb-3">
-                      {post.category}
+                      {post.tags?.[0] || 'General'}
                     </Badge>
                     <h3 className="text-xl font-bold mb-2 line-clamp-2">{post.title}</h3>
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
@@ -186,16 +143,16 @@ export default function BlogPage() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          <span>{new Date(post.date).toLocaleDateString()}</span>
+                          <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
-                          <span>{post.readTime} min read</span>
+                          <span>5 min read</span>
                         </div>
                       </div>
                     </div>
 
-                    <Button className="w-full" data-testid={`button-read-${post.id}`}>
+                    <Button className="w-full" data-testid={`button-read-${post._id}`}>
                       Read Full Article
                     </Button>
                   </CardContent>
@@ -207,6 +164,14 @@ export default function BlogPage() {
       )}
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <span className="ml-2 text-gray-600">Loading blog posts...</span>
+          </div>
+        )}
+        
+        {!loading && (
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Categories Sidebar */}
           <aside className="lg:w-1/4">
@@ -269,21 +234,18 @@ export default function BlogPage() {
 
             <div className="grid gap-6">
               {filteredPosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-lg transition-all duration-300">
+                <Card key={post._id} className="hover:shadow-lg transition-all duration-300">
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3">
                       <img
-                        src={post.image}
+                        src={post.image || '/api/placeholder/400/250'}
                         alt={post.title}
                         className="w-full h-48 md:h-full object-cover rounded-l-lg"
                       />
                     </div>
                     <div className="md:w-2/3 p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <Badge variant="secondary">{post.category}</Badge>
-                        {post.featured && (
-                          <Badge className="bg-indigo-600">Featured</Badge>
-                        )}
+                        <Badge variant="secondary">{post.tags?.[0] || 'General'}</Badge>
                       </div>
                       
                       <h3 className="text-xl font-bold mb-2 line-clamp-2">
@@ -302,24 +264,24 @@ export default function BlogPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            <span>{new Date(post.date).toLocaleDateString()}</span>
+                            <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            <span>{post.readTime} min</span>
+                            <span>5 min</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <Button variant="outline" data-testid={`button-read-${post.id}`}>
+                        <Button variant="outline" data-testid={`button-read-${post._id}`}>
                           Read More
                         </Button>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost" data-testid={`button-like-${post.id}`}>
+                          <Button size="sm" variant="ghost" data-testid={`button-like-${post._id}`}>
                             <Heart className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" data-testid={`button-share-${post.id}`}>
+                          <Button size="sm" variant="ghost" data-testid={`button-share-${post._id}`}>
                             <Share2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -330,7 +292,7 @@ export default function BlogPage() {
               ))}
             </div>
 
-            {filteredPosts.length === 0 && (
+            {filteredPosts.length === 0 && !loading && (
               <div className="text-center py-12">
                 <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 text-lg">No blog posts found matching your criteria.</p>
@@ -338,6 +300,7 @@ export default function BlogPage() {
             )}
           </main>
         </div>
+        )}
       </div>
 
       <Footer />
