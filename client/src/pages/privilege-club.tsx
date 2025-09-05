@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Crown, Star, Gift, Heart } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import NavigationSidebar from '@/components/layout/sidebar';
 
 const membershipTiers = [
   {
