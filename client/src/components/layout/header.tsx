@@ -150,7 +150,7 @@ export default function Header() {
             </div>
 
             {/* Visible Area for Announcement - Only shows here */}
-            <div className="flex-none w-48 lg:w-64 flex justify-center items-center relative min-h-[24px] overflow-hidden">
+            <div className="flex-1 flex justify-center items-center relative min-h-[24px] overflow-hidden">
               {currentAnnouncement && (
                 <div className="animate-marquee whitespace-nowrap absolute inset-0 flex items-center" style={{ width: 'max-content' }}>
                   <div className="inline-flex items-center text-white text-xs font-medium">
