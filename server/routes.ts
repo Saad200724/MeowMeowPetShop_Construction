@@ -347,13 +347,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // First try to find existing category
       if (productData.categoryId) {
-        categoryRecord = await Category.findOne({
-          $or: [
-            { slug: productData.categoryId },
-            { name: productData.categoryId },
-            { _id: productData.categoryId }
-          ]
-        });
+        // Check if it's a valid ObjectId first
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(productData.categoryId);
+
+        if (isValidObjectId) {
+          categoryRecord = await Category.findById(productData.categoryId);
+        } else {
+          // Look up by slug or name
+          categoryRecord = await Category.findOne({
+            $or: [
+              { slug: productData.categoryId },
+              { name: productData.categoryId }
+            ]
+          });
+        }
       }
 
       if (!categoryRecord) {
@@ -371,13 +378,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // First try to find existing brand
       if (productData.brandId) {
-        brandRecord = await Brand.findOne({
-          $or: [
-            { slug: productData.brandId },
-            { name: productData.brandId },
-            { _id: productData.brandId }
-          ]
-        });
+        // Check if it's a valid ObjectId first
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(productData.brandId);
+
+        if (isValidObjectId) {
+          brandRecord = await Brand.findById(productData.brandId);
+        } else {
+          // Look up by slug or name
+          brandRecord = await Brand.findOne({
+            $or: [
+              { slug: productData.brandId },
+              { name: productData.brandId }
+            ]
+          });
+        }
       }
 
       if (!brandRecord) {
@@ -460,13 +474,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // First try to find existing category
       if (productData.categoryId) {
-        categoryRecord = await Category.findOne({
-          $or: [
-            { slug: productData.categoryId },
-            { name: productData.categoryId },
-            { _id: productData.categoryId }
-          ]
-        });
+        // Check if it's a valid ObjectId first
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(productData.categoryId);
+
+        if (isValidObjectId) {
+          categoryRecord = await Category.findById(productData.categoryId);
+        } else {
+          // Look up by slug or name
+          categoryRecord = await Category.findOne({
+            $or: [
+              { slug: productData.categoryId },
+              { name: productData.categoryId }
+            ]
+          });
+        }
       }
 
       if (!categoryRecord) {
@@ -484,13 +505,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // First try to find existing brand
       if (productData.brandId) {
-        brandRecord = await Brand.findOne({
-          $or: [
-            { slug: productData.brandId },
-            { name: productData.brandId },
-            { _id: productData.brandId }
-          ]
-        });
+        // Check if it's a valid ObjectId first
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(productData.brandId);
+
+        if (isValidObjectId) {
+          brandRecord = await Brand.findById(productData.brandId);
+        } else {
+          // Look up by slug or name
+          brandRecord = await Brand.findOne({
+            $or: [
+              { slug: productData.brandId },
+              { name: productData.brandId }
+            ]
+          });
+        }
       }
 
       if (!brandRecord) {
