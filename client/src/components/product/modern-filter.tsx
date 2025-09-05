@@ -94,7 +94,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 13000, classNa
       {/* Clear Filters */}
       <Button 
         variant="outline" 
-        className="w-full text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-gray-900 shadow-sm"
+        className="w-full text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
         onClick={resetFilters}
       >
         Clear Filters
