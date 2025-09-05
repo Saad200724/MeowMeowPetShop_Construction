@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useLocation } from 'wouter';
 
 interface SidebarContextType {
@@ -13,8 +13,17 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  const [isVisible, setIsVisible] = useState(false); // Start closed on all pages
+  const [isVisible, setIsVisible] = useState(false);
   const isHomePage = location === '/';
+
+  // Reset sidebar visibility based on page when location changes
+  useEffect(() => {
+    if (isHomePage) {
+      setIsVisible(true);  // Home page: show sidebar by default
+    } else {
+      setIsVisible(false); // Other pages: hide sidebar by default
+    }
+  }, [location, isHomePage]);
 
   const toggle = () => setIsVisible(!isVisible);
 

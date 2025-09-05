@@ -13,17 +13,9 @@ import MembershipBanner from "@/components/sections/membership-banner";
 import BlogPreview from "@/components/sections/blog-preview";
 import Testimonials from "@/components/sections/testimonials";
 import { useSidebar } from "@/contexts/sidebar-context";
-import { useEffect } from "react";
 
 export default function Home() {
-  const { isVisible: sidebarVisible, setIsVisible, isHomePage } = useSidebar();
-
-  // Show sidebar by default on home page
-  useEffect(() => {
-    if (isHomePage) {
-      setIsVisible(true);
-    }
-  }, [isHomePage, setIsVisible]);
+  const { isVisible: sidebarVisible } = useSidebar();
 
   return (
     <div className="min-h-screen bg-white">
