@@ -6,20 +6,16 @@
 /* Scrolling announcement animation */
 @keyframes marquee {
   0% {
-    transform: translateX(100%);
+    transform: translateX(100vw);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-100vw);
   }
 }
 
 .animate-marquee {
-  animation: marquee 8s linear infinite;
-}
-
-.animate-marquee2 {
-  animation: marquee 8s linear infinite;
-  animation-delay: 4s;
+  animation: marquee 10s linear infinite;
+  animation-delay: 0s;
 }
 
 /* Simplified scrollbar styling that doesn't interfere with positioning */
