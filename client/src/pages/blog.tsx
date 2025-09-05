@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Search, Calendar, User, Clock, BookOpen, Heart, Share2 } from 'lucide-react';
+import { Link } from 'wouter';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 
@@ -152,9 +153,11 @@ export default function BlogPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full" data-testid={`button-read-${post._id}`}>
-                      Read Full Article
-                    </Button>
+                    <Link href={`/blog/${post.slug}`}>
+                      <Button className="w-full" data-testid={`button-read-${post._id}`}>
+                        Read Full Article
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}
@@ -274,9 +277,11 @@ export default function BlogPage() {
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <Button variant="outline" data-testid={`button-read-${post._id}`}>
-                          Read More
-                        </Button>
+                        <Link href={`/blog/${post.slug}`}>
+                          <Button variant="outline" data-testid={`button-read-${post._id}`}>
+                            Read More
+                          </Button>
+                        </Link>
                         <div className="flex items-center gap-2">
                           <Button size="sm" variant="ghost" data-testid={`button-like-${post._id}`}>
                             <Heart className="h-4 w-4" />

@@ -23,6 +23,7 @@ import RabbitPage from "@/pages/rabbit";
 import BirdPage from "@/pages/bird";
 import ReflexPage from "@/pages/reflex";
 import BlogPage from "@/pages/blog";
+import BlogDetailPage from "@/pages/blog-detail";
 import BulkProductsPage from "@/pages/bulk-products";
 import BulkDiscountsPage from "@/pages/bulk-discounts";
 import NekkoPage from "@/pages/brands/nekko";
@@ -73,6 +74,7 @@ function Router() {
         <Route path="/brands/royal-canin" component={RoyalCaninPage} />
         <Route path="/brands/sheba" component={ShebaPage} />
         <Route path="/blog" component={BlogPage} />
+        <Route path="/blog/:slug" component={BlogDetailPage} />
         <Route path="/bulk-products" component={BulkProductsPage} />
         <Route path="/bulk-discounts" component={BulkDiscountsPage} />
         <Route path="/sign-in" component={SignInPage} />
