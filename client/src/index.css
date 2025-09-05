@@ -6,7 +6,7 @@
 /* Scrolling announcement animation */
 @keyframes marquee {
   0% {
-    transform: translateX(300%);
+    transform: translateX(120%);
   }
   100% {
     transform: translateX(-100%);
