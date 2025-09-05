@@ -150,10 +150,10 @@ export default function Header() {
             </div>
 
             {/* Scrolling Announcement Area */}
-            <div className="flex-1 flex justify-center items-center relative overflow-hidden mx-4 min-h-[24px]">
+            <div className="flex-1 flex justify-center items-center relative overflow-hidden min-h-[24px]">
               {currentAnnouncement && (
                 <div className="w-full h-full relative">
-                  <div className="animate-marquee whitespace-nowrap absolute top-0 left-full h-full flex items-center" style={{ width: 'max-content' }}>
+                  <div className="animate-marquee whitespace-nowrap absolute top-0 left-0 h-full flex items-center" style={{ width: 'max-content' }}>
                     <div className="inline-flex items-center text-white text-xs font-medium">
                       <Speaker size={12} className="mr-2" />
                       <span dangerouslySetInnerHTML={{ __html: parseAnnouncementText(currentAnnouncement.text) }} />
