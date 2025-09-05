@@ -80,10 +80,27 @@
 .scrollbar-hide {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
+  overflow: -moz-scrollbars-none;  /* Firefox older versions */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
+  width: 0px;  /* Additional webkit rule */
+  background: transparent;  /* Make scrollbar invisible */
+}
+
+/* Additional tablet-specific rules */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .scrollbar-hide {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 }
 
 body {
