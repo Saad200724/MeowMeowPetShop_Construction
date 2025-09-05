@@ -6,15 +6,15 @@
 /* Scrolling announcement animation */
 @keyframes marquee {
   0% {
-    transform: translateX(calc(100% + 20px));
+    transform: translateX(150%);
   }
   100% {
-    transform: translateX(calc(-100% - 20px));
+    transform: translateX(-150%);
   }
 }
 
 .animate-marquee {
-  animation: marquee 15s linear infinite;
+  animation: marquee 20s linear infinite;
   animation-delay: 0s;
 }
 
