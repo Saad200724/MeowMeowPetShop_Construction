@@ -315,7 +315,7 @@ export default function ContactPage() {
         <div className="mt-12">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Find Our Store</h2>
           <Card className="border-0 shadow-md overflow-hidden">
-            <div className="aspect-video bg-gray-200 relative">
+            <div className="h-64 bg-gray-200 relative">
               {/* Embedded Google Map */}
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d912.3297468964263!2d90.25490467115716!3d23.842804035630493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755eb2ecda85ab9%3A0x1aada17efba5882e!2sMeow%20Meow%20Pet%20shop!5e0!3m2!1sen!2sbd!4v1756620179156!5m2!1sen!2sbd"
