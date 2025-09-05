@@ -4,12 +4,13 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Heart, ShoppingCart, Star, Check } from 'lucide-react'
 import { Product } from '@/lib/product-data'
+import { Product as HookProduct } from '@/hooks/use-products'
 import { useCart } from '@/contexts/cart-context'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
-  product: Product
+  product: Product | HookProduct
   className?: string
 }
 

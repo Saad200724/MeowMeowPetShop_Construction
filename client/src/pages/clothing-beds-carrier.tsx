@@ -35,7 +35,7 @@ export default function ClothingBedsCarrierPage() {
     .sort((a, b) => {
       switch (filters.sortBy) {
         case 'latest':
-          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+          return 0; // No createdAt available
         case 'a-z':
           return a.name.localeCompare(b.name);
         case 'z-a':
@@ -124,7 +124,7 @@ export default function ClothingBedsCarrierPage() {
           {/* Main Content Area */}
           <main className="lg:w-3/4">
             {/* Analytics Bar */}
-            <AnalyticsBar products={allProducts} />
+            <AnalyticsBar categoryId="clothing-beds-carrier" />
 
             {/* Products Grid */}
             <div className="mt-6">
@@ -153,7 +153,7 @@ export default function ClothingBedsCarrierPage() {
               {!loading && filteredProducts.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredProducts.map((product) => (
-                    <ProductCard key={product._id} product={product} />
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               )}

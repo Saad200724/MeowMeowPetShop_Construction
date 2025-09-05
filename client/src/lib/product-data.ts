@@ -7,7 +7,7 @@ export interface Product {
   rating: number
   reviews: number
   category: string
-  description: string
+  description?: string
   tags: string[]
   stock: number
   isBestSeller?: boolean
