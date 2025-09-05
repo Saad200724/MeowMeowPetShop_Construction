@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice } from "@shared/models";
-import type { IUser, ICart, ICartItem, IOrder, IInvoice } from "@shared/models";
+import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost } from "@shared/models";
+import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost } from "@shared/models";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import multer from "multer";
@@ -1278,6 +1278,156 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.send(invoiceHtml);
     } catch (error) {
       res.status(500).json({ message: "Failed to generate invoice" });
+    }
+  });
+
+  // Blog API endpoints
+  // Get all blog posts
+  app.get("/api/blog", async (req, res) => {
+    try {
+      const blogPosts = await storage.getBlogPosts();
+      res.json(blogPosts);
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  // Get published blog posts only
+  app.get("/api/blog/published", async (req, res) => {
+    try {
+      const allPosts = await storage.getBlogPosts();
+      const publishedPosts = allPosts.filter(post => post.isPublished);
+      res.json(publishedPosts);
+    } catch (error) {
+      console.error('Error fetching published blog posts:', error);
+      res.status(500).json({ message: "Failed to fetch published blog posts" });
+    }
+  });
+
+  // Get single blog post by ID
+  app.get("/api/blog/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const blogPost = await storage.getBlogPost(id);
+      
+      if (!blogPost) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      
+      res.json(blogPost);
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  // Get blog post by slug
+  app.get("/api/blog/slug/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const blogPost = await storage.getBlogPostBySlug(slug);
+      
+      if (!blogPost) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      
+      res.json(blogPost);
+    } catch (error) {
+      console.error('Error fetching blog post by slug:', error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  // Create new blog post
+  app.post("/api/blog", async (req, res) => {
+    try {
+      const blogPostSchema = z.object({
+        title: z.string().min(1, "Title is required"),
+        slug: z.string().min(1, "Slug is required"),
+        excerpt: z.string().optional(),
+        content: z.string().min(1, "Content is required"),
+        image: z.string().optional(),
+        author: z.string().min(1, "Author is required"),
+        publishedAt: z.string().datetime().optional(),
+        tags: z.array(z.string()).optional(),
+        isPublished: z.boolean().optional()
+      });
+
+      const validatedData = blogPostSchema.parse(req.body);
+      
+      // Convert publishedAt string to Date if provided
+      const blogPostData = {
+        ...validatedData,
+        publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : undefined
+      };
+
+      const newBlogPost = await storage.createBlogPost(blogPostData);
+      res.status(201).json(newBlogPost);
+    } catch (error) {
+      console.error('Error creating blog post:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create blog post" });
+    }
+  });
+
+  // Update blog post
+  app.put("/api/blog/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const updateSchema = z.object({
+        title: z.string().min(1).optional(),
+        slug: z.string().min(1).optional(),
+        excerpt: z.string().optional(),
+        content: z.string().min(1).optional(),
+        image: z.string().optional(),
+        author: z.string().min(1).optional(),
+        publishedAt: z.string().datetime().optional(),
+        tags: z.array(z.string()).optional(),
+        isPublished: z.boolean().optional()
+      });
+
+      const validatedData = updateSchema.parse(req.body);
+      
+      // Convert publishedAt string to Date if provided
+      const updateData = {
+        ...validatedData,
+        publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : undefined
+      };
+
+      const updatedBlogPost = await storage.updateBlogPost(id, updateData);
+      
+      if (!updatedBlogPost) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      
+      res.json(updatedBlogPost);
+    } catch (error) {
+      console.error('Error updating blog post:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update blog post" });
+    }
+  });
+
+  // Delete blog post
+  app.delete("/api/blog/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await storage.deleteBlogPost(id);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      
+      res.json({ message: "Blog post deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting blog post:', error);
+      res.status(500).json({ message: "Failed to delete blog post" });
     }
   });
 

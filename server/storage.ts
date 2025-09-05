@@ -1,5 +1,5 @@
 import { User, Category, Brand, Product, BlogPost, Order } from "@shared/models";
-import type { IUser, ICategory, IBrand, IProduct } from "@shared/models";
+import type { IUser, ICategory, IBrand, IProduct, IBlogPost } from "@shared/models";
 import { nanoid } from "nanoid";
 
 // Simple storage for the pet shop
@@ -40,6 +40,18 @@ interface InsertUser {
   isActive?: boolean;
 }
 
+interface InsertBlogPost {
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  image?: string;
+  author: string;
+  publishedAt?: Date;
+  tags?: string[];
+  isPublished?: boolean;
+}
+
 export interface IStorage {
   getCategories(): Promise<SimpleCategory[]>;
   getBrands(): Promise<SimpleBrand[]>;
@@ -53,6 +65,12 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<IUser | undefined>;
   createUser(insertUser: InsertUser): Promise<IUser>;
   updateUser(id: string, userData: Partial<InsertUser>): Promise<IUser | undefined>;
+  getBlogPosts(): Promise<IBlogPost[]>;
+  getBlogPost(id: string): Promise<IBlogPost | undefined>;
+  getBlogPostBySlug(slug: string): Promise<IBlogPost | undefined>;
+  createBlogPost(blogPost: InsertBlogPost): Promise<IBlogPost>;
+  updateBlogPost(id: string, blogPost: Partial<InsertBlogPost>): Promise<IBlogPost | undefined>;
+  deleteBlogPost(id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -313,6 +331,72 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error('Error fetching products:', error);
       return [];
+    }
+  }
+
+  // Blog CRUD operations
+  async getBlogPosts(): Promise<IBlogPost[]> {
+    try {
+      const blogPosts = await BlogPost.find().sort({ createdAt: -1 });
+      return blogPosts;
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+      return [];
+    }
+  }
+
+  async getBlogPost(id: string): Promise<IBlogPost | undefined> {
+    try {
+      const blogPost = await BlogPost.findById(id);
+      return blogPost || undefined;
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+      return undefined;
+    }
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<IBlogPost | undefined> {
+    try {
+      const blogPost = await BlogPost.findOne({ slug });
+      return blogPost || undefined;
+    } catch (error) {
+      console.error('Error fetching blog post by slug:', error);
+      return undefined;
+    }
+  }
+
+  async createBlogPost(blogPostData: InsertBlogPost): Promise<IBlogPost> {
+    try {
+      const newBlogPost = new BlogPost(blogPostData);
+      await newBlogPost.save();
+      return newBlogPost;
+    } catch (error) {
+      console.error('Error creating blog post:', error);
+      throw error;
+    }
+  }
+
+  async updateBlogPost(id: string, blogPostData: Partial<InsertBlogPost>): Promise<IBlogPost | undefined> {
+    try {
+      const updatedBlogPost = await BlogPost.findByIdAndUpdate(
+        id,
+        { ...blogPostData, updatedAt: new Date() },
+        { new: true }
+      );
+      return updatedBlogPost || undefined;
+    } catch (error) {
+      console.error('Error updating blog post:', error);
+      return undefined;
+    }
+  }
+
+  async deleteBlogPost(id: string): Promise<boolean> {
+    try {
+      const result = await BlogPost.findByIdAndDelete(id);
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting blog post:', error);
+      return false;
     }
   }
 
