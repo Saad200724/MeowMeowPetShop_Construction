@@ -47,29 +47,6 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Additional promotional content below banner */}
-      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 py-6 px-4 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="hidden md:block mb-4">
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
-              Premium Pet Food & Accessories in Savar
-            </h2>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold">
-              5% OFF your first order!
-            </div>
-            <Button 
-              variant="default" 
-              size="lg"
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
-            >
-              <ShoppingBag size={20} />
-              Start Shopping
-            </Button>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
