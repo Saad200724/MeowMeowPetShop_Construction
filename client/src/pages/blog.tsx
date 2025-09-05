@@ -7,6 +7,7 @@ import { Search, Calendar, User, Clock, BookOpen, Heart, Share2 } from 'lucide-r
 import { Link } from 'wouter';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import NavigationSidebar from '@/components/layout/sidebar';
 
 const blogCategories = [
   'Pet Care Tips',
@@ -82,6 +83,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      <NavigationSidebar />
       
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-indigo-600 to-purple-700 text-white">

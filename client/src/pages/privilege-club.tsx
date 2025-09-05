@@ -64,6 +64,7 @@ export default function PrivilegeClubPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <Header />
+      <NavigationSidebar />
       
       {/* Hero Section */}
       <section className="pt-24 pb-16 px-4">
