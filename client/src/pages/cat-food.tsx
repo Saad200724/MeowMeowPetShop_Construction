@@ -15,12 +15,12 @@ export default function CatFoodPage() {
     priceRange: [1, 13000],
     sortBy: 'relevance'
   });
-  
+
   const { loading, error, getProductsByCategory } = useProducts()
-  
+
   // Get dynamic products from API
   const allProducts = getProductsByCategory('cat-food');
-  
+
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
     .filter(product => {
@@ -86,13 +86,13 @@ export default function CatFoodPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Cat Food Collection</h1>
           <p className="text-xl opacity-90 mb-6">Premium nutrition for your feline friends</p>
-          
+
           {/* Search Bar */}
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -122,7 +122,7 @@ export default function CatFoodPage() {
           <main className="lg:w-3/4">
             {/* Analytics Bar */}
             <AnalyticsBar categoryId="cat-food" className="mb-6" />
-            
+
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Cat Food Products</h2>
               <p className="text-gray-600">{filteredProducts.length} products found</p>
@@ -135,12 +135,12 @@ export default function CatFoodPage() {
             </div>
 
             {/* No Products Message */}
-            {filteredProducts.length === 0 && (
+            {filteredProducts.length === 0 && !loading && (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
                 <Button
                   variant="outline"
-                  className="mt-4"
+                  className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
                     setSearchQuery('');
                     setFilters({ priceRange: [1, 13000], sortBy: 'relevance' });

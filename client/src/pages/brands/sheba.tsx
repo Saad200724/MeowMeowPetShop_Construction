@@ -15,12 +15,12 @@ export default function ShebaPage() {
     priceRange: [1, 13000],
     sortBy: 'relevance'
   });
-  
+
   const { loading, error, getProductsByBrand } = useProducts();
-  
+
   // Get products for Sheba brand from API
   const allProducts = getProductsByBrand('sheba');
-  
+
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
     .filter(product => {
@@ -86,13 +86,13 @@ export default function ShebaPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Sheba Cat Food</h1>
           <p className="text-xl opacity-90 mb-6">Irresistible meals that cats can't resist</p>
-          
+
           {/* Search Bar */}
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -121,7 +121,7 @@ export default function ShebaPage() {
           {/* Products Grid */}
           <div className="lg:w-3/4">
             <AnalyticsBar products={filteredProducts} />
-            
+
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Sheba Products</h2>
               <p className="text-gray-600">
@@ -137,14 +137,17 @@ export default function ShebaPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">📦</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-                <p className="text-gray-600">
-                  {searchQuery 
-                    ? `No Sheba products match "${searchQuery}"`
-                    : 'No products available in this category'
-                  }
-                </p>
+                <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+                <Button
+                  variant="outline"
+                  className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilters({ priceRange: [1, 13000], sortBy: 'relevance' });
+                  }}
+                >
+                  Clear Filters
+                </Button>
               </div>
             )}
           </div>

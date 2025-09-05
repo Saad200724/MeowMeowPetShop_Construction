@@ -15,12 +15,12 @@ export default function CatCarePage() {
     priceRange: [1, 13000],
     sortBy: 'relevance'
   });
-  
+
   const { loading, error, getProductsByCategory } = useProducts()
-  
+
   // Get dynamic products from API
   const allProducts = getProductsByCategory('cat-care');
-  
+
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
     .filter(product => {
@@ -86,13 +86,13 @@ export default function CatCarePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-green-500 to-teal-500 text-white">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Cat Care & Health</h1>
           <p className="text-xl opacity-90 mb-6">Keep your feline friends healthy and happy</p>
-          
+
           {/* Search Bar */}
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />

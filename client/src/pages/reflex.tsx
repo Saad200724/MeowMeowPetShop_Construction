@@ -161,7 +161,7 @@ export default function ReflexPage() {
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
                 <Button
                   variant="outline"
-                  className="mt-4 bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory('All');
