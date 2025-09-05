@@ -1,10 +1,9 @@
-
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Link } from 'wouter';
-import { Calendar, User, ArrowRight, BookOpen, Heart } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Calendar, User, ArrowRight, BookOpen, BookText } from "lucide-react";
 
 interface BlogPost {
   _id: string;
@@ -28,12 +27,12 @@ export default function BlogPreview() {
   useEffect(() => {
     const fetchTopBlogs = async () => {
       try {
-        const response = await fetch('/api/blog/published');
+        const response = await fetch("/api/blog/published");
         const blogs = await response.json();
         // Get top 3 blogs
         setBlogPosts(blogs.slice(0, 3));
       } catch (error) {
-        console.error('Error fetching blog posts:', error);
+        console.error("Error fetching blog posts:", error);
         setBlogPosts([]);
       } finally {
         setLoading(false);
@@ -62,7 +61,9 @@ export default function BlogPreview() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">Latest Pet Care Tips</h2>
-            <p className="text-gray-600">No blog posts available at the moment.</p>
+            <p className="text-gray-600">
+              No blog posts available at the moment.
+            </p>
           </div>
         </div>
       </section>
@@ -73,37 +74,44 @@ export default function BlogPreview() {
     <section className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: '#257334' }}>
-            <Heart className="h-8 w-8" />
+          <h2
+            className="text-3xl font-bold mb-4 flex items-center justify-center gap-2"
+            style={{ color: "#257334" }}
+          >
+            <BookText className="h-8 w-8" />
             Latest Pet Care Tips
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Stay informed with expert advice and insights to keep your pets healthy and happy.
+            Stay informed with expert advice and insights to keep your pets
+            healthy and happy.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {blogPosts.map((post) => (
-            <Card key={post._id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+            <Card
+              key={post._id}
+              className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
+            >
               <div className="relative">
                 <img
-                  src={post.image || '/api/placeholder/400/200'}
+                  src={post.image || "/api/placeholder/400/200"}
                   alt={post.title}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <Badge className="absolute top-4 left-4 bg-indigo-600">
-                  {post.category || 'General'}
+                  {post.category || "General"}
                 </Badge>
               </div>
-              
+
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors">
                   {post.title}
                 </h3>
                 <p className="text-gray-600 mb-4 line-clamp-2">
-                  {post.excerpt || post.content.substring(0, 120) + '...'}
+                  {post.excerpt || post.content.substring(0, 120) + "..."}
                 </p>
-                
+
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
@@ -112,7 +120,11 @@ export default function BlogPreview() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
-                      <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
+                      <span>
+                        {new Date(
+                          post.publishedAt || post.createdAt,
+                        ).toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
                 </div>
