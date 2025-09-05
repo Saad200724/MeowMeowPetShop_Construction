@@ -323,7 +323,7 @@ export default function Header() {
               <div className="flex-shrink-0">
                 <Button 
                   variant="ghost" 
-                  className="text-gray-700 hover:text-white font-medium flex items-center gap-1 bg-gray-50"
+                  className="text-gray-700 hover:text-[#f8fbfc] font-medium flex items-center gap-1 bg-gray-50"
                   onClick={toggleSidebar}
                   data-testid="button-categories-toggle"
                 >
@@ -338,7 +338,7 @@ export default function Header() {
                   <Link href={item.path}>
                     <Button 
                       variant="ghost" 
-                      className="text-gray-700 hover:text-white font-medium" 
+                      className="text-gray-700 hover:text-[#f8fbfc] font-medium" 
                       data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {item.name}
