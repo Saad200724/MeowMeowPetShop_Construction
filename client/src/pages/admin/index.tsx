@@ -533,13 +533,13 @@ export default function AdminPage() {
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    
+
     const stockQuantity = product.stockQuantity || product.stock || 0;
     const matchesStock = stockFilter === 'all' || 
       (stockFilter === 'out-of-stock' && stockQuantity === 0) ||
       (stockFilter === 'low-stock' && stockQuantity > 0 && stockQuantity < 10) ||
       (stockFilter === 'high-stock' && stockQuantity >= 10);
-    
+
     return matchesSearch && matchesCategory && matchesStock;
   });
 
@@ -633,7 +633,7 @@ export default function AdminPage() {
 
   const handleSaveBlog = () => {
     if (!editingBlog) return;
-    
+
     const blogData = {
       title: editingBlog.title,
       excerpt: editingBlog.excerpt || '',
@@ -1566,11 +1566,16 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
-                          {categories.map((category: any) => (
-                            <SelectItem key={category.id} value={category.id} className="text-gray-900 hover:bg-gray-100">
-                              {category.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="cat-food">Cat Food</SelectItem>
+                          <SelectItem value="dog-food">Dog Food</SelectItem>
+                          <SelectItem value="cat-toys">Cat Toys</SelectItem>
+                          <SelectItem value="cat-litter">Cat Litter</SelectItem>
+                          <SelectItem value="cat-care">Cat Care & Health</SelectItem>
+                          <SelectItem value="clothing-beds-carrier">Clothing, Beds & Carrier</SelectItem>
+                          <SelectItem value="cat-accessories">Cat Accessories</SelectItem>
+                          <SelectItem value="dog-accessories">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -1586,15 +1591,22 @@ export default function AdminPage() {
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                            <SelectValue placeholder="Select brand" className="text-gray-900" />
+                            <SelectValue placeholder="Select brand">
+                              {field.value && brands.find((b: any) => b.id === field.value)?.name || 
+                               field.value && brands.find((b: any) => b.slug === field.value)?.name || 
+                               field.value || 
+                               "Select brand"}
+                            </SelectValue>
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
-                          {brands.map((brand: any) => (
-                            <SelectItem key={brand.id} value={brand.id} className="text-gray-900 hover:bg-gray-100">
-                              {brand.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="nekko">Nekko</SelectItem>
+                          <SelectItem value="purina">Purina</SelectItem>
+                          <SelectItem value="purina-one">Purina One</SelectItem>
+                          <SelectItem value="reflex">Reflex</SelectItem>
+                          <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
+                          <SelectItem value="royal-canin">Royal Canin</SelectItem>
+                          <SelectItem value="sheba">Sheba</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -1854,11 +1866,16 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
-                          {categories.map((category: any) => (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="cat-food">Cat Food</SelectItem>
+                          <SelectItem value="dog-food">Dog Food</SelectItem>
+                          <SelectItem value="cat-toys">Cat Toys</SelectItem>
+                          <SelectItem value="cat-litter">Cat Litter</SelectItem>
+                          <SelectItem value="cat-care">Cat Care & Health</SelectItem>
+                          <SelectItem value="clothing-beds-carrier">Clothing, Beds & Carrier</SelectItem>
+                          <SelectItem value="cat-accessories">Cat Accessories</SelectItem>
+                          <SelectItem value="dog-accessories">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -1879,11 +1896,13 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
-                          {brands.map((brand: any) => (
-                            <SelectItem key={brand.id} value={brand.id}>
-                              {brand.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="nekko">Nekko</SelectItem>
+                          <SelectItem value="purina">Purina</SelectItem>
+                          <SelectItem value="purina-one">Purina One</SelectItem>
+                          <SelectItem value="reflex">Reflex</SelectItem>
+                          <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
+                          <SelectItem value="royal-canin">Royal Canin</SelectItem>
+                          <SelectItem value="sheba">Sheba</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
