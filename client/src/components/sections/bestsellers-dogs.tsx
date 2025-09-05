@@ -7,12 +7,11 @@ export default function BestsellersDogs() {
     queryKey: ['/api/products'],
   });
 
-  // Filter products that are bestsellers and dog-related
+  // Filter products that are bestsellers and dog-related (dog food, dog health & accessories)
+  const dogCategories = ['dog-food', 'dog-accessories'];
   const products = (allProducts as any[]).filter((product: any) => 
     product.isBestseller && 
-    (product.category?.toLowerCase().includes('dog') || 
-     product.categoryName?.toLowerCase().includes('dog') ||
-     product.tags?.some((tag: string) => tag.toLowerCase().includes('dog')))
+    dogCategories.includes(product.category)
   );
 
   return (

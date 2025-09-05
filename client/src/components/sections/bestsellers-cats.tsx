@@ -7,12 +7,11 @@ export default function BestsellersCats() {
     queryKey: ['/api/products'],
   });
 
-  // Filter products that are bestsellers and cat-related
+  // Filter products that are bestsellers and cat-related (cat food, toys, litter, care & health, accessories)
+  const catCategories = ['cat-food', 'cat-toys', 'cat-litter', 'cat-care', 'cat-accessories'];
   const products = (allProducts as any[]).filter((product: any) => 
     product.isBestseller && 
-    (product.category?.toLowerCase().includes('cat') || 
-     product.categoryName?.toLowerCase().includes('cat') ||
-     product.tags?.some((tag: string) => tag.toLowerCase().includes('cat')))
+    catCategories.includes(product.category)
   );
 
   return (
