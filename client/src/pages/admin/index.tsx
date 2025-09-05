@@ -825,7 +825,9 @@ export default function AdminPage() {
                                 <div>
                                   <div className="font-medium text-gray-900">{product.name}</div>
                                   <div className="text-sm text-gray-500">
-                                    {(brands as any[]).find((b: any) => b.id === product.brandId)?.name || 'Unknown Brand'}
+                                    {product.brandName || 
+                                     (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
+                                     'Unknown Brand'}
                                   </div>
                                 </div>
                               </div>
@@ -894,7 +896,9 @@ export default function AdminPage() {
                       <CardContent>
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-xl font-bold text-green-600">৳{product.price}</span>
-                          <Badge variant="outline">{product.brandId}</Badge>
+                          <Badge variant="outline">{product.brandName || 
+                               (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
+                               'Unknown Brand'}</Badge>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-500">Stock: {product.stockQuantity || product.stock || 0}</span>
@@ -1203,7 +1207,9 @@ export default function AdminPage() {
                                 <div>
                                   <div className="font-medium text-gray-900">{product.name}</div>
                                   <div className="text-sm text-gray-500">
-                                    {(brands as any[]).find((b: any) => b.id === product.brandId)?.name || 'Unknown Brand'}
+                                    {product.brandName || 
+                                     (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
+                                     'Unknown Brand'}
                                   </div>
                                 </div>
                               </div>

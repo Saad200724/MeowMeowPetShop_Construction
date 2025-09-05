@@ -342,13 +342,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'sheba': { name: 'Sheba', slug: 'sheba' }
       };
 
-      // Find category and brand by their IDs/names
-      let categoryRecord = await Category.findOne({
-        $or: [
-          { slug: productData.categoryId },
-          { name: productData.categoryId }
-        ]
-      });
+      // Find category and brand by their IDs/names/slugs
+      let categoryRecord = null;
+
+      // First try to find existing category
+      if (productData.categoryId) {
+        categoryRecord = await Category.findOne({
+          $or: [
+            { slug: productData.categoryId },
+            { name: productData.categoryId },
+            { _id: productData.categoryId }
+          ]
+        });
+      }
 
       if (!categoryRecord) {
         // Create category if it doesn't exist using proper mapping
@@ -358,14 +364,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
+        console.log(`Created new category: ${categoryRecord.name} with slug: ${categoryRecord.slug}`);
       }
 
-      let brandRecord = await Brand.findOne({
-        $or: [
-          { slug: productData.brandId },
-          { name: productData.brandId }
-        ]
-      });
+      let brandRecord = null;
+
+      // First try to find existing brand
+      if (productData.brandId) {
+        brandRecord = await Brand.findOne({
+          $or: [
+            { slug: productData.brandId },
+            { name: productData.brandId },
+            { _id: productData.brandId }
+          ]
+        });
+      }
 
       if (!brandRecord) {
         // Create brand if it doesn't exist using proper mapping
@@ -375,6 +388,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: brandMapping ? brandMapping.slug : productData.brandId.toLowerCase().replace(/\s+/g, '-'),
         });
         await brandRecord.save();
+        console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
       }
 
       // Create product directly in database with all fields
@@ -441,13 +455,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'sheba': { name: 'Sheba', slug: 'sheba' }
       };
 
-      // Find category and brand by their IDs/names
-      let categoryRecord = await Category.findOne({
-        $or: [
-          { slug: productData.categoryId },
-          { name: productData.categoryId }
-        ]
-      });
+      // Find category and brand by their IDs/names/slugs
+      let categoryRecord = null;
+
+      // First try to find existing category
+      if (productData.categoryId) {
+        categoryRecord = await Category.findOne({
+          $or: [
+            { slug: productData.categoryId },
+            { name: productData.categoryId },
+            { _id: productData.categoryId }
+          ]
+        });
+      }
 
       if (!categoryRecord) {
         // Create category if it doesn't exist using proper mapping
@@ -457,14 +477,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
+        console.log(`Created new category: ${categoryRecord.name} with slug: ${categoryRecord.slug}`);
       }
 
-      let brandRecord = await Brand.findOne({
-        $or: [
-          { slug: productData.brandId },
-          { name: productData.brandId }
-        ]
-      });
+      let brandRecord = null;
+
+      // First try to find existing brand
+      if (productData.brandId) {
+        brandRecord = await Brand.findOne({
+          $or: [
+            { slug: productData.brandId },
+            { name: productData.brandId },
+            { _id: productData.brandId }
+          ]
+        });
+      }
 
       if (!brandRecord) {
         // Create brand if it doesn't exist using proper mapping
@@ -474,6 +501,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: brandMapping ? brandMapping.slug : productData.brandId.toLowerCase().replace(/\s+/g, '-'),
         });
         await brandRecord.save();
+        console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
       }
 
       // Update product directly in database with all fields
