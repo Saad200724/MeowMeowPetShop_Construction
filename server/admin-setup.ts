@@ -33,6 +33,7 @@ export async function createAdminAccount() {
 
     // Create default brands
     const brands = [
+      { name: 'Default Brand', slug: 'default-brand', description: 'Default brand for products without specific brand assignment' },
       { name: 'Nekko', slug: 'nekko', description: 'Premium cat food brand from Thailand' },
       { name: 'Purina', slug: 'purina', description: 'Trusted pet nutrition for over 90 years' },
       { name: 'Purina One', slug: 'purina-one', description: 'Purposeful nutrition for dogs and cats' },

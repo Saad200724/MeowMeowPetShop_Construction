@@ -1600,6 +1600,7 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
+                          <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
                           <SelectItem value="purina-one">Purina One</SelectItem>
@@ -1896,6 +1897,7 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                          <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
                           <SelectItem value="purina-one">Purina One</SelectItem>
