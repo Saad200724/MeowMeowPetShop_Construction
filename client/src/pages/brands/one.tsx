@@ -76,8 +76,8 @@ export default function OnePage() {
     );
   }
 
-  const handleCategoryFilter = (category: string) => {
-    setSelectedCategory(category);
+  const handleFilterChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
   };
 
   const handleSearch = (query: string) => {
@@ -126,7 +126,7 @@ export default function OnePage() {
             
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {selectedCategory === 'All' ? 'All ONE Products' : selectedCategory}
+                All ONE Products
               </h2>
               <p className="text-gray-600">
                 Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
