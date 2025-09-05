@@ -318,7 +318,7 @@ export default function Header() {
         {/* Navigation Menu */}
         <nav className="border-t border-gray-100 bg-gray-50 relative z-[100]">
           <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center space-x-6 overflow-x-auto">
+            <div className="flex items-center space-x-6 overflow-x-auto scrollbar-hide">
               {/* Categories Toggle */}
               <div className="flex-shrink-0">
                 <Button 
