@@ -327,6 +327,16 @@ export default function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Meow Meow Pet Shop Location - Pakiza Bus Stand, Savar, Dhaka"
               />
+              
+              {/* Directions Button */}
+              <Button
+                className="absolute top-4 left-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 shadow-lg z-10"
+                size="sm"
+                onClick={() => window.open('https://www.google.com/maps/dir//Meow+Meow+Pet+shop,+Pakiza+Bus+Stand,+Chapra+Mosjid+Road,+Bank+Colony,+Savar,+Dhaka,+Bangladesh/@23.842804,90.254905,17z', '_blank')}
+              >
+                <MapPin className="w-4 h-4 mr-2" />
+                Directions
+              </Button>
             </div>
           </Card>
 
