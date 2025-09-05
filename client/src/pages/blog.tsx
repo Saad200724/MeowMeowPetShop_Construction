@@ -28,7 +28,7 @@ interface BlogPost {
   image?: string;
   author: string;
   publishedAt?: Date;
-  tags?: string[];
+  category?: string;
   isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -45,7 +45,8 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch('/api/blog/published');
+        const categoryParam = selectedCategory === 'All' ? '' : `?category=${encodeURIComponent(selectedCategory)}`;
+        const response = await fetch(`/api/blog/published${categoryParam}`);
         const blogs = await response.json();
         setBlogPosts(blogs);
         setFilteredPosts(blogs);
@@ -59,17 +60,11 @@ export default function BlogPage() {
     };
     
     fetchBlogs();
-  }, []);
+  }, [selectedCategory]);
 
   const handleCategoryFilter = (category: string) => {
     setSelectedCategory(category);
-    if (category === 'All') {
-      setFilteredPosts(blogPosts);
-    } else {
-      setFilteredPosts(blogPosts.filter(post => 
-        post.tags?.some(tag => tag.toLowerCase().includes(category.toLowerCase()))
-      ));
-    }
+    setSearchQuery(''); // Reset search when changing category
   };
 
   const handleSearch = (query: string) => {
@@ -77,7 +72,7 @@ export default function BlogPage() {
     const filtered = blogPosts.filter(post =>
       post.title.toLowerCase().includes(query.toLowerCase()) ||
       (post.excerpt?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
-      (post.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ?? false)
+      (post.category?.toLowerCase().includes(query.toLowerCase()) ?? false)
     );
     setFilteredPosts(filtered);
   };
@@ -131,7 +126,7 @@ export default function BlogPage() {
                   </div>
                   <CardContent className="p-6">
                     <Badge variant="secondary" className="mb-3">
-                      {post.tags?.[0] || 'General'}
+                      {post.category || 'General'}
                     </Badge>
                     <h3 className="text-xl font-bold mb-2 line-clamp-2">{post.title}</h3>
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
@@ -247,7 +242,7 @@ export default function BlogPage() {
                     </div>
                     <div className="md:w-2/3 p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <Badge variant="secondary">{post.tags?.[0] || 'General'}</Badge>
+                        <Badge variant="secondary">{post.category || 'General'}</Badge>
                       </div>
                       
                       <h3 className="text-xl font-bold mb-2 line-clamp-2">

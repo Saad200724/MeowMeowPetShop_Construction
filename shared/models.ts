@@ -130,7 +130,7 @@ export interface IBlogPost extends Document {
   image?: string;
   author: string;
   publishedAt?: Date;
-  tags?: string[];
+  category?: string;
   isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -144,7 +144,7 @@ const blogPostSchema = new Schema<IBlogPost>({
   image: String,
   author: { type: String, required: true },
   publishedAt: Date,
-  tags: [String],
+  category: String,
   isPublished: { type: Boolean, default: false },
 }, { timestamps: true });
 

@@ -639,7 +639,7 @@ export default function AdminPage() {
       excerpt: editingBlog.excerpt || '',
       content: editingBlog.content,
       author: editingBlog.author,
-      tags: editingBlog.tags || [],
+      category: (editingBlog as any).category || '',
       isPublished: editingBlog.isPublished,
       slug: editingBlog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     };
@@ -1436,7 +1436,7 @@ export default function AdminPage() {
                     image: '',
                     author: user.firstName || 'Admin',
                     publishedAt: new Date(),
-                    tags: [],
+                    category: '',
                     isPublished: false,
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2027,15 +2027,19 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="blog-tags">Tags (comma separated)</Label>
-                  <Input
-                    id="blog-tags"
-                    value={editingBlog.tags?.join(', ') || ''}
-                    onChange={(e) => setEditingBlog({...editingBlog, tags: e.target.value.split(',').map(tag => tag.trim())})}
-                    placeholder="Pet Care, Health, Tips"
-                    className="text-gray-900 bg-white border-gray-300"
-                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
-                  />
+                  <Label htmlFor="blog-category">Category</Label>
+                  <Select value={(editingBlog as any).category || ''} onValueChange={(value) => setEditingBlog({...editingBlog, category: value} as any)}>
+                    <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                      <SelectValue placeholder="Select a category" className="text-gray-900" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-gray-300">
+                      {blogCategories.map(category => (
+                        <SelectItem key={category} value={category} className="text-gray-900 hover:bg-gray-100">
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="blog-author">Author</Label>

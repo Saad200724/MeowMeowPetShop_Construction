@@ -1296,8 +1296,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get published blog posts only
   app.get("/api/blog/published", async (req, res) => {
     try {
+      const { category } = req.query;
       const allPosts = await storage.getBlogPosts();
-      const publishedPosts = allPosts.filter(post => post.isPublished);
+      let publishedPosts = allPosts.filter(post => post.isPublished);
+      
+      // Filter by category if provided
+      if (category && category !== 'All') {
+        publishedPosts = publishedPosts.filter(post => 
+          post.category && post.category === category
+        );
+      }
+      
       res.json(publishedPosts);
     } catch (error) {
       console.error('Error fetching published blog posts:', error);
@@ -1350,7 +1359,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         image: z.string().optional(),
         author: z.string().min(1, "Author is required"),
         publishedAt: z.string().datetime().optional(),
-        tags: z.array(z.string()).optional(),
+        category: z.string().optional(),
         isPublished: z.boolean().optional()
       });
 
@@ -1386,7 +1395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         image: z.string().optional(),
         author: z.string().min(1).optional(),
         publishedAt: z.string().datetime().optional(),
-        tags: z.array(z.string()).optional(),
+        category: z.string().optional(),
         isPublished: z.boolean().optional()
       });
 
