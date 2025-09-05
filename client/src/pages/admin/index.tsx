@@ -631,6 +631,26 @@ export default function AdminPage() {
     }
   };
 
+  const handleSaveBlog = () => {
+    if (!editingBlog) return;
+    
+    const blogData = {
+      title: editingBlog.title,
+      excerpt: editingBlog.excerpt || '',
+      content: editingBlog.content,
+      author: editingBlog.author,
+      tags: editingBlog.tags || [],
+      isPublished: editingBlog.isPublished,
+      slug: editingBlog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    };
+
+    if (editingBlog._id === 'new') {
+      createBlogMutation.mutate(blogData);
+    } else {
+      updateBlogMutation.mutate({ id: editingBlog._id, data: blogData });
+    }
+  };
+
   // Blog categories
   const blogCategories = [
     'Pet Care Tips',
@@ -1413,12 +1433,14 @@ export default function AdminPage() {
                     slug: '',
                     excerpt: '',
                     content: '',
+                    image: '',
                     author: user.firstName || 'Admin',
+                    publishedAt: new Date(),
                     tags: [],
                     isPublished: false,
                     createdAt: new Date(),
                     updatedAt: new Date()
-                  });
+                  } as any);
                   setShowBlogDialog(true);
                 }}
                 className="bg-purple-600 hover:bg-purple-700"
@@ -1957,10 +1979,10 @@ export default function AdminPage() {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingBlog?.id === 'new' ? 'Add New Blog Post' : 'Edit Blog Post'}
+              {editingBlog?._id === 'new' ? 'Add New Blog Post' : 'Edit Blog Post'}
             </DialogTitle>
             <DialogDescription>
-              {editingBlog?.id === 'new' ? 'Create a new blog post' : 'Update blog post'}
+              {editingBlog?._id === 'new' ? 'Create a new blog post' : 'Update blog post'}
             </DialogDescription>
           </DialogHeader>
 
@@ -2005,12 +2027,12 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="blog-category">Category</Label>
+                  <Label htmlFor="blog-tags">Tags (comma separated)</Label>
                   <Input
-                    id="blog-category"
-                    value={editingBlog.category}
-                    onChange={(e) => setEditingBlog({...editingBlog, category: e.target.value})}
-                    placeholder="Pet Care"
+                    id="blog-tags"
+                    value={editingBlog.tags?.join(', ') || ''}
+                    onChange={(e) => setEditingBlog({...editingBlog, tags: e.target.value.split(',').map(tag => tag.trim())})}
+                    placeholder="Pet Care, Health, Tips"
                     className="text-gray-900 bg-white border-gray-300"
                     style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                   />
@@ -2028,7 +2050,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <Label htmlFor="blog-status">Status</Label>
-                  <Select value={editingBlog.status} onValueChange={(value) => setEditingBlog({...editingBlog, status: value as any})}>
+                  <Select value={editingBlog.isPublished ? 'published' : 'draft'} onValueChange={(value) => setEditingBlog({...editingBlog, isPublished: value === 'published'})}>
                     <SelectTrigger className="bg-white text-gray-900 border-gray-300">
                       <SelectValue className="text-gray-900" />
                     </SelectTrigger>
