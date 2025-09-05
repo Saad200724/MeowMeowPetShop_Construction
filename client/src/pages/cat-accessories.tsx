@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import NavigationSidebar from '@/components/layout/sidebar';
 import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
 import { useProducts, type Product } from '@/hooks/use-products';
@@ -82,6 +83,7 @@ export default function CatAccessoriesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      <NavigationSidebar />
       
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white">

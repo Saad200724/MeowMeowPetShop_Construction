@@ -99,6 +99,36 @@ export class DatabaseStorage implements IStorage {
         products: []
       },
       {
+        id: 'cat-care',
+        name: 'Cat Care',
+        products: []
+      },
+      {
+        id: 'clothing-beds-carrier',
+        name: 'Clothing/Beds/Carrier',
+        products: []
+      },
+      {
+        id: 'cat-accessories',
+        name: 'Cat Accessories',
+        products: []
+      },
+      {
+        id: 'dog-accessories',
+        name: 'Dog Accessories',
+        products: []
+      },
+      {
+        id: 'rabbit',
+        name: 'Rabbit',
+        products: []
+      },
+      {
+        id: 'bird',
+        name: 'Bird',
+        products: []
+      },
+      {
         id: 'reflex',
         name: 'Reflex Brand',
         products: []
@@ -276,7 +306,8 @@ export class DatabaseStorage implements IStorage {
 
   async getBrands(): Promise<SimpleBrand[]> {
     try {
-      const dbBrands = await Brand.find({ isActive: true });
+      const allowedBrands = ['nekko', 'purina', 'purina-one', 'reflex', 'reflex-plus', 'royal-canin', 'sheba'];
+      const dbBrands = await Brand.find({ isActive: true, slug: { $in: allowedBrands } });
       return dbBrands.map(brand => ({
         id: brand.id.toString(),
         name: brand.name,

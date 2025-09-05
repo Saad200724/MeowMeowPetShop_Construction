@@ -106,6 +106,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to seed missing categories
+  app.post("/api/admin/seed-categories", async (req, res) => {
+    try {
+      const newCategories = [
+        { name: 'Cat Care', slug: 'cat-care' },
+        { name: 'Clothing/Beds/Carrier', slug: 'clothing-beds-carrier' },
+        { name: 'Cat Accessories', slug: 'cat-accessories' },
+        { name: 'Dog Accessories', slug: 'dog-accessories' },
+        { name: 'Rabbit', slug: 'rabbit' },
+        { name: 'Bird', slug: 'bird' }
+      ];
+
+      const createdCategories = [];
+      for (const categoryData of newCategories) {
+        const existingCategory = await Category.findOne({ slug: categoryData.slug });
+        if (!existingCategory) {
+          const newCategory = new Category(categoryData);
+          await newCategory.save();
+          createdCategories.push(newCategory);
+        }
+      }
+
+      res.json({ 
+        message: "Categories seeded successfully", 
+        created: createdCategories.length,
+        categories: createdCategories 
+      });
+    } catch (error) {
+      console.error("Error seeding categories:", error);
+      res.status(500).json({ message: "Failed to seed categories" });
+    }
+  });
+
   // Brands API
   app.get("/api/brands", async (req, res) => {
     try {
