@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Use memory storage for Sharp processing
   const upload = multer({ 
-    storage: multer.memoryStorage(),
+    storage:multer.memoryStorage(),
     limits: {
       fileSize: 5 * 1024 * 1024 // 5MB limit
     },
@@ -110,12 +110,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/seed-categories", async (req, res) => {
     try {
       const newCategories = [
-        { name: 'Cat Care', slug: 'cat-care' },
-        { name: 'Clothing/Beds/Carrier', slug: 'clothing-beds-carrier' },
+        { name: 'Cat Food', slug: 'cat-food' },
+        { name: 'Dog Food', slug: 'dog-food' },
+        { name: 'Cat Toys', slug: 'cat-toys' },
+        { name: 'Cat Litter', slug: 'cat-litter' },
+        { name: 'Cat Care & Health', slug: 'cat-care' },
+        { name: 'Clothing, Beds & Carrier', slug: 'clothing-beds-carrier' },
         { name: 'Cat Accessories', slug: 'cat-accessories' },
-        { name: 'Dog Accessories', slug: 'dog-accessories' },
-        { name: 'Rabbit', slug: 'rabbit' },
-        { name: 'Bird', slug: 'bird' }
+        { name: 'Dog Health & Accessories', slug: 'dog-accessories' },
+        { name: 'Rabbit Food & Accessories', slug: 'rabbit' },
+        { name: 'Bird Food & Accessories', slug: 'bird' }
       ];
 
       const createdCategories = [];
@@ -311,6 +315,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Parse tags if they exist (comma-separated string to array)
       const tags = productData.tags ? productData.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0) : [];
 
+      // Category mapping for proper slug creation
+      const categoryMappings: { [key: string]: { name: string; slug: string } } = {
+        'cat-food': { name: 'Cat Food', slug: 'cat-food' },
+        'dog-food': { name: 'Dog Food', slug: 'dog-food' },
+        'cat-toys': { name: 'Cat Toys', slug: 'cat-toys' },
+        'cat-litter': { name: 'Cat Litter', slug: 'cat-litter' },
+        'cat-care': { name: 'Cat Care & Health', slug: 'cat-care' },
+        'clothing-beds-carrier': { name: 'Clothing, Beds & Carrier', slug: 'clothing-beds-carrier' },
+        'cat-accessories': { name: 'Cat Accessories', slug: 'cat-accessories' },
+        'dog-accessories': { name: 'Dog Health & Accessories', slug: 'dog-accessories' },
+        'rabbit': { name: 'Rabbit Food & Accessories', slug: 'rabbit' },
+        'bird': { name: 'Bird Food & Accessories', slug: 'bird' }
+      };
+
       // Find category and brand by their IDs/names
       let categoryRecord = await Category.findOne({ 
         $or: [
@@ -320,10 +338,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!categoryRecord) {
-        // Create category if it doesn't exist
+        // Create category if it doesn't exist using proper mapping
+        const categoryMapping = categoryMappings[productData.categoryId];
         categoryRecord = new Category({
-          name: productData.categoryId,
-          slug: productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
+          name: categoryMapping ? categoryMapping.name : productData.categoryId,
+          slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
       }
@@ -381,6 +400,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Parse tags if they exist (comma-separated string to array)
       const tags = productData.tags ? productData.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0) : [];
 
+      // Category mapping for proper slug creation
+      const categoryMappings: { [key: string]: { name: string; slug: string } } = {
+        'cat-food': { name: 'Cat Food', slug: 'cat-food' },
+        'dog-food': { name: 'Dog Food', slug: 'dog-food' },
+        'cat-toys': { name: 'Cat Toys', slug: 'cat-toys' },
+        'cat-litter': { name: 'Cat Litter', slug: 'cat-litter' },
+        'cat-care': { name: 'Cat Care & Health', slug: 'cat-care' },
+        'clothing-beds-carrier': { name: 'Clothing, Beds & Carrier', slug: 'clothing-beds-carrier' },
+        'cat-accessories': { name: 'Cat Accessories', slug: 'cat-accessories' },
+        'dog-accessories': { name: 'Dog Health & Accessories', slug: 'dog-accessories' },
+        'rabbit': { name: 'Rabbit Food & Accessories', slug: 'rabbit' },
+        'bird': { name: 'Bird Food & Accessories', slug: 'bird' }
+      };
+
       // Find category and brand by their IDs/names
       let categoryRecord = await Category.findOne({ 
         $or: [
@@ -390,10 +423,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!categoryRecord) {
-        // Create category if it doesn't exist
+        // Create category if it doesn't exist using proper mapping
+        const categoryMapping = categoryMappings[productData.categoryId];
         categoryRecord = new Category({
-          name: productData.categoryId,
-          slug: productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
+          name: categoryMapping ? categoryMapping.name : productData.categoryId,
+          slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
       }
@@ -565,7 +599,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Set cache headers for better performance
       res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache
-      
+
       const repackProducts = await Product.find({
         $or: [
           { tags: { $in: ['repack-food', 'repack'] } },
@@ -1332,14 +1366,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { category } = req.query;
       const allPosts = await storage.getBlogPosts();
       let publishedPosts = allPosts.filter(post => post.isPublished);
-      
+
       // Filter by category if provided
       if (category && category !== 'All') {
         publishedPosts = publishedPosts.filter(post => 
           post.category && post.category === category
         );
       }
-      
+
       res.json(publishedPosts);
     } catch (error) {
       console.error('Error fetching published blog posts:', error);
@@ -1352,11 +1386,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const blogPost = await storage.getBlogPost(id);
-      
+
       if (!blogPost) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.json(blogPost);
     } catch (error) {
       console.error('Error fetching blog post:', error);
@@ -1369,11 +1403,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { slug } = req.params;
       const blogPost = await storage.getBlogPostBySlug(slug);
-      
+
       if (!blogPost) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.json(blogPost);
     } catch (error) {
       console.error('Error fetching blog post by slug:', error);
@@ -1397,7 +1431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const validatedData = blogPostSchema.parse(req.body);
-      
+
       // Convert publishedAt string to Date if provided
       const blogPostData = {
         ...validatedData,
@@ -1419,7 +1453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/blog/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       const updateSchema = z.object({
         title: z.string().min(1).optional(),
         slug: z.string().min(1).optional(),
@@ -1433,7 +1467,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const validatedData = updateSchema.parse(req.body);
-      
+
       // Convert publishedAt string to Date if provided
       const updateData = {
         ...validatedData,
@@ -1441,11 +1475,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const updatedBlogPost = await storage.updateBlogPost(id, updateData);
-      
+
       if (!updatedBlogPost) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.json(updatedBlogPost);
     } catch (error) {
       console.error('Error updating blog post:', error);
@@ -1461,11 +1495,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const deleted = await storage.deleteBlogPost(id);
-      
+
       if (!deleted) {
         return res.status(404).json({ message: "Blog post not found" });
       }
-      
+
       res.json({ message: "Blog post deleted successfully" });
     } catch (error) {
       console.error('Error deleting blog post:', error);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 export interface Product {
   id: string;
@@ -63,7 +64,7 @@ export function useProducts() {
       );
       return !isBulkProduct;
     });
-    
+
     if (categoryId === 'all' || !categoryId) return filteredProducts;
     return filteredProducts.filter(product => product.category === categoryId);
   };
@@ -74,19 +75,19 @@ export function useProducts() {
       const isBulkProduct = product.tags?.some(tag => 
         ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
       );
-      
+
       if (isBulkProduct) return false;
-      
+
       // Match by brand name or slug
       const brandMatches = product.brandName?.toLowerCase() === brandSlug.toLowerCase() ||
                           product.brandSlug?.toLowerCase() === brandSlug.toLowerCase();
-      
+
       // Also check tags and product name for brand matches
       const tagMatches = product.tags?.some(tag => 
         tag.toLowerCase().includes(brandSlug.toLowerCase())
       );
       const nameMatches = product.name.toLowerCase().includes(brandSlug.toLowerCase());
-      
+
       return brandMatches || tagMatches || nameMatches;
     });
   };
@@ -97,9 +98,9 @@ export function useProducts() {
       const isBulkProduct = product.tags?.some(tag => 
         ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
       );
-      
+
       if (isBulkProduct) return false;
-      
+
       return product.name.toLowerCase().includes(query.toLowerCase()) ||
              product.description?.toLowerCase().includes(query.toLowerCase()) ||
              product.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
@@ -116,3 +117,59 @@ export function useProducts() {
     refetch: () => window.location.reload() // Simple refetch
   };
 }
+
+export const useProductsByCategory = (category?: string, brand?: string, searchTerm?: string) => {
+  return useQuery({
+    queryKey: ['/api/products', category, brand, searchTerm],
+    select: (data: any[]) => {
+      return data.filter((product: any) => {
+        // Filter by category if specified
+        if (category && category !== 'all') {
+          const productCategory = product.category || product.categoryId;
+          // Handle category mapping for the 10 specific categories
+          const categoryMappings: { [key: string]: string[] } = {
+            'cat-food': ['cat-food'],
+            'dog-food': ['dog-food'],
+            'cat-toys': ['cat-toys'],
+            'cat-litter': ['cat-litter'],
+            'cat-care': ['cat-care'],
+            'clothing-beds-carrier': ['clothing-beds-carrier'],
+            'cat-accessories': ['cat-accessories'],
+            'dog-accessories': ['dog-accessories'],
+            'rabbit': ['rabbit'],
+            'bird': ['bird']
+          };
+
+          const validCategories = categoryMappings[category] || [category];
+          if (!validCategories.includes(productCategory)) {
+            return false;
+          }
+        }
+
+        // Filter by brand if specified
+        if (brand && brand !== 'all') {
+          const productBrand = product.brandSlug || product.brandId || product.brand;
+          if (productBrand !== brand) {
+            return false;
+          }
+        }
+
+        // Filter by search term if specified
+        if (searchTerm) {
+          const searchLower = searchTerm.toLowerCase();
+          const matchesName = product.name?.toLowerCase().includes(searchLower);
+          const matchesDescription = product.description?.toLowerCase().includes(searchLower);
+          const matchesTags = product.tags?.some((tag: string) => 
+            tag.toLowerCase().includes(searchLower)
+          );
+
+          if (!matchesName && !matchesDescription && !matchesTags) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    },
+  });
+};

@@ -118,7 +118,7 @@ export default function AdminPage() {
   const [editingRepackProduct, setEditingRepackProduct] = useState<any>(null);
   const [showRepackDialog, setShowRepackDialog] = useState(false);
 
-  // Function to parse bold text formatting
+  // Function to parse announcement text for bold formatting
   const parseAnnouncementText = (text: string) => {
     if (!text) return text;
 
@@ -532,7 +532,7 @@ export default function AdminPage() {
 
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || product.categoryId === selectedCategory;
 
     const stockQuantity = product.stockQuantity || product.stock || 0;
     const matchesStock = stockFilter === 'all' || 
@@ -570,8 +570,8 @@ export default function AdminPage() {
       description: product.description || '',
       price: product.price.toString(),
       originalPrice: product.originalPrice?.toString() || '',
-      categoryId: product.category || product.categoryId || '',
-      brandId: product.brandSlug || product.brandId || '',
+      categoryId: product.categoryId || '',
+      brandId: product.brandId || '',
       image: product.image,
       stockQuantity: product.stock || product.stockQuantity || 0,
       tags: product.tags?.join(', ') || '',
@@ -607,8 +607,8 @@ export default function AdminPage() {
       description: product.description || '',
       price: product.price.toString(),
       originalPrice: product.originalPrice?.toString() || '',
-      categoryId: product.category || product.categoryId || '',
-      brandId: product.brandSlug || product.brandId || '',
+      categoryId: product.categoryId || '',
+      brandId: product.brandId || '',
       image: product.image,
       stockQuantity: product.stock || product.stockQuantity || 0,
     });
@@ -832,7 +832,7 @@ export default function AdminPage() {
                             </td>
                             <td className="px-4 py-4">
                               <Badge variant="outline">
-                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.category}
+                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
                               </Badge>
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
@@ -894,10 +894,10 @@ export default function AdminPage() {
                       <CardContent>
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-xl font-bold text-green-600">৳{product.price}</span>
-                          <Badge variant="outline">{product.brand}</Badge>
+                          <Badge variant="outline">{product.brandId}</Badge>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-500">Stock: {product.stock}</span>
+                          <span className="text-sm text-gray-500">Stock: {product.stockQuantity || product.stock || 0}</span>
                           <div className="flex space-x-1">
                             <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => {
                               setEditingProduct(product);
@@ -935,16 +935,16 @@ export default function AdminPage() {
                   <SelectValue placeholder="Select a shop category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="adult-food">Adult Food</SelectItem>
-                  <SelectItem value="kitten-food">Kitten Food</SelectItem>
-                  <SelectItem value="collar">Collar</SelectItem>
-                  <SelectItem value="clumping-cat-litter">Clumping Cat Litter</SelectItem>
-                  <SelectItem value="cat-litter-accessories">Cat Litter Accessories</SelectItem>
-                  <SelectItem value="harness">Harness</SelectItem>
-                  <SelectItem value="cat-tick-flea-control">Cat Tick & Flea Control</SelectItem>
-                  <SelectItem value="deworming-tablet">Deworming Tablet</SelectItem>
-                  <SelectItem value="cat-pouches">Cat Pouches</SelectItem>
-                  <SelectItem value="sunglass">Sunglass</SelectItem>
+                  <SelectItem value="cat-food">Cat Food</SelectItem>
+                  <SelectItem value="dog-food">Dog Food</SelectItem>
+                  <SelectItem value="cat-toys">Cat Toys</SelectItem>
+                  <SelectItem value="cat-litter">Cat Litter</SelectItem>
+                  <SelectItem value="cat-care">Cat Care & Health</SelectItem>
+                  <SelectItem value="clothing-beds-carrier">Clothing, Beds & Carrier</SelectItem>
+                  <SelectItem value="cat-accessories">Cat Accessories</SelectItem>
+                  <SelectItem value="dog-accessories">Dog Health & Accessories</SelectItem>
+                  <SelectItem value="rabbit">Rabbit Food & Accessories</SelectItem>
+                  <SelectItem value="bird">Bird Food & Accessories</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -981,16 +981,16 @@ export default function AdminPage() {
                         {products
                           .filter((product: any) => 
                             product.tags?.includes(selectedShopCategory) ||
-                            (selectedShopCategory === 'adult-food' && product.categoryId === 'adult-food') ||
-                            (selectedShopCategory === 'kitten-food' && product.categoryId === 'kitten-food') ||
-                            (selectedShopCategory === 'collar' && product.tags?.includes('collar')) ||
-                            (selectedShopCategory === 'clumping-cat-litter' && product.categoryId === 'clumping-cat-litter') ||
-                            (selectedShopCategory === 'cat-litter-accessories' && product.categoryId === 'cat-litter-accessories') ||
-                            (selectedShopCategory === 'harness' && product.tags?.includes('harness')) ||
-                            (selectedShopCategory === 'cat-tick-flea-control' && product.categoryId === 'cat-tick-flea-control') ||
-                            (selectedShopCategory === 'deworming-tablet' && product.categoryId === 'deworming-tablet') ||
-                            (selectedShopCategory === 'cat-pouches' && product.categoryId === 'cat-pouches') ||
-                            (selectedShopCategory === 'sunglass' && product.tags?.includes('sunglass'))
+                            (selectedShopCategory === 'cat-food' && product.categoryId === 'cat-food') ||
+                            (selectedShopCategory === 'dog-food' && product.categoryId === 'dog-food') ||
+                            (selectedShopCategory === 'cat-toys' && product.categoryId === 'cat-toys') ||
+                            (selectedShopCategory === 'cat-litter' && product.categoryId === 'cat-litter') ||
+                            (selectedShopCategory === 'cat-care' && product.categoryId === 'cat-care') ||
+                            (selectedShopCategory === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
+                            (selectedShopCategory === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
+                            (selectedShopCategory === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
+                            (selectedShopCategory === 'rabbit' && product.categoryId === 'rabbit') ||
+                            (selectedShopCategory === 'bird' && product.categoryId === 'bird')
                           )
                           .map((product: any) => (
                             <Card key={product.id} className="hover:shadow-md transition-shadow">
@@ -1024,16 +1024,16 @@ export default function AdminPage() {
                         {products
                           .filter((product: any) => 
                             product.tags?.includes(selectedShopCategory) ||
-                            (selectedShopCategory === 'adult-food' && product.categoryId === 'adult-food') ||
-                            (selectedShopCategory === 'kitten-food' && product.categoryId === 'kitten-food') ||
-                            (selectedShopCategory === 'collar' && product.tags?.includes('collar')) ||
-                            (selectedShopCategory === 'clumping-cat-litter' && product.categoryId === 'clumping-cat-litter') ||
-                            (selectedShopCategory === 'cat-litter-accessories' && product.categoryId === 'cat-litter-accessories') ||
-                            (selectedShopCategory === 'harness' && product.tags?.includes('harness')) ||
-                            (selectedShopCategory === 'cat-tick-flea-control' && product.categoryId === 'cat-tick-flea-control') ||
-                            (selectedShopCategory === 'deworming-tablet' && product.categoryId === 'deworming-tablet') ||
-                            (selectedShopCategory === 'cat-pouches' && product.categoryId === 'cat-pouches') ||
-                            (selectedShopCategory === 'sunglass' && product.tags?.includes('sunglass'))
+                            (selectedShopCategory === 'cat-food' && product.categoryId === 'cat-food') ||
+                            (selectedShopCategory === 'dog-food' && product.categoryId === 'dog-food') ||
+                            (selectedShopCategory === 'cat-toys' && product.categoryId === 'cat-toys') ||
+                            (selectedShopCategory === 'cat-litter' && product.categoryId === 'cat-litter') ||
+                            (selectedShopCategory === 'cat-care' && product.categoryId === 'cat-care') ||
+                            (selectedShopCategory === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
+                            (selectedShopCategory === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
+                            (selectedShopCategory === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
+                            (selectedShopCategory === 'rabbit' && product.categoryId === 'rabbit') ||
+                            (selectedShopCategory === 'bird' && product.categoryId === 'bird')
                           ).length === 0 && (
                           <div className="col-span-full text-center py-8 text-gray-500">
                             <Grid3X3 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
@@ -1079,22 +1079,22 @@ export default function AdminPage() {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {[
-                      'adult-food', 'kitten-food', 'collar', 'clumping-cat-litter', 
-                      'cat-litter-accessories', 'harness', 'cat-tick-flea-control', 
-                      'deworming-tablet', 'cat-pouches', 'sunglass'
+                      'cat-food', 'dog-food', 'cat-toys', 'cat-litter', 
+                      'cat-care', 'clothing-beds-carrier', 'cat-accessories', 
+                      'dog-accessories', 'rabbit', 'bird'
                     ].map((category) => {
                       const count = products.filter((product: any) => 
                         product.tags?.includes(category) ||
-                        (category === 'adult-food' && product.categoryId === 'adult-food') ||
-                        (category === 'kitten-food' && product.categoryId === 'kitten-food') ||
-                        (category === 'collar' && product.tags?.includes('collar')) ||
-                        (category === 'clumping-cat-litter' && product.categoryId === 'clumping-cat-litter') ||
-                        (category === 'cat-litter-accessories' && product.categoryId === 'cat-litter-accessories') ||
-                        (category === 'harness' && product.tags?.includes('harness')) ||
-                        (category === 'cat-tick-flea-control' && product.categoryId === 'cat-tick-flea-control') ||
-                        (category === 'deworming-tablet' && product.categoryId === 'deworming-tablet') ||
-                        (category === 'cat-pouches' && product.categoryId === 'cat-pouches') ||
-                        (category === 'sunglass' && product.tags?.includes('sunglass'))
+                        (category === 'cat-food' && product.categoryId === 'cat-food') ||
+                        (category === 'dog-food' && product.categoryId === 'dog-food') ||
+                        (category === 'cat-toys' && product.categoryId === 'cat-toys') ||
+                        (category === 'cat-litter' && product.categoryId === 'cat-litter') ||
+                        (category === 'cat-care' && product.categoryId === 'cat-care') ||
+                        (category === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
+                        (category === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
+                        (category === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
+                        (category === 'rabbit' && product.categoryId === 'rabbit') ||
+                        (category === 'bird' && product.categoryId === 'bird')
                       ).length;
 
                       return (
@@ -1210,7 +1210,7 @@ export default function AdminPage() {
                             </td>
                             <td className="px-4 py-4">
                               <Badge variant="outline" className="border-orange-200 text-orange-800">
-                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.category}
+                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
                               </Badge>
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
@@ -1452,7 +1452,7 @@ export default function AdminPage() {
 
             <div className="grid gap-6">
               {blogPosts.map((blog) => (
-                <Card key={blog.id} className="hover:shadow-lg transition-shadow">
+                <Card key={blog._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -1566,16 +1566,16 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
-                          <SelectItem value="cat-food">Cat Food</SelectItem>
-                          <SelectItem value="dog-food">Dog Food</SelectItem>
-                          <SelectItem value="cat-toys">Cat Toys</SelectItem>
-                          <SelectItem value="cat-litter">Cat Litter</SelectItem>
-                          <SelectItem value="cat-care">Cat Care & Health</SelectItem>
-                          <SelectItem value="clothing-beds-carrier">Clothing, Beds & Carrier</SelectItem>
-                          <SelectItem value="cat-accessories">Cat Accessories</SelectItem>
-                          <SelectItem value="dog-accessories">Dog Health & Accessories</SelectItem>
-                          <SelectItem value="rabbit">Rabbit Food & Accessories</SelectItem>
-                          <SelectItem value="bird">Bird Food & Accessories</SelectItem>
+                          <SelectItem value="cat-food" className="text-black hover:bg-gray-100">Cat Food</SelectItem>
+                          <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
+                          <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
+                          <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
+                          <SelectItem value="cat-care" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
+                          <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
+                          <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
+                          <SelectItem value="dog-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -1866,16 +1866,16 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
-                          <SelectItem value="cat-food">Cat Food</SelectItem>
-                          <SelectItem value="dog-food">Dog Food</SelectItem>
-                          <SelectItem value="cat-toys">Cat Toys</SelectItem>
-                          <SelectItem value="cat-litter">Cat Litter</SelectItem>
-                          <SelectItem value="cat-care">Cat Care & Health</SelectItem>
-                          <SelectItem value="clothing-beds-carrier">Clothing, Beds & Carrier</SelectItem>
-                          <SelectItem value="cat-accessories">Cat Accessories</SelectItem>
-                          <SelectItem value="dog-accessories">Dog Health & Accessories</SelectItem>
-                          <SelectItem value="rabbit">Rabbit Food & Accessories</SelectItem>
-                          <SelectItem value="bird">Bird Food & Accessories</SelectItem>
+                          <SelectItem value="cat-food" className="text-black hover:bg-gray-100">Cat Food</SelectItem>
+                          <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
+                          <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
+                          <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
+                          <SelectItem value="cat-care" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
+                          <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
+                          <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
+                          <SelectItem value="dog-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
