@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
-import { Calendar, User, ArrowRight, BookOpen } from 'lucide-react';
+import { Calendar, User, ArrowRight, BookOpen, Heart } from 'lucide-react';
 
 interface BlogPost {
   _id: string;
@@ -73,7 +73,10 @@ export default function BlogPreview() {
     <section className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-4">Latest Pet Care Tips</h2>
+          <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: '#257334' }}>
+            <Heart className="h-8 w-8" />
+            Latest Pet Care Tips
+          </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Stay informed with expert advice and insights to keep your pets healthy and happy.
           </p>
