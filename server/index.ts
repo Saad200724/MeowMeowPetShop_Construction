@@ -18,8 +18,8 @@ import { setupVite, serveStatic, log } from "./vite";
 import { createAdminAccount } from "./admin-setup";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
