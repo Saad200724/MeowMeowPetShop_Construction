@@ -13,7 +13,7 @@ export default function NavigationSidebar() {
     { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
     { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: true },
     { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
-    { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/cat-accessories', hasSubCategories: true },
+    { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/cat-clothing', hasSubCategories: true },
     { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: true },
     { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: true },
     { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: true },
