@@ -131,8 +131,20 @@ export default function Header() {
       {/* Top Announcement Bar */}
       <div className="bg-[#38603d] text-white py-2 text-sm overflow-hidden relative">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2">
-            <div className="flex flex-wrap items-center gap-3">
+          <div className="relative flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2">
+            {/* Scrolling Announcement - Full Width Behind Everything */}
+            <div className="absolute inset-0 overflow-hidden">
+              {currentAnnouncement && (
+                <div className="animate-marquee whitespace-nowrap absolute top-0 h-full flex items-center" style={{ width: 'max-content', left: '100%' }}>
+                  <div className="inline-flex items-center text-white text-xs font-medium">
+                    <Speaker size={12} className="mr-2" />
+                    <span dangerouslySetInnerHTML={{ __html: parseAnnouncementText(currentAnnouncement.text) }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 relative z-10">
               <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
                 <Phone size={12} className="mr-1" />
                 <span>01405-045023</span>
@@ -149,21 +161,12 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Scrolling Announcement Area */}
-            <div className="flex-1 flex justify-center items-center relative overflow-hidden min-h-[24px]">
-              {currentAnnouncement && (
-                <div className="w-full h-full relative">
-                  <div className="animate-marquee whitespace-nowrap absolute top-0 h-full flex items-center" style={{ width: 'max-content', left: '100%' }}>
-                    <div className="inline-flex items-center text-white text-xs font-medium">
-                      <Speaker size={12} className="mr-2" />
-                      <span dangerouslySetInnerHTML={{ __html: parseAnnouncementText(currentAnnouncement.text) }} />
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Visible Area for Announcement */}
+            <div className="flex-1 flex justify-center items-center relative min-h-[24px]">
+              {/* This area shows the scrolling text */}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 relative z-10">
               <span className="text-white font-medium text-xs">Follow:</span>
               <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
                 <Facebook size={14} />
