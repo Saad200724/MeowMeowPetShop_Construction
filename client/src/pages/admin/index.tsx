@@ -66,19 +66,35 @@ const announcementFormSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+const blogFormSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  excerpt: z.string().optional(),
+  content: z.string().min(1, 'Content is required'),
+  image: z.string().optional(),
+  author: z.string().min(1, 'Author is required'),
+  category: z.string().min(1, 'Category is required'),
+  isPublished: z.boolean().optional(),
+});
+
 type ProductFormData = z.infer<typeof productFormSchema>;
 type RepackFormData = z.infer<typeof repackFormSchema>;
 type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
+type BlogFormData = z.infer<typeof blogFormSchema>;
 
 interface BlogPost {
-  id: string;
+  _id: string;
   title: string;
-  excerpt: string;
+  slug: string;
+  excerpt?: string;
   content: string;
-  category: string;
+  image?: string;
   author: string;
-  publishedAt: string;
-  status: 'draft' | 'published';
+  publishedAt?: Date;
+  tags?: string[];
+  isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 
@@ -87,7 +103,6 @@ export default function AdminPage() {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('products');
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
@@ -395,33 +410,104 @@ export default function AdminPage() {
     },
   });
 
-  // Initialize sample blog data
-  useEffect(() => {
-    const sampleBlogs: BlogPost[] = [
-      {
-        id: '1',
-        title: 'Complete Guide to Cat Nutrition',
-        excerpt: 'Everything you need to know about feeding your feline friend',
-        content: 'Proper nutrition is essential for your cat\'s health and wellbeing...',
-        category: 'Cat Care',
-        author: 'Dr. Sarah Johnson',
-        publishedAt: '2025-01-20',
-        status: 'published'
-      },
-      {
-        id: '2',
-        title: 'Best Dog Training Tips for Beginners',
-        excerpt: 'Start your puppy training journey with these essential tips',
-        content: 'Training your dog is one of the most rewarding experiences...',
-        category: 'Dog Care',
-        author: 'Mark Wilson',
-        publishedAt: '2025-01-18',
-        status: 'published'
-      }
-    ];
+  // Fetch blogs from API
+  const { data: blogPosts = [], refetch: refetchBlogs } = useQuery({
+    queryKey: ['/api/blog'],
+  });
 
-    setBlogPosts(sampleBlogs);
-  }, []);
+  // Blog mutations
+  const createBlogMutation = useMutation({
+    mutationFn: async (data: BlogFormData) => {
+      const slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const blogData = {
+        ...data,
+        slug,
+        tags: data.category ? [data.category] : [],
+        isPublished: data.isPublished || false
+      };
+      const response = await fetch('/api/blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(blogData),
+      });
+      if (!response.ok) throw new Error('Failed to create blog post');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/blog'] });
+      setShowBlogDialog(false);
+      setEditingBlog(null);
+      toast({
+        title: 'Success',
+        description: 'Blog post created successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create blog post',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const updateBlogMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: BlogFormData }) => {
+      const slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const blogData = {
+        ...data,
+        slug,
+        tags: data.category ? [data.category] : [],
+      };
+      const response = await fetch(`/api/blog/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(blogData),
+      });
+      if (!response.ok) throw new Error('Failed to update blog post');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/blog'] });
+      setShowBlogDialog(false);
+      setEditingBlog(null);
+      toast({
+        title: 'Success',
+        description: 'Blog post updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update blog post',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/blog/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete blog post');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/blog'] });
+      toast({
+        title: 'Success',
+        description: 'Blog post deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete blog post',
+        variant: 'destructive',
+      });
+    },
+  });
 
   if (!user || user.role !== 'admin') {
     return (
@@ -529,28 +615,33 @@ export default function AdminPage() {
     setShowRepackDialog(true);
   };
 
-  const handleSaveBlog = () => {
-    if (!editingBlog) return;
+  const handleCreateBlog = (data: BlogFormData) => {
+    createBlogMutation.mutate(data);
+  };
 
-    if (editingBlog.id === 'new') {
-      const newBlog = { ...editingBlog, id: Date.now().toString() };
-      setBlogPosts([...blogPosts, newBlog]);
-      toast({ title: 'Success', description: 'Blog post added successfully!' });
-    } else {
-      setBlogPosts(blogPosts.map(b => b.id === editingBlog.id ? editingBlog : b));
-      toast({ title: 'Success', description: 'Blog post updated successfully!' });
+  const handleUpdateBlog = (data: BlogFormData) => {
+    if (editingBlog && editingBlog._id !== 'new') {
+      updateBlogMutation.mutate({ id: editingBlog._id, data });
     }
-
-    setEditingBlog(null);
-    setShowBlogDialog(false);
   };
 
   const handleDeleteBlog = (blogId: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
-      setBlogPosts(blogPosts.filter(b => b.id !== blogId));
-      toast({ title: 'Success', description: 'Blog post deleted successfully!' });
+      deleteBlogMutation.mutate(blogId);
     }
   };
+
+  // Blog categories
+  const blogCategories = [
+    'Pet Care Tips',
+    'Cat Health', 
+    'Dog Health',
+    'Training',
+    'Nutrition',
+    'Grooming',
+    'Behavior',
+    'Product Reviews'
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1317,14 +1408,16 @@ export default function AdminPage() {
               <Button 
                 onClick={() => {
                   setEditingBlog({
-                    id: 'new',
+                    _id: 'new',
                     title: '',
+                    slug: '',
                     excerpt: '',
                     content: '',
-                    category: 'Pet Care',
                     author: user.firstName || 'Admin',
-                    publishedAt: new Date().toISOString().split('T')[0],
-                    status: 'draft'
+                    tags: [],
+                    isPublished: false,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
                   });
                   setShowBlogDialog(true);
                 }}
@@ -1346,9 +1439,9 @@ export default function AdminPage() {
                         <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
                           <span>By {blog.author}</span>
                           <span>•</span>
-                          <span>{blog.publishedAt}</span>
-                          <Badge variant={blog.status === 'published' ? 'default' : 'secondary'}>
-                            {blog.status}
+                          <span>{new Date(blog.publishedAt || blog.createdAt).toLocaleDateString()}</span>
+                          <Badge variant={blog.isPublished ? 'default' : 'secondary'}>
+                            {blog.isPublished ? 'published' : 'draft'}
                           </Badge>
                         </div>
                       </div>
@@ -1359,7 +1452,7 @@ export default function AdminPage() {
                         }}>
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="outline" className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" onClick={() => handleDeleteBlog(blog.id)}>
+                        <Button size="sm" variant="outline" className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" onClick={() => handleDeleteBlog(blog._id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
