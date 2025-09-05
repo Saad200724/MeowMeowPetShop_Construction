@@ -15,10 +15,10 @@ export default function CatLitterPage() {
     priceRange: [1, 13000],
     sortBy: 'relevance'
   });
-  
+
   // Get dynamic products from centralized data
   const allProducts = getProductsByCategory('cat-litter');
-  
+
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
     .filter(product => {
@@ -56,13 +56,13 @@ export default function CatLitterPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Cat Litter & Accessories</h1>
           <p className="text-xl opacity-90 mb-6">Everything you need for your cat's hygiene and comfort</p>
-          
+
           {/* Search Bar */}
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -92,7 +92,7 @@ export default function CatLitterPage() {
           <main className="lg:w-3/4">
             {/* Analytics Bar */}
             <AnalyticsBar categoryId="cat-litter" className="mb-6" />
-            
+
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Cat Litter & Accessories</h2>
               <p className="text-gray-600">{filteredProducts.length} products found</p>
@@ -110,10 +110,10 @@ export default function CatLitterPage() {
                 <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
                 <Button
                   variant="outline"
-                  className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 shadow-sm"
+                  className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
                     setSearchQuery('');
-                    setFilters({ priceRange: [1, 13000], sortBy: 'relevance' });
+                    setFilters({ priceRange: [1, 8000], sortBy: 'relevance' });
                   }}
                 >
                   Clear Filters
