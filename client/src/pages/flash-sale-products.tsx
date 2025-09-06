@@ -1,35 +1,57 @@
 
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Flame, Search, Grid3X3, List } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import ProductCard from '@/components/ui/product-card';
+import { Input } from '@/components/ui/input';
+import { Flame, Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from '@/components/layout/sidebar';
+import ProductCard from '@/components/product/product-card';
+import { useProducts } from '@/hooks/use-products';
 
 export default function FlashSaleProducts() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const { data: allProducts = [], isLoading } = useQuery({
-    queryKey: ['/api/products'],
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-  });
+  const { loading, error, products } = useProducts();
 
-  // Filter products that are on sale
-  const flashSaleProducts = (allProducts as any[]).filter((product: any) => product.isOnSale);
+  // Filter for flash sale products
+  const flashSaleProducts = products.filter(product => product.isOnSale);
 
   // Filter products based on search query
-  const filteredProducts = flashSaleProducts.filter((product: any) =>
+  const filteredProducts = flashSaleProducts.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading flash sale products...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">Error loading products: {error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -62,77 +84,29 @@ export default function FlashSaleProducts() {
       {/* Main Content */}
       <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Controls */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <h2 className="text-2xl font-bold">
-              All Flash Sale Products {!isLoading && `(${filteredProducts.length})`}
-            </h2>
-            <div className="flex items-center gap-4">
-              <div className="flex rounded-lg border border-gray-200 overflow-hidden">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-none h-10 px-3"
-                >
-                  <Grid3X3 size={16} />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-none h-10 px-3"
-                >
-                  <List size={16} />
-                </Button>
-              </div>
-            </div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Flash Sale Products</h2>
+            <p className="text-gray-600">{filteredProducts.length} products found</p>
           </div>
 
-          {/* Products Grid */}
-          {isLoading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {/* No Products Message */}
+          {filteredProducts.length === 0 && (
             <div className="text-center py-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                    <div className="bg-red-200 h-48 rounded-t-lg"></div>
-                    <div className="p-4 space-y-2">
-                      <div className="bg-gray-200 h-4 rounded"></div>
-                      <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-lg text-red-600 font-medium animate-pulse">Loading flash sale products...</p>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <Card className="p-8">
-              <div className="text-center">
-                <Flame className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Flash Sale Products Found</h3>
-                <p className="text-gray-500">
-                  {searchQuery ? 'Try adjusting your search terms' : 'No flash sale products available at the moment.'}
-                </p>
-              </div>
-            </Card>
-          ) : (
-            <div className={`grid gap-4 sm:gap-6 ${
-              viewMode === 'grid' 
-                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-                : 'grid-cols-1'
-            }`}>
-              {filteredProducts.map((product: any, index: number) => (
-                <div 
-                  key={product.id || product._id} 
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <ProductCard 
-                    product={product} 
-                    className={viewMode === 'list' ? 'sm:flex sm:flex-row sm:h-48' : ''}
-                  />
-                </div>
-              ))}
+              <Flame className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">No flash sale products found.</p>
+              <Button
+                variant="outline"
+                className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100"
+                onClick={() => setSearchQuery('')}
+              >
+                Clear Search
+              </Button>
             </div>
           )}
         </div>

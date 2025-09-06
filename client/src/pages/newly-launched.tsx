@@ -1,34 +1,56 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Sparkles, Search, Grid3X3, List } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import ProductCard from '@/components/ui/product-card';
+import { Input } from '@/components/ui/input';
+import { Sparkles, Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from '@/components/layout/sidebar';
+import ProductCard from '@/components/product/product-card';
+import { useProducts } from '@/hooks/use-products';
 
 export default function NewlyLaunchedPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const { data: allProducts = [], isLoading } = useQuery({
-    queryKey: ['/api/products'],
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-  });
+  const { loading, error, products } = useProducts();
 
-  // Filter products that are newly launched
-  const newlyLaunchedProducts = (allProducts as any[]).filter((product: any) => product.isNew);
+  // Filter for newly launched products
+  const newlyLaunchedProducts = products.filter(product => product.isNew);
 
   // Filter products based on search query
-  const filteredProducts = newlyLaunchedProducts.filter((product: any) =>
+  const filteredProducts = newlyLaunchedProducts.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading newly launched products...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">Error loading products: {error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -63,9 +85,8 @@ export default function NewlyLaunchedPage() {
         <div className="max-w-7xl mx-auto">
           {/* Controls */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <h2 className="text-2xl font-bold">
-              All Newly Launched Products {!isLoading && `(${filteredProducts.length})`}
-            </h2>
+            <h2 className="text-2xl font-bold">Newly Launched Products</h2>
+            <p className="text-gray-600">{filteredProducts.length} products found</p>
             <div className="flex items-center gap-4">
               <div className="flex rounded-lg border border-gray-200 overflow-hidden">
                 <Button
@@ -88,59 +109,30 @@ export default function NewlyLaunchedPage() {
             </div>
           </div>
 
-          {/* Products Grid */}
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse relative">
-                    <div className="absolute top-2 left-2 bg-blue-400 text-white px-2 py-1 rounded text-xs font-medium z-10 animate-pulse">
-                      LOADING...
-                    </div>
-                    <div className="bg-indigo-200 h-48 rounded-t-lg"></div>
-                    <div className="p-4 space-y-2">
-                      <div className="bg-gray-200 h-4 rounded"></div>
-                      <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-lg text-indigo-600 font-medium animate-pulse">Loading newly launched products...</p>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <Card className="p-8">
-              <div className="text-center">
-                <Sparkles className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Newly Launched Products Found</h3>
-                <p className="text-gray-500">
-                  {searchQuery ? 'Try adjusting your search terms' : 'No newly launched products available at the moment.'}
-                </p>
-              </div>
-            </Card>
-          ) : (
-            <div className={`grid gap-4 sm:gap-6 ${
-              viewMode === 'grid' 
-                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-                : 'grid-cols-1'
-            }`}>
-              {filteredProducts.map((product: any, index: number) => (
-                <div 
-                  key={product.id || product._id} 
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="relative">
-                    <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
-                      <Sparkles size={12} />
-                      JUST IN
-                    </div>
-                    <ProductCard 
-                      product={product} 
-                      className={viewMode === 'list' ? 'sm:flex sm:flex-row sm:h-48' : ''}
-                    />
-                  </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="relative">
+                <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
+                  <Sparkles size={12} />
+                  JUST IN
                 </div>
-              ))}
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+
+          {/* No Products Message */}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-12">
+              <Sparkles className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">No newly launched products found.</p>
+              <Button
+                variant="outline"
+                className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100"
+                onClick={() => setSearchQuery('')}
+              >
+                Clear Search
+              </Button>
             </div>
           )}
         </div>
