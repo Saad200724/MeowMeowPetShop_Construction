@@ -22,7 +22,7 @@ export default function MobileBottomNav() {
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[1001] safe-area-pb">
+    <div className="md:hidden fixed bottom-2 left-0 right-0 bg-white border-t border-gray-200 z-[1001] safe-area-pb">
       <div className="flex items-center justify-around py-2 px-2">
         {/* Categories */}
         <button
@@ -30,7 +30,7 @@ export default function MobileBottomNav() {
           className="flex flex-col items-center justify-center py-2 px-3 transition-colors"
           data-testid="mobile-nav-categories"
         >
-          <Grid3X3 size={20} className="text-gray-600" />
+          <Grid3X3 size={18} className="text-gray-600" />
           <span className="text-xs text-gray-600 mt-1">Categories</span>
         </button>
 
@@ -42,7 +42,7 @@ export default function MobileBottomNav() {
             }`}
             data-testid="mobile-nav-search"
           >
-            <Search size={20} />
+            <Search size={18} />
             <span className="text-xs mt-1">Search</span>
           </div>
         </Link>
@@ -55,9 +55,7 @@ export default function MobileBottomNav() {
             }`}
             data-testid="mobile-nav-home"
           >
-            <div className="w-6 h-6 rounded-full bg-[#26732d] flex items-center justify-center">
-              <img src={logoPath} alt="Home" className="w-4 h-4" />
-            </div>
+            <img src={logoPath} alt="Home" className="w-5 h-5" />
             <span className="text-xs mt-1">Home</span>
           </div>
         </Link>
@@ -70,7 +68,7 @@ export default function MobileBottomNav() {
             }`}
             data-testid="mobile-nav-profile"
           >
-            <User size={20} />
+            <User size={18} />
             <span className="text-xs mt-1">My Profile</span>
           </div>
         </Link>
@@ -83,7 +81,7 @@ export default function MobileBottomNav() {
             }`}
             data-testid="mobile-nav-chat"
           >
-            <MessageCircle size={20} />
+            <MessageCircle size={18} />
             <span className="text-xs mt-1">Chat</span>
           </div>
         </Link>
