@@ -13,7 +13,7 @@ import { getProductsByCategory, type Product } from '@/lib/product-data';
 export default function CatToysPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({
-    priceRange: [1, 13000],
+    priceRange: [1, 20000],
     sortBy: 'relevance'
   });
   
@@ -86,7 +86,7 @@ export default function CatToysPage() {
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
             <ModernFilter 
               onFilterChange={handleFilterChange}
-              maxPrice={2000}
+              maxPrice={20000}
             />
           </aside>
 
@@ -115,7 +115,7 @@ export default function CatToysPage() {
                   className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
                     setSearchQuery('');
-                    setFilters({ priceRange: [1, 13000], sortBy: 'relevance' });
+                    setFilters({ priceRange: [1, 20000], sortBy: 'relevance' });
                   }}
                 >
                   Clear Filters

@@ -14,7 +14,7 @@ import { useProducts, type Product } from '@/hooks/use-products';
 export default function BirdPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({
-    priceRange: [1, 13000],
+    priceRange: [1, 20000],
     sortBy: 'relevance'
   });
   
@@ -117,7 +117,7 @@ export default function BirdPage() {
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
             <ModernFilter 
               onFilterChange={handleFilterChange}
-              maxPrice={1500}
+              maxPrice={20000}
             />
           </aside>
 
