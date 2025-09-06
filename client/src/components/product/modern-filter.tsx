@@ -97,7 +97,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-16 h-8 text-sm"
+                className="w-24 h-10 text-sm px-2"
                 min="1"
                 max={maxPrice}
               />
@@ -114,7 +114,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-20 h-8 text-sm"
+                className="w-28 h-10 text-sm px-2"
                 min="1"
                 max={maxPrice}
               />
