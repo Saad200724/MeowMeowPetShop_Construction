@@ -6,6 +6,11 @@ import { useEffect, useState } from 'react';
 function NewlyLaunchedCarousel({ products }: { products: any[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Don't render anything if no products
+  if (products.length === 0) {
+    return null;
+  }
+
   useEffect(() => {
     if (products.length <= 2) return;
 
