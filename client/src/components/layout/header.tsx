@@ -261,7 +261,7 @@ export default function Header() {
                     placeholder="Search for pet food, toys, accessories..." 
                     value={searchQuery} 
                     onChange={handleSearchChange} 
-                    className="w-full py-2 px-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#ffde59] focus:outline-none text-sm" 
+                    className="w-full py-2 px-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#ffde59] focus:outline-none text-sm text-black" 
                     data-testid="input-global-search" 
                   />
                   <Button 
