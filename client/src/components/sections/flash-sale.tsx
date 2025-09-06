@@ -21,13 +21,13 @@ export default function FlashSale() {
               <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                <div className="p-4 space-y-2">
-                  <div className="bg-gray-200 h-4 rounded"></div>
-                  <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+              <div key={i} className="bg-white rounded-lg shadow-md h-64 animate-pulse transform scale-90 sm:scale-95 md:scale-100">
+                <div className="bg-gray-200 h-36 rounded-t-lg"></div>
+                <div className="p-3 space-y-2">
+                  <div className="bg-gray-200 h-3 rounded"></div>
+                  <div className="bg-gray-200 h-3 w-3/4 rounded"></div>
                 </div>
               </div>
             ))}
@@ -64,14 +64,16 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6">
-          {flashSaleProducts.map((product: any, index: number) => (
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
+          {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
             <div 
               key={product.id} 
               className="hover-lift animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <ProductCard product={product} />
+              <div className="transform scale-90 sm:scale-95 md:scale-100">
+                <ProductCard product={product} />
+              </div>
             </div>
           ))}
         </div>
