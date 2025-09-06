@@ -22,7 +22,7 @@ export default function MobileBottomNav() {
   };
 
   return (
-    <div className="md:hidden fixed bottom-2 left-0 right-0 bg-white border-t border-gray-200 z-[1001] safe-area-pb">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[1001] safe-area-pb">
       <div className="flex items-center justify-around py-2 px-2">
         {/* Categories */}
         <button
@@ -55,7 +55,7 @@ export default function MobileBottomNav() {
             }`}
             data-testid="mobile-nav-home"
           >
-            <img src={logoPath} alt="Home" className="w-5 h-5" />
+            <img src={logoPath} alt="Home" className="w-7 h-7" />
             <span className="text-xs mt-1">Home</span>
           </div>
         </Link>
