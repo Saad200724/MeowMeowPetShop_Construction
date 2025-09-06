@@ -273,7 +273,7 @@ export default function Header() {
                   </Button>
 
                   {showSearchResults && searchResults.length > 0 && (
-                    <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-96 overflow-y-auto">
+                    <Card className="absolute top-full left-0 right-0 mt-1 z-[9999] max-h-96 overflow-y-auto">
                       <CardContent className="p-0">
                         {searchResults.map((product) => (
                           <div 
@@ -297,7 +297,7 @@ export default function Header() {
                   )}
 
                   {showSearchResults && searchResults.length === 0 && searchQuery.trim() && (
-                    <Card className="absolute top-full left-0 right-0 mt-1 z-50">
+                    <Card className="absolute top-full left-0 right-0 mt-1 z-[9999]">
                       <CardContent className="p-4 text-center text-gray-500 text-sm">
                         No products found for "{searchQuery}"
                       </CardContent>
