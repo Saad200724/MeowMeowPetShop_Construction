@@ -60,7 +60,7 @@ export default function MobileFooter() {
             © 2025 Meow Meow Pet Shop. All rights reserved.
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Powered By: <a href="https://znforge.com" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge (znforge.com)</a>
+            Powered By: <a href="https://znforge.com" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge</a>
           </p>
         </div>
       </div>
