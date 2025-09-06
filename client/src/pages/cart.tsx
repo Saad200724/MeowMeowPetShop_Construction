@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/contexts/cart-context';
 import Header from '@/components/layout/header';
-import Footer from '@/components/footer';
+import Footer from '@/components/layout/footer';
 
 export default function CartPage() {
   const { state, updateQuantity, removeItem, clearCart } = useCart();
