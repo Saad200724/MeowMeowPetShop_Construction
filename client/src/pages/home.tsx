@@ -1,7 +1,6 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import NavigationSidebar from "@/components/layout/sidebar";
-import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 import HeroBanner from "@/components/sections/hero-banner";
 import CategoriesGrid from "@/components/sections/categories-grid";
 import FlashSale from "@/components/sections/flash-sale";
@@ -21,10 +20,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Fixed Sidebar */}
       <NavigationSidebar />
-      
+
       {/* Main content - adjusted for desktop sidebar and mobile bottom nav */}
       <main className={`transition-all duration-300 ${sidebarVisible ? 'md:ml-80' : 'md:ml-0'} overflow-x-hidden pb-20 md:pb-0`}>
         <HeroBanner />
@@ -41,14 +40,14 @@ export default function Home() {
           <Testimonials />
         </div>
       </main>
-      
+
       {/* Footer - Full width, overlays sidebar */}
       <div className="relative z-30 w-full">
         <Footer />
       </div>
-      
+
       {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
+      {/* This component is now globally available in the App component */}
     </div>
   );
 }

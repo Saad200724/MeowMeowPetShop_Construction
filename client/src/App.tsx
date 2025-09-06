@@ -47,6 +47,7 @@ import MessengerPage from "@/pages/messenger";
 import ContactPage from "@/pages/contact";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
+import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 
 function Router() {
   return (
@@ -92,6 +93,7 @@ function Router() {
         <Route path="/contact" component={ContactPage} />
         <Route component={NotFoundPage} />
       </Switch>
+      <MobileBottomNav />
     </>
   );
 }
