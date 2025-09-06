@@ -10,8 +10,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/cart-context';
 import { useSidebar } from '@/contexts/sidebar-context';
 import { Link, useLocation } from 'wouter';
-import { searchProducts, type SearchableProduct } from '@/lib/search-data';
 import { useQuery } from '@tanstack/react-query';
+import { type SearchableProduct } from '@/lib/search-data';
 const logoPath = '/logo.png';
 
 export default function Header() {
@@ -71,11 +71,77 @@ export default function Header() {
     }
   };
 
+  // Fetch products for search
+  const { data: allProducts = [] } = useQuery({
+    queryKey: ['/api/products'],
+  });
+
+  // Shop by Category items that should be searchable
+  const shopByCategoryItems: SearchableProduct[] = [
+    { id: 'adult-food', name: 'Adult Food', category: 'Adult Food', brand: 'Various', price: '৳1,200+', page: 'Shop by Category', route: '/products?category=adult-food', keywords: ['adult', 'food', 'premium', 'quality'] },
+    { id: 'kitten-food', name: 'Kitten Food', category: 'Kitten Food', brand: 'Various', price: '৳800+', page: 'Shop by Category', route: '/products?category=kitten-food', keywords: ['kitten', 'food', 'growing', 'nutrition'] },
+    { id: 'collar', name: 'Collar', category: 'Collar', brand: 'Various', price: '৳300+', page: 'Shop by Category', route: '/products?category=collar', keywords: ['collar', 'style', 'safety'] },
+    { id: 'clumping-cat-litter', name: 'Clumping Cat Litter', category: 'Clumping Cat Litter', brand: 'Various', price: '৳600+', page: 'Shop by Category', route: '/products?category=clumping-cat-litter', keywords: ['clumping', 'cat', 'litter', 'easy', 'clean'] },
+    { id: 'cat-litter-accessories', name: 'Cat Litter Accessories', category: 'Cat Litter Accessories', brand: 'Various', price: '৳200+', page: 'Shop by Category', route: '/products?category=cat-litter-accessories', keywords: ['cat', 'litter', 'accessories', 'complete', 'care'] },
+    { id: 'harness', name: 'Harness', category: 'Harness', brand: 'Various', price: '৳500+', page: 'Shop by Category', route: '/products?category=harness', keywords: ['harness', 'secure', 'walking'] },
+    { id: 'cat-tick-flea-control', name: 'Cat Tick & Flea Control', category: 'Cat Tick & Flea Control', brand: 'Various', price: '৳400+', page: 'Shop by Category', route: '/products?category=cat-tick-flea-control', keywords: ['cat', 'tick', 'flea', 'control', 'health', 'protection'] },
+    { id: 'deworming-tablet', name: 'Deworming Tablet', category: 'Deworming Tablet', brand: 'Various', price: '৳250+', page: 'Shop by Category', route: '/products?category=deworming-tablet', keywords: ['deworming', 'tablet', 'wellness', 'care'] },
+    { id: 'cat-pouches', name: 'Cat Pouches', category: 'Cat Pouches', brand: 'Various', price: '৳150+', page: 'Shop by Category', route: '/products?category=cat-pouches', keywords: ['cat', 'pouches', 'wet', 'food'] },
+    { id: 'sunglass', name: 'Sunglass', category: 'Sunglass', brand: 'Various', price: '৳800+', page: 'Shop by Category', route: '/products?category=sunglass', keywords: ['sunglass', 'pet', 'fashion'] }
+  ];
+
+  const searchAllProducts = (query: string): SearchableProduct[] => {
+    if (!query.trim()) return [];
+    
+    const searchTerm = query.toLowerCase().trim();
+    const results: SearchableProduct[] = [];
+    
+    // Search through real products from API
+    (allProducts as any[]).forEach(product => {
+      const searchableText = [
+        product.name,
+        product.categoryName || product.category,
+        product.brandName || product.brand,
+        product.description || '',
+        ...(product.tags || [])
+      ].join(' ').toLowerCase();
+      
+      if (searchableText.includes(searchTerm)) {
+        results.push({
+          id: product.id,
+          name: product.name,
+          category: product.categoryName || product.category,
+          brand: product.brandName || product.brand,
+          price: `৳${product.price}`,
+          page: product.categoryName || product.category,
+          route: `/products/${product.id}`,
+          keywords: product.tags || []
+        });
+      }
+    });
+    
+    // Search through Shop by Category items
+    shopByCategoryItems.forEach(item => {
+      const searchableText = [
+        item.name,
+        item.category,
+        item.brand || '',
+        ...item.keywords
+      ].join(' ').toLowerCase();
+      
+      if (searchableText.includes(searchTerm)) {
+        results.push(item);
+      }
+    });
+    
+    return results.slice(0, 10); // Limit to 10 results
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
     if (query.trim()) {
-      const results = searchProducts(query);
+      const results = searchAllProducts(query);
       setSearchResults(results);
       setShowSearchResults(true);
     } else {
