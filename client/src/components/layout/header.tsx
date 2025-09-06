@@ -195,7 +195,7 @@ export default function Header() {
   return (
     <>
       {/* Top Announcement Bar - Thin for mobile */}
-      <div className="bg-[#663d85] text-white py-1 md:py-2 text-sm overflow-hidden relative">
+      <div className="bg-[#38603d] text-white py-1 md:py-2 text-sm overflow-hidden relative">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Mobile: Only announcement and social media */}
