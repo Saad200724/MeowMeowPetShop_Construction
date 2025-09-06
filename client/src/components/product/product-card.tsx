@@ -118,11 +118,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" 
+          className="w-full h-40 object-contain transition-transform duration-500 group-hover:scale-110" 
           loading="lazy"
           decoding="async"
         />

@@ -97,11 +97,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" 
+          className="w-full h-28 object-contain transition-transform duration-500 group-hover:scale-110" 
           loading="lazy"
           decoding="async"
         />
