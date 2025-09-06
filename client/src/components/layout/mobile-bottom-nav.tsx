@@ -1,0 +1,93 @@
+import { Home, Search, Grid3X3, User, MessageCircle, ShoppingCart } from 'lucide-react';
+import { Link, useLocation } from 'wouter';
+import { useCart } from '@/contexts/cart-context';
+import { useSidebar } from '@/contexts/sidebar-context';
+
+const logoPath = '/logo.png';
+
+export default function MobileBottomNav() {
+  const [location] = useLocation();
+  const { state: cartState } = useCart();
+  const { toggle: toggleSidebar } = useSidebar();
+
+  const isActive = (path: string) => {
+    if (path === '/' && location === '/') return true;
+    if (path !== '/' && location.startsWith(path)) return true;
+    return false;
+  };
+
+  const handleCategoriesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toggleSidebar();
+  };
+
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[1001] safe-area-pb">
+      <div className="flex items-center justify-around py-2 px-2">
+        {/* Categories */}
+        <button
+          onClick={handleCategoriesClick}
+          className="flex flex-col items-center justify-center py-2 px-3 transition-colors"
+          data-testid="mobile-nav-categories"
+        >
+          <Grid3X3 size={20} className="text-gray-600" />
+          <span className="text-xs text-gray-600 mt-1">Categories</span>
+        </button>
+
+        {/* Search */}
+        <Link href="/products">
+          <div
+            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
+              isActive('/products') ? 'text-[#26732d]' : 'text-gray-600'
+            }`}
+            data-testid="mobile-nav-search"
+          >
+            <Search size={20} />
+            <span className="text-xs mt-1">Search</span>
+          </div>
+        </Link>
+
+        {/* Home with Logo */}
+        <Link href="/">
+          <div
+            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
+              isActive('/') ? 'text-[#26732d]' : 'text-gray-600'
+            }`}
+            data-testid="mobile-nav-home"
+          >
+            <div className="w-6 h-6 rounded-full bg-[#26732d] flex items-center justify-center">
+              <img src={logoPath} alt="Home" className="w-4 h-4" />
+            </div>
+            <span className="text-xs mt-1">Home</span>
+          </div>
+        </Link>
+
+        {/* My Profile */}
+        <Link href="/dashboard">
+          <div
+            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
+              isActive('/dashboard') || isActive('/profile') ? 'text-[#26732d]' : 'text-gray-600'
+            }`}
+            data-testid="mobile-nav-profile"
+          >
+            <User size={20} />
+            <span className="text-xs mt-1">My Profile</span>
+          </div>
+        </Link>
+
+        {/* Chat */}
+        <Link href="/messenger">
+          <div
+            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors relative ${
+              isActive('/messenger') ? 'text-[#26732d]' : 'text-gray-600'
+            }`}
+            data-testid="mobile-nav-chat"
+          >
+            <MessageCircle size={20} />
+            <span className="text-xs mt-1">Chat</span>
+          </div>
+        </Link>
+      </div>
+    </div>
+  );
+}

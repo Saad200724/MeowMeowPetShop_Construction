@@ -194,83 +194,145 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="bg-[#38603d] text-white py-2 text-sm overflow-hidden relative">
+      {/* Top Announcement Bar - Thin for mobile */}
+      <div className="bg-[#663d85] text-white py-1 md:py-2 text-sm overflow-hidden relative">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
-                <Phone size={12} className="mr-1" />
-                <span>01405-045023</span>
-              </div>
-              <Link href="/contact">
-                <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
-                  <Truck size={12} className="mr-1" />
-                  <span>Our location</span>
-                </div>
-              </Link>
-              <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
-                <Shield size={12} className="mr-1" />
-                <span>Track Your Order</span>
-              </div>
-            </div>
-
-            {/* Visible Area for Announcement - Only shows here */}
-            <div className="flex-1 flex justify-center items-center relative min-h-[24px] overflow-hidden">
+          <div className="flex items-center justify-between">
+            {/* Mobile: Only announcement and social media */}
+            <div className="md:hidden flex-1 flex justify-center items-center relative min-h-[20px] overflow-hidden">
               {currentAnnouncement && (
                 <div className="animate-marquee whitespace-nowrap absolute inset-0 flex items-center" style={{ width: 'max-content' }}>
                   <div className="inline-flex items-center text-white text-xs font-medium">
-                    <Speaker size={12} className="mr-2" />
+                    <Speaker size={10} className="mr-1" />
                     <span dangerouslySetInnerHTML={{ __html: parseAnnouncementText(currentAnnouncement.text) }} />
                   </div>
                 </div>
               )}
             </div>
+            
+            {/* Mobile: Social media icons only */}
+            <div className="md:hidden flex items-center gap-1">
+              <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition-colors p-1 rounded">
+                <Facebook size={12} />
+              </a>
+              <a href="#" className="text-white hover:text-yellow-300 transition-colors p-1 rounded">
+                <Instagram size={12} />
+              </a>
+            </div>
+            
+            {/* Desktop: Full layout */}
+            <div className="hidden md:flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 w-full">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs">
+                  <Phone size={12} className="mr-1" />
+                  <span>01405-045023</span>
+                </div>
+                <Link href="/contact">
+                  <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
+                    <Truck size={12} className="mr-1" />
+                    <span>Our location</span>
+                  </div>
+                </Link>
+                <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
+                  <Shield size={12} className="mr-1" />
+                  <span>Track Your Order</span>
+                </div>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-white font-medium text-xs">Follow:</span>
-              <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
-                <Facebook size={14} />
-              </a>
-              <a href="#" className="text-white hover:text-black transition-colors p-1 rounded">
-                <Instagram size={14} />
-              </a>
+              {/* Desktop Announcement */}
+              <div className="flex-1 flex justify-center items-center relative min-h-[24px] overflow-hidden">
+                {currentAnnouncement && (
+                  <div className="animate-marquee whitespace-nowrap absolute inset-0 flex items-center" style={{ width: 'max-content' }}>
+                    <div className="inline-flex items-center text-white text-xs font-medium">
+                      <Speaker size={12} className="mr-2" />
+                      <span dangerouslySetInnerHTML={{ __html: parseAnnouncementText(currentAnnouncement.text) }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-white font-medium text-xs">Follow:</span>
+                <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
+                  <Facebook size={14} />
+                </a>
+                <a href="#" className="text-white hover:text-black transition-colors p-1 rounded">
+                  <Instagram size={14} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Header - Stays sticky and visible */}
+      {/* Main Header - Mobile optimized */}
       <header className="bg-white shadow-md sticky top-0 z-[1000] border-b border-gray-200 transition-all duration-300 w-full">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8">
-            {/* Logo + Search */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:gap-8 w-full">
+        <div className="container mx-auto px-4 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-3 md:gap-4">
+            {/* Mobile: Hamburger + Logo + Cart */}
+            <div className="md:hidden flex items-center justify-between w-full">
+              {/* Hamburger Menu */}
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="p-2 hover:bg-gray-100"
+                onClick={toggleSidebar}
+                data-testid="button-mobile-menu"
+              >
+                <Menu size={20} className="text-gray-700" />
+              </Button>
+              
+              {/* Logo */}
               <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-                <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-10 w-10 mr-2" />
+                <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-8 w-8 mr-2" />
                 <div>
-                  <h1 className="text-lg font-bold text-[#26732d]">Meow Meow</h1>
+                  <h1 className="text-base font-bold text-[#26732d]">Meow Meow</h1>
                   <p className="text-xs text-gray-600">Pet Shop</p>
                 </div>
               </Link>
+              
+              {/* Cart */}
+              <Link href="/cart">
+                <div className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer" data-testid="button-cart-mobile">
+                  <ShoppingCart size={20} className="text-gray-700" />
+                  {cartState.items.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                      {cartState.items.reduce((total, item) => total + item.quantity, 0)}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            </div>
+            
+            {/* Desktop: Logo + Search + Account + Cart */}
+            <div className="hidden md:flex md:flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8 w-full">
+              {/* Logo + Search */}
+              <div className="flex flex-col lg:flex-row lg:items-center lg:gap-8 w-full">
+                <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+                  <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-10 w-10 mr-2" />
+                  <div>
+                    <h1 className="text-lg font-bold text-[#26732d]">Meow Meow</h1>
+                    <p className="text-xs text-gray-600">Pet Shop</p>
+                  </div>
+                </Link>
 
-              <div className="flex-1 mt-4 lg:mt-0" ref={searchRef}>
-                <div className="relative">
-                  <Input 
-                    type="text" 
-                    placeholder="Search for pet food, toys, accessories..." 
-                    value={searchQuery} 
-                    onChange={handleSearchChange} 
-                    className="w-full py-2 px-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#ffde59] focus:outline-none text-sm text-black" 
-                    data-testid="input-global-search" 
-                  />
-                  <Button 
-                    size="sm" 
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#ffde59] text-black px-3 py-1 rounded-md hover:bg-[#ffd73e] transition-colors" 
-                    data-testid="button-search"
-                  >
-                    <Search size={14} />
-                  </Button>
+                <div className="flex-1 mt-4 lg:mt-0" ref={searchRef}>
+                  <div className="relative">
+                    <Input 
+                      type="text" 
+                      placeholder="Search for pet food, toys, accessories..." 
+                      value={searchQuery} 
+                      onChange={handleSearchChange} 
+                      className="w-full py-2 px-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#ffde59] focus:outline-none text-sm text-black" 
+                      data-testid="input-global-search" 
+                    />
+                    <Button 
+                      size="sm" 
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#ffde59] text-black px-3 py-1 rounded-md hover:bg-[#ffd73e] transition-colors" 
+                      data-testid="button-search"
+                    >
+                      <Search size={14} />
+                    </Button>
 
                   {showSearchResults && searchResults.length > 0 && (
                     <Card className="absolute top-full left-0 right-0 mt-1 z-[9999] max-h-96 overflow-y-auto">
@@ -307,82 +369,83 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Account + Cart */}
-            <div className="flex items-center space-x-4">
-              {!loading && user ? (
-                <div className="flex items-center space-x-3">
-                  {/* Circular Avatar */}
-                  <div className="relative group">
-                    <Link href={user.email === 'admin@meowmeowpetshop.com' ? '/admin' : '/dashboard'}>
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#26732d] to-[#1d5624] flex items-center justify-center text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
-                        {(user.firstName?.[0] || user.name?.[0] || user.email?.[0] || 'U').toUpperCase()}
-                      </div>
-                    </Link>
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
-                      {user.firstName && user.lastName 
-                        ? `${user.firstName} ${user.lastName}` 
-                        : user.name || user.email?.split('@')[0]}
-                      <div className="text-xs opacity-75 mt-1">
-                        {user.email === 'admin@meowmeowpetshop.com' ? 'Click to view admin panel' : 'Click to view dashboard'}
+              {/* Account + Cart - Desktop only */}
+              <div className="flex items-center space-x-4">
+                {!loading && user ? (
+                  <div className="flex items-center space-x-3">
+                    {/* Circular Avatar */}
+                    <div className="relative group">
+                      <Link href={user.email === 'admin@meowmeowpetshop.com' ? '/admin' : '/dashboard'}>
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#26732d] to-[#1d5624] flex items-center justify-center text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105">
+                          {(user.firstName?.[0] || user.name?.[0] || user.email?.[0] || 'U').toUpperCase()}
+                        </div>
+                      </Link>
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                        {user.firstName && user.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user.name || user.email?.split('@')[0]}
+                        <div className="text-xs opacity-75 mt-1">
+                          {user.email === 'admin@meowmeowpetshop.com' ? 'Click to view admin panel' : 'Click to view dashboard'}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Sign Out Button */}
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleSignOut} 
-                    className="text-red-600 border-red-200 hover:bg-gray-100 hover:text-black hover:border-gray-300 transition-colors"
-                    data-testid="button-sign-out"
-                  >
-                    <LogOut size={14} className="mr-1" />
-                    Sign Out
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Link href="/sign-in">
+                    {/* Sign Out Button */}
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="text-[#26732d] border-[#26732d] hover:bg-[#26732d] hover:text-white transition-colors"
-                      data-testid="button-sign-in"
+                      onClick={handleSignOut} 
+                      className="text-red-600 border-red-200 hover:bg-gray-100 hover:text-black hover:border-gray-300 transition-colors"
+                      data-testid="button-sign-out"
                     >
-                      <LogIn size={14} className="mr-1" />
-                      Sign In
+                      <LogOut size={14} className="mr-1" />
+                      Sign Out
                     </Button>
-                  </Link>
-                  <Link href="/sign-up">
-                    <Button 
-                      size="sm" 
-                      className="bg-[#ffde59] text-black hover:bg-[#ffd73e] transition-colors"
-                      data-testid="button-sign-up"
-                    >
-                      Sign Up
-                    </Button>
-                  </Link>
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <Link href="/sign-in">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-[#26732d] border-[#26732d] hover:bg-[#26732d] hover:text-white transition-colors"
+                        data-testid="button-sign-in"
+                      >
+                        <LogIn size={14} className="mr-1" />
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/sign-up">
+                      <Button 
+                        size="sm" 
+                        className="bg-[#ffde59] text-black hover:bg-[#ffd73e] transition-colors"
+                        data-testid="button-sign-up"
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                )}
 
-              {/* Cart */}
-              <Link href="/cart">
-                <div className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer" data-testid="button-cart">
-                  <ShoppingCart size={20} className="text-gray-700" />
-                  {cartState.items.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                      {cartState.items.reduce((total, item) => total + item.quantity, 0)}
-                    </span>
-                  )}
-                </div>
-              </Link>
+                {/* Cart - Desktop */}
+                <Link href="/cart">
+                  <div className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer" data-testid="button-cart">
+                    <ShoppingCart size={20} className="text-gray-700" />
+                    {cartState.items.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                        {cartState.items.reduce((total, item) => total + item.quantity, 0)}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Navigation Menu */}
-        <nav className="border-t border-gray-100 bg-gray-50 relative z-[100]">
+        {/* Navigation Menu - Desktop only */}
+        <nav className="hidden md:block border-t border-gray-100 bg-gray-50 relative z-[100]">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center space-x-6 overflow-x-auto scrollbar-hide">
               {/* Categories Toggle */}
@@ -415,6 +478,59 @@ export default function Header() {
             </div>
           </div>
         </nav>
+        
+        {/* Mobile Search Bar */}
+        <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3" ref={searchRef}>
+          <div className="relative">
+            <Input 
+              type="text" 
+              placeholder="What can we help you find?" 
+              value={searchQuery} 
+              onChange={handleSearchChange} 
+              className="w-full py-2 px-4 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#ffde59] focus:outline-none text-sm text-black" 
+              data-testid="input-mobile-search" 
+            />
+            <Button 
+              size="sm" 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#ffde59] text-black px-3 py-1 rounded-md hover:bg-[#ffd73e] transition-colors" 
+              data-testid="button-mobile-search"
+            >
+              <Search size={14} />
+            </Button>
+
+            {showSearchResults && searchResults.length > 0 && (
+              <Card className="absolute top-full left-0 right-0 mt-1 z-[9999] max-h-96 overflow-y-auto">
+                <CardContent className="p-0">
+                  {searchResults.map((product) => (
+                    <div 
+                      key={product.id} 
+                      className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
+                      onClick={() => handleSearchSelect(product)} 
+                      data-testid={`search-result-${product.id}`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium text-sm">{product.name}</h4>
+                          <p className="text-xs text-gray-600">{product.brand} • {product.category}</p>
+                          <p className="text-xs text-blue-600">{product.page}</p>
+                        </div>
+                        <span className="text-sm font-bold text-green-600">{product.price}</span>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {showSearchResults && searchResults.length === 0 && searchQuery.trim() && (
+              <Card className="absolute top-full left-0 right-0 mt-1 z-[9999]">
+                <CardContent className="p-4 text-center text-gray-500 text-sm">
+                  No products found for "{searchQuery}"
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
       </header>
     </>
   );
