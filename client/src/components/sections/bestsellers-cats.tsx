@@ -22,8 +22,8 @@ export default function BestsellersCats() {
           Bestsellers for Cats
         </h2>
         {isLoading ? (
-          <div className="grid grid-cols-4 gap-4 md:gap-6">
-            {[1, 2, 3, 4].map((i) => (
+          <div className="grid grid-cols-2 gap-4 md:gap-6">
+            {[1, 2].map((i) => (
               <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
                 <div className="bg-gray-200 h-48 rounded-t-lg"></div>
                 <div className="p-4 space-y-2">
@@ -38,16 +38,29 @@ export default function BestsellersCats() {
             <p className="text-gray-600">No bestselling cat products available.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-2 sm:gap-4 md:gap-6">
-            {products.map((product: any, index: number) => (
+          <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6">
+            {products.slice(0, 2).map((product: any, index: number) => (
               <div 
                 key={product.id || product._id} 
                 className="hover-lift animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                style={{ animationDelay: `${index * 0.3}s` }}
               >
                 <ProductCard product={product} />
               </div>
             ))}
+            {products.length >= 3 && (
+              <>
+                {products.slice(2).map((product: any, index: number) => (
+                  <div 
+                    key={product.id || product._id} 
+                    className="hover-lift animate-fade-in"
+                    style={{ animationDelay: `${(index + 2) * 0.3}s` }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
