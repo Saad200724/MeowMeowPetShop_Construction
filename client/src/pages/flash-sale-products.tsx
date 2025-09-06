@@ -16,6 +16,8 @@ export default function FlashSaleProducts() {
 
   const { data: allProducts = [], isLoading } = useQuery({
     queryKey: ['/api/products'],
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   // Filter products that are on sale
@@ -63,7 +65,7 @@ export default function FlashSaleProducts() {
           {/* Controls */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h2 className="text-2xl font-bold">
-              All Flash Sale Products ({filteredProducts.length})
+              All Flash Sale Products {!isLoading && `(${filteredProducts.length})`}
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex rounded-lg border border-gray-200 overflow-hidden">
@@ -89,16 +91,19 @@ export default function FlashSaleProducts() {
 
           {/* Products Grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                  <div className="p-4 space-y-2">
-                    <div className="bg-gray-200 h-4 rounded"></div>
-                    <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+            <div className="text-center py-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
+                    <div className="bg-red-200 h-48 rounded-t-lg"></div>
+                    <div className="p-4 space-y-2">
+                      <div className="bg-gray-200 h-4 rounded"></div>
+                      <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <p className="text-lg text-red-600 font-medium animate-pulse">Loading flash sale products...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
             <Card className="p-8">

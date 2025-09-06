@@ -15,6 +15,8 @@ export default function NewlyLaunchedPage() {
 
   const { data: allProducts = [], isLoading } = useQuery({
     queryKey: ['/api/products'],
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   // Filter products that are newly launched
@@ -62,7 +64,7 @@ export default function NewlyLaunchedPage() {
           {/* Controls */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
             <h2 className="text-2xl font-bold">
-              All Newly Launched Products ({filteredProducts.length})
+              All Newly Launched Products {!isLoading && `(${filteredProducts.length})`}
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex rounded-lg border border-gray-200 overflow-hidden">
@@ -88,16 +90,22 @@ export default function NewlyLaunchedPage() {
 
           {/* Products Grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                  <div className="p-4 space-y-2">
-                    <div className="bg-gray-200 h-4 rounded"></div>
-                    <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+            <div className="text-center py-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse relative">
+                    <div className="absolute top-2 left-2 bg-blue-400 text-white px-2 py-1 rounded text-xs font-medium z-10 animate-pulse">
+                      LOADING...
+                    </div>
+                    <div className="bg-indigo-200 h-48 rounded-t-lg"></div>
+                    <div className="p-4 space-y-2">
+                      <div className="bg-gray-200 h-4 rounded"></div>
+                      <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <p className="text-lg text-indigo-600 font-medium animate-pulse">Loading newly launched products...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
             <Card className="p-8">
