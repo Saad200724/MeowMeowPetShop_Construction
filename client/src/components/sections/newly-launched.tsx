@@ -28,9 +28,14 @@ function NewlyLaunchedCarousel({ products }: { products: any[] }) {
 
   if (products.length <= 2) {
     return (
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         {products.map((product: any) => (
-          <div key={product.id || product._id} className="flex-shrink-0 w-1/2 hover-lift relative">
+          <div 
+            key={product.id || product._id} 
+            className={`flex-shrink-0 hover-lift relative ${
+              products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
+            }`}
+          >
             <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
               <Sparkles size={12} />
               JUST IN

@@ -28,9 +28,14 @@ function BestsellerCarousel({ products }: { products: any[] }) {
 
   if (products.length <= 2) {
     return (
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         {products.map((product: any) => (
-          <div key={product.id || product._id} className="flex-shrink-0 w-1/2 hover-lift">
+          <div 
+            key={product.id || product._id} 
+            className={`flex-shrink-0 hover-lift ${
+              products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
+            }`}
+          >
             <ProductCard product={product} />
           </div>
         ))}
