@@ -16,14 +16,35 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const [isVisible, setIsVisible] = useState(false);
   const isHomePage = location === '/';
 
-  // Reset sidebar visibility based on page when location changes
+  // Check if device is mobile (screen width < 768px)
+  const isMobile = () => {
+    return window.innerWidth < 768;
+  };
+
+  // Reset sidebar visibility based on page and device when location changes
   useEffect(() => {
-    if (isHomePage) {
-      setIsVisible(true);  // Home page: show sidebar by default
+    if (isHomePage && !isMobile()) {
+      // Home page on desktop/tablet: show sidebar by default
+      setIsVisible(true);
     } else {
-      setIsVisible(false); // Other pages: hide sidebar by default
+      // Other pages or mobile: hide sidebar by default
+      setIsVisible(false);
     }
   }, [location, isHomePage]);
+
+  // Handle window resize to adjust sidebar visibility
+  useEffect(() => {
+    const handleResize = () => {
+      if (isHomePage && !isMobile()) {
+        setIsVisible(true);
+      } else if (isMobile()) {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isHomePage]);
 
   const toggle = () => setIsVisible(!isVisible);
 
