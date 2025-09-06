@@ -9,8 +9,8 @@ export default function MobileFooter() {
     <footer className="md:hidden meow-green text-white py-4 mt-8 pb-24">
       <div className="container mx-auto px-4">
         {/* Logo and Company Info */}
-        <div className="text-center mb-3">
-          <div className="flex items-center justify-center mb-2">
+        <div className="text-left mb-3">
+          <div className="flex items-center mb-2">
             <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-8 w-8 mr-2" />
             <div>
               <h3 className="text-sm font-bold text-meow-yellow">Meow Meow</h3>
@@ -23,12 +23,12 @@ export default function MobileFooter() {
         </div>
 
         {/* Contact Info - Compact */}
-        <div className="text-center space-y-1 mb-3">
-          <div className="flex items-center justify-center text-xs text-gray-300">
+        <div className="text-left space-y-1 mb-3">
+          <div className="flex items-center text-xs text-gray-300">
             <Phone size={12} className="mr-1 text-meow-yellow" />
             <span>01405-045023</span>
           </div>
-          <div className="flex items-center justify-center text-xs text-gray-300">
+          <div className="flex items-center text-xs text-gray-300">
             <Mail size={12} className="mr-1 text-meow-yellow" />
             <span>meowmeowpetshop1@gmail.com</span>
           </div>
