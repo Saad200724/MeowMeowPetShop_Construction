@@ -39,14 +39,14 @@ export default function NavigationSidebar() {
     <>
       {/* Backdrop overlay */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-[1000]" 
+        className="fixed inset-0 bg-black bg-opacity-50 z-[1100]" 
         onClick={handleBackdropClick}
       />
       
       {/* Mobile Sidebar */}
       <div 
         className={cn(
-          "fixed left-0 top-0 w-80 max-w-[85vw] h-full bg-white shadow-2xl z-[1001] transform transition-transform duration-300 ease-in-out",
+          "fixed left-0 top-0 w-80 max-w-[85vw] h-full bg-white shadow-2xl z-[1101] transform transition-transform duration-300 ease-in-out",
           isVisible ? "translate-x-0" : "-translate-x-full"
         )}
         onClick={handleSidebarClick}
