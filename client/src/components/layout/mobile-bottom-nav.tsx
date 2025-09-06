@@ -1,9 +1,16 @@
-import { Home, Search, Grid3X3, User, MessageCircle, ShoppingCart } from 'lucide-react';
-import { Link, useLocation } from 'wouter';
-import { useCart } from '@/contexts/cart-context';
-import { useSidebar } from '@/contexts/sidebar-context';
+import {
+  Home,
+  Search,
+  Grid3X3,
+  User,
+  MessageCircle,
+  ShoppingCart,
+} from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { useCart } from "@/contexts/cart-context";
+import { useSidebar } from "@/contexts/sidebar-context";
 
-const logoPath = '/logo.png';
+const logoPath = "/logo.png";
 
 export default function MobileBottomNav() {
   const [location] = useLocation();
@@ -11,8 +18,8 @@ export default function MobileBottomNav() {
   const { toggle: toggleSidebar } = useSidebar();
 
   const isActive = (path: string) => {
-    if (path === '/' && location === '/') return true;
-    if (path !== '/' && location.startsWith(path)) return true;
+    if (path === "/" && location === "/") return true;
+    if (path !== "/" && location.startsWith(path)) return true;
     return false;
   };
 
@@ -38,7 +45,7 @@ export default function MobileBottomNav() {
         <Link href="/products">
           <div
             className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
-              isActive('/products') ? 'text-[#26732d]' : 'text-gray-600'
+              isActive("/products") ? "text-[#26732d]" : "text-gray-600"
             }`}
             data-testid="mobile-nav-search"
           >
@@ -51,11 +58,11 @@ export default function MobileBottomNav() {
         <Link href="/">
           <div
             className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
-              isActive('/') ? 'text-[#26732d]' : 'text-gray-600'
+              isActive("/") ? "text-[#26732d]" : "text-gray-600"
             }`}
             data-testid="mobile-nav-home"
           >
-            <img src={logoPath} alt="Home" className="w-7 h-7" />
+            <img src={logoPath} alt="Home" className="w-10 h-10" />
             <span className="text-xs mt-1">Home</span>
           </div>
         </Link>
@@ -64,7 +71,9 @@ export default function MobileBottomNav() {
         <Link href="/dashboard">
           <div
             className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
-              isActive('/dashboard') || isActive('/profile') ? 'text-[#26732d]' : 'text-gray-600'
+              isActive("/dashboard") || isActive("/profile")
+                ? "text-[#26732d]"
+                : "text-gray-600"
             }`}
             data-testid="mobile-nav-profile"
           >
@@ -77,7 +86,7 @@ export default function MobileBottomNav() {
         <Link href="/messenger">
           <div
             className={`flex flex-col items-center justify-center py-2 px-3 transition-colors relative ${
-              isActive('/messenger') ? 'text-[#26732d]' : 'text-gray-600'
+              isActive("/messenger") ? "text-[#26732d]" : "text-gray-600"
             }`}
             data-testid="mobile-nav-chat"
           >

@@ -101,26 +101,26 @@ export function FloatingCart() {
   return (
     <>
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-row gap-3">
+      <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[9999] flex flex-row gap-2">
         {/* Messenger Button */}
         <button
           onClick={() => setIsChatOpen(!isChatOpen)}
-          className="text-white rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+          className="text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110"
           style={{backgroundColor: '#fec900'}}
           data-testid="floating-messenger-button"
         >
-          <MessageCircle size={24} />
+          <MessageCircle size={20} className="md:w-6 md:h-6" />
         </button>
         
         {/* Cart Button */}
         <button
           onClick={() => setIsCartOpen(!isCartOpen)}
-          className="bg-[#26732d] hover:bg-[#1e5d26] text-white rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+          className="bg-[#26732d] hover:bg-[#1e5d26] text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110 relative"
           data-testid="floating-cart-button"
         >
-          <ShoppingCart size={24} />
+          <ShoppingCart size={20} className="md:w-6 md:h-6" />
           {itemCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 bg-red-500 text-white min-w-[20px] h-5 flex items-center justify-center text-xs">
+            <Badge className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-red-500 text-white min-w-[18px] h-4 md:min-w-[20px] md:h-5 flex items-center justify-center text-xs">
               {itemCount}
             </Badge>
           )}
@@ -129,7 +129,7 @@ export function FloatingCart() {
 
       {/* Floating Chat Box */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-6 w-80 h-96 bg-white rounded-lg shadow-2xl z-[9999] flex flex-col">
+        <div className="fixed bottom-36 md:bottom-24 right-4 md:right-6 w-80 h-96 bg-white rounded-lg shadow-2xl z-[9999] flex flex-col">
           {/* Chat Header */}
           <div className="flex items-center justify-between p-3 bg-[#26732d] text-white rounded-t-lg">
             <div className="flex items-center gap-2">
