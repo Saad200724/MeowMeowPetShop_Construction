@@ -6,7 +6,7 @@ const logoPath = '/logo.png';
 
 export default function MobileFooter() {
   return (
-    <footer className="md:hidden meow-green text-white py-4 mt-8 pb-20">
+    <footer className="md:hidden meow-green text-white py-4 mt-8 pb-24">
       <div className="container mx-auto px-4">
         {/* Logo and Company Info */}
         <div className="text-center mb-3">
