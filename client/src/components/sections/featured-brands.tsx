@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Award } from "lucide-react";
 
 export default function FeaturedBrands() {
   const brands = [
@@ -43,7 +44,10 @@ export default function FeaturedBrands() {
     <section className="py-8 bg-gray-50">
       <div className="container mx-auto">
         <div className="mb-6 text-center px-4">
-          <h3 className="text-2xl font-bold text-[#26732d]">FEATURED BRANDS</h3>
+          <h3 className="text-2xl font-bold text-[#26732d] flex items-center justify-center gap-2">
+            <Award className="w-6 h-6" />
+            FEATURED BRANDS
+          </h3>
         </div>
         <div className="overflow-x-auto scrollbar-hide pb-2">
           <div className="flex justify-center items-center gap-4 md:gap-6 lg:gap-8 min-w-max px-4">
