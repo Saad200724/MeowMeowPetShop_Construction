@@ -23,11 +23,11 @@ export default function FlashSale() {
           </div>
           <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-64 animate-pulse transform scale-90 sm:scale-95 md:scale-100">
-                <div className="bg-gray-200 h-36 rounded-t-lg"></div>
-                <div className="p-3 space-y-2">
-                  <div className="bg-gray-200 h-3 rounded"></div>
-                  <div className="bg-gray-200 h-3 w-3/4 rounded"></div>
+              <div key={i} className="bg-white rounded-lg shadow-md h-48 animate-pulse transform scale-90 sm:scale-95 md:scale-100">
+                <div className="bg-gray-200 h-28 rounded-t-lg"></div>
+                <div className="p-2 space-y-1">
+                  <div className="bg-gray-200 h-2 rounded"></div>
+                  <div className="bg-gray-200 h-2 w-3/4 rounded"></div>
                 </div>
               </div>
             ))}

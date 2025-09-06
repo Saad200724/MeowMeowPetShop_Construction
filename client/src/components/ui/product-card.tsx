@@ -71,7 +71,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover-lift relative overflow-hidden group animate-fade-in h-[280px] flex flex-col">
+    <div className="bg-white rounded-lg shadow-md hover-lift relative overflow-hidden group animate-fade-in h-[220px] flex flex-col">
       {product.badge && (
         <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${getBadgeStyles(product.badgeColor)} z-10 animate-scale-up`}>
           {product.badge}
@@ -88,16 +88,16 @@ export default function ProductCard({ product }: ProductCardProps) {
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105" 
+          className="w-full h-24 object-cover transition-transform duration-300 group-hover:scale-105" 
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
       </div>
       
-      <div className="p-3 flex-1 flex flex-col justify-between">
+      <div className="p-2 flex-1 flex flex-col justify-between">
         <div>
-          <h4 className="font-semibold mb-1 text-sm text-[#26732d] group-hover:text-[#1e5d26] transition-colors line-clamp-2 leading-tight">{product.name}</h4>
+          <h4 className="font-semibold mb-1 text-xs text-[#26732d] group-hover:text-[#1e5d26] transition-colors line-clamp-2 leading-tight">{product.name}</h4>
           
           <div className="mb-2">
             {renderStars(product.rating)}
@@ -107,7 +107,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
-              <span className="text-base font-bold text-[#26732d]">
+              <span className="text-sm font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
@@ -126,9 +126,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button 
             variant="meow"
             size="sm"
-            className="px-2 py-1 rounded-md shadow-sm btn-bounce h-8"
+            className="px-1 py-1 rounded-md shadow-sm btn-bounce h-6"
           >
-            <ShoppingCart size={14} />
+            <ShoppingCart size={12} />
           </Button>
         </div>
       </div>
