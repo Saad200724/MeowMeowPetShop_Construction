@@ -1,9 +1,15 @@
 import { Facebook, Instagram, Youtube, MessageCircle, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import MobileFooter from './mobile-footer';
 const logoPath = '/logo.png';
 
 export default function Footer() {
   return (
-    <footer className="meow-green text-white py-12 relative z-40 w-full">
+    <>
+      {/* Mobile Footer */}
+      <MobileFooter />
+      
+      {/* Desktop Footer */}
+      <footer className="hidden md:block meow-green text-white py-12 relative z-40 w-full">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -90,5 +96,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }
