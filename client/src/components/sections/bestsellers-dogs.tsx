@@ -1,67 +1,25 @@
 import { Dog } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 
-function BestsellerCarousel({ products }: { products: any[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+function BestsellerDisplay({ products }: { products: any[] }) {
   // Don't render anything if no products
   if (products.length === 0) {
     return null;
   }
 
-  useEffect(() => {
-    if (products.length <= 2) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = prevIndex + 1;
-        // Reset to 0 when we reach the last valid position (showing 2 products)
-        const maxIndex = products.length - 2;
-        return nextIndex > maxIndex ? 0 : nextIndex;
-      });
-    }, 3000); // Change every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [products.length]);
-
-  if (products.length <= 2) {
-    return (
-      <div className="flex gap-4 justify-center">
-        {products.map((product: any) => (
-          <div 
-            key={product.id || product._id} 
-            className={`flex-shrink-0 hover-lift ${
-              products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
-            }`}
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="overflow-hidden">
-      <div 
-        className="flex gap-4 transition-transform duration-700 ease-in-out"
-        style={{
-          transform: `translateX(-${currentIndex * 50}%)`,
-          width: `${products.length * 50}%`
-        }}
-      >
-        {products.map((product: any) => (
-          <div 
-            key={product.id || product._id}
-            className="flex-shrink-0 w-1/2 hover-lift"
-            style={{ width: `${100 / products.length}%` }}
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
+    <div className="flex gap-4 justify-center">
+      {products.slice(0, 2).map((product: any) => (
+        <div 
+          key={product.id || product._id} 
+          className={`flex-shrink-0 hover-lift ${
+            products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
+          }`}
+        >
+          <ProductCard product={product} />
+        </div>
+      ))}
     </div>
   );
 }
@@ -102,7 +60,7 @@ export default function BestsellersDogs() {
             <p className="text-gray-600">No bestselling dog products available.</p>
           </div>
         ) : (
-          <BestsellerCarousel products={products.slice(0, 5)} />
+          <BestsellerDisplay products={products.slice(0, 2)} />
         )}
       </div>
     </section>
