@@ -1,6 +1,67 @@
 import { Sparkles } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+
+function NewlyLaunchedCarousel({ products }: { products: any[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (products.length <= 2) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = prevIndex + 1;
+        // Reset to 0 when we reach the end
+        return nextIndex >= products.length ? 0 : nextIndex;
+      });
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [products.length]);
+
+  if (products.length <= 2) {
+    return (
+      <div className="flex gap-4">
+        {products.map((product: any) => (
+          <div key={product.id || product._id} className="flex-shrink-0 w-1/2 hover-lift relative">
+            <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
+              <Sparkles size={12} />
+              JUST IN
+            </div>
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden">
+      <div 
+        className="flex gap-4 transition-transform duration-700 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * 50}%)`,
+          width: `${products.length * 50}%`
+        }}
+      >
+        {products.map((product: any) => (
+          <div 
+            key={product.id || product._id}
+            className="flex-shrink-0 w-1/2 hover-lift relative"
+            style={{ width: `${100 / products.length}%` }}
+          >
+            <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
+              <Sparkles size={12} />
+              JUST IN
+            </div>
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function NewlyLaunched() {
   const { data: allProducts = [], isLoading } = useQuery({
@@ -45,17 +106,7 @@ export default function NewlyLaunched() {
           <Sparkles size={32} className="text-[#26732d]" />
           Newly Launched
         </h2>
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
-          {products.map((product: any) => (
-            <div key={product.id || product._id} className="transform hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out relative">
-              <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
-                <Sparkles size={12} />
-                JUST IN
-              </div>
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        <NewlyLaunchedCarousel products={products.slice(0, 5)} />
       </div>
     </section>
   );
