@@ -12,7 +12,7 @@ function BestsellerCarousel({ products }: { products: any[] }) {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
-        // Reset to 0 when we've shown all products
+        // Reset to 0 when we reach the end
         return nextIndex >= products.length ? 0 : nextIndex;
       });
     }, 3000); // Change every 3 seconds
@@ -20,21 +20,32 @@ function BestsellerCarousel({ products }: { products: any[] }) {
     return () => clearInterval(interval);
   }, [products.length]);
 
-  // Show 2 products at a time, starting from currentIndex
-  const visibleProducts = products.length <= 2 
-    ? products 
-    : [
-        products[currentIndex % products.length],
-        products[(currentIndex + 1) % products.length]
-      ];
+  if (products.length <= 2) {
+    return (
+      <div className="flex gap-4">
+        {products.map((product: any) => (
+          <div key={product.id || product._id} className="flex-shrink-0 w-1/2 hover-lift">
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-hidden">
-      <div className="flex gap-4 transition-transform duration-500 ease-in-out">
-        {visibleProducts.map((product: any, index: number) => (
+      <div 
+        className="flex gap-4 transition-transform duration-700 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * 50}%)`,
+          width: `${products.length * 50}%`
+        }}
+      >
+        {products.map((product: any) => (
           <div 
-            key={`${product.id || product._id}-${currentIndex}-${index}`}
-            className="flex-shrink-0 w-1/2 hover-lift animate-fade-in"
+            key={product.id || product._id}
+            className="flex-shrink-0 w-1/2 hover-lift"
+            style={{ width: `${100 / products.length}%` }}
           >
             <ProductCard product={product} />
           </div>
