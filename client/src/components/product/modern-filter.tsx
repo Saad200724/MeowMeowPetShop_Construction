@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 import { Filter, ArrowUpDown } from 'lucide-react';
 
 export interface FilterOptions {
@@ -84,9 +85,40 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
               className="w-full"
             />
           </div>
-          <div className="flex justify-between items-center text-sm text-gray-600">
-            <span>৳{priceRange[0]}</span>
-            <span>৳{priceRange[1]}</span>
+          <div className="flex justify-between items-center gap-2 mt-3">
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-gray-600">৳</span>
+              <Input
+                type="number"
+                value={priceRange[0]}
+                onChange={(e) => {
+                  const value = Math.max(1, parseInt(e.target.value) || 1);
+                  const newRange: [number, number] = [value, Math.max(value, priceRange[1])];
+                  setPriceRange(newRange);
+                  onFilterChange({ priceRange: newRange, sortBy });
+                }}
+                className="w-16 h-8 text-sm"
+                min="1"
+                max={maxPrice}
+              />
+            </div>
+            <span className="text-sm text-gray-400">to</span>
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-gray-600">৳</span>
+              <Input
+                type="number"
+                value={priceRange[1]}
+                onChange={(e) => {
+                  const value = Math.min(maxPrice, parseInt(e.target.value) || maxPrice);
+                  const newRange: [number, number] = [Math.min(priceRange[0], value), value];
+                  setPriceRange(newRange);
+                  onFilterChange({ priceRange: newRange, sortBy });
+                }}
+                className="w-20 h-8 text-sm"
+                min="1"
+                max={maxPrice}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
