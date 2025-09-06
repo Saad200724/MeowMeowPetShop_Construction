@@ -17,8 +17,9 @@ function BestsellerCarousel({ products }: { products: any[] }) {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
-        // Reset to 0 when we reach the end
-        return nextIndex >= products.length ? 0 : nextIndex;
+        // Reset to 0 when we reach the last valid position (showing 2 products)
+        const maxIndex = products.length - 2;
+        return nextIndex > maxIndex ? 0 : nextIndex;
       });
     }, 3000); // Change every 3 seconds
 
