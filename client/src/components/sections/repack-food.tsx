@@ -95,14 +95,14 @@ export default function RepackFood() {
             const badge = getBadgeFromTags(product.tags);
 
             return (
-              <div key={productId} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative min-h-[400px] flex flex-col">
+              <div key={productId} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative h-[280px] flex flex-col">
                 <div className="absolute top-2 left-2 bg-yellow-400 text-[#26732d] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
-                  <Package size={14} />
+                  <Package size={12} />
                   {badge}
                 </div>
                 <div className="absolute top-2 right-2 z-10">
                   <button className="bg-white bg-opacity-80 p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm">
-                    <Heart size={18} />
+                    <Heart size={14} />
                   </button>
                 </div>
 
@@ -111,71 +111,69 @@ export default function RepackFood() {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-48 object-cover rounded-t-lg"
+                      className="w-full h-32 object-cover rounded-t-lg"
                     />
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <h4 className="font-bold mb-2 text-base text-[#26732d] leading-tight">{product.name}</h4>
-                    <p className="text-sm text-gray-700 mb-2 flex-1 leading-relaxed">{product.description}</p>
-                    <div className="text-sm text-gray-600 mb-3">
-                      <span className="font-medium">Stock: </span>
-                      <span className={`font-semibold ${
-                        (product.stockQuantity || product.stock || 0) === 0
-                          ? 'text-red-600'
-                          : (product.stockQuantity || product.stock || 0) < 10
-                          ? 'text-orange-600'
-                          : 'text-green-600'
-                      }`}>
-                        {(product.stockQuantity || product.stock || 0)} available
-                      </span>
+                  <div className="p-3 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-bold mb-1 text-sm text-[#26732d] leading-tight line-clamp-2">{product.name}</h4>
+                      <div className="text-xs text-gray-600 mb-2">
+                        <span className={`font-semibold ${
+                          (product.stockQuantity || product.stock || 0) === 0
+                            ? 'text-red-600'
+                            : (product.stockQuantity || product.stock || 0) < 10
+                            ? 'text-orange-600'
+                            : 'text-green-600'
+                        }`}>
+                          {(product.stockQuantity || product.stock || 0)} available
+                        </span>
+                      </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between mb-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
                         <div className="flex flex-col">
-                          <span className="text-xl font-bold text-[#26732d]">৳{product.price?.toLocaleString()}</span>
+                          <span className="text-base font-bold text-[#26732d]">৳{product.price?.toLocaleString()}</span>
                           {product.originalPrice && (
-                            <span className="text-sm text-gray-600 line-through">৳{product.originalPrice?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-600 line-through">৳{product.originalPrice?.toLocaleString()}</span>
                           )}
                         </div>
                         {savings > 0 && (
-                          <span className="bg-yellow-400 text-[#26732d] font-bold text-sm px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-                            Save {savings}%
+                          <span className="bg-yellow-400 text-[#26732d] font-bold text-xs px-2 py-1 rounded-full whitespace-nowrap shadow-sm">
+                            {savings}%
                           </span>
                         )}
                       </div>
-                      <div className="w-full">
-                        <Button
-                          className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium w-full shadow-sm"
-                          onClick={() => {
-                            const stockAvailable = product.stockQuantity || product.stock || 0;
+                      <Button
+                        className="bg-[#26732d] text-white px-3 py-1 rounded-md hover:bg-[#1e5d26] transition-colors text-xs font-medium w-full shadow-sm h-7"
+                        onClick={() => {
+                          const stockAvailable = product.stockQuantity || product.stock || 0;
 
-                            if (stockAvailable === 0) {
-                              toast({
-                                title: 'Out of Stock',
-                                description: 'This item is currently out of stock.',
-                                variant: 'destructive'
-                              });
-                              return;
-                            }
-
-                            addItem({
-                              id: productId,
-                              name: product.name,
-                              price: product.price,
-                              image: product.image,
-                              maxStock: stockAvailable
-                            });
-
+                          if (stockAvailable === 0) {
                             toast({
-                              title: 'Added to Cart',
-                              description: `${product.name} added to your cart.`
+                              title: 'Out of Stock',
+                              description: 'This item is currently out of stock.',
+                              variant: 'destructive'
                             });
-                          }}
-                          disabled={(product.stockQuantity || product.stock || 0) === 0}
-                        >
-                          {(product.stockQuantity || product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
-                        </Button>
-                      </div>
+                            return;
+                          }
+
+                          addItem({
+                            id: productId,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            maxStock: stockAvailable
+                          });
+
+                          toast({
+                            title: 'Added to Cart',
+                            description: `${product.name} added to your cart.`
+                          });
+                        }}
+                        disabled={(product.stockQuantity || product.stock || 0) === 0}
+                      >
+                        {(product.stockQuantity || product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      </Button>
                     </div>
                   </div>
                 </div>

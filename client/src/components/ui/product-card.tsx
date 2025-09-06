@@ -52,35 +52,35 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const renderStars = (rating?: number) => {
-    if (!rating) return <span className="text-gray-600 text-sm">(New)</span>;
+    if (!rating) return <span className="text-gray-600 text-xs">(New)</span>;
     
     return (
       <div className="flex items-center">
         {Array.from({ length: 5 }, (_, index) => (
           <Star 
             key={index} 
-            size={14} 
+            size={10} 
             className={index < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'} 
           />
         ))}
         {product.reviews !== undefined && (
-          <span className="text-gray-600 text-sm ml-1">({product.reviews} reviews)</span>
+          <span className="text-gray-600 text-xs ml-1">({product.reviews})</span>
         )}
       </div>
     );
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover-lift relative overflow-hidden group animate-fade-in">
+    <div className="bg-white rounded-lg shadow-md hover-lift relative overflow-hidden group animate-fade-in h-[280px] flex flex-col">
       {product.badge && (
-        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-bold ${getBadgeStyles(product.badgeColor)} z-10 animate-scale-up`}>
+        <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${getBadgeStyles(product.badgeColor)} z-10 animate-scale-up`}>
           {product.badge}
         </div>
       )}
       
-      <div className="absolute top-3 right-3 z-10">
-        <button className="bg-white bg-opacity-80 p-2 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
-          <Heart size={18} />
+      <div className="absolute top-2 right-2 z-10">
+        <button className="bg-white bg-opacity-80 p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
+          <Heart size={14} />
         </button>
       </div>
       
@@ -88,28 +88,30 @@ export default function ProductCard({ product }: ProductCardProps) {
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105" 
+          className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105" 
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
       </div>
       
-      <div className="p-4">
-        <h4 className="font-semibold mb-2 text-[#26732d] group-hover:text-[#1e5d26] transition-colors">{product.name}</h4>
-        
-        <div className="mb-3">
-          {renderStars(product.rating)}
+      <div className="p-3 flex-1 flex flex-col justify-between">
+        <div>
+          <h4 className="font-semibold mb-1 text-sm text-[#26732d] group-hover:text-[#1e5d26] transition-colors line-clamp-2 leading-tight">{product.name}</h4>
+          
+          <div className="mb-2">
+            {renderStars(product.rating)}
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-[#26732d]">
+            <div className="flex items-center gap-1">
+              <span className="text-base font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-xs text-gray-500 line-through">
                   ৳{product.originalPrice.toLocaleString()}
                 </span>
               )}
@@ -124,9 +126,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button 
             variant="meow"
             size="sm"
-            className="px-3 py-2 rounded-lg shadow-sm btn-bounce"
+            className="px-2 py-1 rounded-md shadow-sm btn-bounce h-8"
           >
-            <ShoppingCart size={16} />
+            <ShoppingCart size={14} />
           </Button>
         </div>
       </div>
