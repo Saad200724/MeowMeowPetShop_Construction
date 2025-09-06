@@ -18,7 +18,7 @@ export default function NewlyLaunched() {
             <Sparkles size={32} className="text-[#26732d]" />
             Newly Launched
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
                 <div className="bg-gray-200 h-48 rounded-t-lg"></div>
@@ -45,7 +45,7 @@ export default function NewlyLaunched() {
           <Sparkles size={32} className="text-[#26732d]" />
           Newly Launched
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
           {products.map((product: any) => (
             <div key={product.id || product._id} className="transform hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out relative">
               <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">

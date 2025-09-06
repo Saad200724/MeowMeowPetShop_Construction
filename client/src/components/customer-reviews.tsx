@@ -45,7 +45,7 @@ export default function CustomerReviews() {
           <p className="text-gray-600">See what our customers have to say</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
           {reviews.map((review) => (
             <Card key={review.id} className="bg-white shadow-lg">
               <CardContent className="p-6">

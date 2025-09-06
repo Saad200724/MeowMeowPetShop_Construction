@@ -77,8 +77,8 @@ export default function RepackFood() {
             <Package size={32} className="text-[#26732d]" />
             Repack Food - Bulk Save!
           </h2>
-          <a 
-            href="/bulk-products" 
+          <a
+            href="/bulk-products"
             className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1e5d26] font-medium text-lg transition-colors"
             rel="prefetch"
           >
@@ -88,12 +88,12 @@ export default function RepackFood() {
             </svg>
           </a>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
           {(products as any[]).map((product: any) => {
             const productId = product.id || product._id;
             const savings = calculateSavings(product.price, product.originalPrice);
             const badge = getBadgeFromTags(product.tags);
-            
+
             return (
               <div key={productId} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative min-h-[400px] flex flex-col">
                 <div className="absolute top-2 left-2 bg-yellow-400 text-[#26732d] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
@@ -108,10 +108,10 @@ export default function RepackFood() {
 
                 <div className="flex flex-col h-full">
                   <div className="relative">
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="w-full h-48 object-cover rounded-t-lg" 
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-48 object-cover rounded-t-lg"
                     />
                   </div>
                   <div className="p-4 flex-1 flex flex-col">
@@ -120,10 +120,10 @@ export default function RepackFood() {
                     <div className="text-sm text-gray-600 mb-3">
                       <span className="font-medium">Stock: </span>
                       <span className={`font-semibold ${
-                        (product.stockQuantity || product.stock || 0) === 0 
-                          ? 'text-red-600' 
-                          : (product.stockQuantity || product.stock || 0) < 10 
-                          ? 'text-orange-600' 
+                        (product.stockQuantity || product.stock || 0) === 0
+                          ? 'text-red-600'
+                          : (product.stockQuantity || product.stock || 0) < 10
+                          ? 'text-orange-600'
                           : 'text-green-600'
                       }`}>
                         {(product.stockQuantity || product.stock || 0)} available
@@ -144,11 +144,11 @@ export default function RepackFood() {
                         )}
                       </div>
                       <div className="w-full">
-                        <Button 
+                        <Button
                           className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm font-medium w-full shadow-sm"
                           onClick={() => {
                             const stockAvailable = product.stockQuantity || product.stock || 0;
-                            
+
                             if (stockAvailable === 0) {
                               toast({
                                 title: 'Out of Stock',
@@ -157,7 +157,7 @@ export default function RepackFood() {
                               });
                               return;
                             }
-                            
+
                             addItem({
                               id: productId,
                               name: product.name,
@@ -165,7 +165,7 @@ export default function RepackFood() {
                               image: product.image,
                               maxStock: stockAvailable
                             });
-                            
+
                             toast({
                               title: 'Added to Cart',
                               description: `${product.name} added to your cart.`

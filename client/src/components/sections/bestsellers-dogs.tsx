@@ -38,7 +38,7 @@ export default function BestsellersDogs() {
             <p className="text-gray-600">No bestselling dog products available.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4 md:gap-6">
             {products.map((product: any, index: number) => (
               <div 
                 key={product.id || product._id} 

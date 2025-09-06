@@ -87,7 +87,7 @@ export default function BlogPreview() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-6 mb-8">
           {blogPosts.map((post) => (
             <Card
               key={post._id}

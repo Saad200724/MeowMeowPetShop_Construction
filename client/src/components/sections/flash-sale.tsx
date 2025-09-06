@@ -64,7 +64,7 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
           {flashSaleProducts.map((product: any, index: number) => (
             <div 
               key={product.id} 
