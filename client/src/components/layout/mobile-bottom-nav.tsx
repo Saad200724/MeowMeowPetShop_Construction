@@ -42,17 +42,22 @@ export default function MobileBottomNav() {
         </button>
 
         {/* Search */}
-        <Link href="/products">
-          <div
-            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
-              isActive("/products") ? "text-[#26732d]" : "text-gray-600"
-            }`}
-            data-testid="mobile-nav-search"
-          >
-            <Search size={18} />
-            <span className="text-xs mt-1">Search</span>
-          </div>
-        </Link>
+        <button
+          onClick={() => {
+            const searchInput = document.querySelector('[data-testid="input-mobile-search"]') as HTMLInputElement;
+            if (searchInput) {
+              searchInput.focus();
+              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }}
+          className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
+            isActive("/products") ? "text-[#26732d]" : "text-gray-600"
+          }`}
+          data-testid="mobile-nav-search"
+        >
+          <Search size={18} />
+          <span className="text-xs mt-1">Search</span>
+        </button>
 
         {/* Home with Logo */}
         <Link href="/">
