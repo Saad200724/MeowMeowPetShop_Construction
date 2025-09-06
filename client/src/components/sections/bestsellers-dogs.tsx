@@ -1,6 +1,48 @@
 import { Dog } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+
+function BestsellerCarousel({ products }: { products: any[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (products.length <= 2) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = prevIndex + 1;
+        // Reset to 0 when we've shown all products
+        return nextIndex >= products.length ? 0 : nextIndex;
+      });
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [products.length]);
+
+  // Show 2 products at a time, starting from currentIndex
+  const visibleProducts = products.length <= 2 
+    ? products 
+    : [
+        products[currentIndex % products.length],
+        products[(currentIndex + 1) % products.length]
+      ];
+
+  return (
+    <div className="overflow-hidden">
+      <div className="flex gap-4 transition-transform duration-500 ease-in-out">
+        {visibleProducts.map((product: any, index: number) => (
+          <div 
+            key={`${product.id || product._id}-${currentIndex}-${index}`}
+            className="flex-shrink-0 w-1/2 hover-lift animate-fade-in"
+          >
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function BestsellersDogs() {
   const { data: allProducts = [], isLoading } = useQuery({
@@ -38,30 +80,7 @@ export default function BestsellersDogs() {
             <p className="text-gray-600">No bestselling dog products available.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6">
-            {products.slice(0, 2).map((product: any, index: number) => (
-              <div 
-                key={product.id || product._id} 
-                className="hover-lift animate-fade-in"
-                style={{ animationDelay: `${index * 0.3}s` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
-            {products.length >= 3 && (
-              <>
-                {products.slice(2).map((product: any, index: number) => (
-                  <div 
-                    key={product.id || product._id} 
-                    className="hover-lift animate-fade-in"
-                    style={{ animationDelay: `${(index + 2) * 0.3}s` }}
-                  >
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
+          <BestsellerCarousel products={products.slice(0, 5)} />
         )}
       </div>
     </section>
