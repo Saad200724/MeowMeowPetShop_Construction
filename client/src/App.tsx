@@ -45,6 +45,10 @@ import InvoicePage from "@/pages/invoice";
 import ProfilePage from "@/pages/profile";
 import MessengerPage from "@/pages/messenger";
 import ContactPage from "@/pages/contact";
+import FlashSaleProductsPage from "@/pages/flash-sale-products";
+import CatBestSellerPage from "@/pages/cat-best-seller";
+import DogBestSellerPage from "@/pages/dog-best-seller";
+import NewlyLaunchedPage from "@/pages/newly-launched";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
@@ -91,6 +95,10 @@ function Router() {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
+        <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
+        <Route path="/cat-best-seller" component={CatBestSellerPage} />
+        <Route path="/dog-best-seller" component={DogBestSellerPage} />
+        <Route path="/newly-launched" component={NewlyLaunchedPage} />
         <Route component={NotFoundPage} />
       </Switch>
       <MobileBottomNav />
