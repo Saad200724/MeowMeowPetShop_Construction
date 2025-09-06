@@ -64,18 +64,18 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
-          {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
-            <div 
-              key={product.id} 
-              className="hover-lift animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="transform scale-90 sm:scale-95 md:scale-100">
+        <div className="overflow-x-auto">
+          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+            {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
+              <div 
+                key={product.id} 
+                className="flex-shrink-0 w-64 hover-lift animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <ProductCard product={product} />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

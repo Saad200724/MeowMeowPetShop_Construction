@@ -9,21 +9,21 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="flex gap-4 justify-center">
-      {products.slice(0, 2).map((product: any) => (
-        <div 
-          key={product.id || product._id} 
-          className={`flex-shrink-0 hover-lift relative ${
-            products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
-          }`}
-        >
-          <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
-            <Sparkles size={12} />
-            JUST IN
+    <div className="overflow-x-auto">
+      <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+        {products.slice(0, 4).map((product: any) => (
+          <div 
+            key={product.id || product._id} 
+            className="flex-shrink-0 w-64 hover-lift relative"
+          >
+            <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
+              <Sparkles size={12} />
+              JUST IN
+            </div>
+            <ProductCard product={product} />
           </div>
-          <ProductCard product={product} />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
@@ -46,16 +46,18 @@ export default function NewlyLaunched() {
               Newly Launched
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                <div className="p-4 space-y-2">
-                  <div className="bg-gray-200 h-4 rounded"></div>
-                  <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+          <div className="overflow-x-auto">
+            <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-80 animate-pulse">
+                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
+                  <div className="p-4 space-y-2">
+                    <div className="bg-gray-200 h-4 rounded"></div>
+                    <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -87,7 +89,7 @@ export default function NewlyLaunched() {
             </a>
           </div>
         </div>
-        <NewlyLaunchedDisplay products={products.slice(0, 2)} />
+        <NewlyLaunchedDisplay products={products.slice(0, 4)} />
       </div>
     </section>
   );

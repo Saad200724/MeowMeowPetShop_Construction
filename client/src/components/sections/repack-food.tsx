@@ -52,17 +52,19 @@ export default function RepackFood() {
             <Package size={32} className="text-[#26732d]" />
             Repack Food - Bulk Save!
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-[400px] animate-pulse">
-                <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                <div className="p-4 space-y-3">
-                  <div className="bg-gray-200 h-4 rounded w-3/4"></div>
-                  <div className="bg-gray-200 h-3 rounded w-full"></div>
-                  <div className="bg-gray-200 h-6 rounded w-1/2"></div>
+          <div className="overflow-x-auto">
+            <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-[400px] animate-pulse">
+                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
+                  <div className="p-4 space-y-3">
+                    <div className="bg-gray-200 h-4 rounded w-3/4"></div>
+                    <div className="bg-gray-200 h-3 rounded w-full"></div>
+                    <div className="bg-gray-200 h-6 rounded w-1/2"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -88,14 +90,15 @@ export default function RepackFood() {
             </svg>
           </a>
         </div>
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
-          {(products as any[]).map((product: any) => {
+        <div className="overflow-x-auto">
+          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+            {(products as any[]).slice(0, 3).map((product: any) => {
             const productId = product.id || product._id;
             const savings = calculateSavings(product.price, product.originalPrice);
             const badge = getBadgeFromTags(product.tags);
 
             return (
-              <div key={productId} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative h-[280px] flex flex-col">
+              <div key={productId} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative h-[280px] flex flex-col">
                 <div className="absolute top-2 left-2 bg-yellow-400 text-[#26732d] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
                   <Package size={12} />
                   {badge}
@@ -180,6 +183,7 @@ export default function RepackFood() {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
     </section>

@@ -9,17 +9,17 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="flex gap-4 justify-center">
-      {products.slice(0, 2).map((product: any) => (
-        <div 
-          key={product.id || product._id} 
-          className={`flex-shrink-0 hover-lift ${
-            products.length === 1 ? 'w-1/2 max-w-sm mx-auto' : 'w-1/2'
-          }`}
-        >
-          <ProductCard product={product} />
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+        {products.slice(0, 3).map((product: any) => (
+          <div 
+            key={product.id || product._id} 
+            className="flex-shrink-0 w-64 hover-lift"
+          >
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -58,23 +58,25 @@ export default function BestsellersDogs() {
           </div>
         </div>
         {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
-            {[1, 2].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
-                <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                <div className="p-4 space-y-2">
-                  <div className="bg-gray-200 h-4 rounded"></div>
-                  <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+          <div className="overflow-x-auto">
+            <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-80 animate-pulse">
+                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
+                  <div className="p-4 space-y-2">
+                    <div className="bg-gray-200 h-4 rounded"></div>
+                    <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-600">No bestselling dog products available.</p>
           </div>
         ) : (
-          <BestsellerDisplay products={products.slice(0, 2)} />
+          <BestsellerDisplay products={products.slice(0, 3)} />
         )}
       </div>
     </section>
