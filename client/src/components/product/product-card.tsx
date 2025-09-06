@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -56,7 +57,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     return Array.from({ length: 5 }, (_, index) => (
       <Star 
         key={index} 
-        size={14} 
+        size={12} 
         className={index < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'} 
       />
     ))
@@ -77,14 +78,22 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   }
 
   const badgeText = getBadgeText(product)
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price
 
   return (
-    <Card className={cn('group hover-lift animate-fade-in relative overflow-hidden', className)}>
-      {/* Badges */}
-      {badgeText && (
+    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl', className)}>
+      {/* Discount Badge */}
+      {hasDiscount && (
+        <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          -৳{(product.originalPrice! - product.price).toLocaleString()}
+        </Badge>
+      )}
+
+      {/* Other Badges */}
+      {badgeText && !hasDiscount && (
         <Badge 
           className={cn(
-            'absolute top-3 left-3 z-10 text-xs font-bold',
+            'absolute top-3 left-3 z-10 text-xs font-bold px-2 py-1 rounded-full',
             getBadgeColor(product)
           )}
         >
@@ -96,7 +105,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       <Button
         variant="ghost"
         size="sm"
-        className="absolute top-3 right-3 z-10 bg-white bg-opacity-80 hover:bg-white p-2 rounded-full"
+        className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-sm"
         onClick={() => setIsLiked(!isLiked)}
       >
         <Heart 
@@ -109,78 +118,97 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105" 
+          className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" 
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="p-4">
-        {/* Product Name */}
-        <h3 className="font-semibold text-[#26732d] mb-2 line-clamp-2 group-hover:text-[#1e5d26] transition-colors">
-          {product.name}
-        </h3>
-
-        {/* Rating */}
-        <div className="flex items-center mb-3">
-          <div className="flex items-center mr-2">
-            {renderStars(product.rating)}
-          </div>
-          <span className="text-sm text-gray-600">
-            ({product.reviews} reviews)
-          </span>
-        </div>
-
-        {/* Tags */}
-        {product.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {product.tags.slice(0, 2).map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
+      <CardContent className="p-4 space-y-3">
+        {/* Category Tag */}
+        {product.tags && product.tags.length > 0 && (
+          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+            {product.tags[0]}
           </div>
         )}
 
-        {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-[#26732d]">
-                ৳{product.price.toLocaleString()}
+        {/* Product Name */}
+        <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem]">
+          {product.name}
+        </h3>
+
+        {/* Rating - Only show if exists */}
+        {product.rating > 0 && (
+          <div className="flex items-center gap-1">
+            <div className="flex items-center">
+              {renderStars(product.rating)}
+            </div>
+            <span className="text-xs text-gray-500">
+              ({product.reviews})
+            </span>
+          </div>
+        )}
+
+        {/* Price Section */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold text-[#26732d]">
+              ৳{product.price.toLocaleString()}
+            </span>
+            {product.originalPrice && (
+              <span className="text-sm text-gray-500 line-through">
+                ৳{product.originalPrice.toLocaleString()}
               </span>
-              {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
-                  ৳{product.originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              Stock: {product.stock} units
-            </div>
+            )}
           </div>
           
-          <Button 
-            variant={isInCart ? "default" : "meow"}
-            size="sm"
-            className="px-3 py-2 rounded-lg shadow-sm btn-bounce"
-            disabled={product.stock === 0 || isAddingToCart}
-            onClick={handleAddToCart}
-          >
-            {isAddingToCart ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : isInCart ? (
-              <Check size={16} />
+          {/* Stock Status */}
+          <div className="text-xs text-gray-500">
+            {product.stock > 0 ? (
+              <span className={cn(
+                'font-medium',
+                product.stock < 10 ? 'text-orange-600' : 'text-green-600'
+              )}>
+                {product.stock < 10 ? `Only ${product.stock} left` : 'In Stock'}
+              </span>
             ) : (
-              <ShoppingCart size={16} />
+              <span className="text-red-600 font-medium">Out of Stock</span>
             )}
-          </Button>
+          </div>
         </div>
+
+        {/* Add to Cart Button */}
+        <Button 
+          variant={isInCart ? "default" : "outline"}
+          size="sm"
+          className={cn(
+            "w-full rounded-full py-2 transition-all duration-200 border-2",
+            isInCart 
+              ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]" 
+              : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
+          )}
+          disabled={product.stock === 0 || isAddingToCart}
+          onClick={handleAddToCart}
+        >
+          {isAddingToCart ? (
+            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : isInCart ? (
+            <>
+              <Check size={16} className="mr-1" />
+              Added
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={16} className="mr-1" />
+              Add to Cart
+            </>
+          )}
+        </Button>
       </CardContent>
     </Card>
   )

@@ -1,3 +1,4 @@
+
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -24,17 +25,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   const getBadgeStyles = (color?: string) => {
     switch (color) {
       case 'red':
-        return 'bg-red-600 text-white';
+        return 'bg-red-500 text-white';
       case 'blue':
         return 'bg-blue-500 text-white';
       case 'yellow':
-        return 'meow-yellow text-black';
+        return 'bg-yellow-500 text-white';
       case 'green':
-        return 'bg-green-600 text-white';
+        return 'bg-green-500 text-white';
       case 'purple':
-        return 'bg-purple-600 text-white';
+        return 'bg-purple-500 text-white';
       default:
-        return 'bg-gray-600 text-white';
+        return 'bg-gray-500 text-white';
     }
   };
 
@@ -55,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     if (!rating) return <span className="text-gray-600 text-xs">(New)</span>;
     
     return (
-      <div className="flex items-center">
+      <div className="flex items-center gap-1">
         {Array.from({ length: 5 }, (_, index) => (
           <Star 
             key={index} 
@@ -70,65 +71,87 @@ export default function ProductCard({ product }: ProductCardProps) {
     );
   };
 
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover-lift relative overflow-hidden group animate-fade-in h-[220px] flex flex-col">
-      {product.badge && (
-        <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${getBadgeStyles(product.badgeColor)} z-10 animate-scale-up`}>
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[280px] flex flex-col">
+      {/* Discount Badge */}
+      {hasDiscount && (
+        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-pink-500 text-white z-10">
+          -৳{(product.originalPrice! - product.price).toLocaleString()}
+        </div>
+      )}
+
+      {/* Other Badges */}
+      {product.badge && !hasDiscount && (
+        <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${getBadgeStyles(product.badgeColor)} z-10`}>
           {product.badge}
         </div>
       )}
       
+      {/* Like Button */}
       <div className="absolute top-2 right-2 z-10">
-        <button className="bg-white bg-opacity-80 p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
+        <button className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
           <Heart size={14} />
         </button>
       </div>
       
-      <div className="relative overflow-hidden">
+      {/* Product Image */}
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-24 object-cover transition-transform duration-300 group-hover:scale-105" 
+          className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" 
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       
-      <div className="p-2 flex-1 flex flex-col justify-between">
-        <div>
-          <h4 className="font-semibold mb-1 text-xs text-[#26732d] group-hover:text-[#1e5d26] transition-colors line-clamp-2 leading-tight">{product.name}</h4>
+      {/* Product Content */}
+      <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
+        <div className="space-y-2">
+          {/* Product Name */}
+          <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight min-h-[2.5rem]">
+            {product.name}
+          </h4>
           
-          <div className="mb-2">
+          {/* Rating */}
+          <div className="flex items-center">
             {renderStars(product.rating)}
           </div>
         </div>
         
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-bold text-[#26732d]">
-                ৳{product.price.toLocaleString()}
-              </span>
-              {product.originalPrice && (
-                <span className="text-xs text-gray-500 line-through">
-                  ৳{product.originalPrice.toLocaleString()}
+        {/* Price and Actions */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <span className="text-base font-bold text-[#26732d]">
+                  ৳{product.price.toLocaleString()}
                 </span>
+                {product.originalPrice && (
+                  <span className="text-xs text-gray-500 line-through">
+                    ৳{product.originalPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+              {product.stockStatus && (
+                <div className={`text-xs font-medium ${getStockStatusStyles(product.stockStatus)}`}>
+                  {product.stockStatus}
+                </div>
               )}
             </div>
-            {product.stockStatus && (
-              <div className={`text-xs font-medium ${getStockStatusStyles(product.stockStatus)} mt-1`}>
-                {product.stockStatus}
-              </div>
-            )}
           </div>
           
+          {/* Add to Cart Button */}
           <Button 
-            variant="meow"
+            variant="outline"
             size="sm"
-            className="px-1 py-1 rounded-md shadow-sm btn-bounce h-6"
+            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-8"
           >
-            <ShoppingCart size={12} />
+            <ShoppingCart size={14} className="mr-1" />
+            Add to Cart
           </Button>
         </div>
       </div>
