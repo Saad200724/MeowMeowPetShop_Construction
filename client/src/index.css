@@ -86,6 +86,24 @@
   display: none;  /* Safari and Chrome */
 }
 
+/* Mobile-specific safe area handling */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .responsive-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure mobile content isn't hidden behind bottom nav */
+  .mobile-safe-bottom {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
