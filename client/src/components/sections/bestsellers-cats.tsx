@@ -22,7 +22,7 @@ export default function BestsellersCats() {
           Bestsellers for Cats
         </h2>
         {isLoading ? (
-          <div className="responsive-grid">
+          <div className="grid grid-cols-4 gap-4 md:gap-6">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="bg-white rounded-lg shadow-md h-80 animate-pulse">
                 <div className="bg-gray-200 h-48 rounded-t-lg"></div>
@@ -38,7 +38,7 @@ export default function BestsellersCats() {
             <p className="text-gray-600">No bestselling cat products available.</p>
           </div>
         ) : (
-          <div className="responsive-grid">
+          <div className="grid grid-cols-4 gap-4 md:gap-6">
             {products.map((product: any, index: number) => (
               <div 
                 key={product.id || product._id} 
