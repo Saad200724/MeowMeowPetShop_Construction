@@ -55,7 +55,7 @@ export default function ProductGrid({ title, bgColor = "bg-white", products, isL
               </Button>
             </div>
           )}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-1">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="bg-white rounded-lg h-64 animate-pulse border"></div>
             ))}
@@ -77,7 +77,7 @@ export default function ProductGrid({ title, bgColor = "bg-white", products, isL
           </div>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-1">
           {products.map((product) => (
             <Card
               key={product.id}

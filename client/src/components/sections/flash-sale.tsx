@@ -21,7 +21,7 @@ export default function FlashSale() {
               <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
+          <div className="grid grid-cols-3 gap-1">
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-lg shadow-md h-48 animate-pulse transform scale-90 sm:scale-95 md:scale-100">
                 <div className="bg-gray-200 h-28 rounded-t-lg"></div>
@@ -65,11 +65,11 @@ export default function FlashSale() {
         </div>
 
         <div className="overflow-x-auto">
-          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+          <div className="flex gap-1 pb-1" style={{ width: 'max-content' }}>
             {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
               <div 
                 key={product.id} 
-                className="flex-shrink-0 w-64 hover-lift animate-fade-in"
+                className="flex-shrink-0 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <ProductCard product={product} />
