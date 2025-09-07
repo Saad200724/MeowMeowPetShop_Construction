@@ -7,11 +7,11 @@ export default function HeroBanner() {
       {/* Banner Container with fixed 1200x400px dimensions */}
       <div className="container mx-auto px-4">
         <div className="relative w-full max-w-[1200px] mx-auto">
-          <div className="relative w-full h-[400px] overflow-hidden rounded-xl shadow-md bg-gray-100">
+          <div className="relative w-full h-[400px] overflow-hidden bg-gray-100">
             <img
               src="/Banner_Reflex.png"
               alt="Reflex High Quality - আর্ডার করলেই পেয়ে যাচ্ছেন আকর্ষণীয় GIFT - Shop Now"
-              className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+              className="w-full h-full object-contain"
               loading="eager"
               onLoad={() => console.log("Banner loaded successfully")}
               onError={(e) => {
