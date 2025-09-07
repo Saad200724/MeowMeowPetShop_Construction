@@ -439,7 +439,7 @@ main {
 .hero-banner-content {
   width: 100%;
   height: 0;
-  padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio */
+  padding-bottom: 40%; /* Increased height to show more of the banner */
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -452,14 +452,14 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
 /* Scale down for laptop screens while maintaining ratio */
 @media (min-width: 1024px) and (max-width: 1400px) {
   .hero-banner-content {
-    padding-bottom: 25%; /* Smaller but still proportional */
+    padding-bottom: 32%; /* Taller for laptops to show full image */
   }
 }
 
