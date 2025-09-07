@@ -3,18 +3,21 @@ import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Product {
-  id: number;
+  id?: number;
   name: string;
   image: string;
-  price: number;
-  originalPrice?: number;
-  discount?: number;
+  price: string | number;
+  oldPrice?: string | number;
+  discount?: string;
+  stock?: string;
   rating?: number;
   reviews?: number;
   badge?: string;
   badgeColor?: string;
   stockStatus?: string;
   isNew?: boolean;
+  // Legacy support
+  originalPrice?: number;
 }
 
 interface ProductCardProps {
@@ -53,15 +56,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const renderStars = (rating?: number) => {
-    if (!rating) return <span className="text-gray-600 text-xs">(New)</span>;
+    // Default to 5 stars for static display as requested
+    const displayRating = rating || 5;
     
     return (
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }, (_, index) => (
           <Star 
             key={index} 
-            size={10} 
-            className={index < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'} 
+            size={12} 
+            className={index < displayRating ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
           />
         ))}
         {product.reviews !== undefined && (
@@ -71,14 +75,23 @@ export default function ProductCard({ product }: ProductCardProps) {
     );
   };
 
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  // Handle both new interface (oldPrice/discount) and legacy interface (originalPrice)
+  const oldPriceValue = product.oldPrice || product.originalPrice;
+  const currentPrice = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
+  const originalPriceValue = typeof oldPriceValue === 'string' ? parseFloat(oldPriceValue) : oldPriceValue;
+  const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[280px] flex flex-col">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[320px] flex flex-col">
       {/* Discount Badge */}
-      {hasDiscount && (
-        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-pink-500 text-white z-10">
-          -৳{(product.originalPrice! - product.price).toLocaleString()}
+      {product.discount && (
+        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
+          {product.discount}
+        </div>
+      )}
+      {hasDiscount && !product.discount && (
+        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
+          -৳{Math.round(originalPriceValue! - currentPrice).toLocaleString()}
         </div>
       )}
 
@@ -97,11 +110,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4 flex items-center justify-center h-40">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-28 object-contain transition-transform duration-500 group-hover:scale-110" 
+          className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105" 
           loading="lazy"
           decoding="async"
         />
@@ -127,18 +140,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <span className="text-base font-bold text-[#26732d]">
-                  ৳{product.price.toLocaleString()}
+                <span className="text-base font-bold text-green-600">
+                  ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
                 </span>
-                {product.originalPrice && (
-                  <span className="text-xs text-gray-500 line-through">
-                    ৳{product.originalPrice.toLocaleString()}
+                {oldPriceValue && (
+                  <span className="text-xs text-red-500 line-through">
+                    ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
                   </span>
                 )}
               </div>
-              {product.stockStatus && (
-                <div className={`text-xs font-medium ${getStockStatusStyles(product.stockStatus)}`}>
-                  {product.stockStatus}
+              {(product.stock || product.stockStatus) && (
+                <div className={`text-xs font-medium ${getStockStatusStyles(product.stock || product.stockStatus)}`}>
+                  {product.stock || product.stockStatus}
                 </div>
               )}
             </div>
