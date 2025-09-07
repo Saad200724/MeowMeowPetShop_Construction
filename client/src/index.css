@@ -427,19 +427,20 @@ main {
   display: block;
 }
 
-/* Hero Banner - Matches competitor's responsive behavior */
+/* Hero Banner - Responsive for all screen sizes including 1366x768 */
 .hero-banner-wrapper {
   position: relative;
   width: 100%;
   padding: 0.5rem;
   background: white;
+  box-sizing: border-box;
 }
 
 .hero-banner-content {
   width: 100%;
   max-width: 100%;
   height: 0;
-  padding-bottom: 33.33%; /* 3:1 aspect ratio (1200:400) */
+  padding-bottom: 28%; /* Reduced aspect ratio for better fit */
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -452,8 +453,22 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+}
+
+/* Specific adjustments for laptop screens */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .hero-banner-content {
+    padding-bottom: 25%; /* Even smaller for laptops */
+  }
+}
+
+/* For very small laptop screens */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .hero-banner-content {
+    padding-bottom: 22%; /* Smallest ratio for tight screens */
+  }
 }
 
 /* Responsive adjustments for smaller screens */
