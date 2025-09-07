@@ -61,7 +61,7 @@ export default function NewlyLaunchedPage() {
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-1 mb-4">
             <Sparkles className="h-12 w-12" />
             <h1 className="text-4xl md:text-5xl font-bold">Newly Launched</h1>
           </div>
@@ -84,10 +84,10 @@ export default function NewlyLaunchedPage() {
       <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Controls */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-1">
             <h2 className="text-2xl font-bold">Newly Launched Products</h2>
             <p className="text-gray-600">{filteredProducts.length} products found</p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
               <div className="flex rounded-lg border border-gray-200 overflow-hidden">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'ghost'}

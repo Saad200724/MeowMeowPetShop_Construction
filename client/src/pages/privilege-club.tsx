@@ -89,7 +89,7 @@ export default function PrivilegeClubPage() {
       {/* Membership Tiers */}
       <section className="pb-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-1">
             {membershipTiers.map((tier) => {
               const IconComponent = tier.icon;
               return (
@@ -120,7 +120,7 @@ export default function PrivilegeClubPage() {
                   <CardContent className="space-y-4">
                     <ul className="space-y-3">
                       {tier.benefits.map((benefit, index) => (
-                        <li key={index} className="flex items-start gap-3">
+                        <li key={index} className="flex items-start gap-1">
                           <Check className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700">{benefit}</span>
                         </li>
@@ -150,7 +150,7 @@ export default function PrivilegeClubPage() {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Why Join Our Privilege Club?</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-1">
             {[
               {
                 icon: Gift,

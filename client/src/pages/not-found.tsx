@@ -66,7 +66,7 @@ export default function NotFound() {
                 </div>
                 
                 {/* Cat Legs */}
-                <div className="flex justify-center gap-2 mt-1">
+                <div className="flex justify-center gap-1 mt-1">
                   <div className="w-3 h-8 bg-orange-400 rounded-b-full"></div>
                   <div className="w-3 h-8 bg-orange-400 rounded-b-full"></div>
                   <div className="w-3 h-8 bg-orange-400 rounded-b-full"></div>
@@ -97,9 +97,9 @@ export default function NotFound() {
             </div>
             
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-1 justify-center items-center">
               <Link href="/">
-                <Button className="bg-[#26732d] hover:bg-[#1e5d26] text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2">
+                <Button className="bg-[#26732d] hover:bg-[#1e5d26] text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-1">
                   <Home size={20} />
                   Go Home
                 </Button>
@@ -107,7 +107,7 @@ export default function NotFound() {
               <Button 
                 variant="outline" 
                 onClick={() => window.history.back()}
-                className="border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
+                className="border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-1"
               >
                 <ArrowLeft size={20} />
                 Go Back

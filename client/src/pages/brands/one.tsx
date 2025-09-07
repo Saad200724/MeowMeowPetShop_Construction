@@ -111,7 +111,7 @@ export default function OnePage() {
 
       {/* Main Content */}
       <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto lg:flex lg:gap-8">
+        <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
           {/* Modern Filter Sidebar */}
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
             <ModernFilter 
@@ -134,7 +134,7 @@ export default function OnePage() {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

@@ -94,7 +94,7 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 max-w-7xl mx-auto">
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h2>
@@ -209,7 +209,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent className="p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Your Name <span className="text-red-500">*</span>
@@ -341,7 +341,7 @@ export default function ContactPage() {
           </Card>
 
           {/* Quick Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-1 mt-8">
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -81,13 +81,13 @@ export default function CartPage() {
             </Button>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-1">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {state.items.map((item) => (
                 <Card key={item.id}>
                   <CardContent className="p-6">
-                    <div className="flex gap-4">
+                    <div className="flex gap-1">
                       <img
                         src={item.image}
                         alt={item.name}
@@ -101,7 +101,7 @@ export default function CartPage() {
                         </p>
                         
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
                             <Button
                               variant="outline"
                               size="sm"

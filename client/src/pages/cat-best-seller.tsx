@@ -64,7 +64,7 @@ export default function CatBestSeller() {
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-green-600 to-teal-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-1 mb-4">
             <Cat className="h-12 w-12" />
             <h1 className="text-4xl md:text-5xl font-bold">Cat Bestsellers</h1>
           </div>
@@ -91,7 +91,7 @@ export default function CatBestSeller() {
             <p className="text-gray-600">{filteredProducts.length} products found</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

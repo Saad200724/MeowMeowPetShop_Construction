@@ -199,7 +199,7 @@ export default function CheckoutPage() {
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold text-[#26732d] mb-8">Checkout</h1>
           
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-1">
             {/* Left Column - Forms */}
             <div className="lg:col-span-2 space-y-6">
               
@@ -295,7 +295,7 @@ export default function CheckoutPage() {
                 
                 {showCoupon && (
                   <CardContent>
-                    <div className="flex gap-2">
+                    <div className="flex gap-1">
                       <Input
                         placeholder="Coupon code"
                         value={couponCode}
@@ -362,7 +362,7 @@ export default function CheckoutPage() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-1">
                       <div>
                         <Label htmlFor="billing-city">City</Label>
                         <Input

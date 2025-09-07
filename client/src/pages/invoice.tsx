@@ -150,7 +150,7 @@ export default function InvoicePage() {
           </Card>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-4 mb-6">
+          <div className="flex flex-wrap gap-1 mb-6">
             <Button 
               onClick={() => window.history.back()}
               variant="outline"
@@ -207,7 +207,7 @@ export default function InvoicePage() {
 
             <CardContent className="p-6">
               {/* Customer Information */}
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid md:grid-cols-2 gap-1 mb-8">
                 <div>
                   <h3 className="font-bold text-lg mb-3">Bill To:</h3>
                   <div className="space-y-1">

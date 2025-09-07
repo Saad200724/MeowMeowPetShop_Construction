@@ -62,7 +62,7 @@ export default function FlashSaleProducts() {
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-red-600 to-orange-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-1 mb-4">
             <Flame className="h-12 w-12" />
             <h1 className="text-4xl md:text-5xl font-bold">Flash Sale Products</h1>
           </div>
@@ -89,7 +89,7 @@ export default function FlashSaleProducts() {
             <p className="text-gray-600">{filteredProducts.length} products found</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

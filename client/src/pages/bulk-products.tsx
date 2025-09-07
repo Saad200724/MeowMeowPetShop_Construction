@@ -132,7 +132,7 @@ export default function BulkProducts() {
             <div className="absolute left-0 top-0">
               <a 
                 href="/" 
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#26732d] text-white rounded-lg hover:bg-[#1e5d26] transition-colors"
+                className="inline-flex items-center gap-1 px-4 py-2 bg-[#26732d] text-white rounded-lg hover:bg-[#1e5d26] transition-colors"
               >
                 <Home size={18} />
                 Go Home
@@ -140,7 +140,7 @@ export default function BulkProducts() {
             </div>
             
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-3">
+              <h1 className="text-4xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-1">
                 <Package size={40} className="text-[#26732d]" />
                 Bulk Products - Save More!
               </h1>
@@ -155,8 +155,8 @@ export default function BulkProducts() {
       {/* Filters and Search */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between">
+            <div className="flex items-center gap-1 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-80">
                 <Input
                   placeholder="Search bulk products..."
@@ -168,8 +168,8 @@ export default function BulkProducts() {
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1">
                 <Filter className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-600">Sort by:</span>
               </div>
@@ -290,7 +290,7 @@ export default function BulkProducts() {
                         
                         <div className="w-full">
                           <Button 
-                            className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm w-full flex items-center justify-center gap-2 font-medium shadow-sm"
+                            className="bg-[#26732d] text-white px-4 py-2 rounded-lg hover:bg-[#1e5d26] transition-colors text-sm w-full flex items-center justify-center gap-1 font-medium shadow-sm"
                             onClick={() => {
                               const stockAvailable = product.stockQuantity || product.stock || 0;
                               
@@ -340,7 +340,7 @@ export default function BulkProducts() {
           <p className="text-lg text-green-100 mb-8 max-w-2xl mx-auto">
             Purchase in bulk and enjoy significant savings on premium pet food. Perfect for pet shelters, multiple pet owners, or long-term savings.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-1 justify-center">
             <a href="/contact">
               <Button size="lg" className="bg-yellow-400 text-[#26732d] hover:bg-yellow-300 font-bold w-full sm:w-auto">
                 Contact for Custom Orders

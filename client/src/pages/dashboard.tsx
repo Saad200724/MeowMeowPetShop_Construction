@@ -187,7 +187,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
         <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium">TOTAL SPENT</CardTitle>
@@ -217,7 +217,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Order Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
         <Card className="text-center">
           <CardHeader className="pb-2">
             <CheckCircle className="h-8 w-8 text-green-600 mx-auto" />
@@ -328,7 +328,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <Separator />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
             <div>
               <label className="text-sm font-medium text-gray-700">First Name</label>
               <p className="mt-1">{user.firstName || 'Not set'}</p>
@@ -369,7 +369,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-1">
           {/* Sidebar */}
           <div className="w-full lg:w-80">
             <Card className="p-4">

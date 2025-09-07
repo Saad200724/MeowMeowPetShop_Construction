@@ -71,7 +71,7 @@ export default function BulkDiscountsPage() {
             <div className="absolute left-0 top-0">
               <a 
                 href="/bulk-products" 
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#26732d] text-white rounded-lg hover:bg-[#1e5d26] transition-colors"
+                className="inline-flex items-center gap-1 px-4 py-2 bg-[#26732d] text-white rounded-lg hover:bg-[#1e5d26] transition-colors"
               >
                 <Package size={18} />
                 Back to Bulk Products
@@ -79,7 +79,7 @@ export default function BulkDiscountsPage() {
             </div>
             
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-3">
+              <h1 className="text-4xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-1">
                 <Package size={40} className="text-[#26732d]" />
                 Bulk Discount Program
               </h1>
@@ -98,7 +98,7 @@ export default function BulkDiscountsPage() {
           <p className="text-lg text-gray-600">The more you buy, the more you save!</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 mb-12">
           {discountTiers.map((tier, index) => (
             <div key={index} className={`${tier.color} rounded-lg p-6 border-2 text-center`}>
               <Badge className={`${tier.badgeColor} mb-4 text-lg font-bold px-4 py-2`}>
@@ -117,9 +117,9 @@ export default function BulkDiscountsPage() {
         {/* Benefits Section */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Why Choose Our Bulk Program?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start gap-4">
+              <div key={index} className="flex items-start gap-1">
                 <div className="flex-shrink-0">
                   {benefit.icon}
                 </div>
@@ -135,7 +135,7 @@ export default function BulkDiscountsPage() {
         {/* How It Works */}
         <div className="bg-gradient-to-r from-[#26732d] to-[#1e5d26] rounded-lg shadow-lg p-8 text-white mb-12">
           <h2 className="text-2xl font-bold mb-8 text-center">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             <div className="text-center">
               <div className="bg-white bg-opacity-20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold">1</span>
@@ -163,7 +163,7 @@ export default function BulkDiscountsPage() {
         {/* Special Programs */}
         <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Special Programs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
             <div className="text-center">
               <Heart className="w-12 h-12 text-[#26732d] mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Animal Shelter Program</h3>
@@ -189,7 +189,7 @@ export default function BulkDiscountsPage() {
           <p className="text-lg text-gray-600 mb-8">
             Browse our bulk products and start enjoying instant discounts today!
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-1 justify-center">
             <a href="/bulk-products">
               <Button size="lg" className="bg-[#26732d] text-white hover:bg-[#1e5d26] w-full sm:w-auto">
                 Shop Bulk Products

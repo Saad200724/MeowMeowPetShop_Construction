@@ -88,7 +88,7 @@ export default function BlogPage() {
       {/* Hero Section */}
       <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-1 mb-4">
             <BookOpen className="h-12 w-12" />
             <h1 className="text-4xl md:text-5xl font-bold">Pet Care Blog</h1>
           </div>
@@ -113,7 +113,7 @@ export default function BlogPage() {
         <section className="py-12 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold mb-8">Featured Articles</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-1">
               {featuredPosts.map((post) => (
                 <Card key={post._id} className="hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <div className="relative">
@@ -134,7 +134,7 @@ export default function BlogPage() {
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
                     
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
                         <div className="flex items-center gap-1">
                           <User className="h-4 w-4" />
                           <span>{post.author}</span>
@@ -172,7 +172,7 @@ export default function BlogPage() {
         )}
         
         {!loading && (
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-1">
           {/* Categories Sidebar */}
           <aside className="lg:w-1/4">
             <Card>
@@ -231,7 +231,7 @@ export default function BlogPage() {
               <p className="text-gray-600">{filteredPosts.length} articles found</p>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-1">
               {filteredPosts.map((post) => (
                 <Card key={post._id} className="hover:shadow-lg transition-all duration-300">
                   <div className="flex flex-col md:flex-row">
@@ -243,7 +243,7 @@ export default function BlogPage() {
                       />
                     </div>
                     <div className="md:w-2/3 p-6">
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-1 mb-3">
                         <Badge variant="secondary">{post.category || 'General'}</Badge>
                       </div>
                       
@@ -256,7 +256,7 @@ export default function BlogPage() {
                       </p>
 
                       <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" />
                             <span>{post.author}</span>
@@ -278,7 +278,7 @@ export default function BlogPage() {
                             Read More
                           </Button>
                         </Link>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Button size="sm" variant="ghost" data-testid={`button-like-${post._id}`}>
                             <Heart className="h-4 w-4" />
                           </Button>

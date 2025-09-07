@@ -83,13 +83,13 @@ export default function MessengerPage() {
       {/* Header */}
       <div className="bg-[#26732d] text-white p-4 shadow-lg">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             <Link href="/">
               <Button variant="ghost" size="sm" className="text-white hover:bg-[#1e5d26] p-2">
                 <ArrowLeft size={20} />
               </Button>
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                 <span className="text-[#26732d] font-bold text-lg">M</span>
               </div>
@@ -99,7 +99,7 @@ export default function MessengerPage() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" className="text-white hover:bg-[#1e5d26] p-2">
               <Phone size={20} />
             </Button>
@@ -164,7 +164,7 @@ export default function MessengerPage() {
 
       {/* Input Area */}
       <div className="bg-white border-t p-4">
-        <div className="flex items-end gap-3">
+        <div className="flex items-end gap-1">
           <Button variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100 p-2">
             <Smile size={20} />
           </Button>

@@ -167,7 +167,7 @@ export default function SignUpPage() {
           <CardContent className="space-y-5">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-1">
                 <div className="space-y-2">
                   <Label htmlFor="firstName" className="text-meow-green font-medium text-sm">
                     First Name

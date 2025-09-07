@@ -156,7 +156,7 @@ export default function BlogDetailPage() {
         {/* Article Header */}
         <Card className="mb-8">
           <CardContent className="p-8">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-1 mb-4">
               <Badge variant="secondary" className="text-indigo-600">
                 {blogPost.tags?.[0] || 'General'}
               </Badge>
@@ -172,13 +172,13 @@ export default function BlogDetailPage() {
               </p>
             )}
             
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 pt-6 gap-4">
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 pt-6 gap-1">
+              <div className="flex flex-wrap items-center gap-1 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
                   <span className="font-medium">{blogPost.author}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   <span>{new Date(blogPost.publishedAt || blogPost.createdAt).toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -186,13 +186,13 @@ export default function BlogDetailPage() {
                     day: 'numeric'
                   })}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
                   <span>5 min read</span>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Button variant="ghost" size="sm">
                   <Heart className="h-4 w-4" />
                 </Button>
@@ -219,7 +219,7 @@ export default function BlogDetailPage() {
         {blogPost.tags && blogPost.tags.length > 0 && (
           <div className="mt-12 pt-8 border-t border-gray-200">
             <h3 className="text-lg font-semibold mb-4">Tags</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
               {blogPost.tags.map((tag, index) => (
                 <Badge key={index} variant="outline" className="text-sm">
                   {tag}

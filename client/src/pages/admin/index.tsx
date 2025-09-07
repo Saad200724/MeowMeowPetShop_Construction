@@ -717,7 +717,7 @@ export default function AdminPage() {
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Products Management</h2>
                 <p className="text-gray-600">Manage your product catalog across all categories</p>
@@ -736,7 +736,7 @@ export default function AdminPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border">
+            <div className="flex flex-col sm:flex-row gap-1 bg-white p-4 rounded-lg border">
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -885,7 +885,7 @@ export default function AdminPage() {
                   </table>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 p-6">
                   {filteredProducts.map((product) => (
                     <Card key={product.id} className="hover:shadow-lg transition-shadow">
                       <CardHeader className="pb-3">
@@ -924,7 +924,7 @@ export default function AdminPage() {
 
           {/* Shop by Category Tab */}
           <TabsContent value="shop-categories" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Shop by Category Management</h2>
                 <p className="text-gray-600">Manage the 10 featured categories displayed on the homepage</p>
@@ -957,7 +957,7 @@ export default function AdminPage() {
             <div className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-1">
                     <Grid3X3 className="w-5 h-5 text-green-600" />
                     {selectedShopCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Products
                   </CardTitle>
@@ -981,7 +981,7 @@ export default function AdminPage() {
                     {/* Current Products in Category */}
                     <div className="border rounded-lg p-4">
                       <h4 className="font-medium mb-3">Products currently assigned to this category:</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
                         {products
                           .filter((product: any) => 
                             product.tags?.includes(selectedShopCategory) ||
@@ -1051,7 +1051,7 @@ export default function AdminPage() {
                     </div>
 
                     {/* Quick Actions */}
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1">
                       <Button
                         onClick={() => {
                           setEditingProduct(null);
@@ -1081,7 +1081,7 @@ export default function AdminPage() {
                   <CardTitle className="text-lg">Category Statistics</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-1">
                     {[
                       'cat-food', 'dog-food', 'cat-toys', 'cat-litter', 
                       'cat-care', 'clothing-beds-carrier', 'cat-accessories', 
@@ -1118,7 +1118,7 @@ export default function AdminPage() {
 
           {/* Repack Food Tab */}
           <TabsContent value="repack-food" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Repack Food Management</h2>
                 <p className="text-gray-600">Manage repack food products and bulk food items</p>
@@ -1137,7 +1137,7 @@ export default function AdminPage() {
             </div>
 
             {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border">
+            <div className="flex flex-col sm:flex-row gap-1 bg-white p-4 rounded-lg border">
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -1154,7 +1154,7 @@ export default function AdminPage() {
             {/* Repack Food Products */}
             <div className="bg-white rounded-lg border">
               <div className="p-4 border-b bg-orange-50">
-                <h3 className="text-lg font-semibold text-orange-800 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-orange-800 flex items-center gap-1">
                   <Coffee className="w-5 h-5" />
                   Repack Food Products
                 </h3>
@@ -1267,13 +1267,13 @@ export default function AdminPage() {
             {/* Repack Food Guidelines */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-1">
                   <Coffee className="w-5 h-5 text-orange-600" />
                   Repack Food Guidelines
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
                   <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                     <h4 className="font-medium text-orange-900 mb-2">How to add repack food products:</h4>
                     <ul className="list-disc list-inside text-sm text-orange-800 space-y-1">
@@ -1297,7 +1297,7 @@ export default function AdminPage() {
             </Card>
 
             {/* Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-1">
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-orange-600">
@@ -1335,7 +1335,7 @@ export default function AdminPage() {
 
           {/* Announcements Tab */}
           <TabsContent value="announcements" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Announcement Management</h2>
                 <p className="text-gray-600">Manage website announcements shown in the top bar</p>
@@ -1353,20 +1353,20 @@ export default function AdminPage() {
               </Button>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-1">
               {announcements.map((announcement: any) => (
                 <Card key={announcement._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                        <div className="flex items-center gap-1 mb-2">
                           <Speaker className="w-5 h-5 text-yellow-600" />
                           <Badge variant={announcement.isActive ? 'default' : 'secondary'}>
                             {announcement.isActive ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
                         <CardTitle className="text-xl" dangerouslySetInnerHTML={{ __html: parseAnnouncementText(announcement.text) }} />
-                        <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 mt-3 text-sm text-gray-500">
                           <span>Created: {new Date(announcement.createdAt).toLocaleDateString()}</span>
                           {announcement.updatedAt !== announcement.createdAt && (
                             <>
@@ -1426,7 +1426,7 @@ export default function AdminPage() {
 
           {/* Blogs Tab */}
           <TabsContent value="blogs" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Blog Management</h2>
                 <p className="text-gray-600">Create and manage blog posts</p>
@@ -1456,7 +1456,7 @@ export default function AdminPage() {
               </Button>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-1">
               {blogPosts.map((blog) => (
                 <Card key={blog._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
@@ -1464,7 +1464,7 @@ export default function AdminPage() {
                       <div className="flex-1">
                         <CardTitle className="text-xl">{blog.title}</CardTitle>
                         <CardDescription className="mt-2">{blog.excerpt}</CardDescription>
-                        <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 mt-3 text-sm text-gray-500">
                           <span>By {blog.author}</span>
                           <span>•</span>
                           <span>{new Date(blog.publishedAt || blog.createdAt).toLocaleDateString()}</span>
@@ -1510,7 +1510,7 @@ export default function AdminPage() {
               onSubmit={form.handleSubmit(editingProduct ? handleUpdateProduct : handleCreateProduct)} 
               className="space-y-6"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-1">
                 <FormField
                   control={form.control}
                   name="name"
@@ -1558,7 +1558,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-1">
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -1641,7 +1641,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-1">
                 <FormField
                   control={form.control}
                   name="originalPrice"
@@ -1687,7 +1687,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-1">
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium">Product Flags</h4>
                   <div className="space-y-3">
@@ -1811,7 +1811,7 @@ export default function AdminPage() {
               onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : handleCreateRepack)} 
               className="space-y-6"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-1">
                 <FormField
                   control={repackForm.control}
                   name="name"
@@ -1859,7 +1859,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-1">
                 <FormField
                   control={repackForm.control}
                   name="categoryId"
@@ -1939,7 +1939,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-1">
                 <FormField
                   control={repackForm.control}
                   name="originalPrice"
@@ -2052,7 +2052,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-1">
                 <div>
                   <Label htmlFor="blog-category">Category</Label>
                   <Select value={(editingBlog as any).category || ''} onValueChange={(value) => setEditingBlog({...editingBlog, category: value} as any)}>

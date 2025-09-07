@@ -103,12 +103,12 @@ export default function ReflexPage() {
 
       {/* Main Content */}
       <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto lg:flex lg:gap-8">
+        <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
           {/* Sidebar */}
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-1">
                   <Filter className="h-5 w-5" />
                   Categories
                 </CardTitle>
@@ -151,7 +151,7 @@ export default function ReflexPage() {
               <p className="text-gray-600">{filteredProducts.length} products found</p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-1">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

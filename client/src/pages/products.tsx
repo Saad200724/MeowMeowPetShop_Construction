@@ -84,7 +84,7 @@ export default function ProductsPage() {
           <AnalyticsBar categoryId={selectedCategory} className="animate-fade-in" />
 
           {/* Filters and Search */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 animate-slide-up">
+          <div className="flex flex-col sm:flex-row gap-1 sm:gap-1 mb-6 sm:mb-8 animate-slide-up">
             {/* Search */}
             <div className="relative flex-1">
               <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
