@@ -103,7 +103,7 @@ export default function BulkProducts() {
 
         {/* Loading Products */}
         <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
               <div key={i} className="bg-white rounded-lg shadow-md h-[450px] animate-pulse">
                 <div className="bg-gray-200 h-48 rounded-t-lg"></div>
@@ -207,7 +207,7 @@ export default function BulkProducts() {
             <p className="text-gray-600">Try adjusting your search or filter criteria</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
             {filteredAndSortedProducts.map((product: any) => {
               const productId = product.id || product._id;
               const savings = calculateSavings(product.price, product.originalPrice);
