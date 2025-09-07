@@ -439,7 +439,7 @@ main {
 .hero-banner-content {
   width: 100%;
   height: 0;
-  padding-bottom: 25%; /* Reduced size for desktop/laptop/tablet when sidebar closed */
+  padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio */
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -452,14 +452,14 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
-/* Smaller banner for larger screens when sidebar is closed */
-@media (min-width: 1024px) {
+/* Exact 1200:400 ratio for laptop screens */
+@media (min-width: 1024px) and (max-width: 1400px) {
   .hero-banner-content {
-    padding-bottom: 22%; /* Compact size for desktop/laptop/tablet */
+    padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio - nothing cut off */
   }
 }
 
