@@ -6,7 +6,7 @@ export default function Testimonials() {
       id: 1,
       name: 'Sarah Rahman',
       role: 'Cat Parent, Savar',
-      image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
+      image: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
       text: 'Meow Meow Pet Shop has the best quality pet food in Savar! My cat Luna loves their premium kibble and the delivery is always on time. Highly recommended!',
       rating: 5
     },
@@ -14,7 +14,7 @@ export default function Testimonials() {
       id: 2,
       name: 'Ahmed Hassan',
       role: 'Dog Parent, Savar',
-      image: 'https://images.unsplash.com/photo-1552053628-0dcb5a60e3de?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
+      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
       text: 'Amazing service and products! I\'ve been buying dog food and toys from here for 2 years. The staff is knowledgeable and always helps me choose the right products for Max.',
       rating: 5
     },
@@ -55,7 +55,7 @@ export default function Testimonials() {
               <img 
                 src={testimonial.image} 
                 alt={testimonial.name} 
-                className="w-16 h-16 rounded-full mb-4 object-cover border-4 border-[#ffde59] hover:scale-110 transition-transform duration-300" 
+                className="w-16 h-16 rounded-full mb-4 object-cover object-center border-4 border-[#ffde59] hover:scale-110 transition-transform duration-300" 
                 loading="lazy"
                 decoding="async"
               />
