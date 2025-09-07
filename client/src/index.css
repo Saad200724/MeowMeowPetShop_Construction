@@ -456,10 +456,10 @@ main {
   display: block;
 }
 
-/* Scale down for laptop screens while maintaining ratio */
+/* Exact 1200:400 ratio for laptop screens */
 @media (min-width: 1024px) and (max-width: 1400px) {
   .hero-banner-content {
-    padding-bottom: 25%; /* Smaller but still proportional */
+    padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio - nothing cut off */
   }
 }
 
