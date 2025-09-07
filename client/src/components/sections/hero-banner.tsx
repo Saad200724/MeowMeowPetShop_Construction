@@ -9,8 +9,8 @@ export default function HeroBanner() {
       <div className="relative w-full">
         <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px]">
           <img
-            src="/Banner_Meow.png"
-            alt="Meow Meow Pet Shop - Special Offer - Everything for Your Pet - Up to 70% Off"
+            src="/Banner_Reflex.png"
+            alt="Reflex High Quality - আর্ডার করলেই পেয়ে যাচ্ছেন আকর্ষণীয় GIFT - Shop Now"
             className="w-full h-full object-cover"
             loading="eager"
             onError={(e) => {
