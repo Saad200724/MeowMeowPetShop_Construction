@@ -427,20 +427,19 @@ main {
   display: block;
 }
 
-/* Hero Banner - Much shorter to fit all screens */
+/* Hero Banner - Proportional 1200:400 ratio, full width usage */
 .hero-banner-wrapper {
   position: relative;
   width: 100%;
-  padding: 0.25rem;
+  padding: 0.5rem;
   background: white;
   box-sizing: border-box;
 }
 
 .hero-banner-content {
   width: 100%;
-  max-width: 100%;
   height: 0;
-  padding-bottom: 18%; /* Much shorter banner */
+  padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio */
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -453,14 +452,14 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
-/* Even shorter for laptop screens */
+/* Scale down for laptop screens while maintaining ratio */
 @media (min-width: 1024px) and (max-width: 1400px) {
   .hero-banner-content {
-    padding-bottom: 15%; /* Very compact for laptops */
+    padding-bottom: 25%; /* Smaller but still proportional */
   }
 }
 
