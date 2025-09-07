@@ -2,18 +2,20 @@ import bannerImage from "@assets/Banner_1753440909945.jpg";
 
 export default function HeroBanner() {
   return (
-    <section className="hero-banner-wrapper">
-      <div className="hero-banner-content">
-        <img
-          src={bannerImage}
-          alt="Meow Meow Pet Shop - Everything You Need"
-          loading="eager"
-          onLoad={() => console.log("Banner loaded successfully")}
-          onError={(e) => {
-            console.error("Banner failed to load:", e);
-            console.log("Trying fallback image path...");
-          }}
-        />
+    <section className="w-full">
+      <div className="hero-banner-wrapper">
+        <div className="hero-banner-content">
+          <img
+            src={bannerImage}
+            alt="Meow Meow Pet Shop - Everything You Need"
+            loading="eager"
+            onLoad={() => console.log("Banner loaded successfully")}
+            onError={(e) => {
+              console.error("Banner failed to load:", e);
+              console.log("Trying fallback image path...");
+            }}
+          />
+        </div>
       </div>
 
       {/* Featured Categories Header */}

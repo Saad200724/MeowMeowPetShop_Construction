@@ -427,24 +427,23 @@ main {
   display: block;
 }
 
-/* Hero Banner - Responsive banner that maintains aspect ratio */
+/* Hero Banner - Responsive banner that fits available space */
 .hero-banner-wrapper {
   position: relative;
   width: 100%;
-  display: flex;
-  justify-content: center;
   padding: 1rem;
   background: white;
+  box-sizing: border-box;
 }
 
 .hero-banner-content {
   width: 100%;
-  max-width: 100%;
-  aspect-ratio: 3/1; /* Maintains 1200:400 ratio */
+  height: 300px;
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .hero-banner-content img {
@@ -452,6 +451,19 @@ main {
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+/* Adjust height based on available width to maintain aspect ratio */
+@media (min-width: 1024px) {
+  .hero-banner-content {
+    height: 350px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-banner-content {
+    height: 400px;
+  }
 }
 
 /* Responsive adjustments for smaller screens */
