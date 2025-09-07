@@ -109,12 +109,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         </button>
       </div>
       
-      {/* Product Image - Full Visible, Minimal Padding */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl h-56 p-2 flex items-center justify-center">
+      {/* Product Image - E-commerce Standard */}
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-56 flex items-center justify-center">
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" 
+          className="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" 
           loading="lazy"
           decoding="async"
         />
