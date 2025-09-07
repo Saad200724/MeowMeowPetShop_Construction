@@ -427,21 +427,20 @@ main {
   display: block;
 }
 
-/* Hero Banner - Fixed 1200x400px dimensions, always fully visible */
+/* Hero Banner - Responsive banner that adjusts to available space */
 .hero-banner-wrapper {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
+  padding: 1rem;
   background: white;
-  z-index: 20;
 }
 
 .hero-banner-content {
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   height: 400px;
-  max-width: calc(100% - 2rem);
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -456,26 +455,22 @@ main {
 }
 
 /* Responsive adjustments for smaller screens */
-@media (max-width: 1200px) {
-  .hero-banner-content {
-    width: 100%;
-    max-width: calc(100% - 2rem);
-  }
-}
-
 @media (max-width: 768px) {
   .hero-banner-content {
     height: 300px;
-    max-width: calc(100% - 1rem);
   }
   
   .hero-banner-wrapper {
-    padding: 0.5rem 0;
+    padding: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .hero-banner-content {
     height: 250px;
+  }
+  
+  .hero-banner-wrapper {
+    padding: 0.25rem;
   }
 }
