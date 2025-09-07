@@ -82,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[320px] flex flex-col">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[360px] flex flex-col">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -109,8 +109,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         </button>
       </div>
       
-      {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4 flex items-center justify-center h-40">
+      {/* Product Image - Much Larger */}
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-6 flex items-center justify-center h-56">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -121,22 +121,20 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       
-      {/* Product Content */}
-      <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
-        <div className="space-y-2">
-          {/* Product Name */}
-          <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight min-h-[2.5rem]">
-            {product.name}
-          </h4>
-          
-          {/* Rating */}
-          <div className="flex items-center">
-            {renderStars(product.rating)}
-          </div>
+      {/* Product Content - Compact */}
+      <div className="p-3 flex flex-col justify-between space-y-1.5">
+        {/* Product Name - More Compact */}
+        <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-1 leading-tight">
+          {product.name}
+        </h4>
+        
+        {/* Rating - Smaller */}
+        <div className="flex items-center">
+          {renderStars(product.rating)}
         </div>
         
-        {/* Price and Actions */}
-        <div className="space-y-2">
+        {/* Price and Actions - Compact */}
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
