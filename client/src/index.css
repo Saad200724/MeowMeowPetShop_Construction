@@ -427,59 +427,55 @@ main {
   display: block;
 }
 
-/* Fixed banner dimensions - 1200x400px visible on all screens */
-.hero-banner {
+/* Hero Banner - Fixed 1200x400px dimensions, always fully visible */
+.hero-banner-wrapper {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  background: white;
+  z-index: 20;
 }
 
-.hero-banner img {
-  width: 100%;
+.hero-banner-content {
+  width: 1200px;
   height: 400px;
+  max-width: calc(100% - 2rem);
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hero-banner-content img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
-/* Responsive adjustments while maintaining 400px height */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 1200px) {
-  .hero-banner img {
+  .hero-banner-content {
     width: 100%;
-    height: 400px;
-    object-fit: contain;
+    max-width: calc(100% - 2rem);
   }
 }
 
 @media (max-width: 768px) {
-  .hero-banner img {
-    width: 100%;
-    height: 400px;
-    object-fit: contain;
+  .hero-banner-content {
+    height: 300px;
+    max-width: calc(100% - 1rem);
+  }
+  
+  .hero-banner-wrapper {
+    padding: 0.5rem 0;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-banner img {
-    width: 100%;
-    height: 400px;
-    object-fit: contain;
+  .hero-banner-content {
+    height: 250px;
   }
-}
-
-/* Banner container for consistent layout */
-.banner-container {
-  position: relative;
-  width: 100%;
-  max-width: 1200px;
-  height: 400px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.banner-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
