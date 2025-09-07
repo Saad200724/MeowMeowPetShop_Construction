@@ -9,20 +9,16 @@ export default function HeroBanner() {
       <div className="relative w-full">
         <div className="relative w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px]">
           <img
-            src="./Banner_Reflex.png"
+            src="/Banner_Reflex.png"
             alt="Reflex High Quality - আর্ডার করলেই পেয়ে যাচ্ছেন আকর্ষণীয় GIFT - Shop Now"
             className="w-full h-full object-cover"
             loading="eager"
             onLoad={() => console.log('Banner loaded successfully')}
             onError={(e) => {
               console.error('Banner failed to load:', e);
-              // Try alternative path
+              console.log('Trying fallback image path...');
               const target = e.currentTarget;
-              if (target.src.includes('./Banner_Reflex.png')) {
-                target.src = '/Banner_Reflex.png';
-              } else if (target.src.includes('/Banner_Reflex.png')) {
-                target.src = 'Banner_Reflex.png';
-              }
+              target.src = 'Banner_Reflex.png';
             }}
           />
         </div>
