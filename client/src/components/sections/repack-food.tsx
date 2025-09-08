@@ -1,13 +1,17 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Heart, Plus, Minus, Package } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Heart, Package, ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function RepackFood() {
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  const { addItem } = useCart();
+  const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
+  const { addItem, getItemQuantity } = useCart();
   const { toast } = useToast();
 
   // Fetch repack products from API
@@ -15,21 +19,10 @@ export default function RepackFood() {
     queryKey: ['/api/repack-products'],
   });
 
-  // Initialize quantities when products are loaded
-  useEffect(() => {
-    if ((products as any[]).length > 0) {
-      const initialQuantities: { [key: string]: number } = {};
-      (products as any[]).forEach((product: any) => {
-        initialQuantities[product.id || product._id] = 1;
-      });
-      setQuantities(initialQuantities);
-    }
-  }, [products]);
-
-  const updateQuantity = (id: string, delta: number) => {
-    setQuantities(prev => ({
+  const toggleLike = (id: string) => {
+    setLikedItems(prev => ({
       ...prev,
-      [id]: Math.max(1, (prev[id] || 1) + delta)
+      [id]: !prev[id]
     }));
   };
 
@@ -44,6 +37,33 @@ export default function RepackFood() {
     return Math.round(((originalPrice - price) / originalPrice) * 100);
   };
 
+  const handleAddToCart = (product: any) => {
+    const productId = product.id || product._id;
+    const stockAvailable = product.stockQuantity || product.stock || 0;
+
+    if (stockAvailable === 0) {
+      toast({
+        title: 'Out of Stock',
+        description: 'This item is currently out of stock.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    addItem({
+      id: productId,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      maxStock: stockAvailable
+    });
+
+    toast({
+      title: 'Added to Cart',
+      description: `${product.name} added to your cart.`
+    });
+  };
+
   if (isLoading) {
     return (
       <section className="py-12">
@@ -55,8 +75,8 @@ export default function RepackFood() {
           <div className="overflow-x-auto">
             <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-[400px] animate-pulse">
-                  <div className="bg-gray-200 h-48 rounded-t-lg"></div>
+                <div key={i} className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-md h-[450px] animate-pulse border border-gray-100">
+                  <div className="bg-gray-200 h-48 rounded-t-2xl"></div>
                   <div className="p-4 space-y-3">
                     <div className="bg-gray-200 h-4 rounded w-3/4"></div>
                     <div className="bg-gray-200 h-3 rounded w-full"></div>
@@ -93,96 +113,134 @@ export default function RepackFood() {
         <div className="overflow-x-auto">
           <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
             {(products as any[]).slice(0, 3).map((product: any) => {
-            const productId = product.id || product._id;
-            const savings = calculateSavings(product.price, product.originalPrice);
-            const badge = getBadgeFromTags(product.tags);
+              const productId = product.id || product._id;
+              const savings = calculateSavings(product.price, product.originalPrice);
+              const badge = getBadgeFromTags(product.tags);
+              const stockAvailable = product.stockQuantity || product.stock || 0;
+              const itemQuantity = getItemQuantity(productId);
+              const isInCart = itemQuantity > 0;
+              const isLiked = likedItems[productId];
 
-            return (
-              <div key={productId} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative h-[280px] flex flex-col">
-                <div className="absolute top-2 left-2 bg-yellow-400 text-[#26732d] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
-                  <Package size={12} />
-                  {badge}
-                </div>
-                <div className="absolute top-2 right-2 z-10">
-                  <button className="bg-white bg-opacity-80 p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm">
-                    <Heart size={14} />
-                  </button>
-                </div>
+              return (
+                <Card key={productId} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-80">
+                  {/* Discount Badge */}
+                  {savings > 0 && (
+                    <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                      -{savings}%
+                    </Badge>
+                  )}
 
-                <div className="flex flex-col h-full">
-                  <div className="relative">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-32 object-cover rounded-t-lg"
+                  {/* Repack Badge */}
+                  {!savings && (
+                    <Badge className="absolute top-3 left-3 z-10 bg-yellow-400 text-[#26732d] text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                      <Package size={12} />
+                      {badge}
+                    </Badge>
+                  )}
+
+                  {/* Like Button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-sm"
+                    onClick={() => toggleLike(productId)}
+                  >
+                    <Heart 
+                      size={16} 
+                      className={cn(
+                        'transition-colors',
+                        isLiked ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'
+                      )} 
                     />
+                  </Button>
+
+                  {/* Product Image */}
+                  <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4">
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="w-full h-48 object-contain transition-transform duration-500 group-hover:scale-110" 
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-3 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="font-bold mb-1 text-sm text-[#26732d] leading-tight line-clamp-2">{product.name}</h4>
-                      <div className="text-xs text-gray-600 mb-2">
-                        <span className={`font-semibold ${
-                          (product.stockQuantity || product.stock || 0) === 0
-                            ? 'text-red-600'
-                            : (product.stockQuantity || product.stock || 0) < 10
-                            ? 'text-orange-600'
-                            : 'text-green-600'
-                        }`}>
-                          {(product.stockQuantity || product.stock || 0)} available
-                        </span>
-                      </div>
+
+                  <CardContent className="p-4 space-y-3">
+                    {/* Category Tag */}
+                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                      Repack Food
                     </div>
+
+                    {/* Product Name */}
+                    <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[3rem]">
+                      {product.name}
+                    </h3>
+
+                    {/* Price Section */}
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-base font-bold text-[#26732d]">৳{product.price?.toLocaleString()}</span>
-                          {product.originalPrice && (
-                            <span className="text-xs text-gray-600 line-through">৳{product.originalPrice?.toLocaleString()}</span>
-                          )}
-                        </div>
-                        {savings > 0 && (
-                          <span className="bg-yellow-400 text-[#26732d] font-bold text-xs px-2 py-1 rounded-full whitespace-nowrap shadow-sm">
-                            {savings}%
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl font-bold text-[#26732d]">
+                          ৳{product.price?.toLocaleString()}
+                        </span>
+                        {product.originalPrice && (
+                          <span className="text-sm text-gray-500 line-through">
+                            ৳{product.originalPrice?.toLocaleString()}
                           </span>
                         )}
+                        {savings > 0 && (
+                          <Badge className="bg-yellow-400 text-[#26732d] font-bold text-xs px-2 py-1 rounded-full ml-auto">
+                            {savings}% OFF
+                          </Badge>
+                        )}
                       </div>
-                      <Button
-                        className="bg-[#26732d] text-white px-3 py-1 rounded-md hover:bg-[#1e5d26] transition-colors text-xs font-medium w-full shadow-sm h-7"
-                        onClick={() => {
-                          const stockAvailable = product.stockQuantity || product.stock || 0;
-
-                          if (stockAvailable === 0) {
-                            toast({
-                              title: 'Out of Stock',
-                              description: 'This item is currently out of stock.',
-                              variant: 'destructive'
-                            });
-                            return;
-                          }
-
-                          addItem({
-                            id: productId,
-                            name: product.name,
-                            price: product.price,
-                            image: product.image,
-                            maxStock: stockAvailable
-                          });
-
-                          toast({
-                            title: 'Added to Cart',
-                            description: `${product.name} added to your cart.`
-                          });
-                        }}
-                        disabled={(product.stockQuantity || product.stock || 0) === 0}
-                      >
-                        {(product.stockQuantity || product.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
-                      </Button>
+                      
+                      {/* Stock Status */}
+                      <div className="text-xs text-gray-500">
+                        {stockAvailable > 0 ? (
+                          <span className={cn(
+                            'font-medium',
+                            stockAvailable < 10 ? 'text-orange-600' : 'text-green-600'
+                          )}>
+                            {stockAvailable < 10 ? `Only ${stockAvailable} left` : `${stockAvailable} available`}
+                          </span>
+                        ) : (
+                          <span className="text-red-600 font-medium">Out of Stock</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+
+                    {/* Add to Cart Button */}
+                    <Button 
+                      variant={isInCart ? "default" : "outline"}
+                      size="sm"
+                      className={cn(
+                        "w-full rounded-full py-2 transition-all duration-200 border-2",
+                        isInCart 
+                          ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]" 
+                          : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
+                      )}
+                      disabled={stockAvailable === 0}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      {stockAvailable === 0 ? (
+                        'Out of Stock'
+                      ) : isInCart ? (
+                        <>
+                          <Check size={16} className="mr-1" />
+                          Added
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart size={16} className="mr-1" />
+                          Add to Cart
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>
