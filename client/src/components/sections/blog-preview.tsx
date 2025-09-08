@@ -88,10 +88,12 @@ export default function BlogPreview() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 mb-8">
-          {blogPosts.map((post) => (
+          {blogPosts.map((post, index) => (
             <Card
               key={post._id}
-              className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
+              className={`group hover:shadow-lg transition-all duration-300 overflow-hidden ${
+                index === 2 ? 'hidden md:block' : ''
+              }`}
             >
               <div className="relative">
                 <img
