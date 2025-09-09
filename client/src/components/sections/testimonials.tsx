@@ -45,7 +45,35 @@ export default function Testimonials() {
           <MessageCircle size={32} className="text-[#26732d]" />
           What Our Customers Say
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Mobile/Tablet Scrollable View */}
+        <div className="lg:hidden overflow-x-auto">
+          <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={testimonial.id} 
+                className="flex-shrink-0 w-72 sm:w-80 flex flex-col items-center text-center bg-white rounded-xl p-4 sm:p-6 hover-lift animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <img 
+                  src={testimonial.image} 
+                  alt={testimonial.name} 
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full mb-3 sm:mb-4 object-cover object-center border-4 border-[#ffde59] hover:scale-110 transition-transform duration-300" 
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="flex justify-center mb-2 sm:mb-3">
+                  {renderStars(testimonial.rating)}
+                </div>
+                <p className="text-gray-700 mb-3 sm:mb-4 italic text-xs sm:text-sm leading-relaxed line-clamp-3">"{testimonial.text}"</p>
+                <div className="font-bold text-[#26732d] text-sm sm:text-lg">{testimonial.name}</div>
+                <div className="text-xs sm:text-sm text-gray-500">{testimonial.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Grid View */}
+        <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
             <div 
               key={testimonial.id} 
