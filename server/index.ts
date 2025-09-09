@@ -2,17 +2,16 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Validate required environment variables
-if (!process.env.MONGODB_URI) {
-  console.error('❌ MONGODB_URI not found in environment variables!');
-  console.error('Please make sure .env file exists and contains:');
-  console.error('MONGODB_URI=your_mongodb_connection_string_here');
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL not found in environment variables!');
+  console.error('Please make sure database is provisioned');
   process.exit(1);
 }
 
 console.log('✅ Environment configuration validated');
 
 import express, { type Request, Response, NextFunction } from "express";
-import { connectDB } from "./mongodb";
+import { db } from "./db";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { createAdminAccount } from "./admin-setup";
@@ -52,8 +51,8 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Connect to MongoDB
-  await connectDB();
+  // Database is already connected via db.ts
+  console.log('✅ Database connection established');
   
   // Create admin account on server start
   await createAdminAccount();
