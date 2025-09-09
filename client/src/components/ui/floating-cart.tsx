@@ -60,8 +60,8 @@ export function FloatingCart() {
     if (newMessage.trim()) {
       // If platform is selected, redirect to the platform
       if (selectedPlatform === 'messenger') {
-        // Redirect to Facebook Messenger (replace with your actual Facebook page username)
-        window.open('https://m.me/meowmeowpetshop', '_blank');
+        // Redirect to Facebook Messenger
+        window.open('https://m.me/meow.meow.pet.shop1', '_blank');
         return;
       } else if (selectedPlatform === 'whatsapp') {
         // Redirect to WhatsApp with the message
