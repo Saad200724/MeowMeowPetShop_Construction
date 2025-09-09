@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShoppingCart, X, Plus, Minus, Trash2, MessageCircle, Send, Minimize2 } from 'lucide-react';
 import { useCart } from '@/contexts/cart-context';
+import { useChat } from '@/contexts/chat-context';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -16,7 +17,7 @@ interface Message {
 
 export function FloatingCart() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const { isChatOpen, toggleChat, closeChat } = useChat();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -105,7 +106,7 @@ export function FloatingCart() {
       <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[9999] flex flex-row gap-2">
         {/* Messenger Button */}
         <button
-          onClick={() => setIsChatOpen(!isChatOpen)}
+          onClick={toggleChat}
           className="text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110"
           style={{backgroundColor: '#fec900'}}
           data-testid="floating-messenger-button"
@@ -141,7 +142,7 @@ export function FloatingCart() {
               </div>
             </div>
             <button
-              onClick={() => setIsChatOpen(false)}
+              onClick={closeChat}
               className="hover:bg-[#1e5d26] p-1 rounded"
               data-testid="close-chat-button"
             >

@@ -9,6 +9,7 @@ import {
 import { Link, useLocation } from "wouter";
 import { useCart } from "@/contexts/cart-context";
 import { useSidebar } from "@/contexts/sidebar-context";
+import { useChat } from "@/contexts/chat-context";
 
 const logoPath = "/logo.png";
 
@@ -16,6 +17,7 @@ export default function MobileBottomNav() {
   const [location] = useLocation();
   const { state: cartState } = useCart();
   const { toggle: toggleSidebar } = useSidebar();
+  const { openChat, isChatOpen } = useChat();
 
   const isActive = (path: string) => {
     if (path === "/" && location === "/") return true;
@@ -88,17 +90,16 @@ export default function MobileBottomNav() {
         </Link>
 
         {/* Chat */}
-        <Link href="/messenger">
-          <div
-            className={`flex flex-col items-center justify-center py-2 px-3 transition-colors relative ${
-              isActive("/messenger") ? "text-[#26732d]" : "text-gray-600"
-            }`}
-            data-testid="mobile-nav-chat"
-          >
-            <MessageCircle size={18} />
-            <span className="text-xs mt-1">Chat</span>
-          </div>
-        </Link>
+        <button
+          onClick={openChat}
+          className={`flex flex-col items-center justify-center py-2 px-3 transition-colors relative ${
+            isChatOpen ? "text-[#26732d]" : "text-gray-600"
+          }`}
+          data-testid="mobile-nav-chat"
+        >
+          <MessageCircle size={18} />
+          <span className="text-xs mt-1">Chat</span>
+        </button>
       </div>
     </div>
   );

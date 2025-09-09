@@ -51,6 +51,7 @@ import RepackProductsPage from "@/pages/repack-products";
 import CatBestSellerPage from "@/pages/cat-best-seller";
 import DogBestSellerPage from "@/pages/dog-best-seller";
 import { SidebarProvider } from "@/contexts/sidebar-context";
+import { ChatProvider } from "@/contexts/chat-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 
@@ -113,15 +114,17 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
-          <TooltipProvider>
-            <SidebarProvider>
-              <div className="min-h-screen bg-white">
-                <Router />
-                <FloatingCart />
-                <Toaster />
-              </div>
-            </SidebarProvider>
-          </TooltipProvider>
+          <ChatProvider>
+            <TooltipProvider>
+              <SidebarProvider>
+                <div className="min-h-screen bg-white">
+                  <Router />
+                  <FloatingCart />
+                  <Toaster />
+                </div>
+              </SidebarProvider>
+            </TooltipProvider>
+          </ChatProvider>
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
