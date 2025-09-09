@@ -65,14 +65,14 @@ export default function FlashSale() {
         </div>
 
         <div className="overflow-x-auto">
-          <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
+          <div className="flex gap-1 pb-1" style={{ width: 'max-content' }}>
             {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
               <div 
                 key={product.id} 
-                className="flex-shrink-0 w-72 animate-fade-in"
+                className="flex-shrink-0 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <ProductCard product={product} className="h-full" />
+                <ProductCard product={product} />
               </div>
             ))}
           </div>
