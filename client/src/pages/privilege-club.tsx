@@ -128,7 +128,7 @@ export default function PrivilegeClubPage() {
                     </ul>
 
                     <Button 
-                      className={`w-full mt-6 ${
+                      className={`w-full mt-6 text-white ${
                         tier.popular 
                           ? 'bg-green-600 hover:bg-green-700' 
                           : 'bg-gray-900 hover:bg-gray-800'
@@ -149,7 +149,7 @@ export default function PrivilegeClubPage() {
       {/* Benefits Overview */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Join Our Privilege Club?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-black">Why Join Our Privilege Club?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-1">
             {[
               {
@@ -179,8 +179,8 @@ export default function PrivilegeClubPage() {
                   <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
                     <IconComponent className="h-8 w-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
-                  <p className="text-gray-600">{benefit.description}</p>
+                  <h3 className="text-xl font-semibold mb-2 text-black">{benefit.title}</h3>
+                  <p className="text-black">{benefit.description}</p>
                 </div>
               );
             })}
