@@ -41,9 +41,9 @@ export default function Testimonials() {
   return (
     <section className="section-spacing bg-gray-50">
       <div className="responsive-container">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#26732d] mb-8 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in">
-          <MessageCircle size={32} className="text-[#26732d]" />
-          What Our Customers Say
+        <h2 className="text-2xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-8">
+          <MessageCircle size={24} className="text-[#26732d]" />
+          WHAT OUR CUSTOMERS SAY
         </h2>
         {/* Mobile/Tablet Scrollable View */}
         <div className="lg:hidden overflow-x-auto">

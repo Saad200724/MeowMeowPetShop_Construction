@@ -80,12 +80,9 @@ export default function BlogPreview() {
     <section className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-6 sm:mb-8">
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 flex items-center justify-center gap-2"
-            style={{ color: "#257334" }}
-          >
-            <BookText className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />
-            Latest Pet Care Tips
+          <h2 className="text-2xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-6">
+            <BookText size={24} />
+            LATEST PET CARE TIPS
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base px-4">
             Stay informed with expert advice and insights to keep your pets
