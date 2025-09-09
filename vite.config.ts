@@ -27,11 +27,31 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu']
+        }
+      }
+    }
   },
   server: {
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
+    watch: {
+      usePolling: false,
+      interval: 1000,
+      ignored: ['**/node_modules/**', '**/uploads/**', '**/attached_assets/**']
+    },
+    hmr: {
+      overlay: false
+    }
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+    exclude: ['@replit/vite-plugin-cartographer']
+  }
 });

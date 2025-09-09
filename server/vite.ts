@@ -22,7 +22,10 @@ export function log(message: string, source = "express") {
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
+    hmr: { 
+      server,
+      port: 5001 // Use different port for HMR to reduce conflicts
+    },
     allowedHosts: true as const,
   };
 
@@ -38,6 +41,8 @@ export async function setupVite(app: Express, server: Server) {
     },
     server: serverOptions,
     appType: "custom",
+    clearScreen: false, // Reduce console output
+    logLevel: 'warn' // Reduce verbose logging
   });
 
   app.use(vite.middlewares);
