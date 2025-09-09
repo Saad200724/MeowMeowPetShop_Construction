@@ -136,7 +136,7 @@ export default function PrivilegeClubPage() {
                       onClick={() => setSelectedTier(tier.name)}
                       data-testid={`button-select-${tier.name.toLowerCase().replace(' ', '-')}`}
                     >
-                      {selectedTier === tier.name ? 'Selected' : 'Choose Plan'}
+                      Coming Soon
                     </Button>
                   </CardContent>
                 </Card>

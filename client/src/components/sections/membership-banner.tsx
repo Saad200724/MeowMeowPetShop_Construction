@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Percent, Truck, Star } from 'lucide-react';
+import { Link } from 'wouter';
 const logoPath = '/logo.png';
 
 export default function MembershipBanner() {
@@ -53,13 +54,15 @@ export default function MembershipBanner() {
                 <div className="text-xs sm:text-sm">Lifetime Membership</div>
               </div>
               
-              <Button 
-                variant="meow" 
-                size="lg" 
-                className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base btn-bounce whitespace-nowrap"
-              >
-                Join Privilege Meow Club
-              </Button>
+              <Link href="/privilege-club">
+                <Button 
+                  variant="meow" 
+                  size="lg" 
+                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base btn-bounce whitespace-nowrap"
+                >
+                  Join Privilege Meow Club
+                </Button>
+              </Link>
             </div>
             
           </div>
