@@ -135,24 +135,22 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         {/* Price and Actions - Compact */}
         <div className="space-y-1">
-          <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-1">
-                <span className="text-sm font-bold text-green-600">
-                  ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <span className="text-sm font-bold text-green-600">
+                ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
+              </span>
+              {oldPriceValue && (
+                <span className="text-xs text-red-500 line-through">
+                  ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
                 </span>
-                {oldPriceValue && (
-                  <span className="text-xs text-red-500 line-through">
-                    ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
-                  </span>
-                )}
-              </div>
-              {(product.stock || product.stockStatus) && (
-                <div className={`text-xs font-medium ${getStockStatusStyles(product.stock || product.stockStatus)}`}>
-                  {product.stock || product.stockStatus}
-                </div>
               )}
             </div>
+            {(product.stock || product.stockStatus) && (
+              <div className={`text-xs font-medium ${getStockStatusStyles(product.stock || product.stockStatus)}`}>
+                {product.stock || product.stockStatus}
+              </div>
+            )}
           </div>
           
           {/* Add to Cart Button */}
