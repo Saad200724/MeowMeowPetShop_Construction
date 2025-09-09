@@ -82,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[320px] md:h-[300px] sm:h-[280px] flex flex-col w-[180px]">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[350px] md:h-[330px] sm:h-[310px] flex flex-col w-[200px] max-w-[250px]">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -110,7 +110,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image - E-commerce Standard */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-56 md:h-48 sm:h-40 flex items-center justify-center">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-48 md:h-44 sm:h-40 flex items-center justify-center flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -121,33 +121,41 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       
-      {/* Product Content - Compact */}
-      <div className="p-2 flex flex-col justify-between space-y-1">
-        {/* Product Name - More Compact */}
-        <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight">
+      {/* Product Content - Improved Layout */}
+      <div className="p-3 flex flex-col justify-between space-y-2 flex-1">
+        {/* Product Name - Left Aligned */}
+        <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
           {product.name}
         </h4>
         
-        {/* Rating - Smaller */}
-        <div className="flex items-center">
+        {/* Rating - Left Aligned */}
+        <div className="flex items-center justify-start">
           {renderStars(product.rating)}
         </div>
         
-        {/* Price and Actions - Compact */}
-        <div className="space-y-1">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <span className="text-sm font-bold text-green-600">
+        {/* Price Section - Left Aligned and Well Structured */}
+        <div className="space-y-2 flex-1 flex flex-col justify-end">
+          <div className="text-left">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg font-bold text-[#26732d]">
                 ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
               </span>
               {oldPriceValue && (
-                <span className="text-xs text-red-500 line-through">
+                <span className="text-sm text-gray-500 line-through">
                   ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
                 </span>
               )}
             </div>
+            
+            {/* Stock Status - Left Aligned with Better Styling */}
             {(product.stock || product.stockStatus) && (
-              <div className={`text-xs font-medium ${getStockStatusStyles(product.stock || product.stockStatus)}`}>
+              <div className={`text-xs font-medium px-2 py-1 rounded-full inline-block ${
+                (product.stock || product.stockStatus) === 'In Stock' 
+                  ? 'bg-green-100 text-green-700' 
+                  : (product.stock || product.stockStatus) === 'Low Stock'
+                  ? 'bg-orange-100 text-orange-700'
+                  : 'bg-red-100 text-red-700'
+              }`}>
                 {product.stock || product.stockStatus}
               </div>
             )}
@@ -157,7 +165,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button 
             variant="outline"
             size="sm"
-            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-7 text-xs"
+            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-8 text-xs mt-2"
           >
             <ShoppingCart size={12} className="mr-1" />
             Add to Cart
