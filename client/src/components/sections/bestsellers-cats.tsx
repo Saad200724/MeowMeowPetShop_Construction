@@ -44,16 +44,7 @@ export default function BestsellersCats() {
             <Cat size={32} className="text-[#26732d]" />
             Bestsellers for Cats
           </h2>
-          <div className="flex justify-between mb-4">
-            <a 
-              href="/bulk-products" 
-              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-lg transition-colors"
-            >
-              Bulk Cat Products
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </a>
+          <div className="flex justify-end mb-4">
             <a 
               href="/cat-best-seller" 
               className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-lg transition-colors"
