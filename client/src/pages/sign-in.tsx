@@ -121,16 +121,16 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-2 sm:px-4 py-4 sm:py-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(38,115,45,0.1),transparent_50%)]" />
       
       <div className="w-full max-w-md relative z-10">
         {/* Back to Home Button */}
-        <div className="mb-6">
+        <div className="mb-3 sm:mb-6">
           <Link href="/">
-            <Button variant="ghost" className="text-meow-green hover:text-meow-green-dark hover:bg-green-50 p-2">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <Button variant="ghost" className="text-meow-green hover:text-meow-green-dark hover:bg-green-50 p-2 text-sm">
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               Back to Home
             </Button>
           </Link>
@@ -138,61 +138,61 @@ export default function SignInPage() {
 
         {/* Main Card */}
         <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
+          <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
             {/* Logo */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-2 sm:mb-4">
               <Link href="/" className="hover:opacity-80 transition-opacity">
                 <img 
                   src={logoPath} 
                   alt="Meow Meow Pet Shop Logo" 
-                  className="h-16 w-16 rounded-full object-cover border-3 border-meow-green shadow-lg"
+                  className="h-12 w-12 sm:h-16 sm:w-16 rounded-full object-cover border-3 border-meow-green shadow-lg"
                 />
               </Link>
             </div>
             
-            <CardTitle className="text-3xl font-bold text-meow-green">
+            <CardTitle className="text-2xl sm:text-3xl font-bold text-meow-green">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-gray-600 text-lg">
+            <CardDescription className="text-gray-600 text-base sm:text-lg">
               Sign in to your Meow Meow Pet Shop account
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
               {/* Email Field */}
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-meow-green font-medium">
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="email" className="text-meow-green font-medium text-sm sm:text-base">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
+                    className="pl-9 sm:pl-10 h-10 sm:h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm sm:text-base"
                     required
                   />
                 </div>
               </div>
 
               {/* Password Field */}
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-meow-green font-medium">
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="password" className="text-meow-green font-medium text-sm sm:text-base">
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="pl-10 pr-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
+                    className="pl-9 sm:pl-10 pr-9 sm:pr-10 h-10 sm:h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm sm:text-base"
                     required
                   />
                   <button
@@ -200,7 +200,7 @@ export default function SignInPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                   </button>
                 </div>
               </div>
@@ -208,7 +208,7 @@ export default function SignInPage() {
               {/* Forgot Password Link */}
               <div className="text-right">
                 <Link href="/forgot-password">
-                  <Button variant="link" className="text-meow-green hover:text-meow-green-dark p-0 h-auto">
+                  <Button variant="link" className="text-meow-green hover:text-meow-green-dark p-0 h-auto text-sm sm:text-base">
                     Forgot your password?
                   </Button>
                 </Link>
@@ -218,11 +218,11 @@ export default function SignInPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-gradient-to-r from-meow-yellow to-yellow-400 hover:from-yellow-400 hover:to-meow-yellow text-meow-green-dark font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full h-10 sm:h-12 bg-gradient-to-r from-meow-yellow to-yellow-400 hover:from-yellow-400 hover:to-meow-yellow text-meow-green-dark font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 {loading ? (
                   <div className="flex items-center">
-                    <div className="w-5 h-5 border-2 border-meow-green-dark border-t-transparent rounded-full animate-spin mr-2" />
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-meow-green-dark border-t-transparent rounded-full animate-spin mr-2" />
                     Signing In...
                   </div>
                 ) : (
@@ -236,15 +236,15 @@ export default function SignInPage() {
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-gray-200" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Don't have an account?</span>
+              <div className="relative flex justify-center text-xs sm:text-sm">
+                <span className="px-3 sm:px-4 bg-white text-gray-500">Don't have an account?</span>
               </div>
             </div>
 
             {/* Sign Up Link */}
             <div className="text-center">
               <Link href="/sign-up">
-                <Button variant="outline" className="w-full h-12 border-meow-green text-meow-green hover:bg-green-50 hover:border-meow-green-dark hover:text-meow-green-dark font-semibold">
+                <Button variant="outline" className="w-full h-10 sm:h-12 border-meow-green text-meow-green hover:bg-green-50 hover:border-meow-green-dark hover:text-meow-green-dark font-semibold text-sm sm:text-base">
                   Create New Account
                 </Button>
               </Link>
@@ -253,45 +253,45 @@ export default function SignInPage() {
         </Card>
 
         {/* Admin Login Section */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-300" />
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gradient-to-br from-green-50 via-white to-yellow-50 text-gray-500">or</span>
+            <div className="relative flex justify-center text-xs sm:text-sm">
+              <span className="px-3 sm:px-4 bg-gradient-to-br from-green-50 via-white to-yellow-50 text-gray-500">or</span>
             </div>
           </div>
           
-          <div className="mt-6">
+          <div className="mt-3 sm:mt-6">
             <Button
               onClick={() => setShowAdminLogin(!showAdminLogin)}
               variant="outline"
-              className="w-full h-12 border-2 border-red-200 text-red-600 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-600 focus:!bg-white focus:!border-red-200 focus:!text-red-600 active:!bg-white active:!text-red-600 font-semibold"
+              className="w-full h-10 sm:h-12 border-2 border-red-200 text-red-600 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-600 focus:!bg-white focus:!border-red-200 focus:!text-red-600 active:!bg-white active:!text-red-600 font-semibold text-sm sm:text-base"
             >
-              <Shield className="w-5 h-5 mr-2" />
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               {showAdminLogin ? 'Hide Admin Login' : 'Admin Login'}
             </Button>
           </div>
 
           {/* Admin Login Form */}
           {showAdminLogin && (
-            <Card className="mt-4 shadow-lg border-2 border-red-100 bg-red-50/50 backdrop-blur-sm">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold text-red-600 flex items-center justify-center">
-                  <Shield className="w-5 h-5 mr-2" />
+            <Card className="mt-3 sm:mt-4 shadow-lg border-2 border-red-100 bg-red-50/50 backdrop-blur-sm">
+              <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6 pt-3 sm:pt-6">
+                <CardTitle className="text-lg sm:text-xl font-bold text-red-600 flex items-center justify-center">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                   Admin Access
                 </CardTitle>
-                <CardDescription className="text-red-500">
+                <CardDescription className="text-red-500 text-sm">
                   Authorized personnel only
                 </CardDescription>
               </CardHeader>
               
-              <CardContent>
-                <form onSubmit={handleAdminSubmit} className="space-y-4">
+              <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                <form onSubmit={handleAdminSubmit} className="space-y-3 sm:space-y-4">
                   {/* Admin Username */}
-                  <div className="space-y-2">
-                    <Label htmlFor="admin-username" className="text-red-600 font-medium">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="admin-username" className="text-red-600 font-medium text-sm">
                       Username
                     </Label>
                     <Input
@@ -300,14 +300,14 @@ export default function SignInPage() {
                       placeholder="Enter admin username"
                       value={adminFormData.username}
                       onChange={(e) => handleAdminInputChange('username', e.target.value)}
-                      className="h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20"
+                      className="h-9 sm:h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20 text-sm"
                       required
                     />
                   </div>
 
                   {/* Admin Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="admin-password" className="text-red-600 font-medium">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="admin-password" className="text-red-600 font-medium text-sm">
                       Password
                     </Label>
                     <Input
@@ -316,7 +316,7 @@ export default function SignInPage() {
                       placeholder="Enter admin password"
                       value={adminFormData.password}
                       onChange={(e) => handleAdminInputChange('password', e.target.value)}
-                      className="h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20"
+                      className="h-9 sm:h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20 text-sm"
                       required
                     />
                   </div>
@@ -325,11 +325,11 @@ export default function SignInPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-10 bg-red-600 hover:bg-red-700 text-white font-semibold"
+                    className="w-full h-9 sm:h-10 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm"
                   >
                     {loading ? (
                       <div className="flex items-center">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         Signing In...
                       </div>
                     ) : (
@@ -343,17 +343,17 @@ export default function SignInPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-6 text-gray-500 text-sm">
+        <div className="text-center mt-4 sm:mt-6 text-gray-500 text-xs sm:text-sm">
           <p>© 2025 Meow Meow Pet Shop. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-2">
+          <div className="flex justify-center space-x-2 sm:space-x-4 mt-1 sm:mt-2">
             <Link href="/privacy">
-              <Button variant="link" className="text-gray-500 hover:text-meow-green p-0 h-auto text-sm">
+              <Button variant="link" className="text-gray-500 hover:text-meow-green p-0 h-auto text-xs sm:text-sm">
                 Privacy Policy
               </Button>
             </Link>
             <span>•</span>
             <Link href="/terms">
-              <Button variant="link" className="text-gray-500 hover:text-meow-green p-0 h-auto text-sm">
+              <Button variant="link" className="text-gray-500 hover:text-meow-green p-0 h-auto text-xs sm:text-sm">
                 Terms of Service
               </Button>
             </Link>
