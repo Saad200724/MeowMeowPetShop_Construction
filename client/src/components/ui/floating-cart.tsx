@@ -287,18 +287,18 @@ export function FloatingCart() {
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors"
+                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors text-black"
                                 data-testid={`decrease-quantity-${item.id}`}
                               >
-                                <Minus size={14} />
+                                <Minus size={14} className="text-black" />
                               </button>
-                              <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                              <span className="w-8 text-center text-sm font-medium text-black">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors"
+                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors text-black"
                                 data-testid={`increase-quantity-${item.id}`}
                               >
-                                <Plus size={14} />
+                                <Plus size={14} className="text-black" />
                               </button>
                             </div>
                             
