@@ -24,7 +24,7 @@ export default function RepackProducts() {
   const { data: repackProducts = [], isLoading, error } = useQuery({
     queryKey: ['/api/repack-products'],
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

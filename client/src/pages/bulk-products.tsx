@@ -25,7 +25,7 @@ export default function BulkProducts() {
   const { data: repackProducts = [], isLoading: loadingRepack } = useQuery({
     queryKey: ['/api/repack-products'],
     staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
@@ -33,7 +33,7 @@ export default function BulkProducts() {
   const { data: allProducts = [], isLoading: loadingProducts } = useQuery({
     queryKey: ['/api/products'],
     staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
@@ -41,7 +41,9 @@ export default function BulkProducts() {
 
   // Combine and filter products
   const bulkProducts = useMemo(() => {
-    const products = [...(repackProducts || []), ...(allProducts || [])];
+    const repackArray = Array.isArray(repackProducts) ? repackProducts : [];
+    const productsArray = Array.isArray(allProducts) ? allProducts : [];
+    const products = [...repackArray, ...productsArray];
     
     return products
       .filter((product: any) => {
