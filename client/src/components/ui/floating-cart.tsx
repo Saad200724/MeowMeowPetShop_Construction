@@ -277,9 +277,9 @@ export function FloatingCart() {
           />
           
           {/* Cart Panel */}
-          <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
+          <div className="fixed right-4 md:right-6 bottom-20 md:bottom-24 w-80 max-w-[calc(100vw-2rem)] h-[70vh] max-h-[500px] bg-white rounded-lg shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0">
+            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-t-lg">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShoppingCart size={20} />
                 Shopping Cart
