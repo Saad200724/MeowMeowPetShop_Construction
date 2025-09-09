@@ -23,7 +23,7 @@ export function FloatingCart() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Welcome to Meow Meow Pet Shop!\n\nWe\'re here to help with all your pet care needs. You can reach us directly by phone or visit our store.\n\nContact Us:\n\nPhone: 01405-045023\n\nLocation: Bank Colony, Savar, Dhaka-1340, Bangladesh\n\nHow would you like to chat with us?',
+      text: 'Welcome to Meow Meow Pet Shop!\n\nPhone: 01405-045023\nLocation: Bank Colony, Savar, Dhaka\n\nHow would you like to chat with us?',
       sender: 'support',
       timestamp: new Date(Date.now() - 5 * 60 * 1000)
     }
