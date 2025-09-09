@@ -66,7 +66,7 @@ export function FloatingCart() {
       } else if (selectedPlatform === 'whatsapp') {
         // Redirect to WhatsApp with the message
         const whatsappMessage = encodeURIComponent(`Hello Meow Meow Pet Shop! ${newMessage}`);
-        window.open(`https://wa.me/8801405045023?text=${whatsappMessage}`, '_blank');
+        window.open(`https://wa.me/8801838511583?text=${whatsappMessage}`, '_blank');
         return;
       }
 
