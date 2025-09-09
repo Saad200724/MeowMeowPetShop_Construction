@@ -94,7 +94,7 @@ export default function RepackFood() {
   }
 
   return (
-    <section className="py-12">
+    <section className="py-12" style={{ backgroundColor: '#f8fbfc' }}>
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <div className="text-center mb-4">
