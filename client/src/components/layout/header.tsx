@@ -531,6 +531,39 @@ export default function Header() {
             )}
           </div>
         </div>
+
+        {/* Mobile Mini Navigation */}
+        <div className="md:hidden bg-gray-50 border-t border-gray-100 px-2 py-2">
+          <div className="flex items-center justify-between overflow-x-auto scrollbar-hide">
+            <Link href="/cat-food" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Cat Food
+            </Link>
+            <Link href="/dog-food" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Dog Food
+            </Link>
+            <Link href="/cat-toys" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Cat Toys
+            </Link>
+            <Link href="/cat-litter" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Cat Litter
+            </Link>
+            <Link href="/cat-accessories" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Cat Accessories
+            </Link>
+            <Link href="/rabbit" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Rabbit
+            </Link>
+            <Link href="/bird" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Bird
+            </Link>
+            <Link href="/brands/reflex" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Reflex
+            </Link>
+            <Link href="/blog" className="flex-shrink-0 px-3 py-1 text-xs font-medium text-gray-700 hover:text-[#26732d] hover:bg-white rounded transition-colors">
+              Blog
+            </Link>
+          </div>
+        </div>
       </header>
     </>
   );
