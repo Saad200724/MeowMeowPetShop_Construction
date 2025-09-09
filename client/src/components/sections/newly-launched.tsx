@@ -9,7 +9,7 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto scrollbar-hide">
       <div className="flex gap-1 pb-1" style={{ width: 'max-content' }}>
         {products.slice(0, 4).map((product: any) => (
           <div 
@@ -46,7 +46,7 @@ export default function NewlyLaunched() {
               Newly Launched
             </h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-1 pb-1" style={{ width: 'max-content' }}>
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-80 animate-pulse">
