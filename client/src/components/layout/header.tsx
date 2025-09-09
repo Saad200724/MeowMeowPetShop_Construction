@@ -175,6 +175,8 @@ export default function Header() {
     { name: 'Dog Food', path: '/dog-food' },
     { name: 'Cat Toys', path: '/cat-toys' },
     { name: 'Cat Litter', path: '/cat-litter' },
+    { name: 'Bird', path: '/bird' },
+    { name: 'Rabbit', path: '/rabbit' },
     { name: 'Reflex', path: '/brands/reflex' },
     { name: 'Blog', path: '/blog' }
   ];
