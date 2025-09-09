@@ -50,18 +50,6 @@ export default function FlashSale() {
             <span className="text-red-600 font-bold text-lg">Flash Sale</span>
             <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
           </div>
-          <div className="flex justify-end mb-4">
-            <a 
-              href="/flash-sale-products" 
-              className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium text-lg transition-colors"
-              rel="prefetch"
-            >
-              More Flash Products
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </a>
-          </div>
         </div>
 
         <div className="overflow-x-auto">

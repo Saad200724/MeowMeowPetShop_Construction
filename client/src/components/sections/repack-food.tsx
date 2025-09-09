@@ -99,16 +99,6 @@ export default function RepackFood() {
             <Package size={32} className="text-[#26732d]" />
             Repack Food - Bulk Save!
           </h2>
-          <a
-            href="/bulk-products"
-            className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1e5d26] font-medium text-lg transition-colors"
-            rel="prefetch"
-          >
-            More Repacks
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </a>
         </div>
         <div className="overflow-x-auto">
           <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>

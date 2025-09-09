@@ -24,7 +24,6 @@ import BirdPage from "@/pages/bird";
 import ReflexPage from "@/pages/reflex";
 import BlogPage from "@/pages/blog";
 import BlogDetailPage from "@/pages/blog-detail";
-import BulkProductsPage from "@/pages/bulk-products";
 import BulkDiscountsPage from "@/pages/bulk-discounts";
 import NekkoPage from "@/pages/brands/nekko";
 import PurinaPage from "@/pages/brands/purina";
@@ -45,10 +44,8 @@ import InvoicePage from "@/pages/invoice";
 import ProfilePage from "@/pages/profile";
 import MessengerPage from "@/pages/messenger";
 import ContactPage from "@/pages/contact";
-import FlashSaleProductsPage from "@/pages/flash-sale-products";
 import CatBestSellerPage from "@/pages/cat-best-seller";
 import DogBestSellerPage from "@/pages/dog-best-seller";
-import NewlyLaunchedPage from "@/pages/newly-launched";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
@@ -80,7 +77,6 @@ function Router() {
         <Route path="/brands/sheba" component={ShebaPage} />
         <Route path="/blog" component={BlogPage} />
         <Route path="/blog/:slug" component={BlogDetailPage} />
-        <Route path="/bulk-products" component={BulkProductsPage} />
         <Route path="/bulk-discounts" component={BulkDiscountsPage} />
         <Route path="/sign-in" component={SignInPage} />
         <Route path="/sign-up" component={SignUpPage} />
@@ -95,10 +91,8 @@ function Router() {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
-        <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
         <Route path="/cat-best-seller" component={CatBestSellerPage} />
         <Route path="/dog-best-seller" component={DogBestSellerPage} />
-        <Route path="/newly-launched" component={NewlyLaunchedPage} />
         <Route component={NotFoundPage} />
       </Switch>
       <MobileBottomNav />

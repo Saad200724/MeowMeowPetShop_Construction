@@ -76,18 +76,6 @@ export default function NewlyLaunched() {
             <Sparkles size={32} className="text-[#26732d]" />
             Newly Launched
           </h2>
-          <div className="flex justify-end mb-4">
-            <a 
-              href="/newly-launched" 
-              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-lg transition-colors"
-              rel="prefetch"
-            >
-              More New Products
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </a>
-          </div>
         </div>
         <NewlyLaunchedDisplay products={products.slice(0, 4)} />
       </div>
