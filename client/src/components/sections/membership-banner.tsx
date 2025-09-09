@@ -17,8 +17,8 @@ export default function MembershipBanner() {
             </div>
           </div>
           
-          {/* Main Content - Horizontal Layout */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+          {/* Main Content - Responsive Layout */}
+          <div className="flex flex-col xl:flex-row items-center justify-between gap-4 xl:gap-6">
             
             {/* Benefits - Horizontal on Desktop */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 flex-1">
@@ -48,7 +48,7 @@ export default function MembershipBanner() {
             </div>
             
             {/* Price and CTA - Compact */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-4 flex-shrink-0">
               <div className="bg-[#26732d] text-white px-4 py-3 sm:px-6 sm:py-4 rounded-xl animate-scale-up text-center">
                 <div className="text-xl sm:text-2xl font-bold">৳5,000</div>
                 <div className="text-xs sm:text-sm">Lifetime Membership</div>
@@ -58,7 +58,7 @@ export default function MembershipBanner() {
                 <Button 
                   variant="meow" 
                   size="lg" 
-                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base btn-bounce whitespace-nowrap"
+                  className="px-3 sm:px-4 lg:px-6 py-2 lg:py-3 rounded-lg text-xs sm:text-sm lg:text-base btn-bounce whitespace-nowrap max-w-full overflow-hidden"
                 >
                   Join Privilege Meow Club
                 </Button>
