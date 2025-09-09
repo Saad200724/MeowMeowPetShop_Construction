@@ -147,16 +147,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
             
-            {/* Stock Status - Left Aligned with Better Styling */}
+            {/* Stock Display - Show as "Stock: number" */}
             {(product.stock || product.stockStatus) && (
-              <div className={`text-xs font-medium px-2 py-1 rounded-full inline-block ${
-                (product.stock || product.stockStatus) === 'In Stock' 
-                  ? 'bg-green-100 text-green-700' 
-                  : (product.stock || product.stockStatus) === 'Low Stock'
-                  ? 'bg-orange-100 text-orange-700'
-                  : 'bg-red-100 text-red-700'
-              }`}>
-                {product.stock || product.stockStatus}
+              <div className="text-xs text-gray-600 mb-2">
+                {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
               </div>
             )}
           </div>
