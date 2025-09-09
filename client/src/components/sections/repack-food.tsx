@@ -74,8 +74,8 @@ export default function RepackFood() {
               Repack Food
             </h2>
           </div>
-          <div>
-            <div className="flex gap-4 pb-4 justify-center flex-wrap">
+          <div className="overflow-x-auto scrollbar-hide pb-2">
+            <div className="flex gap-4 min-w-max px-4">
               {[1, 2, 3].map(i => (
                 <div key={i} className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-md h-[450px] animate-pulse border border-gray-100">
                   <div className="bg-gray-200 h-48 rounded-t-2xl"></div>
@@ -115,8 +115,8 @@ export default function RepackFood() {
             </a>
           </div>
         </div>
-        <div>
-          <div className="flex gap-4 pb-4 justify-center flex-wrap">
+        <div className="overflow-x-auto scrollbar-hide pb-2">
+          <div className="flex gap-4 min-w-max px-4">
             {(products as any[]).slice(0, 3).map((product: any) => {
               const productId = product.id || product._id;
               const savings = calculateSavings(product.price, product.originalPrice);
