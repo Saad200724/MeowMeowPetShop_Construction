@@ -45,11 +45,10 @@ export default function FlashSale() {
     <section className="section-spacing bg-red-50">
       <div className="responsive-container">
         <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-12 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
+          <h2 className="text-2xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-6">
             <Flame className="text-red-600" size={24} />
-            <span className="text-red-600 font-bold text-lg">Flash Sale</span>
-            <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
-          </div>
+            FLASH SALE
+          </h2>
           <div className="flex justify-end mb-4">
             <a 
               href="/flash-sale-products" 

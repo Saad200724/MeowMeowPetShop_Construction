@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -69,9 +68,9 @@ export default function RepackFood() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <Package size={40} className="text-[#26732d] mx-auto mb-3" />
-            <h2 className="text-3xl font-bold text-[#26732d]">
-              Repack Food
+            <h2 className="text-2xl font-bold text-[#26732d] flex items-center justify-center gap-2">
+              <Package size={24} className="text-[#26732d]" />
+              REPACK FOOD
             </h2>
           </div>
           <div className="overflow-x-auto scrollbar-hide pb-2">
@@ -98,9 +97,9 @@ export default function RepackFood() {
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <div className="text-center mb-4">
-            <Package size={40} className="text-[#26732d] mx-auto mb-3" />
-            <h2 className="text-3xl font-bold text-[#26732d]">
-              Repack Food
+            <h2 className="text-2xl font-bold text-[#26732d] flex items-center justify-center gap-2">
+              <Package size={24} className="text-[#26732d]" />
+              REPACK FOOD
             </h2>
           </div>
           <div className="flex justify-end">
@@ -199,7 +198,7 @@ export default function RepackFood() {
                           </Badge>
                         )}
                       </div>
-                      
+
                       {/* Stock Status */}
                       <div className="text-xs text-gray-500">
                         {stockAvailable > 0 ? (

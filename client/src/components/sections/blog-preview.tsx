@@ -47,7 +47,10 @@ export default function BlogPreview() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Latest Pet Care Tips</h2>
+            <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
+              <BookOpen size={24} className="text-[#26732d]" />
+              LATEST PET CARE TIPS
+            </h2>
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
           </div>
         </div>
@@ -60,7 +63,10 @@ export default function BlogPreview() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Latest Pet Care Tips</h2>
+            <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
+              <BookOpen size={24} className="text-[#26732d]" />
+              LATEST PET CARE TIPS
+            </h2>
             <p className="text-gray-600">
               No blog posts available at the moment.
             </p>
@@ -124,8 +130,8 @@ export default function BlogPreview() {
                     <span className="text-xs">
                       {new Date(
                         post.publishedAt || post.createdAt,
-                      ).toLocaleDateString("en-US", { 
-                        month: "short", 
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
                         day: "numeric",
                         year: "2-digit"
                       })}
@@ -134,8 +140,8 @@ export default function BlogPreview() {
                 </div>
 
                 <Link href={`/blog/${post.slug}`}>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full group text-xs sm:text-sm py-2 h-auto"
                     size="sm"
                   >

@@ -40,9 +40,9 @@ export default function BestsellersDogs() {
     <section className="section-spacing bg-white">
       <div className="responsive-container">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#26732d] mb-4 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in">
-            <Dog size={32} className="text-[#26732d]" />
-            Bestsellers for Dogs
+          <h2 className="text-2xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
+            <Dog size={24} className="text-[#26732d]" />
+            BESTSELLERS FOR DOGS
           </h2>
           <div className="flex justify-end mb-4">
             <a 
