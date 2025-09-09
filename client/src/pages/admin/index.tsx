@@ -636,10 +636,10 @@ export default function AdminPage() {
 
     const blogData = {
       title: editingBlog.title,
-      excerpt: editingBlog.excerpt || '',
+      excerpt: editingBlog.excerpt,
       content: editingBlog.content,
       author: editingBlog.author,
-      category: (editingBlog as any).category || '',
+      category: (editingBlog as any).category,
       isPublished: editingBlog.isPublished,
       slug: editingBlog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     };
