@@ -27,10 +27,10 @@ The application follows a modern full-stack architecture with clear separation b
 - **Development**: Hot module replacement with Vite integration
 
 ### Database Architecture
-- **ORM**: Drizzle ORM for type-safe database operations
-- **Database**: PostgreSQL (configured for Neon serverless)
-- **Schema**: Centralized schema definition in shared directory
-- **Migrations**: Drizzle Kit for database migrations
+- **ORM**: Mongoose for MongoDB document modeling
+- **Database**: MongoDB (configured via MONGODB_URI in .env file)
+- **Schema**: Mongoose schemas defined in shared/models.ts
+- **Authentication**: MongoDB session storage
 
 ## Key Components
 
@@ -78,10 +78,10 @@ The application uses a query-first approach where the frontend drives data requi
 - **Date Handling**: date-fns for date manipulation
 
 ### Backend Dependencies
-- **Database**: Neon serverless PostgreSQL
-- **ORM**: Drizzle ORM with PostgreSQL dialect
+- **Database**: MongoDB with Mongoose ODM
+- **ODM**: Mongoose for document modeling and validation
 - **Validation**: Zod for runtime type checking
-- **Session Management**: PostgreSQL session store
+- **Session Management**: MongoDB session store
 
 ### Development Dependencies
 - **Build Tools**: Vite with React plugin
@@ -98,25 +98,25 @@ The application uses a query-first approach where the frontend drives data requi
 ### Environment Configuration
 - **Development**: Uses Vite dev server with Express API proxy
 - **Production**: Serves static files from Express with API routes
-- **Database**: Environment variable `DATABASE_URL` for connection
+- **Database**: Environment variable `MONGODB_URI` for connection (from .env file)
 
 ### Scripts
 - `npm run dev`: Development mode with hot reload
 - `npm run build`: Production build for both frontend and backend
 - `npm start`: Production server startup
-- `npm run db:push`: Database schema synchronization
+- Note: Uses MongoDB with Mongoose, no schema push needed
 
 The application is designed for easy deployment to platforms like Replit, Vercel, or traditional hosting providers with Node.js support.
 
-## Recent Updates (August 19, 2025)
+## Recent Updates (September 9, 2025)
 
-### Migration to Replit Environment & UI Enhancements (Latest Update)
-- **Successful Migration**: Completed migration from Replit Agent to standard Replit environment
-- **Database Migration**: Converted from Neon serverless to PostgreSQL with proper connection setup
-- **Package Dependencies**: Updated database drivers from @neondatabase/serverless to pg for PostgreSQL compatibility
-- **UI Customization**: Implemented yellow-based vertical scrollbar matching brand colors
-- **Horizontal Scroll Prevention**: Removed horizontal scrolling across the entire application
-- **Environment Setup**: Created PostgreSQL database and configured all necessary environment variables
+### MongoDB Configuration & Environment Setup (Latest Update)
+- **Database Preference**: Project configured to use MongoDB exclusively via MONGODB_URI in .env file
+- **Environment Configuration**: Updated all configuration files to ensure MongoDB is used by default
+- **Package Dependencies**: Confirmed Mongoose ODM setup for MongoDB document operations
+- **UI Customization**: Maintained yellow-based vertical scrollbar matching brand colors
+- **GitHub Import Ready**: Configuration files updated to ensure future GitHub imports read .env correctly
+- **No PostgreSQL**: Removed all PostgreSQL references to prevent confusion on future imports
 
 ### Previous Migration to Replit Environment & Category Update
 
