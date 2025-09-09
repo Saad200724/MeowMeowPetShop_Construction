@@ -128,9 +128,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h4>
         
-        {/* Rating - Left Aligned */}
-        <div className="flex items-center justify-start">
-          {renderStars(product.rating)}
+        {/* Rating and Stock - Left Aligned in one line */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            {renderStars(product.rating)}
+          </div>
+          {(product.stock || product.stockStatus) && (
+            <div className="text-xs text-gray-600">
+              {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
+            </div>
+          )}
         </div>
         
         {/* Price Section - Left Aligned and Well Structured */}
@@ -146,13 +153,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </span>
               )}
             </div>
-            
-            {/* Stock Display - Show as "Stock: number" */}
-            {(product.stock || product.stockStatus) && (
-              <div className="text-xs text-gray-600 mb-2">
-                {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
-              </div>
-            )}
           </div>
           
           {/* Add to Cart Button */}
