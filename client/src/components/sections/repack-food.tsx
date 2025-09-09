@@ -164,28 +164,28 @@ export default function RepackFood() {
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="w-full h-48 object-contain transition-transform duration-500 group-hover:scale-110" 
+                      className="w-full h-56 object-contain transition-transform duration-500 group-hover:scale-110" 
                       loading="lazy"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
 
-                  <CardContent className="p-4 space-y-3">
+                  <CardContent className="p-3 space-y-2">
                     {/* Category Tag */}
                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
                       Repack Food
                     </div>
 
                     {/* Product Name */}
-                    <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[3rem]">
+                    <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem]">
                       {product.name}
                     </h3>
 
                     {/* Price Section */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xl font-bold text-[#26732d]">
+                        <span className="text-lg font-bold text-[#26732d]">
                           ৳{product.price?.toLocaleString()}
                         </span>
                         {product.originalPrice && (
