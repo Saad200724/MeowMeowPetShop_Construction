@@ -20,7 +20,7 @@ export default function RabbitPage() {
   const { loading, error, getProductsByCategory } = useProducts()
   
   // Get dynamic products from API
-  const allProducts = getProductsByCategory('rabbit');
+  const allProducts = getProductsByCategory('rabbit-food-accessories');
   
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts

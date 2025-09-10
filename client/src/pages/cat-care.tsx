@@ -21,7 +21,7 @@ export default function CatCarePage() {
   const { loading, error, getProductsByCategory } = useProducts()
 
   // Get dynamic products from API
-  const allProducts = getProductsByCategory('cat-care');
+  const allProducts = getProductsByCategory('cat-care-health');
 
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts

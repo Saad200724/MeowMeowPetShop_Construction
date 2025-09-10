@@ -21,7 +21,7 @@ export default function BirdPage() {
   const { loading, error, getProductsByCategory } = useProducts()
   
   // Get dynamic products from API
-  const allProducts = getProductsByCategory('bird');
+  const allProducts = getProductsByCategory('bird-food-accessories');
   
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts

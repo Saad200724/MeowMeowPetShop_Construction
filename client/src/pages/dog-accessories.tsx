@@ -21,7 +21,7 @@ export default function DogAccessoriesPage() {
   const { loading, error, getProductsByCategory } = useProducts()
   
   // Get dynamic products from API
-  const allProducts = getProductsByCategory('dog-accessories');
+  const allProducts = getProductsByCategory('dog-health-accessories');
   
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts

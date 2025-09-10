@@ -156,12 +156,12 @@ export const useProductsByCategory = (category?: string, brand?: string, searchT
             'dog-food': ['dog-food'],
             'cat-toys': ['cat-toys'],
             'cat-litter': ['cat-litter'],
-            'cat-care': ['cat-care'],
+            'cat-care-health': ['cat-care-health', 'cat-care'],
             'clothing-beds-carrier': ['clothing-beds-carrier'],
             'cat-accessories': ['cat-accessories'],
-            'dog-accessories': ['dog-accessories'],
-            'rabbit': ['rabbit'],
-            'bird': ['bird']
+            'dog-health-accessories': ['dog-health-accessories', 'dog-accessories'],
+            'rabbit-food-accessories': ['rabbit-food-accessories', 'rabbit'],
+            'bird-food-accessories': ['bird-food-accessories', 'bird']
           };
 
           const validCategories = categoryMappings[category] || [category];
