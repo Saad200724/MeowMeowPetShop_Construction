@@ -394,13 +394,16 @@ export function FloatingCart() {
                       View Cart
                     </Button>
                   </Link>
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white md:py-3 md:text-lg"
-                    data-testid="checkout-button"
-                  >
-                    Checkout
-                  </Button>
+                  <Link href="/checkout">
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white md:py-3 md:text-lg"
+                      onClick={() => setIsCartOpen(false)}
+                      data-testid="checkout-button"
+                    >
+                      Checkout
+                    </Button>
+                  </Link>
                 </div>
               </div>
             )}
