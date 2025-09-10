@@ -99,13 +99,13 @@ export class DatabaseStorage implements IStorage {
         products: []
       },
       {
-        id: 'cat-care',
-        name: 'Cat Care',
+        id: 'cat-care-health',
+        name: 'Cat Care & Health',
         products: []
       },
       {
         id: 'clothing-beds-carrier',
-        name: 'Clothing/Beds/Carrier',
+        name: 'Clothing, Beds & Carrier',
         products: []
       },
       {
@@ -114,23 +114,18 @@ export class DatabaseStorage implements IStorage {
         products: []
       },
       {
-        id: 'dog-accessories',
-        name: 'Dog Accessories',
+        id: 'dog-health-accessories',
+        name: 'Dog Health & Accessories',
         products: []
       },
       {
-        id: 'rabbit',
-        name: 'Rabbit',
+        id: 'rabbit-food-accessories',
+        name: 'Rabbit Food & Accessories',
         products: []
       },
       {
-        id: 'bird',
-        name: 'Bird',
-        products: []
-      },
-      {
-        id: 'reflex',
-        name: 'Reflex Brand',
+        id: 'bird-food-accessories',
+        name: 'Bird Food & Accessories',
         products: []
       }
     ];
@@ -306,7 +301,7 @@ export class DatabaseStorage implements IStorage {
 
   async getBrands(): Promise<SimpleBrand[]> {
     try {
-      const allowedBrands = ['nekko', 'purina', 'purina-one', 'reflex', 'reflex-plus', 'royal-canin', 'sheba'];
+      const allowedBrands = ['nekko', 'purina', 'one', 'reflex', 'reflex-plus', 'royal-canin', 'sheba'];
       const dbBrands = await Brand.find({ isActive: true, slug: { $in: allowedBrands } });
       return dbBrands.map(brand => ({
         id: brand.id.toString(),
@@ -435,6 +430,28 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log('Seeding database with initial data...');
       
+      // Create brands first
+      const brandsToCreate = [
+        { name: 'NEKKO', slug: 'nekko' },
+        { name: 'PURINA', slug: 'purina' },
+        { name: 'ONE', slug: 'one' },
+        { name: 'Reflex', slug: 'reflex' },
+        { name: 'Reflex Plus', slug: 'reflex-plus' },
+        { name: 'ROYAL CANIN', slug: 'royal-canin' },
+        { name: 'Sheba', slug: 'sheba' }
+      ];
+
+      for (const brandData of brandsToCreate) {
+        const existingBrand = await Brand.findOne({ slug: brandData.slug });
+        if (!existingBrand) {
+          const newBrand = new Brand({
+            name: brandData.name,
+            slug: brandData.slug,
+          });
+          await newBrand.save();
+        }
+      }
+      
       // Create categories
       for (const category of this.categories) {
         const existingCategory = await Category.findOne({ slug: category.id });
@@ -445,12 +462,12 @@ export class DatabaseStorage implements IStorage {
           });
           await dbCategory.save();
 
-          // Create default brand
-          let brand = await Brand.findOne({ name: 'Default Brand' });
+          // Create default brand if needed
+          let brand = await Brand.findOne({ name: 'NEKKO' });
           if (!brand) {
             brand = new Brand({
-              name: 'Default Brand',
-              slug: 'default-brand',
+              name: 'NEKKO',
+              slug: 'nekko',
             });
             await brand.save();
           }
