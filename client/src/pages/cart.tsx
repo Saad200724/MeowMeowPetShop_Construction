@@ -1,11 +1,12 @@
+
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/contexts/cart-context';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
@@ -35,16 +36,18 @@ export default function CartPage() {
       <div className="min-h-screen bg-gray-50">
         <Header />
         
-        <div className="pt-24 pb-8">
-          <div className="max-w-4xl mx-auto px-4">
+        <div className="pt-16 md:pt-24 pb-8">
+          <div className="max-w-md mx-auto px-4">
             <div className="text-center py-16">
-              <ShoppingBag className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>
-              <p className="text-gray-600 mb-8">
+              <div className="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <ShoppingBag className="h-10 w-10 text-gray-400" />
+              </div>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">Your Cart is Empty</h1>
+              <p className="text-gray-600 mb-8 text-sm md:text-base">
                 Looks like you haven't added any items to your cart yet.
               </p>
               <Link href="/products">
-                <Button size="lg">
+                <Button size="lg" className="w-full md:w-auto bg-[#26732d] hover:bg-[#1e5d26]">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Continue Shopping
                 </Button>
@@ -62,95 +65,95 @@ export default function CartPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="pt-24 pb-8">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-              <p className="text-gray-600 mt-2">
-                {state.itemCount} {state.itemCount === 1 ? 'item' : 'items'} in your cart
-              </p>
+      <div className="pt-16 md:pt-24 pb-8">
+        <div className="max-w-md md:max-w-4xl mx-auto px-4">
+          {/* Header Section */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
+                Shopping Cart
+              </h1>
+              <Button 
+                variant="outline" 
+                onClick={handleClearCart}
+                disabled={isClearing}
+                className="text-xs md:text-sm"
+                size="sm"
+              >
+                {isClearing ? 'Clearing...' : 'Clear'}
+              </Button>
             </div>
-            
-            <Button 
-              variant="outline" 
-              onClick={handleClearCart}
-              disabled={isClearing}
-            >
-              {isClearing ? 'Clearing...' : 'Clear Cart'}
-            </Button>
+            <p className="text-gray-600 text-sm md:text-base">
+              {state.itemCount} {state.itemCount === 1 ? 'item' : 'items'} in your cart
+            </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-1">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
+          <div className="md:grid md:grid-cols-3 md:gap-6">
+            {/* Cart Items - Mobile First Design */}
+            <div className="md:col-span-2 space-y-3 mb-6 md:mb-0">
               {state.items.map((item) => (
-                <Card key={item.id}>
-                  <CardContent className="p-6">
-                    <div className="flex gap-1">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-24 h-24 object-cover rounded-lg"
-                      />
+                <Card key={item.id} className="shadow-sm">
+                  <CardContent className="p-4">
+                    <div className="flex gap-3">
+                      {/* Product Image */}
+                      <div className="flex-shrink-0">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg border"
+                        />
+                      </div>
                       
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
-                        <p className="text-green-600 font-bold text-lg mb-4">
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm md:text-base text-gray-900 line-clamp-2 mb-1">
+                          {item.name}
+                        </h3>
+                        <p className="text-[#26732d] font-bold text-sm md:text-base mb-3">
                           {formatPrice(item.price)}
                         </p>
                         
+                        {/* Quantity and Remove Controls */}
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
+                          <div className="flex items-center gap-2">
+                            <button
                               onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
+                              className="bg-gray-100 hover:bg-gray-200 disabled:opacity-50 rounded-full p-1 transition-colors"
                             >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                              <Minus className="h-3 w-3 md:h-4 md:w-4" />
+                            </button>
                             
-                            <Input
-                              type="number"
-                              value={item.quantity}
-                              onChange={(e) => {
-                                const newQuantity = parseInt(e.target.value) || 1;
-                                if (newQuantity <= item.maxStock) {
-                                  handleQuantityChange(item.id, newQuantity);
-                                }
-                              }}
-                              className="w-20 text-center"
-                              min="1"
-                              max={item.maxStock}
-                            />
+                            <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
                             
-                            <Button
-                              variant="outline"
-                              size="sm"
+                            <button
                               onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                               disabled={item.quantity >= item.maxStock}
+                              className="bg-gray-100 hover:bg-gray-200 disabled:opacity-50 rounded-full p-1 transition-colors"
                             >
-                              <Plus className="h-4 w-4" />
-                            </Button>
+                              <Plus className="h-3 w-3 md:h-4 md:w-4" />
+                            </button>
                             
-                            <Badge variant="secondary" className="ml-2">
-                              Max: {item.maxStock}
-                            </Badge>
+                            {item.maxStock && (
+                              <Badge variant="secondary" className="text-xs ml-2">
+                                Max: {item.maxStock}
+                              </Badge>
+                            )}
                           </div>
                           
-                          <Button
-                            variant="destructive"
-                            size="sm"
+                          <button
                             onClick={() => removeItem(item.id)}
+                            className="bg-red-50 hover:bg-red-100 text-red-600 rounded-full p-1.5 transition-colors"
                           >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                            <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
+                          </button>
                         </div>
                       </div>
                       
-                      <div className="text-right">
-                        <p className="text-lg font-bold">
+                      {/* Item Total - Right Side */}
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-sm md:text-base font-bold text-gray-900">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
@@ -160,40 +163,49 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-24">
-                <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Subtotal ({state.itemCount} items)</span>
-                    <span>{formatPrice(state.total)}</span>
+            {/* Order Summary - Mobile Optimized */}
+            <div className="md:col-span-1">
+              <Card className="sticky top-20">
+                <CardContent className="p-4 md:p-6">
+                  <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm md:text-base">
+                      <span>Subtotal ({state.itemCount} items)</span>
+                      <span className="font-medium">{formatPrice(state.total)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm md:text-base">
+                      <span>Shipping</span>
+                      <span className="text-green-600 font-medium">Free</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex justify-between text-base md:text-lg font-bold">
+                      <span>Total</span>
+                      <span className="text-[#26732d]">{formatPrice(state.total)}</span>
+                    </div>
+                    
+                    <div className="space-y-3 mt-6">
+                      <Button 
+                        className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium"
+                        size="lg"
+                      >
+                        Proceed to Checkout
+                      </Button>
+                      
+                      <Link href="/products">
+                        <Button 
+                          variant="outline" 
+                          className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white"
+                        >
+                          <ArrowLeft className="h-4 w-4 mr-2" />
+                          Continue Shopping
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
-                  
-                  <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span className="text-green-600">Free</span>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span>{formatPrice(state.total)}</span>
-                  </div>
-                  
-                  <Button className="w-full" size="lg">
-                    Proceed to Checkout
-                  </Button>
-                  
-                  <Link href="/products">
-                    <Button variant="outline" className="w-full">
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      Continue Shopping
-                    </Button>
-                  </Link>
                 </CardContent>
               </Card>
             </div>
