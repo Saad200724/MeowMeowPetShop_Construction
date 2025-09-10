@@ -281,12 +281,12 @@ export function FloatingCart() {
             /* Mobile: Right-sided panel */
             top-0 right-0 bottom-0
             w-[85vw] max-w-sm rounded-l-2xl
-            /* Desktop: Right sidebar style */
-            md:right-6 md:bottom-24 md:top-auto 
-            md:w-80 md:max-w-[calc(100vw-2rem)] md:h-[70vh] md:max-h-[500px] md:rounded-lg
+            /* Desktop: Large right sidebar style */
+            md:top-0 md:right-0 md:bottom-0 md:w-[450px] md:max-w-[450px] md:h-full md:rounded-none
+            lg:w-[500px] lg:max-w-[500px]
             bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-tl-2xl md:rounded-t-lg">
+            <div className="flex items-center justify-between p-4 md:p-6 border-b bg-[#26732d] text-white flex-shrink-0 rounded-tl-2xl md:rounded-none">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShoppingCart size={20} />
                 Shopping Cart
@@ -303,7 +303,7 @@ export function FloatingCart() {
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto">
               {items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-6 md:p-8 text-center">
+                <div className="flex flex-col items-center justify-center h-full p-6 md:p-12 text-center">
                   <div className="bg-gray-100 p-4 md:p-6 rounded-full mb-4">
                     <ShoppingCart size={40} className="md:w-12 md:h-12 text-gray-400" />
                   </div>
@@ -317,15 +317,15 @@ export function FloatingCart() {
                   </Button>
                 </div>
               ) : (
-                <div className="p-3 md:p-4 space-y-3 md:space-y-4">
+                <div className="p-3 md:p-6 space-y-3 md:space-y-6">
                   {items.map((item) => (
-                    <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm" data-testid={`cart-item-${item.id}`}>
-                      <div className="flex gap-4">
-                        {/* Product Image - Small and Professional */}
+                    <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 shadow-sm" data-testid={`cart-item-${item.id}`}>
+                      <div className="flex gap-4 md:gap-6">
+                        {/* Product Image - Larger on desktop */}
                         <div className="flex-shrink-0">
-                          <div className="w-16 h-16 bg-gray-50 rounded-lg overflow-hidden border">
+                          <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-50 rounded-lg overflow-hidden border">
                             <img 
-                              src={item.image || '/api/placeholder/64/64'} 
+                              src={item.image || '/api/placeholder/96/96'} 
                               alt={item.name}
                               className="w-full h-full object-contain"
                             />
@@ -334,39 +334,39 @@ export function FloatingCart() {
                         
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-gray-900 text-sm leading-tight line-clamp-2 mb-1">
+                          <h4 className="font-medium text-gray-900 text-sm md:text-base leading-tight line-clamp-2 mb-2 md:mb-3">
                             {item.name}
                           </h4>
-                          <p className="text-[#26732d] font-bold text-sm mb-3">
+                          <p className="text-[#26732d] font-bold text-sm md:text-lg mb-3 md:mb-4">
                             {formatPrice(item.price)}
                           </p>
                           
                           {/* Quantity Controls */}
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 md:gap-3">
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors text-black"
+                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 md:p-2 transition-colors text-black"
                                 data-testid={`decrease-quantity-${item.id}`}
                               >
-                                <Minus size={14} className="text-black" />
+                                <Minus size={14} className="md:w-4 md:h-4 text-black" />
                               </button>
-                              <span className="w-8 text-center text-sm font-medium text-black">{item.quantity}</span>
+                              <span className="w-8 md:w-12 text-center text-sm md:text-base font-medium text-black">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 transition-colors text-black"
+                                className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 md:p-2 transition-colors text-black"
                                 data-testid={`increase-quantity-${item.id}`}
                               >
-                                <Plus size={14} className="text-black" />
+                                <Plus size={14} className="md:w-4 md:h-4 text-black" />
                               </button>
                             </div>
                             
                             <button
                               onClick={() => removeItem(item.id)}
-                              className="bg-red-50 hover:bg-red-100 text-red-600 rounded-full p-1 ml-2 transition-colors"
+                              className="bg-red-50 hover:bg-red-100 text-red-600 rounded-full p-1 md:p-2 ml-2 transition-colors"
                               data-testid={`remove-item-${item.id}`}
                             >
-                              <Trash2 size={14} />
+                              <Trash2 size={14} className="md:w-4 md:h-4" />
                             </button>
                           </div>
                         </div>
@@ -379,15 +379,15 @@ export function FloatingCart() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t bg-gray-50 p-3 md:p-4 flex-shrink-0">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-bold text-gray-900">Total:</span>
-                  <span className="text-xl font-bold text-[#26732d]">{formatPrice(total)}</span>
+              <div className="border-t bg-gray-50 p-3 md:p-6 flex-shrink-0">
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <span className="text-lg md:text-xl font-bold text-gray-900">Total:</span>
+                  <span className="text-xl md:text-2xl font-bold text-[#26732d]">{formatPrice(total)}</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 md:space-y-4">
                   <Link href="/cart">
                     <Button 
-                      className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white"
+                      className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white md:py-3 md:text-lg"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="view-cart-button"
                     >
@@ -396,7 +396,7 @@ export function FloatingCart() {
                   </Link>
                   <Button 
                     variant="outline" 
-                    className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white"
+                    className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white md:py-3 md:text-lg"
                     data-testid="checkout-button"
                   >
                     Checkout
