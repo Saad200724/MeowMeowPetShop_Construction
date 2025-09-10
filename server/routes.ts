@@ -1283,6 +1283,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all orders (admin only)
+  app.get("/api/orders", async (req, res) => {
+    try {
+      const orders = await Order.find({}).sort({ createdAt: -1 });
+      res.json(orders);
+    } catch (error) {
+      console.error('Error fetching all orders:', error);
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
+  // Update order status
+  app.put("/api/orders/:orderId/status", async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      const { status } = req.body;
+
+      if (!status) {
+        return res.status(400).json({ message: "Status is required" });
+      }
+
+      const allowedStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+      if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      const order = await Order.findByIdAndUpdate(
+        orderId,
+        { 
+          status: status,
+          updatedAt: new Date()
+        },
+        { new: true }
+      );
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json({ message: "Order status updated successfully", order });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      res.status(500).json({ message: "Failed to update order status" });
+    }
+  });
+
+  // Delete order (admin only)
+  app.delete("/api/orders/:orderId", async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      
+      const order = await Order.findByIdAndDelete(orderId);
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json({ message: "Order deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      res.status(500).json({ message: "Failed to delete order" });
+    }
+  });
+
   // Contact form submission endpoint (EmailJS handles email sending)
   app.post("/api/contact", async (req, res) => {
     try {

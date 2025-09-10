@@ -29,7 +29,7 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
   Package, FileEdit, Plus, Trash2, ArrowLeft, Search, 
   Filter, Grid, List, Eye, Edit, Save, X, 
-  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee, Tag
+  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee, Tag, ShoppingCart
 } from "lucide-react";
 
 // Form validation schemas
@@ -151,6 +151,8 @@ export default function AdminPage() {
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [showCouponDialog, setShowCouponDialog] = useState(false);
   const [couponSearchTerm, setCouponSearchTerm] = useState('');
+  const [orderSearchTerm, setOrderSearchTerm] = useState('');
+  const [orderStatusFilter, setOrderStatusFilter] = useState('all');
 
   // Function to parse announcement text for bold formatting
   const parseAnnouncementText = (text: string) => {
@@ -468,6 +470,11 @@ export default function AdminPage() {
   // Fetch coupons from API
   const { data: coupons = [], refetch: refetchCoupons } = useQuery({
     queryKey: ['/api/coupons'],
+  });
+
+  // Fetch orders from API
+  const { data: orders = [], refetch: refetchOrders } = useQuery({
+    queryKey: ['/api/orders'],
   });
 
   // Blog mutations
@@ -802,6 +809,68 @@ export default function AdminPage() {
     }
   };
 
+  // Order status update mutation
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+      const response = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!response.ok) throw new Error('Failed to update order status');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      toast({
+        title: 'Success',
+        description: 'Order status updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update order status',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (orderId: string) => {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete order');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      toast({
+        title: 'Success',
+        description: 'Order deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete order',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Order handlers
+  const handleUpdateOrderStatus = (orderId: string, status: string) => {
+    updateOrderStatusMutation.mutate({ orderId, status });
+  };
+
+  const handleDeleteOrder = (orderId: string) => {
+    if (confirm('Are you sure you want to delete this order?')) {
+      deleteOrderMutation.mutate(orderId);
+    }
+  };
+
   const handleSaveBlog = () => {
     if (!editingBlog) return;
 
@@ -863,7 +932,11 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:grid-cols-6 bg-white border border-gray-200">
+          <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-7 bg-white border border-gray-200">
+            <TabsTrigger value="orders" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Orders
+            </TabsTrigger>
             <TabsTrigger value="products" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Package className="w-4 h-4 mr-2" />
               Products
@@ -889,6 +962,138 @@ export default function AdminPage() {
               Blog Management
             </TabsTrigger>
           </TabsList>
+
+          {/* Orders Tab */}
+          <TabsContent value="orders" className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Order Management</h2>
+                <p className="text-gray-600">View and manage customer orders</p>
+              </div>
+            </div>
+
+            {/* Search and Filters */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Search orders by customer name or order ID..."
+                  value={orderSearchTerm}
+                  onChange={(e) => setOrderSearchTerm(e.target.value)}
+                  className="pl-10 bg-white border-gray-300"
+                />
+              </div>
+              <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
+                <SelectTrigger className="w-48 bg-white border-gray-300">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-300">
+                  <SelectItem value="all">All Orders</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="delivered">Delivered</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Orders List */}
+            <div className="grid gap-4">
+              {orders
+                .filter((order: any) => {
+                  const matchesSearch = 
+                    order.customerInfo?.name?.toLowerCase().includes(orderSearchTerm.toLowerCase()) ||
+                    order._id.toLowerCase().includes(orderSearchTerm.toLowerCase());
+                  const matchesStatus = orderStatusFilter === 'all' || order.status?.toLowerCase() === orderStatusFilter;
+                  return matchesSearch && matchesStatus;
+                })
+                .map((order: any) => (
+                <Card key={order._id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <CardTitle className="text-lg font-bold text-red-700">Order #{order._id.slice(-8).toUpperCase()}</CardTitle>
+                          <Badge variant={order.status === 'delivered' ? 'default' : 'secondary'} 
+                                 className={
+                                   order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                   order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
+                                   order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                                   order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                   'bg-gray-100 text-gray-800'
+                                 }>
+                            {order.status?.charAt(0).toUpperCase() + order.status?.slice(1) || 'Pending'}
+                          </Badge>
+                          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                            ৳{order.total || 0}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-600 mb-3">
+                          <div>
+                            <span className="font-medium text-gray-900">Customer:</span>
+                            <p>{order.customerInfo?.name || 'N/A'}</p>
+                          </div>
+                          <div>
+                            <span className="font-medium text-gray-900">Phone:</span>
+                            <p>{order.customerInfo?.phone || 'N/A'}</p>
+                          </div>
+                          <div>
+                            <span className="font-medium text-gray-900">Items:</span>
+                            <p>{order.items?.length || 0} items</p>
+                          </div>
+                          <div>
+                            <span className="font-medium text-gray-900">Date:</span>
+                            <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        {order.customerInfo?.address && (
+                          <div className="text-sm text-gray-600">
+                            <span className="font-medium text-gray-900">Address:</span> {order.customerInfo.address.address}, {order.customerInfo.address.area}, {order.customerInfo.address.city}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex space-x-2">
+                        <Select
+                          value={order.status || 'pending'}
+                          onValueChange={(newStatus) => handleUpdateOrderStatus(order._id, newStatus)}
+                        >
+                          <SelectTrigger className="w-32 bg-white border-gray-300 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border border-gray-300">
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="processing">Processing</SelectItem>
+                            <SelectItem value="shipped">Shipped</SelectItem>
+                            <SelectItem value="delivered">Delivered</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" 
+                          onClick={() => handleDeleteOrder(order._id)}
+                          data-testid={`delete-order-${order._id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </Card>
+              ))}
+              {orders.length === 0 && (
+                <Card className="text-center py-8">
+                  <CardContent>
+                    <ShoppingCart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
+                    <p className="text-gray-600">Customer orders will appear here once they start placing orders.</p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
