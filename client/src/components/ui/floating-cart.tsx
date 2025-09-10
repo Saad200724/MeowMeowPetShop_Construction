@@ -276,10 +276,19 @@ export function FloatingCart() {
             onClick={() => setIsCartOpen(false)}
           />
           
-          {/* Cart Panel */}
-          <div className="fixed right-4 md:right-6 bottom-20 md:bottom-24 w-80 max-w-[calc(100vw-2rem)] h-[70vh] max-h-[500px] bg-white rounded-lg shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
+          {/* Cart Panel - Mobile Bottom Sheet / Desktop Sidebar */}
+          <div className="fixed 
+            /* Mobile: Bottom sheet style */
+            bottom-0 left-0 right-0 
+            w-full h-[85vh] rounded-t-2xl
+            /* Desktop: Right sidebar style */
+            md:right-6 md:bottom-24 md:left-auto 
+            md:w-80 md:max-w-[calc(100vw-2rem)] md:h-[70vh] md:max-h-[500px] md:rounded-lg
+            bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-t-lg">
+            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-t-2xl md:rounded-t-lg relative">
+              {/* Mobile: Drag handle */}
+              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white/30 rounded-full md:hidden"></div>
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShoppingCart size={20} />
                 Shopping Cart
@@ -296,12 +305,12 @@ export function FloatingCart() {
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto">
               {items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                  <div className="bg-gray-100 p-6 rounded-full mb-4">
-                    <ShoppingCart size={48} className="text-gray-400" />
+                <div className="flex flex-col items-center justify-center h-full p-6 md:p-8 text-center">
+                  <div className="bg-gray-100 p-4 md:p-6 rounded-full mb-4">
+                    <ShoppingCart size={40} className="md:w-12 md:h-12 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-                  <p className="text-gray-500 mb-6">Looks like you haven't added any items to your cart yet.</p>
+                  <p className="text-gray-500 mb-6 text-sm md:text-base">Looks like you haven't added any items to your cart yet.</p>
                   <Button 
                     onClick={() => setIsCartOpen(false)}
                     className="bg-[#26732d] hover:bg-[#1e5d26] text-white px-6 py-2"
@@ -310,7 +319,7 @@ export function FloatingCart() {
                   </Button>
                 </div>
               ) : (
-                <div className="p-4 space-y-4">
+                <div className="p-3 md:p-4 space-y-3 md:space-y-4">
                   {items.map((item) => (
                     <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm" data-testid={`cart-item-${item.id}`}>
                       <div className="flex gap-4">
@@ -372,7 +381,7 @@ export function FloatingCart() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t bg-gray-50 p-4 flex-shrink-0">
+              <div className="border-t bg-gray-50 p-3 md:p-4 flex-shrink-0">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-lg font-bold text-gray-900">Total:</span>
                   <span className="text-xl font-bold text-[#26732d]">{formatPrice(total)}</span>
