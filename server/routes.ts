@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost } from "@shared/models";
-import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost } from "@shared/models";
+import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon } from "@shared/models";
+import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import multer from "multer";
@@ -1588,6 +1588,227 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting blog post:', error);
       res.status(500).json({ message: "Failed to delete blog post" });
+    }
+  });
+
+  // Coupon API routes
+  app.get("/api/coupons", async (req, res) => {
+    try {
+      const coupons = await Coupon.find({}).sort({ createdAt: -1 });
+      res.json(coupons);
+    } catch (error) {
+      console.error('Error fetching coupons:', error);
+      res.status(500).json({ message: "Failed to fetch coupons" });
+    }
+  });
+
+  app.get("/api/coupons/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const coupon = await Coupon.findById(id);
+
+      if (!coupon) {
+        return res.status(404).json({ message: "Coupon not found" });
+      }
+
+      res.json(coupon);
+    } catch (error) {
+      console.error('Error fetching coupon:', error);
+      res.status(500).json({ message: "Failed to fetch coupon" });
+    }
+  });
+
+  app.post("/api/coupons", async (req, res) => {
+    try {
+      const couponSchema = z.object({
+        code: z.string().min(1).toUpperCase(),
+        description: z.string().optional(),
+        discountType: z.enum(['percentage', 'fixed']),
+        discountValue: z.number().min(0.01),
+        minOrderAmount: z.number().min(0).optional(),
+        maxDiscountAmount: z.number().min(0).optional(),
+        usageLimit: z.number().min(1).optional(),
+        validFrom: z.string().datetime(),
+        validUntil: z.string().datetime(),
+        isActive: z.boolean().optional()
+      });
+
+      const validatedData = couponSchema.parse(req.body);
+
+      // Check if coupon code already exists
+      const existingCoupon = await Coupon.findOne({ code: validatedData.code });
+      if (existingCoupon) {
+        return res.status(400).json({ message: "Coupon code already exists" });
+      }
+
+      // Validate dates
+      const validFrom = new Date(validatedData.validFrom);
+      const validUntil = new Date(validatedData.validUntil);
+
+      if (validUntil <= validFrom) {
+        return res.status(400).json({ message: "Valid until date must be after valid from date" });
+      }
+
+      const newCoupon = new Coupon({
+        ...validatedData,
+        validFrom,
+        validUntil,
+        usedCount: 0,
+        isActive: validatedData.isActive !== false
+      });
+
+      await newCoupon.save();
+      res.status(201).json(newCoupon);
+    } catch (error) {
+      console.error('Error creating coupon:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create coupon" });
+    }
+  });
+
+  app.put("/api/coupons/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const updateSchema = z.object({
+        code: z.string().min(1).toUpperCase().optional(),
+        description: z.string().optional(),
+        discountType: z.enum(['percentage', 'fixed']).optional(),
+        discountValue: z.number().min(0.01).optional(),
+        minOrderAmount: z.number().min(0).optional(),
+        maxDiscountAmount: z.number().min(0).optional(),
+        usageLimit: z.number().min(1).optional(),
+        validFrom: z.string().datetime().optional(),
+        validUntil: z.string().datetime().optional(),
+        isActive: z.boolean().optional()
+      });
+
+      const validatedData = updateSchema.parse(req.body);
+
+      // If updating code, check for duplicates
+      if (validatedData.code) {
+        const existingCoupon = await Coupon.findOne({ 
+          code: validatedData.code, 
+          _id: { $ne: id } 
+        });
+        if (existingCoupon) {
+          return res.status(400).json({ message: "Coupon code already exists" });
+        }
+      }
+
+      // Validate dates if both are provided
+      if (validatedData.validFrom && validatedData.validUntil) {
+        const validFrom = new Date(validatedData.validFrom);
+        const validUntil = new Date(validatedData.validUntil);
+
+        if (validUntil <= validFrom) {
+          return res.status(400).json({ message: "Valid until date must be after valid from date" });
+        }
+      }
+
+      // Convert date strings to Date objects if provided
+      const updateData: any = { ...validatedData };
+      if (validatedData.validFrom) {
+        updateData.validFrom = new Date(validatedData.validFrom);
+      }
+      if (validatedData.validUntil) {
+        updateData.validUntil = new Date(validatedData.validUntil);
+      }
+
+      const updatedCoupon = await Coupon.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true }
+      );
+
+      if (!updatedCoupon) {
+        return res.status(404).json({ message: "Coupon not found" });
+      }
+
+      res.json(updatedCoupon);
+    } catch (error) {
+      console.error('Error updating coupon:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update coupon" });
+    }
+  });
+
+  app.delete("/api/coupons/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedCoupon = await Coupon.findByIdAndDelete(id);
+
+      if (!deletedCoupon) {
+        return res.status(404).json({ message: "Coupon not found" });
+      }
+
+      res.json({ message: "Coupon deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting coupon:', error);
+      res.status(500).json({ message: "Failed to delete coupon" });
+    }
+  });
+
+  // Validate coupon endpoint (for frontend use)
+  app.post("/api/coupons/validate", async (req, res) => {
+    try {
+      const { code, orderAmount } = req.body;
+
+      if (!code) {
+        return res.status(400).json({ message: "Coupon code is required" });
+      }
+
+      const coupon = await Coupon.findOne({ 
+        code: code.toUpperCase(),
+        isActive: true
+      });
+
+      if (!coupon) {
+        return res.status(404).json({ message: "Invalid coupon code" });
+      }
+
+      const now = new Date();
+      if (now < coupon.validFrom || now > coupon.validUntil) {
+        return res.status(400).json({ message: "Coupon has expired or is not yet valid" });
+      }
+
+      if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
+        return res.status(400).json({ message: "Coupon usage limit reached" });
+      }
+
+      if (coupon.minOrderAmount && orderAmount < coupon.minOrderAmount) {
+        return res.status(400).json({ 
+          message: `Minimum order amount of ৳${coupon.minOrderAmount} required` 
+        });
+      }
+
+      // Calculate discount
+      let discountAmount = 0;
+      if (coupon.discountType === 'percentage') {
+        discountAmount = Math.round((orderAmount * coupon.discountValue) / 100);
+        if (coupon.maxDiscountAmount) {
+          discountAmount = Math.min(discountAmount, coupon.maxDiscountAmount);
+        }
+      } else {
+        discountAmount = coupon.discountValue;
+      }
+
+      res.json({
+        valid: true,
+        coupon: {
+          code: coupon.code,
+          discountType: coupon.discountType,
+          discountValue: coupon.discountValue,
+          discountAmount
+        }
+      });
+    } catch (error) {
+      console.error('Error validating coupon:', error);
+      res.status(500).json({ message: "Failed to validate coupon" });
     }
   });
 

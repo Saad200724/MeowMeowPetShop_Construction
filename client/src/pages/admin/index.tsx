@@ -29,7 +29,7 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
   Package, FileEdit, Plus, Trash2, ArrowLeft, Search, 
   Filter, Grid, List, Eye, Edit, Save, X, 
-  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee
+  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee, Tag
 } from "lucide-react";
 
 // Form validation schemas
@@ -77,10 +77,24 @@ const blogFormSchema = z.object({
   isPublished: z.boolean().optional(),
 });
 
+const couponFormSchema = z.object({
+  code: z.string().min(1, 'Coupon code is required').toUpperCase(),
+  description: z.string().optional(),
+  discountType: z.enum(['percentage', 'fixed'], { required_error: 'Discount type is required' }),
+  discountValue: z.number().min(0.01, 'Discount value must be greater than 0'),
+  minOrderAmount: z.number().min(0).optional(),
+  maxDiscountAmount: z.number().min(0).optional(),
+  usageLimit: z.number().min(1).optional(),
+  validFrom: z.date({ required_error: 'Valid from date is required' }),
+  validUntil: z.date({ required_error: 'Valid until date is required' }),
+  isActive: z.boolean().optional(),
+});
+
 type ProductFormData = z.infer<typeof productFormSchema>;
 type RepackFormData = z.infer<typeof repackFormSchema>;
 type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
 type BlogFormData = z.infer<typeof blogFormSchema>;
+type CouponFormData = z.infer<typeof couponFormSchema>;
 
 interface BlogPost {
   _id: string;
@@ -93,6 +107,23 @@ interface BlogPost {
   publishedAt?: Date;
   tags?: string[];
   isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Coupon {
+  _id: string;
+  code: string;
+  description?: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minOrderAmount?: number;
+  maxDiscountAmount?: number;
+  usageLimit?: number;
+  usedCount: number;
+  validFrom: Date;
+  validUntil: Date;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -117,6 +148,9 @@ export default function AdminPage() {
   const [repackSearchTerm, setRepackSearchTerm] = useState('');
   const [editingRepackProduct, setEditingRepackProduct] = useState<any>(null);
   const [showRepackDialog, setShowRepackDialog] = useState(false);
+  const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
+  const [showCouponDialog, setShowCouponDialog] = useState(false);
+  const [couponSearchTerm, setCouponSearchTerm] = useState('');
 
   // Function to parse announcement text for bold formatting
   const parseAnnouncementText = (text: string) => {
@@ -277,6 +311,22 @@ export default function AdminPage() {
     },
   });
 
+  const couponForm = useForm<CouponFormData>({
+    resolver: zodResolver(couponFormSchema),
+    defaultValues: {
+      code: '',
+      description: '',
+      discountType: 'percentage',
+      discountValue: 0,
+      minOrderAmount: undefined,
+      maxDiscountAmount: undefined,
+      usageLimit: undefined,
+      validFrom: new Date(),
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      isActive: true,
+    },
+  });
+
   // Product mutations
   const createProductMutation = useMutation({
     mutationFn: async (data: ProductFormData) => {
@@ -415,6 +465,11 @@ export default function AdminPage() {
     queryKey: ['/api/blog'],
   });
 
+  // Fetch coupons from API
+  const { data: coupons = [], refetch: refetchCoupons } = useQuery({
+    queryKey: ['/api/coupons'],
+  });
+
   // Blog mutations
   const createBlogMutation = useMutation({
     mutationFn: async (data: BlogFormData) => {
@@ -504,6 +559,88 @@ export default function AdminPage() {
       toast({
         title: 'Error',
         description: error.message || 'Failed to delete blog post',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Coupon mutations
+  const createCouponMutation = useMutation({
+    mutationFn: async (data: CouponFormData) => {
+      const response = await fetch('/api/coupons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to create coupon');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/coupons'] });
+      setShowCouponDialog(false);
+      couponForm.reset();
+      toast({
+        title: 'Success',
+        description: 'Coupon created successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create coupon',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const updateCouponMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: CouponFormData }) => {
+      const response = await fetch(`/api/coupons/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to update coupon');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/coupons'] });
+      setShowCouponDialog(false);
+      setEditingCoupon(null);
+      couponForm.reset();
+      toast({
+        title: 'Success',
+        description: 'Coupon updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update coupon',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteCouponMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/coupons/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete coupon');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/coupons'] });
+      toast({
+        title: 'Success',
+        description: 'Coupon deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete coupon',
         variant: 'destructive',
       });
     },
@@ -631,6 +768,40 @@ export default function AdminPage() {
     }
   };
 
+  // Coupon handlers
+  const handleCreateCoupon = (data: CouponFormData) => {
+    createCouponMutation.mutate(data);
+  };
+
+  const handleUpdateCoupon = (data: CouponFormData) => {
+    if (editingCoupon) {
+      updateCouponMutation.mutate({ id: editingCoupon._id, data });
+    }
+  };
+
+  const handleEditCoupon = (coupon: Coupon) => {
+    setEditingCoupon(coupon);
+    couponForm.reset({
+      code: coupon.code,
+      description: coupon.description || '',
+      discountType: coupon.discountType,
+      discountValue: coupon.discountValue,
+      minOrderAmount: coupon.minOrderAmount,
+      maxDiscountAmount: coupon.maxDiscountAmount,
+      usageLimit: coupon.usageLimit,
+      validFrom: new Date(coupon.validFrom),
+      validUntil: new Date(coupon.validUntil),
+      isActive: coupon.isActive,
+    });
+    setShowCouponDialog(true);
+  };
+
+  const handleDeleteCoupon = (id: string) => {
+    if (confirm('Are you sure you want to delete this coupon?')) {
+      deleteCouponMutation.mutate(id);
+    }
+  };
+
   const handleSaveBlog = () => {
     if (!editingBlog) return;
 
@@ -692,7 +863,7 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:grid-cols-5 bg-white border border-gray-200">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:grid-cols-6 bg-white border border-gray-200">
             <TabsTrigger value="products" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Package className="w-4 h-4 mr-2" />
               Products
@@ -708,6 +879,10 @@ export default function AdminPage() {
             <TabsTrigger value="announcements" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Speaker className="w-4 h-4 mr-2" />
               Announcements
+            </TabsTrigger>
+            <TabsTrigger value="coupons" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <Tag className="w-4 h-4 mr-2" />
+              Coupons
             </TabsTrigger>
             <TabsTrigger value="blogs" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <BookOpen className="w-4 h-4 mr-2" />
@@ -1416,6 +1591,132 @@ export default function AdminPage() {
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add First Announcement
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Coupons Tab */}
+          <TabsContent value="coupons" className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Coupon Management</h2>
+                <p className="text-gray-600">Create and manage discount coupons</p>
+              </div>
+              <Button 
+                onClick={() => {
+                  setEditingCoupon(null);
+                  couponForm.reset();
+                  setShowCouponDialog(true);
+                }}
+                className="bg-purple-600 hover:bg-purple-700"
+                data-testid="add-coupon-button"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Coupon
+              </Button>
+            </div>
+
+            {/* Search and Filters */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Search coupons..."
+                  value={couponSearchTerm}
+                  onChange={(e) => setCouponSearchTerm(e.target.value)}
+                  className="pl-10 bg-white border-gray-300"
+                />
+              </div>
+            </div>
+
+            {/* Coupons List */}
+            <div className="grid gap-4">
+              {coupons
+                .filter((coupon: any) => 
+                  coupon.code.toLowerCase().includes(couponSearchTerm.toLowerCase()) ||
+                  (coupon.description && coupon.description.toLowerCase().includes(couponSearchTerm.toLowerCase()))
+                )
+                .map((coupon: any) => (
+                <Card key={coupon._id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <CardTitle className="text-xl font-bold text-purple-700">{coupon.code}</CardTitle>
+                          <Badge variant={coupon.isActive ? 'default' : 'secondary'} className={coupon.isActive ? 'bg-green-100 text-green-800' : ''}>
+                            {coupon.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            {coupon.discountType === 'percentage' ? `${coupon.discountValue}% Off` : `৳${coupon.discountValue} Off`}
+                          </Badge>
+                        </div>
+                        {coupon.description && (
+                          <CardDescription className="mb-3">{coupon.description}</CardDescription>
+                        )}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-600">
+                          <div>
+                            <span className="font-medium text-gray-900">Min Order:</span>
+                            <p>{coupon.minOrderAmount ? `৳${coupon.minOrderAmount}` : 'No minimum'}</p>
+                          </div>
+                          {coupon.maxDiscountAmount && (
+                            <div>
+                              <span className="font-medium text-gray-900">Max Discount:</span>
+                              <p>৳{coupon.maxDiscountAmount}</p>
+                            </div>
+                          )}
+                          <div>
+                            <span className="font-medium text-gray-900">Usage:</span>
+                            <p>{coupon.usedCount} / {coupon.usageLimit || '∞'}</p>
+                          </div>
+                          <div>
+                            <span className="font-medium text-gray-900">Valid Until:</span>
+                            <p>{new Date(coupon.validUntil).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" 
+                          onClick={() => handleEditCoupon(coupon)}
+                          data-testid={`edit-coupon-${coupon._id}`}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:text-red-900" 
+                          onClick={() => handleDeleteCoupon(coupon._id)}
+                          data-testid={`delete-coupon-${coupon._id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </Card>
+              ))}
+              {coupons.length === 0 && (
+                <Card className="text-center py-8">
+                  <CardContent>
+                    <Tag className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No coupons yet</h3>
+                    <p className="text-gray-600 mb-4">Create your first coupon to offer discounts to customers.</p>
+                    <Button 
+                      onClick={() => {
+                        setEditingCoupon(null);
+                        couponForm.reset();
+                        setShowCouponDialog(true);
+                      }}
+                      className="bg-purple-600 hover:bg-purple-700"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add First Coupon
                     </Button>
                   </CardContent>
                 </Card>
@@ -2182,6 +2483,255 @@ export default function AdminPage() {
                   {createAnnouncementMutation.isPending || updateAnnouncementMutation.isPending 
                     ? 'Saving...' 
                     : editingAnnouncement ? 'Update Announcement' : 'Save Announcement'
+                  }
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Coupon Dialog */}
+      <Dialog open={showCouponDialog} onOpenChange={setShowCouponDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingCoupon ? 'Edit Coupon' : 'Add New Coupon'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingCoupon ? 'Update coupon information' : 'Create a new discount coupon'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <Form {...couponForm}>
+            <form 
+              onSubmit={couponForm.handleSubmit(editingCoupon ? handleUpdateCoupon : handleCreateCoupon)} 
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={couponForm.control}
+                  name="code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Coupon Code</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., SAVE20" 
+                          className="text-gray-900 bg-white border-gray-300 uppercase" 
+                          {...field}
+                          onChange={(e) => field.onChange(e.target.value.toUpperCase())}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={couponForm.control}
+                  name="discountType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Discount Type</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
+                            <SelectValue placeholder="Select discount type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white border border-gray-300">
+                          <SelectItem value="percentage">Percentage (%)</SelectItem>
+                          <SelectItem value="fixed">Fixed Amount (৳)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={couponForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Description (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Brief description of the coupon" 
+                        rows={2} 
+                        className="text-gray-900 bg-white border-gray-300" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={couponForm.control}
+                  name="discountValue"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">
+                        Discount Value {couponForm.watch('discountType') === 'percentage' ? '(%)' : '(৳)'}
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          step="0.01"
+                          min="0"
+                          placeholder={couponForm.watch('discountType') === 'percentage' ? '10' : '100'} 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={couponForm.control}
+                  name="minOrderAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Min Order Amount (৳)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="0 (no minimum)" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={couponForm.control}
+                  name="maxDiscountAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Max Discount Amount (৳)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="No maximum" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={couponForm.control}
+                  name="usageLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Usage Limit</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="Unlimited" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={couponForm.control}
+                  name="validFrom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Valid From</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="date" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                          onChange={(e) => field.onChange(new Date(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={couponForm.control}
+                  name="validUntil"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Valid Until</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="date" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                          value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                          onChange={(e) => field.onChange(new Date(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={couponForm.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-gray-900 font-semibold">Active Status</FormLabel>
+                      <div className="text-sm text-gray-600">
+                        Enable this coupon for customer use
+                      </div>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  onClick={() => setShowCouponDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="bg-purple-600 hover:bg-purple-700"
+                  disabled={createCouponMutation.isPending || updateCouponMutation.isPending}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {createCouponMutation.isPending || updateCouponMutation.isPending 
+                    ? 'Saving...' 
+                    : editingCoupon ? 'Update Coupon' : 'Save Coupon'
                   }
                 </Button>
               </DialogFooter>
