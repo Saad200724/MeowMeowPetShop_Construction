@@ -284,9 +284,9 @@ export function FloatingCart() {
             /* Desktop: Right sidebar style */
             md:right-6 md:bottom-24 md:top-auto 
             md:w-80 md:max-w-[calc(100vw-2rem)] md:h-[70vh] md:max-h-[500px] md:rounded-lg
-            bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col"></div>
+            bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-tl-2xl md:rounded-t-lg relative"></div>
+            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-tl-2xl md:rounded-t-lg">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShoppingCart size={20} />
                 Shopping Cart
