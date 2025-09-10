@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { ChevronDown, ChevronUp, CreditCard, Truck } from 'lucide-react';
+import { ChevronDown, ChevronUp, CreditCard, Truck, User, MapPin, MessageSquare, ShoppingBag } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useMutation } from '@tanstack/react-query';
 
@@ -197,22 +197,38 @@ export default function CheckoutPage() {
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold text-[#26732d] mb-8">Checkout</h1>
+          {/* Header with logo and phone */}
+          <div className="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <img src="/logo.png" alt="Meow Meow Pet Shop" className="w-12 h-12" />
+              <div>
+                <h1 className="text-3xl font-bold text-[#26732d]">Checkout</h1>
+                <p className="text-gray-600">Complete your order</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-[#26732d]">📞 01405588433</p>
+              <p className="text-sm text-gray-600">Customer Support</p>
+            </div>
+          </div>
           
-          <div className="grid lg:grid-cols-3 gap-1">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column - Forms */}
             <div className="lg:col-span-2 space-y-6">
               
               {/* Login Section */}
               {!user && (
-                <Card>
-                  <CardHeader>
+                <Card className="border-[#ffde59] border-2">
+                  <CardHeader className="bg-[#ffde59]/10">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Returning customer?</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <User className="h-5 w-5 text-[#26732d]" />
+                        <CardTitle className="text-lg text-[#26732d]">Already have an account?</CardTitle>
+                      </div>
                       <Button 
                         variant="link" 
                         onClick={() => setShowLogin(!showLogin)}
-                        className="text-[#26732d] hover:text-[#1e5d26]"
+                        className="text-[#26732d] hover:text-[#1e5d26] font-medium"
                       >
                         Click here to login
                         {showLogin ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
@@ -221,36 +237,33 @@ export default function CheckoutPage() {
                   </CardHeader>
                   
                   {showLogin && (
-                    <CardContent>
+                    <CardContent className="pt-6">
                       <p className="text-gray-600 mb-4">
                         Welcome back! Sign in to your account.
-                      </p>
-                      <p className="text-sm text-gray-500 mb-6">
-                        If you have shopped with us before, please enter your details below. If you are a new customer, please proceed to the Billing section.
                       </p>
                       
                       <form onSubmit={handleLogin} className="space-y-4">
                         <div>
-                          <Label htmlFor="email">Username or email *</Label>
+                          <Label htmlFor="email" className="text-[#26732d] font-medium">Username or email *</Label>
                           <Input
                             id="email"
                             type="email"
                             value={loginData.email}
                             onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                             required
-                            className="mt-1"
+                            className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                           />
                         </div>
                         
                         <div>
-                          <Label htmlFor="password">Password *</Label>
+                          <Label htmlFor="password" className="text-[#26732d] font-medium">Password *</Label>
                           <Input
                             id="password"
                             type="password"
                             value={loginData.password}
                             onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
                             required
-                            className="mt-1"
+                            className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                           />
                         </div>
                         
@@ -259,12 +272,13 @@ export default function CheckoutPage() {
                             id="remember"
                             checked={loginData.remember}
                             onCheckedChange={(checked) => setLoginData(prev => ({ ...prev, remember: checked as boolean }))}
+                            className="border-[#26732d] data-[state=checked]:bg-[#26732d]"
                           />
-                          <Label htmlFor="remember" className="text-sm">Remember me</Label>
+                          <Label htmlFor="remember" className="text-sm text-gray-600">Remember me</Label>
                         </div>
                         
                         <div className="flex items-center justify-between">
-                          <Button type="submit" className="bg-[#26732d] hover:bg-[#1e5d26]">
+                          <Button type="submit" className="bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium">
                             Sign In
                           </Button>
                           <Button variant="link" className="text-[#26732d] hover:text-[#1e5d26]">
@@ -278,14 +292,17 @@ export default function CheckoutPage() {
               )}
 
               {/* Coupon Section */}
-              <Card>
-                <CardHeader>
+              <Card className="border-[#26732d]/30">
+                <CardHeader className="bg-[#26732d]/5">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">Have a coupon?</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-[#ffde59] text-black hover:bg-[#e6c950]">OFFER</Badge>
+                      <CardTitle className="text-lg text-[#26732d]">Have a coupon?</CardTitle>
+                    </div>
                     <Button 
                       variant="link" 
                       onClick={() => setShowCoupon(!showCoupon)}
-                      className="text-[#26732d] hover:text-[#1e5d26]"
+                      className="text-[#26732d] hover:text-[#1e5d26] font-medium"
                     >
                       Click here to enter your code
                       {showCoupon ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
@@ -294,15 +311,15 @@ export default function CheckoutPage() {
                 </CardHeader>
                 
                 {showCoupon && (
-                  <CardContent>
-                    <div className="flex gap-1">
+                  <CardContent className="pt-6">
+                    <div className="flex gap-3">
                       <Input
-                        placeholder="Coupon code"
+                        placeholder="Enter coupon code"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
-                        className="flex-1"
+                        className="flex-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                       />
-                      <Button className="bg-[#26732d] hover:bg-[#1e5d26]">
+                      <Button className="bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium px-6">
                         Apply Coupon
                       </Button>
                     </div>
@@ -310,191 +327,208 @@ export default function CheckoutPage() {
                 )}
               </Card>
 
-              {/* Billing Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl">Billing details</CardTitle>
+              {/* Customer Information */}
+              <Card className="border-[#26732d]/30">
+                <CardHeader className="bg-[#26732d]/5">
+                  <div className="flex items-center gap-2">
+                    <User className="h-5 w-5 text-[#26732d]" />
+                    <CardTitle className="text-xl text-[#26732d]">Customer Information</CardTitle>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <form onSubmit={handlePlaceOrder} className="space-y-4">
+                <CardContent className="pt-6">
+                  <form className="space-y-4">
                     <div>
-                      <Label htmlFor="billing-name">Name *</Label>
+                      <Label htmlFor="customer-name" className="text-[#26732d] font-medium">Full Name *</Label>
                       <Input
-                        id="billing-name"
+                        id="customer-name"
                         value={billingDetails.name}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="Enter your name"
                         required
-                        className="mt-1"
+                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-phone">Phone *</Label>
+                      <Label htmlFor="customer-phone" className="text-[#26732d] font-medium">Phone *</Label>
                       <Input
-                        id="billing-phone"
+                        id="customer-phone"
                         type="tel"
                         value={billingDetails.phone}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))}
+                        placeholder="Ex: 01XXXXXXXX"
                         required
-                        className="mt-1"
+                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                      />
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+
+              {/* Billing Details */}
+              <Card className="border-[#26732d]/30">
+                <CardHeader className="bg-[#26732d]/5">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-[#26732d]" />
+                    <CardTitle className="text-xl text-[#26732d]">Select city</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <form className="space-y-4">
+                    <div>
+                      <Label htmlFor="billing-city" className="text-[#26732d] font-medium">State</Label>
+                      <select 
+                        className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                        value={billingDetails.city}
+                        onChange={(e) => setBillingDetails(prev => ({ ...prev, city: e.target.value }))}
+                      >
+                        <option value="">Select state</option>
+                        <option value="dhaka">Dhaka</option>
+                        <option value="chittagong">Chittagong</option>
+                        <option value="sylhet">Sylhet</option>
+                        <option value="rajshahi">Rajshahi</option>
+                        <option value="khulna">Khulna</option>
+                        <option value="barisal">Barisal</option>
+                        <option value="rangpur">Rangpur</option>
+                        <option value="mymensingh">Mymensingh</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="billing-area" className="text-[#26732d] font-medium">Area</Label>
+                      <select 
+                        className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                        value={billingDetails.area}
+                        onChange={(e) => setBillingDetails(prev => ({ ...prev, area: e.target.value }))}
+                      >
+                        <option value="">Select area</option>
+                        <option value="dhanmondi">Dhanmondi</option>
+                        <option value="gulshan">Gulshan</option>
+                        <option value="uttara">Uttara</option>
+                        <option value="mirpur">Mirpur</option>
+                        <option value="mohammadpur">Mohammadpur</option>
+                        <option value="wari">Wari</option>
+                        <option value="old-dhaka">Old Dhaka</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="billing-address" className="text-[#26732d] font-medium">Full Address *</Label>
+                      <Textarea
+                        id="billing-address"
+                        value={billingDetails.address}
+                        onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))}
+                        placeholder="Your full address"
+                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                        rows={3}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-email">Email address *</Label>
+                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium">Email address</Label>
                       <Input
                         id="billing-email"
                         type="email"
                         value={billingDetails.email}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
-                        required
-                        className="mt-1"
+                        placeholder="your.email@example.com"
+                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                       />
                     </div>
-
-                    <div>
-                      <Label htmlFor="billing-address">Address</Label>
-                      <Input
-                        id="billing-address"
-                        value={billingDetails.address}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1">
-                      <div>
-                        <Label htmlFor="billing-city">City</Label>
-                        <Input
-                          id="billing-city"
-                          value={billingDetails.city}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, city: e.target.value }))}
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="billing-area">Area</Label>
-                        <Input
-                          id="billing-area"
-                          value={billingDetails.area}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, area: e.target.value }))}
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-
-                    {!user && (
-                      <>
-                        <div>
-                          <Label htmlFor="account-username">Account username *</Label>
-                          <Input
-                            id="account-username"
-                            value={customerInfo.username}
-                            onChange={(e) => setCustomerInfo(prev => ({ ...prev, username: e.target.value }))}
-                            required={customerInfo.createAccount}
-                            className="mt-1"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="account-password">Create account password *</Label>
-                          <Input
-                            id="account-password"
-                            type="password"
-                            value={customerInfo.password}
-                            onChange={(e) => setCustomerInfo(prev => ({ ...prev, password: e.target.value }))}
-                            required={customerInfo.createAccount}
-                            className="mt-1"
-                          />
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            id="create-account"
-                            checked={customerInfo.createAccount}
-                            onCheckedChange={(checked) => setCustomerInfo(prev => ({ ...prev, createAccount: checked as boolean }))}
-                          />
-                          <Label htmlFor="create-account" className="text-sm">Create an account</Label>
-                        </div>
-                      </>
-                    )}
                   </form>
                 </CardContent>
               </Card>
 
-              {/* Additional Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl">Additional information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div>
-                    <Label htmlFor="order-notes">Order notes (optional)</Label>
-                    <Textarea
-                      id="order-notes"
-                      placeholder="Notes about your order, e.g. special notes for delivery."
-                      value={orderNotes}
-                      onChange={(e) => setOrderNotes(e.target.value)}
-                      className="mt-1"
-                      rows={4}
-                    />
+              {/* Order Notes */}
+              <Card className="border-[#26732d]/30">
+                <CardHeader className="bg-[#26732d]/5">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5 text-[#26732d]" />
+                    <CardTitle className="text-xl text-[#26732d]">Order Notes</CardTitle>
                   </div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <Textarea
+                    placeholder="Notes about your order, e.g. special notes for delivery."
+                    value={orderNotes}
+                    onChange={(e) => setOrderNotes(e.target.value)}
+                    className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                    rows={4}
+                  />
                 </CardContent>
               </Card>
             </div>
 
             {/* Right Column - Order Summary */}
             <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl">Your order</CardTitle>
+              <Card className="border-[#26732d]/30 sticky top-4">
+                <CardHeader className="bg-[#26732d]/5">
+                  <div className="flex items-center gap-2">
+                    <ShoppingBag className="h-5 w-5 text-[#26732d]" />
+                    <CardTitle className="text-xl text-[#26732d]">Order Overview</CardTitle>
+                  </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between font-semibold border-b pb-2">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="flex justify-between font-semibold border-b pb-3 text-[#26732d]">
                     <span>Product</span>
-                    <span>Subtotal</span>
+                    <span>Total</span>
                   </div>
 
                   {cartState.items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center">
+                    <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
                       <div className="flex-1">
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium text-gray-800 text-sm">{item.name}</span>
                         <span className="text-gray-500 ml-2">× {item.quantity}</span>
                       </div>
-                      <span className="font-medium">৳ {(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-medium text-[#26732d]">৳ {(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
 
                   <Separator />
 
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>৳ {cartState.total.toLocaleString()}</span>
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Total Weight</span>
+                    <span className="font-medium">0.5 kg</span>
                   </div>
 
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total</span>
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">SubTotal</span>
+                    <span className="font-medium">৳ {cartState.total.toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Delivery</span>
+                    <span className="font-medium">৳ 0</span>
+                  </div>
+
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Coupon</span>
+                    <span className="font-medium">৳ 0</span>
+                  </div>
+
+                  <div className="flex justify-between py-2 text-lg font-bold text-[#26732d] border-t-2 border-[#26732d]/20 pt-3">
+                    <span>Grand Total</span>
                     <span>৳ {cartState.total.toLocaleString()}</span>
                   </div>
 
                   <Separator />
 
                   {/* Payment Methods */}
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Payment</h4>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-[#26732d]">Payment Method</h4>
                     <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                      <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                        <RadioGroupItem value="Bkash" id="bkash" />
-                        <Label htmlFor="bkash" className="flex items-center cursor-pointer">
-                          <CreditCard className="mr-2 h-4 w-4 text-pink-600" />
-                          Bkash
+                      <div className="flex items-center space-x-3 p-4 border-2 border-[#ffde59] rounded-lg bg-[#ffde59]/10">
+                        <RadioGroupItem value="COD" id="cod" className="border-[#26732d] text-[#26732d]" />
+                        <Label htmlFor="cod" className="flex items-center cursor-pointer font-medium text-[#26732d]">
+                          <Truck className="mr-2 h-5 w-5" />
+                          Cash On Delivery
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                        <RadioGroupItem value="COD" id="cod" />
-                        <Label htmlFor="cod" className="flex items-center cursor-pointer">
-                          <Truck className="mr-2 h-4 w-4 text-green-600" />
-                          Cash On Delivery (COD)
+                      <div className="flex items-center space-x-3 p-4 border border-gray-300 rounded-lg">
+                        <RadioGroupItem value="Bkash" id="bkash" className="border-[#26732d] text-[#26732d]" />
+                        <Label htmlFor="bkash" className="flex items-center cursor-pointer font-medium text-[#26732d]">
+                          <CreditCard className="mr-2 h-5 w-5 text-pink-600" />
+                          Bkash & Card
                         </Label>
                       </div>
                     </RadioGroup>
@@ -502,18 +536,32 @@ export default function CheckoutPage() {
 
                   <Button 
                     onClick={handlePlaceOrder}
-                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 text-lg"
+                    className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold py-4 text-lg border-2 border-[#26732d] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                     disabled={isProcessing || cartState.items.length === 0}
                   >
                     {isProcessing ? (
                       <div className="flex items-center justify-center">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
                         Processing Order...
                       </div>
                     ) : (
-                      'Place Order'
+                      'Apply Coupon'
                     )}
                   </Button>
+
+                  {/* Bottom Info */}
+                  <div className="mt-6 p-4 bg-[#26732d]/5 rounded-lg">
+                    <h5 className="font-semibold text-[#26732d] mb-2">Meow Meow Pet Shop</h5>
+                    <p className="text-sm text-gray-600 mb-1">
+                      <strong>ADDRESS:</strong> House No. 64, Level 4, 5th, Near Bhaatpara High School, Bank Colony, Savar, Dhaka
+                    </p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      <strong>Hotline:</strong> 01405588433
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Email:</strong> meowmeow@example.com
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
