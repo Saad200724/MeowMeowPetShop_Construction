@@ -295,28 +295,29 @@ export default function CartPage() {
                           </p>
                         </div>
                       )}
-                    </div></div>
-                    
-                    <div className="space-y-4 mt-8">
-                      <Button 
-                        className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium py-3"
-                        size="lg"
-                      >
-                        Proceed to Checkout
-                      </Button>
-                      
-                      <Link href="/products">
-                        <Button 
-                          variant="outline" 
-                          className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white py-3"
-                          size="lg"
-                        >
-                          <ArrowLeft className="h-4 w-4 mr-2" />
-                          Continue Shopping
-                        </Button>
-                      </Link>
                     </div>
                   </div>
+                    
+                  <div className="space-y-4 mt-8">
+                    <Button 
+                      className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium py-3"
+                      size="lg"
+                    >
+                      Proceed to Checkout
+                    </Button>
+                    
+                    <Link href="/products">
+                      <Button 
+                        variant="outline" 
+                        className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white py-3"
+                        size="lg"
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Continue Shopping
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
                 </CardContent>
               </Card>
             </div>
