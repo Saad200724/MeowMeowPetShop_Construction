@@ -318,7 +318,6 @@ export default function CartPage() {
                     </Link>
                   </div>
                 </CardContent>
-                </CardContent>
               </Card>
             </div>
           </div>
