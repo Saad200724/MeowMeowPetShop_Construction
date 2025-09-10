@@ -2081,12 +2081,12 @@ export default function AdminPage() {
                           <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
                           <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
                           <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
-                          <SelectItem value="cat-care" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
+                          <SelectItem value="cat-care-health" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
                           <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
                           <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
-                          <SelectItem value="dog-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
-                          <SelectItem value="rabbit" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
-                          <SelectItem value="bird" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
+                          <SelectItem value="dog-health-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit-food-accessories" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird-food-accessories" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -2114,7 +2114,7 @@ export default function AdminPage() {
                           <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="one">Purina One</SelectItem>
+                          <SelectItem value="one">ONE</SelectItem>
                           <SelectItem value="reflex">Reflex</SelectItem>
                           <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
                           <SelectItem value="royal-canin">Royal Canin</SelectItem>
@@ -2382,12 +2382,12 @@ export default function AdminPage() {
                           <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
                           <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
                           <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
-                          <SelectItem value="cat-care" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
+                          <SelectItem value="cat-care-health" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
                           <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
                           <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
-                          <SelectItem value="dog-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
-                          <SelectItem value="rabbit" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
-                          <SelectItem value="bird" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
+                          <SelectItem value="dog-health-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
+                          <SelectItem value="rabbit-food-accessories" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
+                          <SelectItem value="bird-food-accessories" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -2411,7 +2411,7 @@ export default function AdminPage() {
                           <SelectItem value="default-brand">Default Brand</SelectItem>
                           <SelectItem value="nekko">Nekko</SelectItem>
                           <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="one">Purina One</SelectItem>
+                          <SelectItem value="one">ONE</SelectItem>
                           <SelectItem value="reflex">Reflex</SelectItem>
                           <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
                           <SelectItem value="royal-canin">Royal Canin</SelectItem>

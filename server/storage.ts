@@ -211,8 +211,8 @@ export class DatabaseStorage implements IStorage {
       name: productData.name,
       description: `High-quality ${productData.name}`,
       price: productData.price,
-      categoryId: categoryRecord._id.toString(),
-      brandId: brandRecord._id.toString(),
+      categoryId: (categoryRecord._id as any).toString(),
+      brandId: (brandRecord._id as any).toString(),
       image: productData.image,
       rating: productData.rating,
       stockQuantity: productData.stock,
@@ -221,7 +221,7 @@ export class DatabaseStorage implements IStorage {
     await newProduct.save();
 
     return {
-      id: newProduct._id.toString(),
+      id: (newProduct._id as any).toString(),
       name: newProduct.name,
       price: newProduct.price,
       category: productData.category,
@@ -480,8 +480,8 @@ export class DatabaseStorage implements IStorage {
                 name: product.name,
                 description: `High-quality ${product.name}`,
                 price: product.price,
-                categoryId: dbCategory._id.toString(),
-                brandId: brand._id.toString(),
+                categoryId: (dbCategory._id as any).toString(),
+                brandId: (brand._id as any).toString(),
                 image: product.image,
                 rating: product.rating,
                 stockQuantity: product.stock,
