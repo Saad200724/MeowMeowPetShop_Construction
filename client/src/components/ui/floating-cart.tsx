@@ -276,19 +276,17 @@ export function FloatingCart() {
             onClick={() => setIsCartOpen(false)}
           />
           
-          {/* Cart Panel - Mobile Bottom Sheet / Desktop Sidebar */}
+          {/* Cart Panel - Right-sided for both mobile and desktop */}
           <div className="fixed 
-            /* Mobile: Bottom sheet style */
-            bottom-0 left-0 right-0 
-            w-full h-[85vh] rounded-t-2xl
+            /* Mobile: Right-sided panel */
+            top-0 right-0 bottom-0
+            w-[85vw] max-w-sm rounded-l-2xl
             /* Desktop: Right sidebar style */
-            md:right-6 md:bottom-24 md:left-auto 
+            md:right-6 md:bottom-24 md:top-auto 
             md:w-80 md:max-w-[calc(100vw-2rem)] md:h-[70vh] md:max-h-[500px] md:rounded-lg
-            bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col">
+            bg-white shadow-2xl z-[9999] transform transition-transform duration-300 flex flex-col"></div>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-t-2xl md:rounded-t-lg relative">
-              {/* Mobile: Drag handle */}
-              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white/30 rounded-full md:hidden"></div>
+            <div className="flex items-center justify-between p-4 border-b bg-[#26732d] text-white flex-shrink-0 rounded-tl-2xl md:rounded-t-lg relative"></div>
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShoppingCart size={20} />
                 Shopping Cart
