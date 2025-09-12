@@ -115,9 +115,9 @@ export default function CategoriesGrid() {
         </div>
 
         {/* Categories Grid */}
-        {/* Mobile/Tablet view: Show first 8 categories in 4 columns (2 rows × 4 columns) */}
-        <div className="grid grid-cols-4 gap-1 md:hidden px-1">
-          {categories.slice(0, 8).map((category, index) => {
+        {/* Mobile/Tablet view: Show first 9 categories in 3 columns (3 rows × 3 columns) */}
+        <div className="grid grid-cols-3 gap-3 md:hidden px-3">
+          {categories.slice(0, 9).map((category, index) => {
             const IconComponent = category.icon;
             return (
               <Link
@@ -129,20 +129,24 @@ export default function CategoriesGrid() {
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white border rounded-md overflow-hidden h-20">
-                  <div className="h-10 flex items-center justify-center bg-gray-50 p-1">
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden h-32 flex flex-col">
+                  <div className="relative overflow-hidden bg-gray-50 p-3 flex-1 flex items-center justify-center">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="h-8 w-auto object-contain transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 max-h-16"
                       loading="lazy"
                       decoding="async"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="px-1 py-0.5 text-center">
-                    <h3 className="text-[10px] font-medium leading-tight line-clamp-1 text-gray-800">
+                  <div className="p-2 text-center bg-white">
+                    <h3 className="text-sm font-bold text-gray-800 line-clamp-2 leading-tight">
                       {category.name}
                     </h3>
+                    <p className="text-xs text-gray-600 mt-1">
+                      {category.count}
+                    </p>
                   </div>
                 </div>
               </Link>
