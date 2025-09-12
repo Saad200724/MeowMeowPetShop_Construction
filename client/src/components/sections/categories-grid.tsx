@@ -115,7 +115,46 @@ export default function CategoriesGrid() {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        {/* Mobile view: Show first 6 categories in 2 columns (3 rows × 2 columns) */}
+        <div className="grid grid-cols-2 gap-4 md:hidden">
+          {categories.slice(0, 6).map((category, index) => {
+            const IconComponent = category.icon;
+            return (
+              <Link
+                key={category.id}
+                href={`/products?category=${category.id}`}
+                className="group cursor-pointer hover-lift animate-fade-in block"
+                style={
+                  { animationDelay: `${index * 0.1}s` } as React.CSSProperties
+                }
+                data-testid={`link-category-${category.id}`}
+              >
+                <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col">
+                  <div className="relative overflow-hidden flex-shrink-0">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div className="p-3 text-center flex-grow flex flex-col justify-center min-h-[80px]">
+                    <h3 className="text-sm font-bold text-gray-800 mb-1 line-clamp-2">
+                      {category.name}
+                    </h3>
+                    <p className="text-xs text-gray-600">
+                      {category.count}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Desktop/Laptop view: Show all 10 categories */}
+        <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (
@@ -126,6 +165,7 @@ export default function CategoriesGrid() {
                 style={
                   { animationDelay: `${index * 0.1}s` } as React.CSSProperties
                 }
+                data-testid={`link-category-${category.id}`}
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
