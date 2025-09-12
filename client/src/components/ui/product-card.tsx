@@ -1,7 +1,7 @@
 
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/hooks/use-cart';
+import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
 
 interface Product {
@@ -27,12 +27,18 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const { toast } = useToast();
 
   const handleAddToCart = () => {
     if (product.id) {
-      addToCart(product.id.toString(), 1);
+      addItem({
+        id: product.id.toString(),
+        name: product.name,
+        price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+        image: product.image,
+        maxStock: 100, // Default max stock
+      });
       toast({
         title: "Added to Cart",
         description: `${product.name} has been added to your cart.`,
