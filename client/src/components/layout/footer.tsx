@@ -78,7 +78,12 @@ export default function Footer() {
               </div>
               <div className="flex items-center">
                 <Mail size={16} className="mr-2 text-meow-yellow flex-shrink-0" />
-                <span className="text-gray-300 text-sm">meowmeowpetshop1@gmail.com</span>
+                <a 
+                  href="mailto:meowmeowpetshop1@gmail.com" 
+                  className="text-gray-300 hover:text-meow-yellow transition-colors text-sm"
+                >
+                  meowmeowpetshop1@gmail.com
+                </a>
               </div>
               <div className="flex items-center">
                 <Clock size={16} className="mr-2 text-meow-yellow flex-shrink-0" />
