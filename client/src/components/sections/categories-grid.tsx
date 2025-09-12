@@ -116,7 +116,7 @@ export default function CategoriesGrid() {
 
         {/* Categories Grid */}
         {/* Mobile/Tablet view: Show first 9 categories in 3 columns (3 rows × 3 columns) */}
-        <div className="grid grid-cols-3 gap-1 md:hidden">
+        <div className="grid grid-cols-3 gap-2 md:hidden px-2">
           {categories.slice(0, 9).map((category, index) => {
             const IconComponent = category.icon;
             return (
@@ -129,8 +129,8 @@ export default function CategoriesGrid() {
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded shadow-sm overflow-hidden h-full flex flex-col">
-                  <div className="relative overflow-hidden bg-gray-50 rounded-t p-0.5 h-12 flex-shrink-0">
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden aspect-square flex flex-col">
+                  <div className="relative overflow-hidden bg-gray-50 p-2 flex-1">
                     <img
                       src={category.image}
                       alt={category.name}
@@ -140,11 +140,11 @@ export default function CategoriesGrid() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-0.5 text-center flex-grow flex flex-col justify-center min-h-[30px]">
-                    <h3 className="text-xs font-bold text-gray-800 mb-0 line-clamp-1 leading-none">
+                  <div className="p-1 text-center bg-white">
+                    <h3 className="text-xs font-semibold text-gray-800 line-clamp-1 leading-tight">
                       {category.name}
                     </h3>
-                    <p className="text-xs text-gray-600 text-xs leading-none">
+                    <p className="text-xs text-gray-500 mt-0.5">
                       {category.count}
                     </p>
                   </div>
