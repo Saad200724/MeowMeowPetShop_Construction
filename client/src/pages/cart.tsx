@@ -40,32 +40,36 @@ export default function CartPage() {
     setIsCouponLoading(true);
     setCouponError('');
 
-    // Simulate API call
-    setTimeout(() => {
-      // Mock coupon validation
-      const validCoupons = {
-        'WELCOME10': { discount: 10, type: 'percentage' },
-        'SAVE50': { discount: 50, type: 'fixed' },
-        'MEOW15': { discount: 15, type: 'percentage' }
-      };
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          orderAmount: state.total
+        }),
+      });
 
-      const coupon = validCoupons[couponCode.toUpperCase() as keyof typeof validCoupons];
-      
-      if (coupon) {
+      const data = await response.json();
+
+      if (response.ok && data.valid) {
         setAppliedCoupon({
-          code: couponCode.toUpperCase(),
-          discount: coupon.type === 'percentage' 
-            ? Math.round((state.total * coupon.discount) / 100)
-            : coupon.discount
+          code: data.coupon.code,
+          discount: data.coupon.discountAmount
         });
         setCouponCode('');
         setCouponError('');
       } else {
-        setCouponError('Invalid coupon code');
+        setCouponError(data.message || 'Invalid coupon code');
       }
-      
+    } catch (error) {
+      console.error('Coupon validation error:', error);
+      setCouponError('Failed to validate coupon. Please try again.');
+    } finally {
       setIsCouponLoading(false);
-    }, 1000);
+    }
   };
 
   const handleRemoveCoupon = () => {
@@ -271,7 +275,7 @@ export default function CartPage() {
                             <p className="text-xs text-red-500">{couponError}</p>
                           )}
                           <p className="text-xs text-gray-500">
-                            Try: WELCOME10, SAVE50, or MEOW15
+                            Enter your coupon code to apply discount
                           </p>
                         </div>
                       ) : (

@@ -1208,37 +1208,145 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId,
         customerInfo,
         items,
-        subtotal,
-        total,
+        discountCode = null,
         paymentMethod,
-        shippingAddress
+        shippingAddress,
+        orderNotes
       } = req.body;
+
+      // Validate required fields
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ message: "Order items are required" });
+      }
+
+      if (!customerInfo || !customerInfo.name || !customerInfo.phone || !customerInfo.email) {
+        return res.status(400).json({ message: "Customer information is required" });
+      }
+
+      // SERVER-SIDE SECURITY: Recompute subtotal based on current product prices
+      let serverSubtotal = 0;
+      const validatedItems = [];
+
+      for (const item of items) {
+        try {
+          // Fetch current product price from database
+          const product = await Product.findById(item.productId);
+          if (!product) {
+            return res.status(400).json({ message: `Product ${item.productId} not found` });
+          }
+
+          if (!product.isActive) {
+            return res.status(400).json({ message: `Product ${product.name} is no longer available` });
+          }
+
+          if (product.stockQuantity < item.quantity) {
+            return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+          }
+
+          // Use current database price, not client-provided price
+          const itemTotal = product.price * item.quantity;
+          serverSubtotal += itemTotal;
+
+          validatedItems.push({
+            productId: item.productId,
+            name: product.name,
+            price: product.price, // Use current price from database
+            quantity: item.quantity,
+            image: item.image || product.image
+          });
+        } catch (error) {
+          console.error(`Error validating product ${item.productId}:`, error);
+          return res.status(400).json({ message: `Invalid product: ${item.productId}` });
+        }
+      }
+
+      // SERVER-SIDE SECURITY: Revalidate coupon and calculate discount
+      let serverDiscount = 0;
+      let validatedCouponCode = null;
+
+      if (discountCode) {
+        try {
+          const coupon = await Coupon.findOne({ 
+            code: discountCode.toUpperCase(),
+            isActive: true
+          });
+
+          if (!coupon) {
+            return res.status(400).json({ message: "Invalid coupon code" });
+          }
+
+          const now = new Date();
+          if (now < coupon.validFrom || now > coupon.validUntil) {
+            return res.status(400).json({ message: "Coupon has expired or is not yet valid" });
+          }
+
+          if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
+            return res.status(400).json({ message: "Coupon usage limit reached" });
+          }
+
+          if (coupon.minOrderAmount && serverSubtotal < coupon.minOrderAmount) {
+            return res.status(400).json({ 
+              message: `Minimum order amount of ৳${coupon.minOrderAmount} required` 
+            });
+          }
+
+          // Calculate discount server-side
+          if (coupon.discountType === 'percentage') {
+            serverDiscount = Math.round((serverSubtotal * coupon.discountValue) / 100);
+            if (coupon.maxDiscountAmount) {
+              serverDiscount = Math.min(serverDiscount, coupon.maxDiscountAmount);
+            }
+          } else {
+            serverDiscount = coupon.discountValue;
+          }
+
+          validatedCouponCode = coupon.code;
+
+          // ATOMIC COUPON USAGE TRACKING: Increment usage count
+          await Coupon.findByIdAndUpdate(
+            coupon._id,
+            { $inc: { usedCount: 1 } },
+            { new: true }
+          );
+
+          console.log(`Coupon ${coupon.code} used. New usage count: ${coupon.usedCount + 1}`);
+        } catch (error) {
+          console.error('Error validating coupon:', error);
+          return res.status(400).json({ message: "Failed to validate coupon" });
+        }
+      }
+
+      // SERVER-SIDE SECURITY: Calculate final total server-side
+      const serverTotal = Math.max(0, serverSubtotal - serverDiscount);
 
       // Generate unique invoice number
       const invoiceNumber = `INV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Create order
+      // Create order with server-computed values
       const order = new Order({
         userId,
         status: 'Processing',
-        total,
-        items,
+        total: serverTotal, // Use server-computed total
+        items: validatedItems,
         shippingAddress,
         paymentMethod,
-        paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid'
+        paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
+        orderNotes
       });
 
       await order.save();
 
-      // Create invoice
+      // Create invoice with server-computed values
       const invoice = new Invoice({
         invoiceNumber,
-        orderId: order._id.toString(),
+        orderId: order._id?.toString() || order.id,
         userId,
         customerInfo,
-        items,
-        subtotal,
-        total,
+        items: validatedItems,
+        subtotal: serverSubtotal, // Use server-computed subtotal
+        discount: serverDiscount, // Use server-computed discount
+        discountCode: validatedCouponCode,
+        total: serverTotal, // Use server-computed total
         paymentMethod,
         paymentStatus: order.paymentStatus
       });
@@ -1251,6 +1359,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { items: [], total: 0 }
       );
 
+      console.log(`Order created: Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
       res.json({ order, invoice });
     } catch (error) {
       console.error('Order creation error:', error);

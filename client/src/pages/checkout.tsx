@@ -49,6 +49,9 @@ export default function CheckoutPage() {
   const [showCoupon, setShowCoupon] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '', remember: false });
   const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
+  const [couponError, setCouponError] = useState('');
+  const [isCouponLoading, setIsCouponLoading] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: '',
     phone: '',
@@ -104,6 +107,59 @@ export default function CheckoutPage() {
     setShowLogin(false);
   };
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    setIsCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          orderAmount: cartState.total
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.valid) {
+        setAppliedCoupon({
+          code: data.coupon.code,
+          discount: data.coupon.discountAmount
+        });
+        setCouponCode('');
+        setCouponError('');
+        toast({
+          title: "Coupon applied successfully!",
+          description: `You saved ৳${data.coupon.discountAmount}`,
+        });
+      } else {
+        setCouponError(data.message || 'Invalid coupon code');
+      }
+    } catch (error) {
+      console.error('Coupon validation error:', error);
+      setCouponError('Failed to validate coupon. Please try again.');
+    } finally {
+      setIsCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    toast({
+      title: "Coupon removed",
+      description: "Discount has been removed from your order.",
+    });
+  };
+
   const createOrderMutation = useMutation({
     mutationFn: async (orderData: any) => {
       const response = await fetch('/api/orders', {
@@ -151,6 +207,8 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
+    const finalTotal = appliedCoupon ? Math.max(0, cartState.total - appliedCoupon.discount) : cartState.total;
+
     const orderData = {
       userId: user?.id || 'guest',
       customerInfo: {
@@ -172,7 +230,9 @@ export default function CheckoutPage() {
         image: item.image
       })),
       subtotal: cartState.total,
-      total: cartState.total,
+      discount: appliedCoupon ? appliedCoupon.discount : 0,
+      discountCode: appliedCoupon ? appliedCoupon.code : null,
+      total: finalTotal,
       paymentMethod,
       shippingAddress: billingDetails,
       orderNotes
