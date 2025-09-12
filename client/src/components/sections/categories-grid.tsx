@@ -129,8 +129,8 @@ export default function CategoriesGrid() {
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded-md shadow-md overflow-hidden h-full flex flex-col">
-                  <div className="relative overflow-hidden bg-gray-50 rounded-t-md p-1 h-16 flex-shrink-0">
+                <div className="bg-white rounded shadow-sm overflow-hidden h-full flex flex-col">
+                  <div className="relative overflow-hidden bg-gray-50 rounded-t p-0.5 h-12 flex-shrink-0">
                     <img
                       src={category.image}
                       alt={category.name}
@@ -140,11 +140,11 @@ export default function CategoriesGrid() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-1 text-center flex-grow flex flex-col justify-center min-h-[45px]">
-                    <h3 className="text-xs font-bold text-gray-800 mb-0.5 line-clamp-2 leading-tight">
+                  <div className="p-0.5 text-center flex-grow flex flex-col justify-center min-h-[30px]">
+                    <h3 className="text-xs font-bold text-gray-800 mb-0 line-clamp-1 leading-none">
                       {category.name}
                     </h3>
-                    <p className="text-xs text-gray-600 text-xs">
+                    <p className="text-xs text-gray-600 text-xs leading-none">
                       {category.count}
                     </p>
                   </div>
