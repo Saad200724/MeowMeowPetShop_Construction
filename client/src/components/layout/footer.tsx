@@ -10,8 +10,8 @@ export default function Footer() {
       
       {/* Desktop Footer */}
       <footer className="hidden md:block meow-green text-white py-12 relative z-40 w-full overflow-hidden">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6">
           {/* Company Info */}
           <div className="min-w-0">
             <div className="flex items-center mb-4">
@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="min-w-0">
+          <div className="min-w-0 lg:pl-4">
             <h4 className="font-bold text-meow-yellow mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Home</a></li>
@@ -52,7 +52,7 @@ export default function Footer() {
           </div>
 
           {/* Policies */}
-          <div className="min-w-0">
+          <div className="min-w-0 lg:pl-2">
             <h4 className="font-bold text-meow-yellow mb-4">Policies</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Privacy Policy</a></li>
@@ -69,19 +69,19 @@ export default function Footer() {
             <h4 className="font-bold text-meow-yellow mb-4">Contact Info</h4>
             <div className="space-y-3">
               <div className="flex items-start">
-                <MapPin size={16} className="mr-3 text-meow-yellow flex-shrink-0 mt-0.5" />
+                <MapPin size={16} className="mr-2 text-meow-yellow flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300 text-sm break-words">Savar, Dhaka, Bangladesh</span>
               </div>
               <div className="flex items-center">
-                <Phone size={16} className="mr-3 text-meow-yellow flex-shrink-0" />
+                <Phone size={16} className="mr-2 text-meow-yellow flex-shrink-0" />
                 <span className="text-gray-300 text-sm">01405-045023</span>
               </div>
-              <div className="flex items-start">
-                <Mail size={16} className="mr-3 text-meow-yellow flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm break-all">meowmeowpetshop1@gmail.com</span>
+              <div className="flex items-center">
+                <Mail size={16} className="mr-2 text-meow-yellow flex-shrink-0" />
+                <span className="text-gray-300 text-sm">meowmeowpetshop1@gmail.com</span>
               </div>
               <div className="flex items-center">
-                <Clock size={16} className="mr-3 text-meow-yellow flex-shrink-0" />
+                <Clock size={16} className="mr-2 text-meow-yellow flex-shrink-0" />
                 <span className="text-gray-300 text-sm">Daily: 9 AM - 9 PM</span>
               </div>
             </div>
