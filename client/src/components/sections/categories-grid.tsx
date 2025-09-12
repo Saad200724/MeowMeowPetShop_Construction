@@ -130,14 +130,15 @@ export default function CategoriesGrid() {
                 data-testid={`link-category-${category.id}`}
               >
                 <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
-                  <div className="relative overflow-hidden flex-shrink-0">
+                  <div className="relative overflow-hidden bg-gray-50 rounded-t-lg p-2 h-20 flex-shrink-0">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <div className="p-2 text-center flex-grow flex flex-col justify-center min-h-[60px]">
                     <h3 className="text-xs font-bold text-gray-800 mb-1 line-clamp-2">
@@ -168,14 +169,15 @@ export default function CategoriesGrid() {
                 data-testid={`link-category-${category.id}`}
               >
                 <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col">
-                  <div className="relative overflow-hidden flex-shrink-0">
+                  <div className="relative overflow-hidden bg-gray-50 rounded-t-xl p-4 h-32 sm:h-40 md:h-48 flex-shrink-0">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-32 sm:h-40 md:h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <div className="p-3 sm:p-4 text-center flex-grow flex flex-col justify-center min-h-[80px]">
                     <h3 className="text-sm sm:text-base font-bold text-gray-800 mb-1 line-clamp-2">
