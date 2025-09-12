@@ -115,9 +115,9 @@ export default function CategoriesGrid() {
         </div>
 
         {/* Categories Grid */}
-        {/* Mobile view: Show first 6 categories in 2 columns (3 rows × 2 columns) */}
-        <div className="grid grid-cols-2 gap-4 md:hidden">
-          {categories.slice(0, 6).map((category, index) => {
+        {/* Mobile/Tablet view: Show first 9 categories in 3 columns (3 rows × 3 columns) */}
+        <div className="grid grid-cols-3 gap-2 md:hidden">
+          {categories.slice(0, 9).map((category, index) => {
             const IconComponent = category.icon;
             return (
               <Link
@@ -129,18 +129,18 @@ export default function CategoriesGrid() {
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                     />
                   </div>
-                  <div className="p-3 text-center flex-grow flex flex-col justify-center min-h-[80px]">
-                    <h3 className="text-sm font-bold text-gray-800 mb-1 line-clamp-2">
+                  <div className="p-2 text-center flex-grow flex flex-col justify-center min-h-[60px]">
+                    <h3 className="text-xs font-bold text-gray-800 mb-1 line-clamp-2">
                       {category.name}
                     </h3>
                     <p className="text-xs text-gray-600">
