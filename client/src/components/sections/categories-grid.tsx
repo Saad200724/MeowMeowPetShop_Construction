@@ -115,9 +115,9 @@ export default function CategoriesGrid() {
         </div>
 
         {/* Categories Grid */}
-        {/* Mobile/Tablet view: Show first 9 categories in 3 columns (3 rows × 3 columns) */}
-        <div className="grid grid-cols-3 gap-8 md:hidden px-4">
-          {categories.slice(0, 9).map((category, index) => {
+        {/* Mobile/Tablet view: Show first 8 categories in 2 columns for maximum size */}
+        <div className="grid grid-cols-2 gap-6 md:hidden px-3">
+          {categories.slice(0, 8).map((category, index) => {
             const IconComponent = category.icon;
             return (
               <Link
@@ -129,22 +129,22 @@ export default function CategoriesGrid() {
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-60 flex flex-col border-2 border-gray-100">
-                  <div className="relative overflow-hidden bg-gray-50 p-8 flex-1 flex items-center justify-center">
+                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-80 flex flex-col border-4 border-gray-100">
+                  <div className="relative overflow-hidden bg-gray-50 p-10 flex-1 flex items-center justify-center">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 max-h-32"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-5 text-center bg-white">
-                    <h3 className="text-xl font-bold text-gray-800 line-clamp-2 leading-tight">
+                  <div className="p-6 text-center bg-white">
+                    <h3 className="text-2xl font-bold text-gray-800 line-clamp-2 leading-tight">
                       {category.name}
                     </h3>
-                    <p className="text-lg text-gray-600 mt-3">
+                    <p className="text-xl text-gray-600 mt-4">
                       {category.count}
                     </p>
                   </div>
