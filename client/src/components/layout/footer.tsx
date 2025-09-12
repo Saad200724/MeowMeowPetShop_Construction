@@ -9,19 +9,19 @@ export default function Footer() {
       <MobileFooter />
       
       {/* Desktop Footer */}
-      <footer className="hidden md:block meow-green text-white py-12 relative z-40 w-full">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <footer className="hidden md:block meow-green text-white py-12 relative z-40 w-full overflow-hidden">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Company Info */}
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center mb-4">
-              <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-12 w-12 mr-3" />
-              <div>
+              <img src={logoPath} alt="Meow Meow Pet Shop Logo" className="h-12 w-12 mr-3 flex-shrink-0" />
+              <div className="min-w-0">
                 <h3 className="text-xl font-bold text-meow-yellow">Meow Meow</h3>
                 <p className="text-sm">Pet Shop</p>
               </div>
             </div>
-            <p className="text-gray-300 mb-4">Your trusted partner for premium pet food and accessories in Savar, Bangladesh. We care for your pets like family.</p>
+            <p className="text-gray-300 mb-4 text-sm leading-relaxed">Your trusted partner for premium pet food and accessories in Savar, Bangladesh. We care for your pets like family.</p>
             <div className="flex space-x-4">
               <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <Facebook size={20} />
@@ -39,50 +39,50 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="min-w-0">
             <h4 className="font-bold text-meow-yellow mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Home</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Cat Food</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Dog Food</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Toys & Accessories</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Grooming</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Health Care</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Home</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Cat Food</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Dog Food</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Toys & Accessories</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Grooming</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Health Care</a></li>
             </ul>
           </div>
 
           {/* Policies */}
-          <div>
+          <div className="min-w-0">
             <h4 className="font-bold text-meow-yellow mb-4">Policies</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Return Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Shipping Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Quality Guarantee</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors">Helpline</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Privacy Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Return Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Terms of Service</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Shipping Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Quality Guarantee</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Helpline</a></li>
             </ul>
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="min-w-0">
             <h4 className="font-bold text-meow-yellow mb-4">Contact Info</h4>
             <div className="space-y-3">
-              <div className="flex items-center">
-                <MapPin size={16} className="mr-3 text-meow-yellow" />
-                <span className="text-gray-300">Savar, Dhaka, Bangladesh</span>
+              <div className="flex items-start">
+                <MapPin size={16} className="mr-3 text-meow-yellow flex-shrink-0 mt-0.5" />
+                <span className="text-gray-300 text-sm break-words">Savar, Dhaka, Bangladesh</span>
               </div>
               <div className="flex items-center">
-                <Phone size={16} className="mr-3 text-meow-yellow" />
-                <span className="text-gray-300">01405-045023</span>
+                <Phone size={16} className="mr-3 text-meow-yellow flex-shrink-0" />
+                <span className="text-gray-300 text-sm">01405-045023</span>
+              </div>
+              <div className="flex items-start">
+                <Mail size={16} className="mr-3 text-meow-yellow flex-shrink-0 mt-0.5" />
+                <span className="text-gray-300 text-sm break-all">meowmeowpetshop1@gmail.com</span>
               </div>
               <div className="flex items-center">
-                <Mail size={16} className="mr-3 text-meow-yellow" />
-                <span className="text-gray-300">meowmeowpetshop1@gmail.com</span>
-              </div>
-              <div className="flex items-center">
-                <Clock size={16} className="mr-3 text-meow-yellow" />
-                <span className="text-gray-300">Daily: 9 AM - 9 PM</span>
+                <Clock size={16} className="mr-3 text-meow-yellow flex-shrink-0" />
+                <span className="text-gray-300 text-sm">Daily: 9 AM - 9 PM</span>
               </div>
             </div>
           </div>
