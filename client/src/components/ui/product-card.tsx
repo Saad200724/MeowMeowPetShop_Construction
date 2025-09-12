@@ -1,6 +1,8 @@
 
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/hooks/use-cart';
+import { useToast } from '@/hooks/use-toast';
 
 interface Product {
   id?: number;
@@ -25,6 +27,19 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    if (product.id) {
+      addToCart(product.id.toString(), 1);
+      toast({
+        title: "Added to Cart",
+        description: `${product.name} has been added to your cart.`,
+      });
+    }
+  };
+
   const getBadgeStyles = (color?: string) => {
     switch (color) {
       case 'red':
@@ -160,6 +175,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             variant="outline"
             size="sm"
             className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-9 text-xs font-medium"
+            onClick={handleAddToCart}
+            data-testid={`add-to-cart-${product.id}`}
           >
             <ShoppingCart size={12} className="mr-1" />
             Add to Cart
