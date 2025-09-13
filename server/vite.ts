@@ -19,43 +19,54 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
-export async function setupVite(app: Express, server: any) {
+export async function setupVite(app: Express, server: Server) {
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { 
+      server,
+      port: 5001 // Use different port for HMR to reduce conflicts
+    },
+    allowedHosts: true as const,
+  };
+
   const vite = await createViteServer({
     ...viteConfig,
     configFile: false,
-    server: {
-      middlewareMode: true,
-      hmr: {
-        port: 24678,
-        host: '0.0.0.0'
-      }
+    customLogger: {
+      ...viteLogger,
+      error: (msg, options) => {
+        viteLogger.error(msg, options);
+        process.exit(1);
+      },
     },
+    server: serverOptions,
     appType: "custom",
+    clearScreen: false, // Reduce console output
+    logLevel: 'warn' // Reduce verbose logging
   });
 
   app.use(vite.middlewares);
-
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
-
-    // Skip API routes
-    if (url.startsWith('/api/')) {
-      return next();
-    }
 
     try {
       const clientTemplate = path.resolve(
         import.meta.dirname,
         "..",
         "client",
-        "index.html"
+        "index.html",
       );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
 
+      // always reload the index.html file from disk incase it changes
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`,
+      );
       const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
-      vite.ssrFixStacktrace(e);
+      vite.ssrFixStacktrace(e as Error);
       next(e);
     }
   });

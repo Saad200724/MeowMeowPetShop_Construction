@@ -12,7 +12,6 @@ if (!process.env.MONGODB_URI) {
 console.log('✅ Environment configuration validated');
 
 import express, { type Request, Response, NextFunction } from "express";
-import path from "path"; // Import path module
 import { connectDB } from "./mongodb";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -55,10 +54,10 @@ app.use((req, res, next) => {
 (async () => {
   // Connect to MongoDB
   await connectDB();
-
+  
   // Create admin account on server start
   await createAdminAccount();
-
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -75,15 +74,7 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    // Serve static files in production
-    app.use(express.static(path.join(import.meta.dirname, "..", "dist", "public")));
-
-    // Handle client-side routing in production
-    app.get("*", (req, res) => {
-      if (!req.path.startsWith('/api/')) {
-        res.sendFile(path.join(import.meta.dirname, "..", "dist", "public", "index.html"));
-      }
-    });
+    serveStatic(app);
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT

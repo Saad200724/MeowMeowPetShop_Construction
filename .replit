@@ -15,10 +15,6 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 24678
-externalPort = 3002
-
-[[ports]]
 localPort = 33965
 externalPort = 3001
 
@@ -30,7 +26,7 @@ externalPort = 3000
 PORT = "5000"
 
 [workflows]
-runButton = "Start Development Server"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Start Server"
@@ -61,19 +57,6 @@ outputType = "webview"
 task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
-
-[[workflows.workflow]]
-name = "Start Development Server"
-author = 47512623
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm install"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
 
 [agent]
 expertMode = true
