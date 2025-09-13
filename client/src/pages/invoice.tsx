@@ -154,7 +154,8 @@ export default function InvoicePage() {
             <Button 
               onClick={() => window.history.back()}
               variant="outline"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 hover:bg-gray-50"
+              data-testid="button-back-shopping"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Shopping</span>
@@ -163,7 +164,8 @@ export default function InvoicePage() {
             <Button 
               onClick={handleDownload}
               disabled={isDownloading}
-              className="bg-[#26732d] hover:bg-[#1e5d26] flex items-center space-x-2"
+              className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
+              data-testid="button-download-invoice"
             >
               <Download className="h-4 w-4" />
               <span>{isDownloading ? 'Downloading...' : 'Download Invoice'}</span>
@@ -172,7 +174,8 @@ export default function InvoicePage() {
             <Button 
               onClick={handlePrint}
               variant="outline"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 hover:bg-gray-50"
+              data-testid="button-print-invoice"
             >
               <Printer className="h-4 w-4" />
               <span>Print Invoice</span>
