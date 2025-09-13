@@ -325,23 +325,18 @@ export default function ProductDetailPage() {
 
               {/* Stock Status */}
               <div className="mb-6">
-                <div className="flex items-center gap-2">
+                <div className="mb-2">
                   <span className={cn(
                     "text-sm font-medium",
                     isOutOfStock ? "text-red-600" : "text-green-600"
                   )}>
                     {isOutOfStock ? "Out of Stock" : "In Stock"}
                   </span>
-                  {!isOutOfStock && product.stock && (
-                    <span className="text-sm text-gray-600">
-                      ({product.stock} in stock)
-                    </span>
-                  )}
                 </div>
-                {/* Stock Number Display */}
-                {product.stock && (
-                  <div className="mt-2">
-                    <span className="text-lg font-semibold text-gray-900" data-testid="stock-number">
+                {/* Stock Number Display - Always show below "In Stock" */}
+                {product.stock !== undefined && product.stock !== null && (
+                  <div className="mb-2">
+                    <span className="text-base font-semibold text-gray-900" data-testid="stock-number">
                       Stock: {product.stock}
                     </span>
                   </div>
