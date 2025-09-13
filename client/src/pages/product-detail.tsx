@@ -354,8 +354,9 @@ export default function ProductDetailPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
                     data-testid="quantity-decrease"
-                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Minus size={16} />
                   </Button>
@@ -365,13 +366,19 @@ export default function ProductDetailPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(product.stockQuantity || 100, quantity + 1))}
+                    disabled={quantity >= (product.stockQuantity || 100)}
                     data-testid="quantity-increase"
-                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Plus size={16} />
                   </Button>
                 </div>
+                {product.stockQuantity && quantity >= product.stockQuantity && (
+                  <span className="text-sm text-orange-600 font-medium">
+                    Maximum available: {product.stockQuantity}
+                  </span>
+                )}
               </div>
             )}
 
