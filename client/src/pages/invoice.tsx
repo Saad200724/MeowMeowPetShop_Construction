@@ -84,7 +84,14 @@ export default function InvoicePage() {
   };
 
   const handlePrint = () => {
+    const printContent = document.querySelector('.print-invoice');
+    if (!printContent) return;
+    
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent.outerHTML;
     window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
   };
 
   if (isLoading) {
@@ -153,8 +160,7 @@ export default function InvoicePage() {
           <div className="flex flex-wrap gap-1 mb-6">
             <Button 
               onClick={() => window.history.back()}
-              variant="outline"
-              className="flex items-center space-x-2 hover:bg-gray-50"
+              className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
               data-testid="button-back-shopping"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -173,8 +179,7 @@ export default function InvoicePage() {
             
             <Button 
               onClick={handlePrint}
-              variant="outline"
-              className="flex items-center space-x-2 hover:bg-gray-50"
+              className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
               data-testid="button-print-invoice"
             >
               <Printer className="h-4 w-4" />
@@ -183,17 +188,20 @@ export default function InvoicePage() {
           </div>
 
           {/* Invoice */}
-          <Card className="print:shadow-none print:border-none">
+          <Card className="print-invoice print:shadow-none print:border-none">
             <CardHeader className="border-b">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-3xl font-bold text-[#26732d]">
-                    Meow Meow Pet Shop
-                  </CardTitle>
+                  <div className="flex items-center mb-3">
+                    <img src="/logo.png" alt="Meow Meow Pet Shop Logo" className="h-12 w-12 mr-3" />
+                    <CardTitle className="text-3xl font-bold text-[#26732d]">
+                      Meow Meow Pet Shop
+                    </CardTitle>
+                  </div>
                   <p className="text-gray-600 mt-2">
                     Savar, Bangladesh<br />
-                    Email: info@meowmeowpetshop.com<br />
-                    Phone: +880 1234-567890
+                    Email: meowmeowpetshop1@gmail.com<br />
+                    Phone: 01405-045023
                   </p>
                 </div>
                 <div className="text-right">
@@ -307,7 +315,7 @@ export default function InvoicePage() {
               <div className="mt-8 pt-6 border-t text-center text-gray-600">
                 <p>Thank you for shopping with Meow Meow Pet Shop!</p>
                 <p className="text-sm mt-2">
-                  For any queries, please contact us at info@meowmeowpetshop.com
+                  For any queries, please contact us at meowmeowpetshop1@gmail.com
                 </p>
               </div>
             </CardContent>
