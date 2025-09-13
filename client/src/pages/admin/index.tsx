@@ -1176,6 +1176,7 @@ export default function AdminPage() {
                     <thead className="bg-gray-50 border-b">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -1185,13 +1186,13 @@ export default function AdminPage() {
                     <tbody className="divide-y divide-gray-200">
                       {isLoadingProducts ? (
                         <tr>
-                          <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                             Loading products...
                           </td>
                         </tr>
                       ) : filteredProducts.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                             No products found
                           </td>
                         </tr>
@@ -1208,13 +1209,13 @@ export default function AdminPage() {
                                      (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
                                      'Unknown Brand'}
                                   </div>
-                                  <div className="mt-1">
-                                    <Badge variant="outline" className="text-xs">
-                                      {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
-                                    </Badge>
-                                  </div>
                                 </div>
                               </div>
+                            </td>
+                            <td className="px-4 py-4">
+                              <Badge variant="outline" className="text-xs">
+                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
+                              </Badge>
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
                             <td className="px-4 py-4 text-gray-900">{product.stockQuantity || product.stock || 0}</td>
