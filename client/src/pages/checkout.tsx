@@ -579,11 +579,6 @@ export default function CheckoutPage() {
                   <Separator />
 
                   <div className="flex justify-between py-2">
-                    <span className="text-gray-600">Total Weight</span>
-                    <span className="font-medium">0.5 kg</span>
-                  </div>
-
-                  <div className="flex justify-between py-2">
                     <span className="text-gray-600">SubTotal</span>
                     <span className="font-medium">৳ {cartState.total.toLocaleString()}</span>
                   </div>
