@@ -134,7 +134,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Image - E-commerce Standard */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 flex items-center justify-center flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 flex items-center justify-center flex-shrink-0">
         <img
           src={product.image}
           alt={product.name}
@@ -146,7 +146,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Content - Improved Layout */}
-      <div className="px-3 pt-3 pb-0 flex flex-col gap-y-1 flex-1">
+      <div className="px-3 pt-3 pb-0 flex flex-col space-y-1 flex-1">
         {/* Product Name - Left Aligned */}
         <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
           {product.name}
@@ -179,7 +179,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-auto mb-0">
+        <div>
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
