@@ -131,7 +131,7 @@ interface Coupon {
 
 
 export default function AdminPage() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('products');
   const [searchTerm, setSearchTerm] = useState('');
@@ -652,6 +652,24 @@ export default function AdminPage() {
       });
     },
   });
+
+  // Show loading spinner while authentication is being checked
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto shadow-lg">
+          <CardContent className="pt-6 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center overflow-hidden">
+              <img src="/logo.png" alt="Meow Meow" className="w-full h-full object-cover" />
+            </div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto mb-4"></div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Loading...</h2>
+            <p className="text-gray-600">Checking authentication...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!user || user.role !== 'admin') {
     return (
