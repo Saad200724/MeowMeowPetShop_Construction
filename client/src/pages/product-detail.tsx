@@ -20,7 +20,9 @@ interface Product {
   image: string;
   price: number;
   originalPrice?: number;
-  category: string;
+  category?: string;
+  categorySlug?: string;
+  categoryName?: string;
   rating?: number;
   reviews?: number;
   stock?: string | number;
@@ -114,13 +116,38 @@ export default function ProductDetailPage() {
 
   const getFilteredRelatedProducts = () => {
     if (!product || !relatedProducts) return [];
+    
     const productId = product.id ?? product._id;
-    return relatedProducts
+    // Handle both category (from products list) and categorySlug (from individual product)
+    const currentProductCategory = product.category || product.categorySlug;
+    
+    // First, try to get products from the same category
+    const sameCategory = relatedProducts
       .filter((p) => {
         const relatedProductId = p.id ?? p._id;
-        return relatedProductId !== productId && p.category === product.category;
+        const isNotSameProduct = relatedProductId !== productId;
+        const isSameCategory = p.category === currentProductCategory;
+        
+        return isNotSameProduct && isSameCategory;
+      });
+    
+    // If we have enough from the same category, return those
+    if (sameCategory.length >= 4) {
+      return sameCategory.slice(0, 4);
+    }
+    
+    // Otherwise, add products from related categories to fill up to 4 items
+    const otherProducts = relatedProducts
+      .filter((p) => {
+        const relatedProductId = p.id ?? p._id;
+        const isNotSameProduct = relatedProductId !== productId;
+        const isNotAlreadyIncluded = !sameCategory.find(sp => (sp.id ?? sp._id) === relatedProductId);
+        
+        return isNotSameProduct && isNotAlreadyIncluded;
       })
-      .slice(0, 4);
+      .slice(0, 4 - sameCategory.length);
+    
+    return [...sameCategory, ...otherProducts];
   };
 
   if (isLoading) {
