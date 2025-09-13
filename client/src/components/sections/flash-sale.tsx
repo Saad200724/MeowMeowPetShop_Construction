@@ -23,7 +23,7 @@ export default function FlashSale() {
           </div>
           <div className="flex gap-3 overflow-x-auto pb-1" style={{ width: 'max-content' }}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md h-[280px] w-[160px] animate-pulse flex-shrink-0">
+              <div key={i} className="bg-white rounded-lg shadow-md h-[320px] w-[160px] animate-pulse flex-shrink-0">
                 <div className="bg-gray-200 h-28 rounded-t-lg"></div>
                 <div className="p-2 space-y-1">
                   <div className="bg-gray-200 h-2 rounded"></div>

@@ -103,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px]">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[320px]">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -131,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image - E-commerce Standard */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 flex items-center justify-center flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -143,7 +143,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Content - Improved Layout */}
-      <div className="p-3 flex flex-col justify-between space-y-2 flex-1">
+      <div className="p-3 flex flex-col space-y-2 flex-1">
         {/* Product Name - Left Aligned */}
         <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
           {product.name}
@@ -155,7 +155,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         
         {/* Price Section - Left Aligned and Well Structured */}
-        <div className="space-y-2 flex-1 flex flex-col justify-between">
+        <div className="space-y-2 flex-1 flex flex-col justify-end">
           <div className="text-left">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-base font-bold text-[#26732d]">
@@ -180,7 +180,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button 
             variant="outline"
             size="sm"
-            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-10 text-sm font-medium"
+            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-10 text-sm font-medium mt-auto"
             onClick={handleAddToCart}
             data-testid={`add-to-cart-${product.id}`}
           >
