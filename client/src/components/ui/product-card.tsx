@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils';
 import { Link } from 'wouter';
 
 interface Product {
-  id?: number;
+  id?: number | string;
+  _id?: string;
   name: string;
   image: string;
   price: string | number;
@@ -31,15 +32,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addItem, state } = useCart();
   const { toast } = useToast();
 
-  const isInCart = state.items.some((item) => item.id === product.id?.toString());
+  const productId = product.id?.toString() ?? product._id;
+  const isInCart = state.items.some((item) => item.id === productId);
   const isAddingToCart = false; // Placeholder for actual adding state
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (product.id) {
+    const productId = product.id?.toString() ?? product._id;
+    if (productId) {
       addItem({
-        id: product.id.toString(),
+        id: productId,
         name: product.name,
         price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
         image: product.image,
@@ -115,7 +118,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <Link href={`/product/${product.id}`} data-testid={`product-link-${product.id}`}>
+    <Link href={`/product/${product.id?.toString() ?? product._id}`} data-testid={`product-link-${product.id?.toString() ?? product._id}`}>
       <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px] cursor-pointer">
       {/* Discount Badge */}
       {product.discount && (
@@ -203,9 +206,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                 ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
             )}
-            disabled={product.stock === "0" || isAddingToCart}
+            disabled={product.stock === "0" || product.stockStatus === "Out of Stock" || isAddingToCart}
             onClick={handleAddToCart}
-            data-testid={`add-to-cart-${product.id}`}
+            data-testid={`add-to-cart-${product.id?.toString() ?? product._id}`}
           >
             {isAddingToCart ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />

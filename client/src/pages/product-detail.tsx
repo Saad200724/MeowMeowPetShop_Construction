@@ -14,7 +14,7 @@ import Footer from '@/components/layout/footer';
 import { cn } from '@/lib/utils';
 
 interface Product {
-  _id: string;
+  _id?: string;
   id: string;
   name: string;
   image: string;
@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { addItem, state } = useCart();
+  const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
   // Fetch product details
@@ -54,20 +54,39 @@ export default function ProductDetailPage() {
     queryKey: ['/api/products'],
   });
 
-  const isInCart = state.items.some((item) => item.id === id);
-  const isOutOfStock = product?.stock === "0" || product?.stock === 0;
+  const productId = product?.id ?? product?._id;
+  const isInCart = state.items.some((item) => item.id === productId);
+  const isOutOfStock = product?.stock === "0" || product?.stock === 0 || product?.stockStatus === "Out of Stock";
 
   const handleAddToCart = () => {
     if (!product || isOutOfStock) return;
 
-    for (let i = 0; i < quantity; i++) {
+    const productId = product.id ?? product._id;
+    const maxStock = typeof product.stock === 'number' ? product.stock : 100;
+    
+    // Check if item already exists in cart
+    const existingItem = state.items.find(item => item.id === productId);
+    
+    if (existingItem) {
+      // If item exists, update its quantity
+      const newQuantity = Math.min(existingItem.quantity + quantity, maxStock);
+      updateQuantity(productId, newQuantity);
+    } else {
+      // Add new item once
       addItem({
-        id: product.id || product._id,
+        id: productId,
         name: product.name,
         price: product.price,
         image: product.image,
-        maxStock: typeof product.stock === 'number' ? product.stock : 100,
+        maxStock: maxStock,
       });
+      
+      // If quantity > 1, update to the desired quantity
+      if (quantity > 1) {
+        setTimeout(() => {
+          updateQuantity(productId, Math.min(quantity, maxStock));
+        }, 0);
+      }
     }
 
     toast({
@@ -95,8 +114,12 @@ export default function ProductDetailPage() {
 
   const getFilteredRelatedProducts = () => {
     if (!product || !relatedProducts) return [];
+    const productId = product.id ?? product._id;
     return relatedProducts
-      .filter((p) => p.id !== product.id && p.category === product.category)
+      .filter((p) => {
+        const relatedProductId = p.id ?? p._id;
+        return relatedProductId !== productId && p.category === product.category;
+      })
       .slice(0, 4);
   };
 
@@ -369,7 +392,7 @@ export default function ProductDetailPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {getFilteredRelatedProducts().map((relatedProduct: Product) => (
                 <ProductCard
-                  key={relatedProduct.id}
+                  key={relatedProduct.id ?? relatedProduct._id}
                   product={relatedProduct}
                 />
               ))}
