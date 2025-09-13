@@ -16,8 +16,8 @@ export default function FlashSale() {
         <div className="responsive-container">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
-              <Flame className="text-red-600" size={20} />
-              <span className="text-red-600 font-bold text-lg">Flash Sale</span>
+              <Flame className="text-red-600 md:w-6 md:h-6" size={20} />
+              <span className="text-red-600 font-bold text-lg md:text-xl">FLASH SALE</span>
               <span className="text-sm text-red-600 font-medium hidden sm:inline">Limited Time Offers</span>
             </div>
           </div>
@@ -46,8 +46,8 @@ export default function FlashSale() {
       <div className="responsive-container">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
-            <Flame className="text-red-600" size={20} />
-            <span className="text-red-600 font-bold text-lg">FLASH SALE</span>
+            <Flame className="text-red-600 md:w-6 md:h-6" size={20} />
+            <span className="text-red-600 font-bold text-lg md:text-xl">FLASH SALE</span>
             <span className="text-sm text-red-600 font-medium hidden sm:inline">Limited Time Offers</span>
           </div>
           <div className="flex justify-end mb-4">
