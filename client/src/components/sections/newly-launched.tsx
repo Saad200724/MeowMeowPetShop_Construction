@@ -47,9 +47,9 @@ export default function NewlyLaunched() {
             </h2>
           </div>
           <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
+            <div className="flex gap-2 pb-1" style={{ width: 'max-content' }}>
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex-shrink-0 w-72 bg-white rounded-lg shadow-md h-80 animate-pulse">
+                <div key={i} className="flex-shrink-0 w-[120px] h-[200px] bg-white rounded-lg shadow-md animate-pulse">
                   <div className="bg-gray-200 h-48 rounded-t-lg"></div>
                   <div className="p-4 space-y-2">
                     <div className="bg-gray-200 h-4 rounded"></div>
