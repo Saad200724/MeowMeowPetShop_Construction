@@ -50,6 +50,7 @@ import NewlyLaunchedPage from "@/pages/newly-launched";
 import RepackProductsPage from "@/pages/repack-products";
 import CatBestSellerPage from "@/pages/cat-best-seller";
 import DogBestSellerPage from "@/pages/dog-best-seller";
+import ProductDetailPage from "@/pages/product-detail";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { ChatProvider } from "@/contexts/chat-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
@@ -62,6 +63,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/products" component={ProductsPage} />
+        <Route path="/product/:id" component={ProductDetailPage} />
         <Route path="/privilege-club" component={PrivilegeClubPage} />
         <Route path="/cat-food" component={CatFoodPage} />
         <Route path="/dog-food" component={DogFoodPage} />
