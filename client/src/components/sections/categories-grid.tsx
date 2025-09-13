@@ -141,10 +141,10 @@ export default function CategoriesGrid() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <div className="p-3 text-center bg-white">
-                    <h3 className="text-base font-bold text-gray-800 line-clamp-2 leading-tight">
+                    <h3 className="text-sm font-bold text-gray-800 leading-tight">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       {category.count}
                     </p>
                   </div>
@@ -180,10 +180,10 @@ export default function CategoriesGrid() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <div className="p-3 sm:p-4 text-center flex-grow flex flex-col justify-center min-h-[80px]">
-                    <h3 className="text-sm sm:text-base font-bold text-gray-800 mb-1 line-clamp-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1 leading-tight">
                       {category.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       {category.count}
                     </p>
                   </div>
