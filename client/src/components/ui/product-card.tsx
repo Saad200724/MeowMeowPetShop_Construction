@@ -103,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-none sm:shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-auto flex flex-col w-[96px] sm:w-[128px] md:w-[200px] max-w-[96px] sm:max-w-[128px] md:max-w-[250px]">
+    <div className="bg-white rounded-2xl shadow-none sm:shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-auto flex flex-col w-[80px] sm:w-[110px] md:w-[200px] max-w-[80px] sm:max-w-[110px] md:max-w-[250px]">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -131,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image - E-commerce Standard */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-14 sm:h-20 md:h-40 flex items-center justify-center flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-12 sm:h-18 md:h-40 flex items-center justify-center flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
