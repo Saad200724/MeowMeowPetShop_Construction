@@ -22,6 +22,7 @@ type DetailProduct = BaseProduct & {
   categorySlug?: string;
   categoryName?: string;
   stockStatus?: string;
+  stockQuantity?: number;
   weight?: string;
   ingredients?: string[];
   features?: string[];
@@ -53,13 +54,13 @@ export default function ProductDetailPage() {
 
   const productId = product?.id ?? product?._id;
   const isInCart = state.items.some((item) => item.id === productId);
-  const isOutOfStock = product?.stock === 0 || product?.stockStatus === "Out of Stock";
+  const isOutOfStock = product?.stockQuantity === 0 || product?.stockStatus === "Out of Stock";
 
   const handleAddToCart = () => {
     if (!product || isOutOfStock) return;
 
     const productId = product.id ?? product._id;
-    const maxStock = product.stock || 100;
+    const maxStock = product.stockQuantity || 100;
     
     // Check if item already exists in cart
     const existingItem = state.items.find(item => item.id === productId);
@@ -334,10 +335,10 @@ export default function ProductDetailPage() {
                   </span>
                 </div>
                 {/* Stock Number Display - Always show below "In Stock" */}
-                {product.stock !== undefined && product.stock !== null && (
+                {product.stockQuantity !== undefined && product.stockQuantity !== null && (
                   <div className="mb-2">
                     <span className="text-base font-semibold text-gray-900" data-testid="stock-number">
-                      Stock: {product.stock}
+                      Stock: {product.stockQuantity}
                     </span>
                   </div>
                 )}
