@@ -1,8 +1,8 @@
-
-import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 interface Product {
   id?: number;
@@ -27,8 +27,11 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addItem } = useCart();
+  const { addItem, cartItems } = useCart();
   const { toast } = useToast();
+
+  const isInCart = cartItems.some((item) => item.id === product.id?.toString());
+  const isAddingToCart = false; // Placeholder for actual adding state
 
   const handleAddToCart = () => {
     if (product.id) {
@@ -79,14 +82,14 @@ export default function ProductCard({ product }: ProductCardProps) {
   const renderStars = (rating?: number) => {
     // Default to 5 stars for static display as requested
     const displayRating = rating || 5;
-    
+
     return (
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }, (_, index) => (
-          <Star 
-            key={index} 
-            size={12} 
-            className={index < displayRating ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
+          <Star
+            key={index}
+            size={12}
+            className={index < displayRating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
           />
         ))}
         {product.reviews !== undefined && (
@@ -122,71 +125,93 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.badge}
         </div>
       )}
-      
+
       {/* Like Button */}
       <div className="absolute top-2 right-2 z-10">
         <button className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
           <Heart size={14} />
         </button>
       </div>
-      
+
       {/* Product Image - E-commerce Standard */}
       <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0">
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" 
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
-      
+
       {/* Product Content - Improved Layout */}
       <div className="p-3 flex flex-col space-y-1 flex-1">
         {/* Product Name - Left Aligned */}
         <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
           {product.name}
         </h4>
-        
+
         {/* Rating - Left Aligned */}
         <div className="flex items-center justify-start">
           {renderStars(product.rating)}
         </div>
-        
+
         {/* Price Section - Left Aligned and Well Structured */}
-        <div className="flex-1 flex flex-col justify-end">
-          <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-base font-bold text-[#26732d]">
-                ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
+        <div className="text-left">
+          <div className="flex items-center gap-2">
+            <span className="text-base font-bold text-[#26732d]">
+              ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
+            </span>
+            {oldPriceValue && (
+              <span className="text-sm text-gray-500 line-through">
+                ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
               </span>
-              {oldPriceValue && (
-                <span className="text-sm text-gray-500 line-through">
-                  ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
-                </span>
-              )}
-            </div>
-            
-            {/* Stock Display - Show as "Stock: number" - Hidden on mobile */}
-            {(product.stock || product.stockStatus) && (
-              <div className="hidden sm:block text-sm text-gray-600 mb-1">
-                {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
-              </div>
             )}
           </div>
-          
-          {/* Add to Cart Button */}
-          <Button 
-            variant="outline"
-            size="sm"
-            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-10 text-sm font-medium mt-auto"
-            onClick={handleAddToCart}
-            data-testid={`add-to-cart-${product.id}`}
-          >
-            <ShoppingCart size={14} className="mr-2" />
-            Add to Cart
-          </Button>
+
+          {/* Stock Display - Show as "Stock: number" - Hidden on mobile */}
+          {(product.stock || product.stockStatus) && (
+            <div className="hidden sm:block text-sm text-gray-600 mb-1">
+              {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
+            </div>
+          )}
+        </div>
+
+        {/* Add to Cart Button */}
+        <Button
+          variant={isInCart ? "default" : "outline"}
+          size="sm"
+          className={cn(
+            "w-full rounded-full py-2 transition-all duration-200 border-2 mb-3",
+            isInCart
+              ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+              : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
+          )}
+          disabled={product.stock === 0 || isAddingToCart}
+          onClick={handleAddToCart}
+          data-testid={`add-to-cart-${product.id}`}
+        >
+          {isAddingToCart ? (
+            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : isInCart ? (
+            <>
+              <Check size={16} className="mr-1" />
+              Added
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={16} className="mr-1" />
+              Add to Cart
+            </>
+          )}
+        </Button>
+
+        <div className="flex items-center">
+          <div className="flex">
+            {renderStars(product.rating)}
+          </div>
+          <span className="text-xs text-gray-500 ml-2">({product.reviews} reviews)</span>
         </div>
       </div>
     </div>
