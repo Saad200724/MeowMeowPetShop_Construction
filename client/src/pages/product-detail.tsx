@@ -624,13 +624,14 @@ export default function ProductDetailPage() {
         {/* Recommended Products */}
         {getFilteredRelatedProducts().length > 0 && (
           <div className="border-t pt-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Recommended Products from this Category</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Recommended Products</h2>
+            <div className="flex overflow-x-auto space-x-4 pb-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:space-x-0">
               {getFilteredRelatedProducts().map((relatedProduct: Product) => (
-                <ProductCard
-                  key={relatedProduct.id ?? relatedProduct._id}
-                  product={relatedProduct}
-                />
+                <div key={relatedProduct.id ?? relatedProduct._id} className="flex-shrink-0">
+                  <ProductCard
+                    product={relatedProduct}
+                  />
+                </div>
               ))}
             </div>
           </div>
