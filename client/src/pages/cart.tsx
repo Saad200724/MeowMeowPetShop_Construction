@@ -12,10 +12,9 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 
 export default function CartPage() {
-  const { state, updateQuantity, removeItem, clearCart } = useCart();
+  const { state, updateQuantity, removeItem, clearCart, applyCoupon, removeCoupon, getFinalTotal } = useCart();
   const [isClearing, setIsClearing] = useState(false);
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
   const [couponError, setCouponError] = useState('');
   const [isCouponLoading, setIsCouponLoading] = useState(false);
 
@@ -55,7 +54,7 @@ export default function CartPage() {
       const data = await response.json();
 
       if (response.ok && data.valid) {
-        setAppliedCoupon({
+        applyCoupon({
           code: data.coupon.code,
           discount: data.coupon.discountAmount
         });
@@ -73,14 +72,14 @@ export default function CartPage() {
   };
 
   const handleRemoveCoupon = () => {
-    setAppliedCoupon(null);
+    removeCoupon();
   };
 
   const formatPrice = (price: number) => {
     return `৳${price.toLocaleString()}`;
   };
 
-  const finalTotal = appliedCoupon ? Math.max(0, state.total - appliedCoupon.discount) : state.total;
+  const finalTotal = getFinalTotal();
 
   if (state.items.length === 0) {
     return (
@@ -231,10 +230,10 @@ export default function CartPage() {
                       <span className="text-green-600 font-medium">Free</span>
                     </div>
 
-                    {appliedCoupon && (
+                    {state.appliedCoupon && (
                       <div className="flex justify-between text-sm md:text-base text-green-600">
-                        <span>Discount ({appliedCoupon.code})</span>
-                        <span className="font-medium">-{formatPrice(appliedCoupon.discount)}</span>
+                        <span>Discount ({state.appliedCoupon.code})</span>
+                        <span className="font-medium">-{formatPrice(state.appliedCoupon.discount)}</span>
                       </div>
                     )}
                     
@@ -252,7 +251,7 @@ export default function CartPage() {
                         <span className="text-sm font-medium text-gray-700">Have a coupon?</span>
                       </div>
                       
-                      {!appliedCoupon ? (
+                      {!state.appliedCoupon ? (
                         <div className="space-y-2">
                           <div className="flex gap-2">
                             <Input
@@ -284,7 +283,7 @@ export default function CartPage() {
                             <div className="flex items-center gap-2">
                               <Tag size={14} className="text-green-600" />
                               <span className="text-sm font-medium text-green-800">
-                                {appliedCoupon.code} Applied
+                                {state.appliedCoupon.code} Applied
                               </span>
                             </div>
                             <button
@@ -295,7 +294,7 @@ export default function CartPage() {
                             </button>
                           </div>
                           <p className="text-xs text-green-600 mt-1">
-                            You saved {formatPrice(appliedCoupon.discount)}!
+                            You saved {formatPrice(state.appliedCoupon.discount)}!
                           </p>
                         </div>
                       )}

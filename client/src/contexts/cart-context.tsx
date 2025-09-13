@@ -9,10 +9,16 @@ export interface CartItem {
   maxStock: number;
 }
 
+export interface AppliedCoupon {
+  code: string;
+  discount: number;
+}
+
 interface CartState {
   items: CartItem[];
   total: number;
   itemCount: number;
+  appliedCoupon: AppliedCoupon | null;
 }
 
 type CartAction =
@@ -20,7 +26,9 @@ type CartAction =
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
-  | { type: 'LOAD_CART'; payload: CartItem[] };
+  | { type: 'LOAD_CART'; payload: { items: CartItem[]; appliedCoupon: AppliedCoupon | null } }
+  | { type: 'APPLY_COUPON'; payload: AppliedCoupon }
+  | { type: 'REMOVE_COUPON' };
 
 interface CartContextType {
   state: CartState;
@@ -29,6 +37,9 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getItemQuantity: (id: string) => number;
+  applyCoupon: (coupon: AppliedCoupon) => void;
+  removeCoupon: () => void;
+  getFinalTotal: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -112,16 +123,30 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         items: [],
         total: 0,
         itemCount: 0,
+        appliedCoupon: null,
       };
     
     case 'LOAD_CART': {
-      const items = action.payload;
+      const { items, appliedCoupon } = action.payload;
       return {
         items,
         total: calculateTotal(items),
         itemCount: calculateItemCount(items),
+        appliedCoupon,
       };
     }
+    
+    case 'APPLY_COUPON':
+      return {
+        ...state,
+        appliedCoupon: action.payload,
+      };
+      
+    case 'REMOVE_COUPON':
+      return {
+        ...state,
+        appliedCoupon: null,
+      };
     
     default:
       return state;
@@ -141,6 +166,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items: [],
     total: 0,
     itemCount: 0,
+    appliedCoupon: null,
   });
 
   // Load cart from localStorage on mount
@@ -149,7 +175,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const savedCart = localStorage.getItem(CART_STORAGE_KEY);
       if (savedCart) {
         const parsedCart = JSON.parse(savedCart);
-        dispatch({ type: 'LOAD_CART', payload: parsedCart });
+        // Support both old format (just items array) and new format (object with items and coupon)
+        if (Array.isArray(parsedCart)) {
+          dispatch({ type: 'LOAD_CART', payload: { items: parsedCart, appliedCoupon: null } });
+        } else {
+          dispatch({ type: 'LOAD_CART', payload: parsedCart });
+        }
       }
     } catch (error) {
       console.error('Failed to load cart from localStorage:', error);
@@ -159,11 +190,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Save cart to localStorage whenever cart changes
   useEffect(() => {
     try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({
+        items: state.items,
+        appliedCoupon: state.appliedCoupon
+      }));
     } catch (error) {
       console.error('Failed to save cart to localStorage:', error);
     }
-  }, [state.items]);
+  }, [state.items, state.appliedCoupon]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
@@ -186,6 +220,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return item ? item.quantity : 0;
   };
 
+  const applyCoupon = (coupon: AppliedCoupon) => {
+    dispatch({ type: 'APPLY_COUPON', payload: coupon });
+  };
+
+  const removeCoupon = () => {
+    dispatch({ type: 'REMOVE_COUPON' });
+  };
+
+  const getFinalTotal = (): number => {
+    return state.appliedCoupon ? Math.max(0, state.total - state.appliedCoupon.discount) : state.total;
+  };
+
   const value: CartContextType = {
     state,
     addItem,
@@ -193,6 +239,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     updateQuantity,
     clearCart,
     getItemQuantity,
+    applyCoupon,
+    removeCoupon,
+    getFinalTotal,
   };
 
   return (

@@ -39,8 +39,8 @@ interface BillingDetails {
 }
 
 export default function CheckoutPage() {
-  const { state: cartState, clearCart } = useCart();
-  const { user, signIn } = useAuth();
+  const { state: cartState, clearCart, applyCoupon, removeCoupon, getFinalTotal } = useCart();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   
@@ -49,7 +49,6 @@ export default function CheckoutPage() {
   const [showCoupon, setShowCoupon] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '', remember: false });
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
   const [couponError, setCouponError] = useState('');
   const [isCouponLoading, setIsCouponLoading] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
@@ -131,7 +130,7 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (response.ok && data.valid) {
-        setAppliedCoupon({
+        applyCoupon({
           code: data.coupon.code,
           discount: data.coupon.discountAmount
         });
@@ -153,7 +152,7 @@ export default function CheckoutPage() {
   };
 
   const handleRemoveCoupon = () => {
-    setAppliedCoupon(null);
+    removeCoupon();
     toast({
       title: "Coupon removed",
       description: "Discount has been removed from your order.",
@@ -207,7 +206,7 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    const finalTotal = appliedCoupon ? Math.max(0, cartState.total - appliedCoupon.discount) : cartState.total;
+    const finalTotal = getFinalTotal();
 
     const orderData = {
       userId: user?.id || 'guest',
@@ -230,8 +229,8 @@ export default function CheckoutPage() {
         image: item.image
       })),
       subtotal: cartState.total,
-      discount: appliedCoupon ? appliedCoupon.discount : 0,
-      discountCode: appliedCoupon ? appliedCoupon.code : null,
+      discount: cartState.appliedCoupon ? cartState.appliedCoupon.discount : 0,
+      discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
       total: finalTotal,
       paymentMethod,
       shippingAddress: billingDetails,
