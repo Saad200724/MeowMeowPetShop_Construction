@@ -1014,7 +1014,9 @@ export default function AdminPage() {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <CardTitle className="text-lg font-bold text-red-700">Order #{order._id.slice(-8).toUpperCase()}</CardTitle>
+                          <CardTitle className="text-lg font-bold text-red-700">
+                            Order #{order.invoiceNumber || order._id.slice(-8).toUpperCase()}
+                          </CardTitle>
                           <Badge variant={order.status === 'delivered' ? 'default' : 'secondary'} 
                                  className={
                                    order.status === 'delivered' ? 'bg-green-100 text-green-800' :

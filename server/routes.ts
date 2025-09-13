@@ -1478,27 +1478,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const orders = await Order.find({}).sort({ createdAt: -1 });
 
-      // Enhance orders with customer info from invoices when missing
+      // Enhance orders with customer info and invoice numbers from invoices when missing
       const enhancedOrders = await Promise.all(orders.map(async (order) => {
         const orderObj = order.toObject();
 
         const orderId = order._id.toString();
         console.log(`Processing order ${orderId}, customerInfo exists:`, !!orderObj.customerInfo);
 
-        // If order doesn't have customer info, try to get it from invoice
-        if (!orderObj.customerInfo || !orderObj.customerInfo.name) {
-          console.log(`Looking for invoice with orderId: ${orderId}`);
-          try {
-            const invoice = await Invoice.findOne({ orderId: orderId });
-            console.log(`Found invoice:`, !!invoice, invoice ? `with customerInfo: ${!!invoice.customerInfo}` : '');
-            if (invoice && invoice.customerInfo) {
+        // Try to get invoice info for this order
+        try {
+          const invoice = await Invoice.findOne({ orderId: orderId });
+          if (invoice) {
+            console.log(`Found invoice:`, !!invoice, `with customerInfo: ${!!invoice.customerInfo}`);
+            
+            // Add invoice number if missing
+            if (!orderObj.invoiceNumber && invoice.invoiceNumber) {
+              orderObj.invoiceNumber = invoice.invoiceNumber;
+            }
+            
+            // Add customer info if missing
+            if ((!orderObj.customerInfo || !orderObj.customerInfo.name) && invoice.customerInfo) {
               console.log(`Enhancing order ${orderId} with customer info:`, invoice.customerInfo.name);
               orderObj.customerInfo = invoice.customerInfo;
+            }
+            
+            // Add invoice ID if missing
+            if (!orderObj.invoiceId) {
               orderObj.invoiceId = invoice._id?.toString();
             }
-          } catch (invoiceError) {
-            console.log(`Could not fetch invoice for order ${orderId}:`, (invoiceError as Error).message);
           }
+        } catch (invoiceError) {
+          console.log(`Could not fetch invoice for order ${orderId}:`, (invoiceError as Error).message);
         }
 
         return orderObj;
