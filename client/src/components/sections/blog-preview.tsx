@@ -47,8 +47,8 @@ export default function BlogPreview() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
-              <BookOpen size={24} className="text-[#26732d]" />
+            <h2 className="text-lg font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
+              <BookOpen size={20} className="text-[#26732d]" />
               LATEST PET CARE TIPS
             </h2>
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
@@ -63,8 +63,8 @@ export default function BlogPreview() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
-              <BookOpen size={24} className="text-[#26732d]" />
+            <h2 className="text-lg font-bold mb-4 flex items-center justify-center gap-2" style={{ color: "#26732d" }}>
+              <BookOpen size={20} className="text-[#26732d]" />
               LATEST PET CARE TIPS
             </h2>
             <p className="text-gray-600">
@@ -80,8 +80,8 @@ export default function BlogPreview() {
     <section className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-6">
-            <BookText size={24} />
+          <h2 className="text-lg font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-6">
+            <BookText size={20} />
             LATEST PET CARE TIPS
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base px-4">

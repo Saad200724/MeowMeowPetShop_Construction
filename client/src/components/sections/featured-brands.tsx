@@ -44,8 +44,8 @@ export default function FeaturedBrands() {
     <section className="py-8 bg-gray-50">
       <div className="container mx-auto">
         <div className="mb-6 text-center px-4">
-          <h3 className="text-2xl font-bold text-[#26732d] flex items-center justify-center gap-2">
-            <Award className="w-6 h-6" />
+          <h3 className="text-lg font-bold text-[#26732d] flex items-center justify-center gap-2">
+            <Award size={20} />
             FEATURED BRANDS
           </h3>
         </div>

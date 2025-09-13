@@ -41,9 +41,9 @@ export default function NewlyLaunched() {
       <section className="py-12 bg-[#f0f8ff]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-3">
-              <Sparkles size={32} className="text-[#26732d]" />
-              Newly Launched
+            <h2 className="text-lg font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
+              <Sparkles size={20} className="text-[#26732d]" />
+              NEWLY LAUNCHED
             </h2>
           </div>
           <div className="overflow-x-auto scrollbar-hide">
@@ -72,8 +72,8 @@ export default function NewlyLaunched() {
     <section className="py-12 bg-[#f0f8ff]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
-            <Sparkles size={24} className="text-[#26732d]" />
+          <h2 className="text-lg font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
+            <Sparkles size={20} className="text-[#26732d]" />
             NEWLY LAUNCHED
           </h2>
           <div className="flex justify-end mb-4">

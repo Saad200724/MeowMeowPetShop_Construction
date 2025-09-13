@@ -40,8 +40,8 @@ export default function BestsellersCats() {
     <section className="section-spacing bg-gray-50">
       <div className="responsive-container">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
-            <Cat size={24} className="text-[#26732d]" />
+          <h2 className="text-lg font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
+            <Cat size={20} className="text-[#26732d]" />
             BESTSELLERS FOR CATS
           </h2>
           <div className="flex justify-end mb-4">
