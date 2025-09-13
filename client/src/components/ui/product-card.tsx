@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { Product } from '@/lib/product-data';
 import { Product as HookProduct } from '@/hooks/use-products';
+import { getProductSlug } from '@/lib/slug-utils';
 
 type UIProduct = (Product | HookProduct) & {
   _id?: string;
@@ -25,6 +26,9 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem, state } = useCart();
   const { toast } = useToast();
+  
+  // Generate product slug for URL
+  const productSlug = getProductSlug(product);
 
   const productId = product.id?.toString() ?? product._id;
   const isInCart = state.items.some((item) => item.id === productId);
@@ -128,8 +132,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link
-      href={`/product/${product.id?.toString() ?? product._id}`}
-      data-testid={`product-link-${product.id?.toString() ?? product._id}`}
+      href={`/product/${productSlug}`}
+      data-testid={`product-link-${productSlug}`}
     >
       <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px] sm:h-[306px] cursor-pointer">
         {/* Discount Badge */}
@@ -232,7 +236,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 isAddingToCart
               }
               onClick={handleAddToCart}
-              data-testid={`add-to-cart-${product.id?.toString() ?? product._id}`}
+              data-testid={`add-to-cart-${productSlug}`}
             >
               {isAddingToCart ? (
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />

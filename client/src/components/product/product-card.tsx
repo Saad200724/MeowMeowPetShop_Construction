@@ -9,6 +9,7 @@ import { Product as HookProduct } from '@/hooks/use-products'
 import { useCart } from '@/contexts/cart-context'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import { getProductSlug } from '@/lib/slug-utils'
 
 interface ProductCardProps {
   product: Product | HookProduct
@@ -20,6 +21,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const { addItem, getItemQuantity } = useCart()
   const { toast } = useToast()
+  
+  // Generate product slug for URL
+  const productSlug = getProductSlug(product)
   
   const itemQuantity = getItemQuantity(product.id)
   const isInCart = itemQuantity > 0
