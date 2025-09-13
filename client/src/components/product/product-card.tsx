@@ -81,7 +81,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const hasDiscount = product.originalPrice && product.originalPrice > product.price
 
   return (
-    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] md:max-w-[280px] h-[300px] md:h-[420px] flex flex-col', className)}>
+    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[160px] md:max-w-[280px] h-[240px] md:h-[420px] flex flex-col', className)}>
       {/* Discount Badge */}
       {hasDiscount && (
         <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -118,7 +118,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-36 md:h-48 flex-shrink-0">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-2 md:p-4 h-28 md:h-48 flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -129,7 +129,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="p-3 md:p-4 flex flex-col flex-1 justify-between">
+      <CardContent className="p-2 md:p-4 flex flex-col flex-1 justify-between">
         <div className="space-y-3 flex-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
