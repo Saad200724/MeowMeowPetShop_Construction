@@ -15,10 +15,10 @@ export default function FlashSale() {
       <section className="section-spacing bg-red-50">
         <div className="responsive-container">
           <div className="text-center mb-8">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-red-100 px-4 sm:px-6 py-3 rounded-lg mb-6 w-fit mx-auto border-2 border-red-200 animate-scale-up">
-              <Flame className="text-red-600" size={24} />
+            <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
+              <Flame className="text-red-600" size={20} />
               <span className="text-red-600 font-bold text-lg">Flash Sale</span>
-              <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
+              <span className="text-sm text-red-600 font-medium hidden sm:inline">Limited Time Offers</span>
             </div>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-1" style={{ width: 'max-content' }}>
@@ -45,10 +45,10 @@ export default function FlashSale() {
     <section className="section-spacing bg-red-50">
       <div className="responsive-container">
         <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-red-100 px-4 sm:px-6 py-3 rounded-lg mb-6 w-fit mx-auto border-2 border-red-200 animate-scale-up">
-            <Flame className="text-red-600" size={24} />
+          <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
+            <Flame className="text-red-600" size={20} />
             <span className="text-red-600 font-bold text-lg">FLASH SALE</span>
-            <span className="text-sm text-red-600 font-medium">Limited Time Offers</span>
+            <span className="text-sm text-red-600 font-medium hidden sm:inline">Limited Time Offers</span>
           </div>
           <div className="flex justify-end mb-4">
             <a 
