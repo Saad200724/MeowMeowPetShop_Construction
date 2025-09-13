@@ -266,17 +266,18 @@ export default function ProductDetailPage() {
             {/* Quantity Selector */}
             {!isOutOfStock && (
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-sm font-medium">Quantity:</span>
-                <div className="flex items-center border rounded-lg">
+                <span className="text-sm font-medium text-gray-900">Quantity:</span>
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     data-testid="quantity-decrease"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none"
                   >
                     <Minus size={16} />
                   </Button>
-                  <span className="px-4 py-2 min-w-[3rem] text-center" data-testid="quantity-display">
+                  <span className="px-4 py-2 min-w-[3rem] text-center text-gray-900 bg-white border-x border-gray-200" data-testid="quantity-display">
                     {quantity}
                   </span>
                   <Button
@@ -284,6 +285,7 @@ export default function ProductDetailPage() {
                     size="sm"
                     onClick={() => setQuantity(quantity + 1)}
                     data-testid="quantity-increase"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-none"
                   >
                     <Plus size={16} />
                   </Button>
@@ -297,10 +299,10 @@ export default function ProductDetailPage() {
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
                 className={cn(
-                  "w-full py-3 text-lg font-medium",
+                  "w-full py-3 text-lg font-medium transition-colors",
                   isOutOfStock
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 text-white"
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
+                    : "bg-green-600 hover:bg-green-700 text-white border-green-600"
                 )}
                 data-testid="add-to-cart-button"
               >
@@ -309,11 +311,19 @@ export default function ProductDetailPage() {
               </Button>
               
               <div className="flex gap-3">
-                <Button variant="outline" className="flex-1" data-testid="add-to-wishlist">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 py-2 text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-gray-900 bg-white" 
+                  data-testid="add-to-wishlist"
+                >
                   <Heart size={16} className="mr-2" />
                   Add to Wishlist
                 </Button>
-                <Button variant="outline" className="flex-1" data-testid="share-product">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 py-2 text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-gray-900 bg-white" 
+                  data-testid="share-product"
+                >
                   <Share size={16} className="mr-2" />
                   Share
                 </Button>
@@ -385,11 +395,11 @@ export default function ProductDetailPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Related Products */}
+        {/* Recommended Products */}
         {getFilteredRelatedProducts().length > 0 && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="border-t pt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Recommended Products from this Category</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {getFilteredRelatedProducts().map((relatedProduct: Product) => (
                 <ProductCard
                   key={relatedProduct.id ?? relatedProduct._id}
