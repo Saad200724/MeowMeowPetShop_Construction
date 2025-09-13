@@ -168,9 +168,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
             
-            {/* Stock Display - Show as "Stock: number" */}
+            {/* Stock Display - Show as "Stock: number" - Hidden on mobile */}
             {(product.stock || product.stockStatus) && (
-              <div className="text-sm text-gray-600 mb-1">
+              <div className="hidden sm:block text-sm text-gray-600 mb-1">
                 {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
               </div>
             )}
