@@ -144,9 +144,6 @@ export default function CategoriesGrid() {
                     <h3 className="text-sm font-bold text-gray-800 leading-tight">
                       {category.name}
                     </h3>
-                    <p className="text-xs text-gray-600 mt-1">
-                      {category.count}
-                    </p>
                   </div>
                 </div>
               </Link>
