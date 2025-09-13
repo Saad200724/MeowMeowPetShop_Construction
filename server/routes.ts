@@ -541,7 +541,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique slug if name changed
       const currentProduct = await Product.findById(id);
       let productSlug = currentProduct?.slug;
-      
+
       if (!productSlug || (currentProduct && currentProduct.name !== productData.name)) {
         productSlug = await generateUniqueProductSlug(productData.name, id);
       }
@@ -1477,14 +1477,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders", async (req, res) => {
     try {
       const orders = await Order.find({}).sort({ createdAt: -1 });
-      
+
       // Enhance orders with customer info from invoices when missing
       const enhancedOrders = await Promise.all(orders.map(async (order) => {
         const orderObj = order.toObject();
-        
+
         const orderId = order._id.toString();
         console.log(`Processing order ${orderId}, customerInfo exists:`, !!orderObj.customerInfo);
-        
+
         // If order doesn't have customer info, try to get it from invoice
         if (!orderObj.customerInfo || !orderObj.customerInfo.name) {
           console.log(`Looking for invoice with orderId: ${orderId}`);
@@ -1500,10 +1500,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.log(`Could not fetch invoice for order ${orderId}:`, (invoiceError as Error).message);
           }
         }
-        
+
         return orderObj;
       }));
-      
+
       res.json(enhancedOrders);
     } catch (error) {
       console.error('Error fetching all orders:', error);
@@ -1550,7 +1550,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/orders/:orderId", async (req, res) => {
     try {
       const { orderId } = req.params;
-      
+
       const order = await Order.findByIdAndDelete(orderId);
 
       if (!order) {
