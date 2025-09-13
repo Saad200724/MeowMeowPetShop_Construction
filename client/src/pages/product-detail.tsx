@@ -136,7 +136,7 @@ export default function ProductDetailPage() {
   }
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
-  const discountAmount = hasDiscount ? product.originalPrice - product.price : 0;
+  const discountAmount = hasDiscount ? (product.originalPrice! - product.price) : 0;
 
   return (
     <div className="min-h-screen bg-white">

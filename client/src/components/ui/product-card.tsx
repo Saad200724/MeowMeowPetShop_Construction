@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Link } from 'wouter';
 
 interface Product {
   id?: number;
@@ -33,7 +34,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isInCart = state.items.some((item) => item.id === product.id?.toString());
   const isAddingToCart = false; // Placeholder for actual adding state
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (product.id) {
       addItem({
         id: product.id.toString(),
@@ -47,6 +50,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         description: `${product.name} has been added to your cart.`,
       });
     }
+  };
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Like functionality can be added here
   };
 
   const getBadgeStyles = (color?: string) => {
@@ -106,7 +115,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px]">
+    <Link href={`/product/${product.id}`} data-testid={`product-link-${product.id}`}>
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px] cursor-pointer">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -128,7 +138,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Like Button */}
       <div className="absolute top-2 right-2 z-10">
-        <button className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95">
+        <button 
+          onClick={handleLikeClick}
+          className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95"
+          data-testid="like-button"
+        >
           <Heart size={14} />
         </button>
       </div>
@@ -189,7 +203,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
             )}
-            disabled={product.stock === "0" || product.stock === 0 || isAddingToCart}
+            disabled={product.stock === "0" || isAddingToCart}
             onClick={handleAddToCart}
             data-testid={`add-to-cart-${product.id}`}
           >
@@ -209,6 +223,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </Link>
   );
 }
