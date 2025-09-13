@@ -72,8 +72,8 @@ export default function NewlyLaunched() {
     <section className="py-12 bg-[#f0f8ff]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-lg md:text-xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
-            <Sparkles size={20} className="text-[#26732d] md:w-6 md:h-6" />
+          <h2 className="text-lg md:text-3xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
+            <Sparkles size={20} className="text-[#26732d] md:w-8 md:h-8" />
             NEWLY LAUNCHED
           </h2>
           <div className="flex justify-end mb-4">

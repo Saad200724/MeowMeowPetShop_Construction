@@ -68,8 +68,8 @@ export default function RepackFood() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-lg md:text-xl font-bold text-[#26732d] flex items-center justify-center gap-2">
-              <Package size={20} className="text-[#26732d] md:w-6 md:h-6" />
+            <h2 className="text-lg md:text-3xl font-bold text-[#26732d] flex items-center justify-center gap-2">
+              <Package size={20} className="text-[#26732d] md:w-8 md:h-8" />
               REPACK FOOD
             </h2>
           </div>
@@ -97,8 +97,8 @@ export default function RepackFood() {
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <div className="text-center mb-4">
-            <h2 className="text-lg md:text-xl font-bold text-[#26732d] flex items-center justify-center gap-2">
-              <Package size={20} className="text-[#26732d] md:w-6 md:h-6" />
+            <h2 className="text-lg md:text-3xl font-bold text-[#26732d] flex items-center justify-center gap-2">
+              <Package size={20} className="text-[#26732d] md:w-8 md:h-8" />
               REPACK FOOD
             </h2>
           </div>
