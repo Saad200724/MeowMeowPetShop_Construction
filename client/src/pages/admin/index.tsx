@@ -1002,10 +1002,22 @@ export default function AdminPage() {
             <div className="grid gap-4">
               {orders
                 .filter((order: any) => {
+                  const searchTerm = orderSearchTerm.toLowerCase();
+                  const invoiceNumber = order.invoiceNumber?.toLowerCase() || '';
+                  
+                  // Remove # from search term if present for comparison
+                  const cleanSearchTerm = searchTerm.startsWith('#') ? searchTerm.substring(1) : searchTerm;
+                  
                   const matchesSearch = 
-                    order.customerInfo?.name?.toLowerCase().includes(orderSearchTerm.toLowerCase()) ||
-                    order._id.toLowerCase().includes(orderSearchTerm.toLowerCase()) ||
-                    order.invoiceNumber?.toLowerCase().includes(orderSearchTerm.toLowerCase());
+                    order.customerInfo?.name?.toLowerCase().includes(searchTerm) ||
+                    order._id.toLowerCase().includes(searchTerm) ||
+                    // Match invoice number with or without # prefix
+                    invoiceNumber.includes(searchTerm) ||
+                    invoiceNumber.includes(cleanSearchTerm) ||
+                    // Also check if invoice number starts with search term when # is added
+                    (searchTerm.startsWith('#') && invoiceNumber.includes(cleanSearchTerm)) ||
+                    (!searchTerm.startsWith('#') && invoiceNumber.includes(searchTerm));
+                    
                   const matchesStatus = orderStatusFilter === 'all' || order.status?.toLowerCase() === orderStatusFilter;
                   return matchesSearch && matchesStatus;
                 })
