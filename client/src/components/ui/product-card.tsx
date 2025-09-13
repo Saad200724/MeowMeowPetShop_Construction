@@ -4,28 +4,22 @@ import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
+import { Product } from '@/lib/product-data';
+import { Product as HookProduct } from '@/hooks/use-products';
 
-interface Product {
-  id?: number | string;
+type UIProduct = (Product | HookProduct) & {
   _id?: string;
-  name: string;
-  image: string;
-  price: string | number;
   oldPrice?: string | number;
   discount?: string;
-  stock?: string;
-  rating?: number;
-  reviews?: number;
   badge?: string;
   badgeColor?: string;
   stockStatus?: string;
   isNew?: boolean;
-  // Legacy support
   originalPrice?: number;
-}
+};
 
 interface ProductCardProps {
-  product: Product;
+  product: UIProduct;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -49,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             ? parseFloat(product.price)
             : product.price,
         image: product.image,
-        maxStock: 100, // Default max stock
+        maxStock: product.stock || 100, // Use actual stock or default
       });
       toast({
         title: "Added to Cart",
@@ -217,7 +211,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Stock Display - Only visible on desktop/laptop (hidden on mobile) */}
           {(product.stock || product.stockStatus) && (
             <div className="hidden sm:block text-sm text-gray-600 mb-1">
-              {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
+              {product.stock ? `Stock: ${product.stock}` : product.stockStatus}
             </div>
           )}
 
@@ -233,7 +227,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
               )}
               disabled={
-                product.stock === "0" ||
+                product.stock === 0 ||
                 product.stockStatus === "Out of Stock" ||
                 isAddingToCart
               }

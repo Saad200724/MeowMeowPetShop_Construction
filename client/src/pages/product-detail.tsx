@@ -15,29 +15,17 @@ import ProductCard from '@/components/ui/product-card';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { cn } from '@/lib/utils';
+import { Product as BaseProduct } from '@/lib/product-data';
 
-interface Product {
+type DetailProduct = BaseProduct & {
   _id?: string;
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-  originalPrice?: number;
-  category?: string;
   categorySlug?: string;
   categoryName?: string;
-  rating?: number;
-  reviews?: number;
-  stock?: string | number;
   stockStatus?: string;
-  description?: string;
   weight?: string;
   ingredients?: string[];
   features?: string[];
-  isBestSeller?: boolean;
-  isNew?: boolean;
-  isLowStock?: boolean;
-}
+};
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -53,25 +41,25 @@ export default function ProductDetailPage() {
   const { toast } = useToast();
 
   // Fetch product details
-  const { data: product, isLoading } = useQuery<Product>({
+  const { data: product, isLoading } = useQuery<DetailProduct>({
     queryKey: ['/api/products', id],
     enabled: !!id,
   });
 
   // Fetch related products  
-  const { data: relatedProducts = [] } = useQuery<Product[]>({
+  const { data: relatedProducts = [] } = useQuery<DetailProduct[]>({
     queryKey: ['/api/products'],
   });
 
   const productId = product?.id ?? product?._id;
   const isInCart = state.items.some((item) => item.id === productId);
-  const isOutOfStock = product?.stock === "0" || product?.stock === 0 || product?.stockStatus === "Out of Stock";
+  const isOutOfStock = product?.stock === 0 || product?.stockStatus === "Out of Stock";
 
   const handleAddToCart = () => {
     if (!product || isOutOfStock) return;
 
     const productId = product.id ?? product._id;
-    const maxStock = typeof product.stock === 'number' ? product.stock : 100;
+    const maxStock = product.stock || 100;
     
     // Check if item already exists in cart
     const existingItem = state.items.find(item => item.id === productId);
@@ -346,10 +334,18 @@ export default function ProductDetailPage() {
                   </span>
                   {!isOutOfStock && product.stock && (
                     <span className="text-sm text-gray-600">
-                      ({typeof product.stock === 'number' ? product.stock : product.stock} in stock)
+                      ({product.stock} in stock)
                     </span>
                   )}
                 </div>
+                {/* Stock Number Display */}
+                {product.stock && (
+                  <div className="mt-2">
+                    <span className="text-lg font-semibold text-gray-900" data-testid="stock-number">
+                      Stock: {product.stock}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -626,7 +622,7 @@ export default function ProductDetailPage() {
           <div className="border-t pt-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-8">Recommended Products</h2>
             <div className="flex overflow-x-auto space-x-4 pb-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:space-x-0">
-              {getFilteredRelatedProducts().map((relatedProduct: Product) => (
+              {getFilteredRelatedProducts().map((relatedProduct) => (
                 <div key={relatedProduct.id ?? relatedProduct._id} className="flex-shrink-0">
                   <ProductCard
                     product={relatedProduct}
