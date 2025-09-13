@@ -195,10 +195,41 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!billingDetails.name || !billingDetails.phone || !billingDetails.email) {
+    // Comprehensive form validation
+    const missingFields = [];
+    if (!billingDetails.name.trim()) missingFields.push("Full Name");
+    if (!billingDetails.phone.trim()) missingFields.push("Phone Number");
+    if (!billingDetails.email.trim()) missingFields.push("Email Address");
+    if (!billingDetails.address.trim()) missingFields.push("Full Address");
+    if (!billingDetails.city.trim()) missingFields.push("City");
+    if (!billingDetails.area.trim()) missingFields.push("Area");
+
+    if (missingFields.length > 0) {
       toast({
-        title: "Missing information",
-        description: "Please fill in all required billing details.",
+        title: "Missing Required Information",
+        description: `Please fill in: ${missingFields.join(', ')}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(billingDetails.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Phone validation (Bangladesh mobile number)
+    const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
+    if (!phoneRegex.test(billingDetails.phone.replace(/\s/g, ''))) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid Bangladesh mobile number (e.g., 01XXXXXXXXX).",
         variant: "destructive",
       });
       return;
@@ -560,14 +591,89 @@ export default function CheckoutPage() {
                     <span className="font-medium">৳ 0</span>
                   </div>
 
-                  <div className="flex justify-between py-2">
-                    <span className="text-gray-600">Coupon</span>
-                    <span className="font-medium">৳ 0</span>
-                  </div>
+                  {cartState.appliedCoupon && (
+                    <div className="flex justify-between py-2">
+                      <span className="text-green-600">Discount ({cartState.appliedCoupon.code})</span>
+                      <span className="font-medium text-green-600">-৳ {cartState.appliedCoupon.discount.toLocaleString()}</span>
+                    </div>
+                  )}
 
                   <div className="flex justify-between py-2 text-lg font-bold text-[#26732d] border-t-2 border-[#26732d]/20 pt-3">
                     <span>Grand Total</span>
-                    <span>৳ {cartState.total.toLocaleString()}</span>
+                    <span>৳ {getFinalTotal().toLocaleString()}</span>
+                  </div>
+
+                  <Separator />
+
+                  {/* Coupon Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold text-[#26732d]">Have a coupon?</h4>
+                      <Button 
+                        variant="link" 
+                        onClick={() => setShowCoupon(!showCoupon)}
+                        className="text-[#26732d] hover:text-[#1e5d26] font-medium p-0"
+                        data-testid="button-toggle-coupon"
+                      >
+                        {showCoupon ? 'Hide' : 'Apply coupon'}
+                        {showCoupon ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
+                      </Button>
+                    </div>
+                    
+                    {showCoupon && (
+                      <div className="space-y-3">
+                        {!cartState.appliedCoupon ? (
+                          <div className="space-y-2">
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Enter coupon code"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
+                                className="flex-1 text-sm border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                                onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                                data-testid="input-coupon-code"
+                              />
+                              <Button
+                                onClick={handleApplyCoupon}
+                                disabled={isCouponLoading || !couponCode.trim()}
+                                size="sm"
+                                className="bg-[#26732d] hover:bg-[#1e5d26] text-white px-4"
+                                data-testid="button-apply-coupon"
+                              >
+                                {isCouponLoading ? 'Applying...' : 'Apply'}
+                              </Button>
+                            </div>
+                            {couponError && (
+                              <p className="text-xs text-red-500" data-testid="text-coupon-error">{couponError}</p>
+                            )}
+                            <p className="text-xs text-gray-500">
+                              Enter your coupon code to apply discount
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">🏷️</span>
+                                <span className="text-sm font-medium text-green-800" data-testid="text-applied-coupon">
+                                  {cartState.appliedCoupon.code} Applied
+                                </span>
+                              </div>
+                              <button
+                                onClick={handleRemoveCoupon}
+                                className="text-xs text-green-600 hover:text-green-800 underline"
+                                data-testid="button-remove-coupon"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                            <p className="text-xs text-green-600 mt-1">
+                              You saved ৳{cartState.appliedCoupon.discount.toLocaleString()}!
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <Separator />
@@ -604,7 +710,7 @@ export default function CheckoutPage() {
                         Processing Order...
                       </div>
                     ) : (
-                      'Apply Coupon'
+                      'Place Order'
                     )}
                   </Button>
 
