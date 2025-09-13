@@ -1004,7 +1004,8 @@ export default function AdminPage() {
                 .filter((order: any) => {
                   const matchesSearch = 
                     order.customerInfo?.name?.toLowerCase().includes(orderSearchTerm.toLowerCase()) ||
-                    order._id.toLowerCase().includes(orderSearchTerm.toLowerCase());
+                    order._id.toLowerCase().includes(orderSearchTerm.toLowerCase()) ||
+                    order.invoiceNumber?.toLowerCase().includes(orderSearchTerm.toLowerCase());
                   const matchesStatus = orderStatusFilter === 'all' || order.status?.toLowerCase() === orderStatusFilter;
                   return matchesSearch && matchesStatus;
                 })
