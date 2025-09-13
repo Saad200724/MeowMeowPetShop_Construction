@@ -157,6 +157,8 @@ export interface IOrder extends Document {
   total: number;
   items: any[];
   shippingAddress?: any;
+  customerInfo?: any;
+  invoiceId?: string;
   paymentMethod?: string;
   paymentStatus: string;
   createdAt: Date;
@@ -169,6 +171,8 @@ const orderSchema = new Schema<IOrder>({
   total: { type: Number, required: true },
   items: [{ type: Schema.Types.Mixed }],
   shippingAddress: Schema.Types.Mixed,
+  customerInfo: Schema.Types.Mixed,
+  invoiceId: String,
   paymentMethod: String,
   paymentStatus: { type: String, default: 'Pending' },
 }, { timestamps: true });

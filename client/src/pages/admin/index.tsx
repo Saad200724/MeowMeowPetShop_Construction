@@ -980,20 +980,20 @@ export default function AdminPage() {
                   placeholder="Search orders by customer name or order ID..."
                   value={orderSearchTerm}
                   onChange={(e) => setOrderSearchTerm(e.target.value)}
-                  className="pl-10 bg-white border-gray-300"
+                  className="pl-10 bg-white border-gray-300 text-black placeholder:text-gray-500"
                 />
               </div>
               <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
-                <SelectTrigger className="w-48 bg-white border-gray-300">
-                  <SelectValue placeholder="Filter by status" />
+                <SelectTrigger className="w-48 bg-white border-gray-300 text-black">
+                  <SelectValue placeholder="Filter by status" className="text-black" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border border-gray-300">
-                  <SelectItem value="all">All Orders</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="processing">Processing</SelectItem>
-                  <SelectItem value="shipped">Shipped</SelectItem>
-                  <SelectItem value="delivered">Delivered</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="all" className="text-black hover:bg-gray-100">All Orders</SelectItem>
+                  <SelectItem value="pending" className="text-black hover:bg-gray-100">Pending</SelectItem>
+                  <SelectItem value="processing" className="text-black hover:bg-gray-100">Processing</SelectItem>
+                  <SelectItem value="shipped" className="text-black hover:bg-gray-100">Shipped</SelectItem>
+                  <SelectItem value="delivered" className="text-black hover:bg-gray-100">Delivered</SelectItem>
+                  <SelectItem value="cancelled" className="text-black hover:bg-gray-100">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1054,19 +1054,31 @@ export default function AdminPage() {
                         )}
                       </div>
                       <div className="flex space-x-2">
+                        {order.invoiceId && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-900"
+                            onClick={() => window.open(`/invoice/${order.invoiceId}`, '_blank')}
+                            data-testid={`view-invoice-${order._id}`}
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            Invoice
+                          </Button>
+                        )}
                         <Select
                           value={order.status || 'pending'}
                           onValueChange={(newStatus) => handleUpdateOrderStatus(order._id, newStatus)}
                         >
-                          <SelectTrigger className="w-32 bg-white border-gray-300 text-sm">
-                            <SelectValue />
+                          <SelectTrigger className="w-32 bg-white border-gray-300 text-sm text-black">
+                            <SelectValue className="text-black" />
                           </SelectTrigger>
                           <SelectContent className="bg-white border border-gray-300">
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="processing">Processing</SelectItem>
-                            <SelectItem value="shipped">Shipped</SelectItem>
-                            <SelectItem value="delivered">Delivered</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                            <SelectItem value="pending" className="text-black hover:bg-gray-100">Pending</SelectItem>
+                            <SelectItem value="processing" className="text-black hover:bg-gray-100">Processing</SelectItem>
+                            <SelectItem value="shipped" className="text-black hover:bg-gray-100">Shipped</SelectItem>
+                            <SelectItem value="delivered" className="text-black hover:bg-gray-100">Delivered</SelectItem>
+                            <SelectItem value="cancelled" className="text-black hover:bg-gray-100">Cancelled</SelectItem>
                           </SelectContent>
                         </Select>
                         <Button 

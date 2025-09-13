@@ -1405,6 +1405,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         total: serverTotal, // Use server-computed total
         items: validatedItems,
         shippingAddress,
+        customerInfo, // Add customer info to order
         paymentMethod,
         paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
         orderNotes
@@ -1428,6 +1429,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       await invoice.save();
+
+      // Update order with invoice ID for easy reference
+      order.invoiceId = invoice._id?.toString() || invoice.id;
+      await order.save();
 
       // Clear user's cart
       await Cart.findOneAndUpdate(
