@@ -108,8 +108,8 @@ export default function CategoriesGrid() {
       <div className="responsive-container">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-center text-[#26732d] flex items-center justify-center gap-3 animate-fade-in">
-            <ShoppingBag size={24} className="text-[#26732d]" />
+          <h2 className="text-lg font-bold text-center text-[#26732d] flex items-center justify-center gap-2 animate-fade-in">
+            <ShoppingBag size={20} className="text-[#26732d]" />
             SHOP BY CATEGORY
           </h2>
         </div>
