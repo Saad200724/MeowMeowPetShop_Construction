@@ -16,6 +16,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { cn } from '@/lib/utils';
 import { Product as BaseProduct } from '@/lib/product-data';
+import { findProductBySlug } from '@/lib/slug-utils';
 
 type DetailProduct = BaseProduct & {
   _id?: string;
@@ -29,7 +30,7 @@ type DetailProduct = BaseProduct & {
 };
 
 export default function ProductDetailPage() {
-  const { id } = useParams();
+  const { id: slug } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -41,16 +42,21 @@ export default function ProductDetailPage() {
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
-  // Fetch product details
-  const { data: product, isLoading } = useQuery<DetailProduct>({
-    queryKey: ['/api/products', id],
-    enabled: !!id,
-  });
-
-  // Fetch related products  
-  const { data: relatedProducts = [] } = useQuery<DetailProduct[]>({
+  // Fetch all products first
+  const { data: allProducts = [], isLoading: isLoadingProducts } = useQuery<DetailProduct[]>({
     queryKey: ['/api/products'],
   });
+
+  // Find product by slug
+  const product = slug ? findProductBySlug(slug, allProducts) : null;
+  const isLoading = isLoadingProducts;
+
+  // Filter related products (exclude current product)
+  const relatedProducts = allProducts.filter(p => {
+    const currentProductId = product?.id ?? product?._id;
+    const relatedProductId = p.id ?? p._id;
+    return relatedProductId !== currentProductId;
+  }).slice(0, 8);
 
   const productId = product?.id ?? product?._id;
   const isInCart = state.items.some((item) => item.id === productId);
@@ -101,7 +107,7 @@ export default function ProductDetailPage() {
   };
 
   const handleShare = (platform: string) => {
-    const productUrl = `${window.location.origin}/product/${id}`;
+    const productUrl = `${window.location.origin}/product/${slug}`;
     const productTitle = product?.name || 'Check out this product';
     
     switch (platform) {
@@ -428,7 +434,7 @@ export default function ProductDetailPage() {
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600 mb-2">Product Link:</p>
                         <p className="text-sm text-gray-900 break-all">
-                          {typeof window !== 'undefined' ? `${window.location.origin}/product/${id}` : ''}
+                          {typeof window !== 'undefined' ? `${window.location.origin}/product/${slug}` : ''}
                         </p>
                       </div>
                       
