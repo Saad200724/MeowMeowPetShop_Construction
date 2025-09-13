@@ -259,12 +259,14 @@ export default function CheckoutPage() {
         quantity: item.quantity,
         image: item.image
       })),
-      subtotal: cartState.total,
-      discount: cartState.appliedCoupon ? cartState.appliedCoupon.discount : 0,
       discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
-      total: finalTotal,
       paymentMethod,
-      shippingAddress: billingDetails,
+      shippingAddress: {
+        address: billingDetails.address,
+        city: billingDetails.city,
+        area: billingDetails.area,
+        zipCode: billingDetails.zipCode
+      },
       orderNotes
     };
 
