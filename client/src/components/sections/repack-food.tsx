@@ -105,7 +105,7 @@ export default function RepackFood() {
           <div className="flex justify-end">
             <a
               href="/repack-products"
-              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1e5d26] font-medium text-sm transition-colors"
+              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1e5d26] font-medium text-sm md:text-lg transition-colors"
             >
               More Repacks
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

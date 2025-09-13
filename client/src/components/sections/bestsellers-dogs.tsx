@@ -47,7 +47,7 @@ export default function BestsellersDogs() {
           <div className="flex justify-end mb-4">
             <a 
               href="/dog-best-seller" 
-              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-sm transition-colors"
+              className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-sm md:text-lg transition-colors"
               rel="prefetch"
             >
               More Dog Products
