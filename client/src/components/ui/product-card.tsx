@@ -143,7 +143,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Content - Improved Layout */}
-      <div className="p-3 flex flex-col space-y-2 flex-1">
+      <div className="p-3 flex flex-col space-y-1 flex-1">
         {/* Product Name - Left Aligned */}
         <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
           {product.name}
@@ -155,7 +155,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         
         {/* Price Section - Left Aligned and Well Structured */}
-        <div className="space-y-2 flex-1 flex flex-col justify-end">
+        <div className="space-y-1 flex-1 flex flex-col justify-end">
           <div className="text-left">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-base font-bold text-[#26732d]">
