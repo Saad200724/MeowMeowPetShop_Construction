@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 interface SimpleProduct {
   id: string;
   name: string;
+  slug: string;
   price: number;
   category: string;
   image: string;
@@ -174,6 +175,7 @@ export class DatabaseStorage implements IStorage {
       return {
         id: product.id,
         name: product.name,
+        slug: product.slug,
         price: product.price,
         category: category?.name || 'uncategorized',
         image: product.image,
@@ -223,6 +225,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: (newProduct._id as any).toString(),
       name: newProduct.name,
+      slug: newProduct.slug,
       price: newProduct.price,
       category: productData.category,
       image: newProduct.image,
@@ -277,6 +280,7 @@ export class DatabaseStorage implements IStorage {
           .map(prod => ({
             id: prod.id,
             name: prod.name,
+            slug: prod.slug,
             price: prod.price,
             category: cat.slug,
             image: prod.image,
@@ -332,6 +336,7 @@ export class DatabaseStorage implements IStorage {
           productsWithCategory.push({
             id: prod.id,
             name: prod.name,
+            slug: prod.slug,
             price: prod.price,
             category: category?.slug || 'uncategorized',
             image: prod.image,
@@ -344,6 +349,7 @@ export class DatabaseStorage implements IStorage {
           productsWithCategory.push({
             id: prod.id,
             name: prod.name,
+            slug: prod.slug,
             price: prod.price,
             category: 'uncategorized',
             image: prod.image,

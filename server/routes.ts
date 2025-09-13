@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon } from "@shared/models";
+import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
 import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
 import { z } from "zod";
 import bcrypt from "bcrypt";
@@ -222,6 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           products.push({
             id: product.id,
             name: product.name,
+            slug: product.slug,
             price: product.price,
             originalPrice: product.originalPrice || null,
             category: category?.slug || 'uncategorized',
@@ -405,9 +407,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
       }
 
+      // Generate unique slug for the product
+      const productSlug = await generateUniqueProductSlug(productData.name);
+
       // Create product directly in database with all fields
       const newProduct = new Product({
         name: productData.name,
+        slug: productSlug,
         description: productData.description,
         price: productData.price,
         originalPrice: productData.originalPrice || undefined,
@@ -532,11 +538,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
       }
 
+      // Generate unique slug if name changed
+      const currentProduct = await Product.findById(id);
+      let productSlug = currentProduct?.slug;
+      
+      if (!productSlug || (currentProduct && currentProduct.name !== productData.name)) {
+        productSlug = await generateUniqueProductSlug(productData.name, id);
+      }
+
       // Update product directly in database with all fields
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
         {
           name: productData.name,
+          slug: productSlug,
           description: productData.description,
           price: productData.price,
           originalPrice: productData.originalPrice || undefined,
@@ -577,6 +592,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Delete product error:', error);
       res.status(500).json({ message: "Failed to delete product" });
+    }
+  });
+
+  // Migration endpoint to add slugs to existing products
+  app.post("/api/admin/migrate-product-slugs", async (req, res) => {
+    try {
+      await migrateProductSlugs();
+      res.json({ message: "Product slug migration completed successfully" });
+    } catch (error) {
+      console.error('Migration error:', error);
+      res.status(500).json({ message: "Failed to migrate product slugs" });
+    }
+  });
+
+  // Get product by slug endpoint
+  app.get("/api/products/slug/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const product = await findProductBySlug(slug);
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Resolve category and brand information
+      let category = null;
+      if (product.categoryId) {
+        try {
+          category = await Category.findById(product.categoryId);
+        } catch (categoryError) {
+          category = await Category.findOne({ slug: product.categoryId });
+        }
+        if (!category) {
+          category = await Category.findOne({ name: product.categoryId });
+        }
+      }
+
+      let brand = null;
+      if (product.brandId) {
+        try {
+          brand = await Brand.findById(product.brandId);
+        } catch (brandError) {
+          brand = await Brand.findOne({ slug: product.brandId });
+        }
+        if (!brand) {
+          brand = await Brand.findOne({ name: product.brandId });
+        }
+      }
+
+      const enrichedProduct = {
+        ...product.toObject(),
+        categoryName: category?.name || 'Uncategorized',
+        categorySlug: category?.slug || 'uncategorized',
+        brandName: brand?.name || 'No Brand',
+        brandSlug: brand?.slug || 'no-brand'
+      };
+
+      res.json(enrichedProduct);
+    } catch (error) {
+      console.error('Error fetching product by slug:', error);
+      res.status(500).json({ message: "Failed to fetch product" });
     }
   });
 

@@ -42,6 +42,7 @@ export const brands = pgTable('brands', {
 export const products = pgTable('products', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
   description: text('description'),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   originalPrice: decimal('originalPrice', { precision: 10, scale: 2 }),

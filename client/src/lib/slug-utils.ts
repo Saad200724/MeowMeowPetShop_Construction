@@ -1,6 +1,35 @@
-// Utility functions for generating URL-friendly slugs from product names
+// Utility functions for working with product slugs
+// Slugs are now persisted server-side, so we just work with the stored values
 
-export function createSlug(text: string): string {
+/**
+ * Get the product slug - products should always have a slug field now
+ * This is a simple accessor function that validates the slug exists
+ */
+export function getProductSlug(product: any): string {
+  // Products should always have a slug field from the server
+  if (product.slug) {
+    return product.slug;
+  }
+  
+  // Fallback for legacy products or edge cases
+  // This should not happen in normal operation as backend generates slugs
+  console.warn('Product missing slug field:', product.name);
+  return createSlugFallback(product.name || 'product');
+}
+
+/**
+ * Find a product by its slug from a list of products
+ * Products should have their slugs populated from the server
+ */
+export function findProductBySlug(slug: string, products: any[]): any {
+  return products.find(product => product.slug === slug);
+}
+
+/**
+ * Fallback slug creation for edge cases only
+ * The server should handle all slug generation now
+ */
+function createSlugFallback(text: string): string {
   return text
     .toLowerCase()
     .trim()
@@ -9,48 +38,21 @@ export function createSlug(text: string): string {
     .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
 }
 
-export function generateUniqueSlug(productName: string, allProducts: any[]): string {
-  const baseSlug = createSlug(productName);
-  
-  // Get all existing slugs for duplicate checking
-  const existingSlugs = allProducts.map(product => {
-    if (product.slug) {
-      return product.slug;
-    }
-    // Generate slug if not exists
-    return createSlug(product.name);
-  });
+// Legacy functions kept for backwards compatibility but should not be used
+// The server now handles all slug generation and persistence
 
-  // If base slug is unique, return it
-  if (!existingSlugs.includes(baseSlug)) {
-    return baseSlug;
-  }
-
-  // Find next available number suffix
-  let counter = 1;
-  let uniqueSlug = `${baseSlug}-${counter}`;
-  
-  while (existingSlugs.includes(uniqueSlug)) {
-    counter++;
-    uniqueSlug = `${baseSlug}-${counter}`;
-  }
-  
-  return uniqueSlug;
+/**
+ * @deprecated Use server-side slug generation instead
+ */
+export function createSlug(text: string): string {
+  console.warn('createSlug is deprecated. Use server-side slug generation instead.');
+  return createSlugFallback(text);
 }
 
-export function getProductSlug(product: any, allProducts: any[] = []): string {
-  // If product already has a slug, use it
-  if (product.slug) {
-    return product.slug;
-  }
-  
-  // Generate unique slug
-  return generateUniqueSlug(product.name, allProducts);
-}
-
-export function findProductBySlug(slug: string, products: any[]): any {
-  return products.find(product => {
-    const productSlug = getProductSlug(product, products);
-    return productSlug === slug;
-  });
+/**
+ * @deprecated Use server-side slug generation instead
+ */
+export function generateUniqueSlug(productName: string, allProducts: any[] = []): string {
+  console.warn('generateUniqueSlug is deprecated. Use server-side slug generation instead.');
+  return createSlugFallback(productName);
 }

@@ -9,7 +9,7 @@ import { Product as HookProduct } from '@/hooks/use-products'
 import { useCart } from '@/contexts/cart-context'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
-import { getProductSlug } from '@/lib/slug-utils'
+// Removed getProductSlug import - using persisted slug from server
 
 interface ProductCardProps {
   product: Product | HookProduct
@@ -22,8 +22,8 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const { addItem, getItemQuantity } = useCart()
   const { toast } = useToast()
   
-  // Generate product slug for URL
-  const productSlug = getProductSlug(product)
+  // Use the persisted product slug from server
+  const productSlug = product.slug || 'product'
   
   const itemQuantity = getItemQuantity(product.id)
   const isInCart = itemQuantity > 0

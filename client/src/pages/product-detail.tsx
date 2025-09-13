@@ -42,14 +42,23 @@ export default function ProductDetailPage() {
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
-  // Fetch all products first
-  const { data: allProducts = [], isLoading: isLoadingProducts } = useQuery<DetailProduct[]>({
-    queryKey: ['/api/products'],
+  // Fetch product directly by slug from the new API endpoint
+  const { data: product, isLoading } = useQuery<DetailProduct>({ 
+    queryKey: ['/api/products/slug', slug],
+    queryFn: async () => {
+      const response = await fetch(`/api/products/slug/${slug}`);
+      if (!response.ok) {
+        throw new Error('Product not found');
+      }
+      return response.json();
+    },
+    enabled: !!slug, // Only run query if slug exists
   });
 
-  // Find product by slug
-  const product = slug ? findProductBySlug(slug, allProducts) : null;
-  const isLoading = isLoadingProducts;
+  // Fetch all products for related products section
+  const { data: allProducts = [] } = useQuery<DetailProduct[]>({
+    queryKey: ['/api/products'],
+  });
 
   // Filter related products (exclude current product)
   const relatedProducts = allProducts.filter(p => {

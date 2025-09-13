@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { Product } from '@/lib/product-data';
 import { Product as HookProduct } from '@/hooks/use-products';
-import { getProductSlug } from '@/lib/slug-utils';
+// Removed getProductSlug import - using persisted slug from server
 
 type UIProduct = (Product | HookProduct) & {
   _id?: string;
@@ -27,8 +27,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addItem, state } = useCart();
   const { toast } = useToast();
   
-  // Generate product slug for URL
-  const productSlug = getProductSlug(product);
+  // Use the persisted product slug from server
+  const productSlug = product.slug || 'product';
 
   const productId = product.id?.toString() ?? product._id;
   const isInCart = state.items.some((item) => item.id === productId);

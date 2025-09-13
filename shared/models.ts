@@ -72,6 +72,7 @@ const brandSchema = new Schema<IBrand>({
 // Product Schema
 export interface IProduct extends Document {
   name: string;
+  slug: string;
   description?: string;
   price: number;
   originalPrice?: number;
@@ -97,6 +98,7 @@ export interface IProduct extends Document {
 
 const productSchema = new Schema<IProduct>({
   name: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
   description: String,
   price: { type: Number, required: true },
   originalPrice: Number,
