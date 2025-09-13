@@ -1477,7 +1477,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders", async (req, res) => {
     try {
       const orders = await Order.find({}).sort({ createdAt: -1 });
-      res.json(orders);
+      
+      // Enhance orders with customer info from invoices when missing
+      const enhancedOrders = await Promise.all(orders.map(async (order) => {
+        const orderObj = order.toObject();
+        
+        const orderId = order._id.toString();
+        console.log(`Processing order ${orderId}, customerInfo exists:`, !!orderObj.customerInfo);
+        
+        // If order doesn't have customer info, try to get it from invoice
+        if (!orderObj.customerInfo || !orderObj.customerInfo.name) {
+          console.log(`Looking for invoice with orderId: ${orderId}`);
+          try {
+            const invoice = await Invoice.findOne({ orderId: orderId });
+            console.log(`Found invoice:`, !!invoice, invoice ? `with customerInfo: ${!!invoice.customerInfo}` : '');
+            if (invoice && invoice.customerInfo) {
+              console.log(`Enhancing order ${orderId} with customer info:`, invoice.customerInfo.name);
+              orderObj.customerInfo = invoice.customerInfo;
+              orderObj.invoiceId = invoice._id?.toString();
+            }
+          } catch (invoiceError) {
+            console.log(`Could not fetch invoice for order ${orderId}:`, (invoiceError as Error).message);
+          }
+        }
+        
+        return orderObj;
+      }));
+      
+      res.json(enhancedOrders);
     } catch (error) {
       console.error('Error fetching all orders:', error);
       res.status(500).json({ message: "Failed to fetch orders" });
