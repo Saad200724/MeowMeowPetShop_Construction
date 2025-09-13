@@ -179,39 +179,34 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <Button
-          variant={isInCart ? "default" : "outline"}
-          size="sm"
-          className={cn(
-            "w-full rounded-full py-2 transition-all duration-200 border-2 mb-3",
-            isInCart
-              ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
-              : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
-          )}
-          disabled={product.stock === 0 || isAddingToCart}
-          onClick={handleAddToCart}
-          data-testid={`add-to-cart-${product.id}`}
-        >
-          {isAddingToCart ? (
-            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          ) : isInCart ? (
-            <>
-              <Check size={16} className="mr-1" />
-              Added
-            </>
-          ) : (
-            <>
-              <ShoppingCart size={16} className="mr-1" />
-              Add to Cart
-            </>
-          )}
-        </Button>
-
-        <div className="flex items-center">
-          <div className="flex">
-            {renderStars(product.rating)}
-          </div>
-          <span className="text-xs text-gray-500 ml-2">({product.reviews} reviews)</span>
+        <div className="mt-auto">
+          <Button
+            variant={isInCart ? "default" : "outline"}
+            size="sm"
+            className={cn(
+              "w-full rounded-full py-2 transition-all duration-200 border-2",
+              isInCart
+                ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+                : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
+            )}
+            disabled={product.stock === 0 || isAddingToCart}
+            onClick={handleAddToCart}
+            data-testid={`add-to-cart-${product.id}`}
+          >
+            {isAddingToCart ? (
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : isInCart ? (
+              <>
+                <Check size={16} className="mr-1" />
+                Added
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={16} className="mr-1" />
+                Add to Cart
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
