@@ -27,10 +27,10 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addItem, cartItems } = useCart();
+  const { addItem, state } = useCart();
   const { toast } = useToast();
 
-  const isInCart = cartItems.some((item) => item.id === product.id?.toString());
+  const isInCart = state.items.some((item) => item.id === product.id?.toString());
   const isAddingToCart = false; // Placeholder for actual adding state
 
   const handleAddToCart = () => {
@@ -189,7 +189,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
             )}
-            disabled={product.stock === 0 || isAddingToCart}
+            disabled={product.stock === "0" || product.stock === 0 || isAddingToCart}
             onClick={handleAddToCart}
             data-testid={`add-to-cart-${product.id}`}
           >
