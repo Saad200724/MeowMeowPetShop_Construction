@@ -155,9 +155,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         
         {/* Price Section - Left Aligned and Well Structured */}
-        <div className="space-y-1 flex-1 flex flex-col justify-end">
+        <div className="flex-1 flex flex-col justify-end">
           <div className="text-left">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2">
               <span className="text-base font-bold text-[#26732d]">
                 ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
               </span>
