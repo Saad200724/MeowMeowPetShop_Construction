@@ -383,76 +383,7 @@ export default function CheckoutPage() {
                 </Card>
               )}
 
-              {/* Coupon Section */}
-              <Card className="border-[#26732d]/30">
-                <CardContent className="p-4">
-                  {!cartState.appliedCoupon ? (
-                    <div>
-                      <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <Badge className="bg-[#ffde59] text-black hover:bg-[#e6c950] text-xs">OFFER</Badge>
-                          <span className="text-sm font-medium text-[#26732d]">Have a coupon?</span>
-                        </div>
-                        <Button 
-                          variant="link" 
-                          onClick={() => setShowCoupon(!showCoupon)}
-                          className="text-[#26732d] hover:text-[#1e5d26] text-sm p-0 h-auto font-normal"
-                        >
-                          Click here to enter your code {showCoupon ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
-                        </Button>
-                      </div>
-                      
-                      {showCoupon && (
-                        <div className="mt-3 space-y-2">
-                          <div className="flex gap-2">
-                            <Input
-                              placeholder="Enter coupon code"
-                              value={couponCode}
-                              onChange={(e) => setCouponCode(e.target.value)}
-                              className="flex-1 text-sm border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
-                              onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                              data-testid="input-coupon-code"
-                            />
-                            <Button
-                              onClick={handleApplyCoupon}
-                              disabled={isCouponLoading || !couponCode.trim()}
-                              size="sm"
-                              className="bg-[#ffde59] hover:bg-[#e6c950] text-black font-medium px-4"
-                              data-testid="button-apply-coupon"
-                            >
-                              {isCouponLoading ? 'Applying...' : 'Apply Coupon'}
-                            </Button>
-                          </div>
-                          {couponError && (
-                            <p className="text-xs text-red-500" data-testid="text-coupon-error">{couponError}</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Tag size={14} className="text-green-600" />
-                          <span className="text-sm font-medium text-green-800" data-testid="text-applied-coupon">
-                            {cartState.appliedCoupon.code} Applied
-                          </span>
-                        </div>
-                        <button
-                          onClick={handleRemoveCoupon}
-                          className="text-xs text-green-600 hover:text-green-800 underline"
-                          data-testid="button-remove-coupon"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                      <p className="text-xs text-green-600 mt-1">
-                        You saved ৳{cartState.appliedCoupon.discount.toLocaleString()}!
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              
 
               {/* Customer Information */}
               <Card className="border-[#26732d]/30">
