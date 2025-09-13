@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { Heart, ShoppingCart, Star, Minus, Plus, Share } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Minus, Plus, Share, Facebook, Twitter, Instagram, Copy, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
 import ProductCard from '@/components/ui/product-card';
@@ -42,6 +45,10 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [userName, setUserName] = useState('');
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
@@ -102,6 +109,55 @@ export default function ProductDetailPage() {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setMousePosition({ x, y });
+  };
+
+  const handleShare = (platform: string) => {
+    const productUrl = `${window.location.origin}/product/${id}`;
+    const productTitle = product?.name || 'Check out this product';
+    
+    switch (platform) {
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(productTitle)}&url=${encodeURIComponent(productUrl)}`, '_blank');
+        break;
+      case 'instagram':
+        // Instagram doesn't have direct URL sharing, copy link instead
+        navigator.clipboard.writeText(productUrl);
+        toast({ title: "Link copied!", description: "Share this link on Instagram" });
+        break;
+      case 'pinterest':
+        window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(productUrl)}&description=${encodeURIComponent(productTitle)}`, '_blank');
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(productUrl);
+        toast({ title: "Link copied!", description: "Product link copied to clipboard" });
+        break;
+    }
+    setIsShareOpen(false);
+  };
+
+  const handleSubmitReview = () => {
+    if (!userName.trim() || !reviewText.trim() || userRating === 0) {
+      toast({
+        title: "Please complete all fields",
+        description: "Name, rating, and review text are required.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Here you would typically send the review to your backend
+    toast({
+      title: "Review submitted!",
+      description: "Thank you for your feedback.",
+    });
+    
+    // Reset form
+    setUserName('');
+    setReviewText('');
+    setUserRating(0);
   };
 
   const renderStars = (rating: number = 5) => {
@@ -281,12 +337,19 @@ export default function ProductDetailPage() {
 
               {/* Stock Status */}
               <div className="mb-6">
-                <span className={cn(
-                  "text-sm font-medium",
-                  isOutOfStock ? "text-red-600" : "text-green-600"
-                )}>
-                  {isOutOfStock ? "Out of Stock" : "In Stock"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className={cn(
+                    "text-sm font-medium",
+                    isOutOfStock ? "text-red-600" : "text-green-600"
+                  )}>
+                    {isOutOfStock ? "Out of Stock" : "In Stock"}
+                  </span>
+                  {!isOutOfStock && product.stock && (
+                    <span className="text-sm text-gray-600">
+                      ({typeof product.stock === 'number' ? product.stock : product.stock} in stock)
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -346,14 +409,77 @@ export default function ProductDetailPage() {
                   <Heart size={16} className="mr-2" />
                   Add to Wishlist
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1 py-2 text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-gray-900 bg-white" 
-                  data-testid="share-product"
-                >
-                  <Share size={16} className="mr-2" />
-                  Share
-                </Button>
+                <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 py-2 text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-gray-900 bg-white" 
+                      data-testid="share-product"
+                    >
+                      <Share size={16} className="mr-2" />
+                      Share
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share Product</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      {/* Product Link */}
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="text-sm text-gray-600 mb-2">Product Link:</p>
+                        <p className="text-sm text-gray-900 break-all">
+                          {typeof window !== 'undefined' ? `${window.location.origin}/product/${id}` : ''}
+                        </p>
+                      </div>
+                      
+                      {/* Social Media Options */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button
+                          variant="outline"
+                          onClick={() => handleShare('facebook')}
+                          className="flex items-center justify-center gap-2 py-3"
+                        >
+                          <Facebook size={20} className="text-blue-600" />
+                          Facebook
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleShare('twitter')}
+                          className="flex items-center justify-center gap-2 py-3"
+                        >
+                          <Twitter size={20} className="text-blue-400" />
+                          X (Twitter)
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleShare('instagram')}
+                          className="flex items-center justify-center gap-2 py-3"
+                        >
+                          <Instagram size={20} className="text-pink-600" />
+                          Instagram
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleShare('pinterest')}
+                          className="flex items-center justify-center gap-2 py-3"
+                        >
+                          <Send size={20} className="text-red-600" />
+                          Pinterest
+                        </Button>
+                      </div>
+                      
+                      {/* Copy Link Button */}
+                      <Button
+                        onClick={() => handleShare('copy')}
+                        className="w-full py-3 bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Copy size={16} className="mr-2" />
+                        Copy Link
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
@@ -413,9 +539,82 @@ export default function ProductDetailPage() {
           <TabsContent value="reviews" className="mt-6">
             <Card>
               <CardContent className="p-6">
-                <div className="text-center py-8">
-                  <h3 className="font-semibold mb-2">Customer Reviews</h3>
-                  <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
+                <div className="space-y-6">
+                  {/* Existing Reviews */}
+                  <div>
+                    <h3 className="font-semibold mb-4">Customer Reviews</h3>
+                    <div className="text-center py-8 border-b">
+                      <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
+                    </div>
+                  </div>
+
+                  {/* Add Review Form */}
+                  <div>
+                    <h4 className="font-semibold mb-4">Write a Review</h4>
+                    <div className="space-y-4">
+                      {/* User Name */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Your Name
+                        </label>
+                        <Input
+                          value={userName}
+                          onChange={(e) => setUserName(e.target.value)}
+                          placeholder="Enter your name"
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* Rating */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Rating
+                        </label>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setUserRating(index + 1)}
+                              className="p-1"
+                            >
+                              <Star
+                                size={24}
+                                className={index < userRating 
+                                  ? 'text-yellow-500 fill-current cursor-pointer' 
+                                  : 'text-gray-300 cursor-pointer hover:text-yellow-400'
+                                }
+                              />
+                            </button>
+                          ))}
+                          <span className="ml-2 text-sm text-gray-600">
+                            {userRating > 0 ? `${userRating} star${userRating > 1 ? 's' : ''}` : 'Select a rating'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Review Text */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Your Review
+                        </label>
+                        <Textarea
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          placeholder="Share your experience with this product..."
+                          className="w-full min-h-[100px]"
+                          rows={4}
+                        />
+                      </div>
+
+                      {/* Submit Button */}
+                      <Button
+                        onClick={handleSubmitReview}
+                        className="w-full py-3 bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        Submit Review
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
