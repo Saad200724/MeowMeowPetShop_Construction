@@ -103,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = originalPriceValue && originalPriceValue > currentPrice;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-[200px] sm:h-[240px] md:h-[360px] flex flex-col w-[120px] sm:w-[140px] md:w-[200px] max-w-[120px] sm:max-w-[140px] md:max-w-[250px]">
+    <div className="bg-white rounded-2xl shadow-none sm:shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 h-auto flex flex-col w-[96px] sm:w-[128px] md:w-[200px] max-w-[96px] sm:max-w-[128px] md:max-w-[250px]">
       {/* Discount Badge */}
       {product.discount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -131,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       
       {/* Product Image - E-commerce Standard */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-20 sm:h-24 md:h-40 flex items-center justify-center flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-14 sm:h-20 md:h-40 flex items-center justify-center flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -145,12 +145,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Content - Improved Layout */}
       <div className="p-1 sm:p-2 md:p-3 flex flex-col justify-between space-y-1 sm:space-y-2 flex-1">
         {/* Product Name - Left Aligned */}
-        <h4 className="font-semibold text-xs sm:text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
+        <h4 className="font-semibold text-[10px] sm:text-xs md:text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-1 sm:line-clamp-2 leading-tight text-left">
           {product.name}
         </h4>
         
         {/* Rating - Left Aligned */}
-        <div className="flex items-center justify-start">
+        <div className="hidden sm:flex items-center justify-start">
           {renderStars(product.rating)}
         </div>
         
@@ -158,11 +158,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="space-y-2 flex-1 flex flex-col justify-between">
           <div className="text-left">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm sm:text-base md:text-lg font-bold text-[#26732d]">
+              <span className="text-xs sm:text-sm md:text-lg font-bold text-[#26732d]">
                 ৳{typeof product.price === 'string' ? product.price : product.price.toLocaleString()}
               </span>
               {oldPriceValue && (
-                <span className="text-xs sm:text-sm text-gray-500 line-through">
+                <span className="hidden sm:inline text-xs sm:text-sm text-gray-500 line-through">
                   ৳{typeof oldPriceValue === 'string' ? oldPriceValue : oldPriceValue.toLocaleString()}
                 </span>
               )}
@@ -170,7 +170,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             
             {/* Stock Display - Show as "Stock: number" */}
             {(product.stock || product.stockStatus) && (
-              <div className="text-xs text-gray-600 mb-2">
+              <div className="hidden sm:block text-xs text-gray-600 mb-2">
                 {typeof product.stock === 'number' ? `Stock: ${product.stock}` : product.stock || product.stockStatus}
               </div>
             )}
@@ -180,12 +180,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button 
             variant="outline"
             size="sm"
-            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-9 text-xs font-medium"
+            className="w-full rounded-full border-2 border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5 transition-all duration-200 h-7 sm:h-8 md:h-9 text-[10px] sm:text-xs font-medium"
             onClick={handleAddToCart}
             data-testid={`add-to-cart-${product.id}`}
           >
-            <ShoppingCart size={12} className="mr-1" />
-            Add to Cart
+            <ShoppingCart size={10} className="sm:mr-1" />
+            <span className="hidden sm:inline">Add to Cart</span>
           </Button>
         </div>
       </div>
