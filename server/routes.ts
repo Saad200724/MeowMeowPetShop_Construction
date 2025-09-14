@@ -2496,8 +2496,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
 
-    // Redirect to frontend success page with order information
-    res.redirect(`/?payment=success&transactionId=${transactionId}&amount=${paymentAmount}`);
+    // Redirect to dedicated payment success page
+    res.redirect(`/payment-success?transactionId=${transactionId}&amount=${paymentAmount}&status=COMPLETED`);
   });
 
   app.get("/payment/cancel", async (req, res) => {

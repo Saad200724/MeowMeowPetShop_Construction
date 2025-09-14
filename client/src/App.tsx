@@ -39,11 +39,12 @@ import ResetPasswordPage from "@/pages/reset-password";
 import AdminPage from "@/pages/admin";
 import DashboardPage from "@/pages/dashboard";
 import CartPage from "@/pages/cart";
-import CheckoutPage from "@/pages/checkout";
-import InvoicePage from "@/pages/invoice";
+import CheckoutPage from './pages/checkout';
+import PaymentSuccessPage from './pages/payment-success';
+import InvoicePage from './pages/invoice';
 import TrackOrderPage from "@/pages/track-order";
 import ProfilePage from "@/pages/profile";
-import MessengerPage from "@/pages/messenger";
+import MessengerPage from './pages/messenger';
 import ContactPage from "@/pages/contact";
 import FlashSaleProductsPage from "@/pages/flash-sale-products";
 import BulkProductsPage from "@/pages/bulk-products";
@@ -95,9 +96,8 @@ function Router() {
         <Route path="/dashboard" component={DashboardPage} />
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
-        <Route path="/invoice/:invoiceId" component={InvoicePage} />
-        <Route path="/track-order/:orderId" component={TrackOrderPage} />
-        <Route path="/profile" component={ProfilePage} />
+        <Route path="/payment-success" component={PaymentSuccessPage} />
+        <Route path="/invoice/:id" component={InvoicePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
