@@ -7,12 +7,16 @@ export async function createAdminAccount() {
     const existingAdmin = await User.findOne({ email: "admin@gmail.com" });
 
     if (existingAdmin) {
-      console.log("Admin account already exists");
+      // Update existing admin password to ensure it matches current code
+      const hashedPassword = await bcrypt.hash("meow123", 10);
+      existingAdmin.password = hashedPassword;
+      await existingAdmin.save();
+      console.log("Admin account password updated");
       return;
     }
 
     // Hash the admin password
-    const hashedPassword = await bcrypt.hash("meowmeow123", 10);
+    const hashedPassword = await bcrypt.hash("meow123", 10);
 
     // Create the admin account with email
     const adminUser = new User({
