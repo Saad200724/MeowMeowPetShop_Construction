@@ -2453,11 +2453,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/payment/success", async (req, res) => {
     const { transactionId, paymentMethod, paymentAmount, status } = req.query;
     
+    console.log('Payment success callback received:', req.query);
+    
     if (transactionId && status === 'COMPLETED') {
       // Update payment status
       try {
         const paymentTransaction = await PaymentTransaction.findOne({ transactionId });
         if (paymentTransaction) {
+          console.log('Updating payment transaction:', paymentTransaction.orderId);
+          
           paymentTransaction.status = 'completed';
           paymentTransaction.transactionId = transactionId as string;
           paymentTransaction.paymentMethod = paymentMethod as string;
@@ -2465,22 +2469,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
           paymentTransaction.callbackData = req.query;
           await paymentTransaction.save();
 
-          // Update order status
-          await Order.findOneAndUpdate(
+          // Update order status to confirmed and payment status to paid
+          const updatedOrder = await Order.findOneAndUpdate(
             { _id: paymentTransaction.orderId },
             { 
               status: 'confirmed',
+              paymentStatus: 'Paid',
+              paymentMethod: paymentMethod as string || 'rupantorpay'
+            },
+            { new: true }
+          );
+
+          // Also update the invoice payment status
+          await Invoice.findOneAndUpdate(
+            { orderId: paymentTransaction.orderId },
+            { 
+              paymentStatus: 'Paid',
               paymentMethod: paymentMethod as string || 'rupantorpay'
             }
           );
+
+          console.log('Payment and order updated successfully for order:', paymentTransaction.orderId);
         }
       } catch (error) {
         console.error('Payment success callback error:', error);
       }
     }
 
-    // Redirect to frontend success page
-    res.redirect(`/?payment=success&transactionId=${transactionId}`);
+    // Redirect to frontend success page with order information
+    res.redirect(`/?payment=success&transactionId=${transactionId}&amount=${paymentAmount}`);
   });
 
   app.get("/payment/cancel", async (req, res) => {
