@@ -192,11 +192,6 @@ export default function RepackFood() {
                             ৳{product.originalPrice?.toLocaleString()}
                           </span>
                         )}
-                        {savings > 0 && (
-                          <Badge className="bg-yellow-400 text-[#26732d] font-bold text-xs px-2 py-1 rounded-full ml-auto">
-                            {savings}% OFF
-                          </Badge>
-                        )}
                       </div>
 
                       {/* Stock Status */}
