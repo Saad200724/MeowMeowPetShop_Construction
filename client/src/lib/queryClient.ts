@@ -7,20 +7,47 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
+export async function apiRequest(url: string, options?: RequestInit): Promise<any> {
+  try {
+    console.log('API Request:', url, options);
 
-  await throwIfResNotOk(res);
-  return res;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+
+    console.log('API Response status:', response.status, response.statusText);
+
+    let responseData;
+    try {
+      responseData = await response.json();
+      console.log('API Response data:', responseData);
+    } catch (parseError) {
+      console.error('Failed to parse response JSON:', parseError);
+      throw new Error(`Invalid response format from server`);
+    }
+
+    if (!response.ok) {
+      // Throw an error object that includes the response data
+      const error = new Error(responseData?.message || `API request failed: ${response.statusText}`);
+      (error as any).response = responseData;
+      (error as any).status = response.status;
+      throw error;
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error('API Request failed:', error);
+
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network connection failed. Please check your internet connection.');
+    }
+
+    throw error;
+  }
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";

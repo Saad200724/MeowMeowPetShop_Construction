@@ -40,17 +40,35 @@ export default function PaymentProcessor({
   
   const createPaymentMutation = useMutation({
     mutationFn: async (): Promise<PaymentResponse> => {
-      return await apiRequest('/api/payments/create', {
-        method: 'POST',
-        body: JSON.stringify({
-          orderId,
-          amount,
-          customerInfo,
-          metadata
-        }),
+      console.log('Initializing payment for order:', orderId);
+      console.log('Payment data:', {
+        orderId,
+        amount,
+        customerInfo,
+        metadata
       });
+
+      try {
+        const response = await apiRequest('/api/payments/create', {
+          method: 'POST',
+          body: JSON.stringify({
+            orderId,
+            amount,
+            customerInfo,
+            metadata
+          }),
+        });
+        
+        console.log('Payment API response:', response);
+        return response;
+      } catch (error) {
+        console.error('Payment API error:', error);
+        throw error;
+      }
     },
     onSuccess: (data) => {
+      console.log('Payment initialization success:', data);
+      
       if (data.success && data.paymentUrl) {
         setPaymentUrl(data.paymentUrl);
         toast({
@@ -58,7 +76,8 @@ export default function PaymentProcessor({
           description: "Click 'Pay Now' to complete your payment securely.",
         });
       } else {
-        const error = data.message || "Failed to initialize payment";
+        const error = data.message || data.error || "Failed to initialize payment";
+        console.error('Payment initialization failed:', error);
         onError?.(error);
         toast({
           title: "Payment Error",
@@ -67,8 +86,20 @@ export default function PaymentProcessor({
         });
       }
     },
-    onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : "Payment initialization failed";
+    onError: (error: any) => {
+      console.error('Payment mutation error:', error);
+      
+      let errorMessage = "Payment initialization failed";
+      
+      if (error?.response) {
+        // API returned an error response
+        errorMessage = error.response.message || error.response.error || errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       onError?.(errorMessage);
       toast({
         title: "Payment Error",
