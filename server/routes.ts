@@ -2123,6 +2123,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test RupantorPay API endpoint
+  app.post("/api/payments/test", async (req, res) => {
+    try {
+      const apiKey = process.env.RUPANTORPAY_API_KEY;
+      if (!apiKey) {
+        return res.status(400).json({ error: "API key not configured" });
+      }
+
+      const host = req.get('host') || 'localhost:5000';
+      const protocol = req.get('x-forwarded-proto') || (host.includes('replit.dev') ? 'https' : 'http');
+      const baseUrl = `${protocol}://${host}`;
+
+      const testData = {
+        fullname: "Test User",
+        email: "test@example.com",
+        amount: 10,
+        success_url: `${baseUrl}/payment/success`,
+        cancel_url: `${baseUrl}/payment/cancel`,
+        webhook_url: `${baseUrl}/api/payments/webhook`,
+        metadata: JSON.stringify({ test: true })
+      };
+
+      console.log('Testing RupantorPay API with:', testData);
+
+      const response = await fetch('https://payment.rupantorpay.com/api/payment/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': apiKey,
+          'X-CLIENT': host,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(testData)
+      });
+
+      const data = await response.json();
+      
+      res.json({
+        httpStatus: response.status,
+        responseData: data,
+        success: response.ok && (data.payment_url || data.checkout_url)
+      });
+
+    } catch (error) {
+      console.error('RupantorPay test error:', error);
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : 'Test failed' 
+      });
+    }
+  });
+
   // Payment Schemas
   const createPaymentSchema = z.object({
     orderId: z.string().min(1, "Order ID is required"),
@@ -2187,24 +2238,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log('Using base URL:', baseUrl);
 
-      // Prepare RupantorPay request with proper formatting
+      // Prepare RupantorPay request according to documentation
       const paymentData = {
         fullname: customerInfo.fullname.trim(),
         email: customerInfo.email.trim(),
-        amount: Math.round(amount).toString(), // Ensure amount is integer string
+        amount: Math.round(amount), // Keep as number, not string
         success_url: `${baseUrl}/payment/success`,
         cancel_url: `${baseUrl}/payment/cancel`,
         webhook_url: `${baseUrl}/api/payments/webhook`,
-        metadata: {
+        metadata: JSON.stringify({
           orderId,
           customerPhone: customerInfo.phone || '',
           ...metadata
-        }
+        })
       };
 
       console.log('Sending payment request to RupantorPay:', {
         ...paymentData,
-        metadata: paymentData.metadata
+        apiKeyPresent: !!apiKey,
+        host: host
       });
 
       // Make request to RupantorPay with proper error handling
@@ -2214,11 +2266,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Content-Type': 'application/json',
           'X-API-KEY': apiKey,
           'X-CLIENT': host,
-          'Accept': 'application/json',
-          'User-Agent': 'MeowMeowPetShop/1.0'
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(paymentData),
-        timeout: 30000, // 30 second timeout
+        body: JSON.stringify(paymentData)
       });
 
       console.log('RupantorPay response status:', rupantorPayResponse.status);
@@ -2248,27 +2298,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if RupantorPay returned error status
-      if (responseData && responseData.status === false) {
+      if (responseData && (responseData.status === false || responseData.error)) {
         console.error('RupantorPay API business error:', responseData);
         return res.status(400).json({
           message: "Payment initialization failed",
-          error: responseData.message || "Payment gateway error"
+          error: responseData.message || responseData.error || "Payment gateway error"
         });
       }
 
-      // Validate required response fields
-      if (!responseData || !responseData.payment_url) {
-        console.error('Missing payment_url in response:', responseData);
+      // Validate required response fields - check for both payment_url and checkout_url
+      if (!responseData || (!responseData.payment_url && !responseData.checkout_url)) {
+        console.error('Missing payment URL in response:', responseData);
         return res.status(500).json({
           message: "Payment initialization failed",
-          error: "Payment URL not provided by gateway"
+          error: "Payment URL not provided by gateway",
+          debug: responseData
         });
       }
+
+      // Use payment_url or checkout_url whichever is available
+      const paymentUrl = responseData.payment_url || responseData.checkout_url;
 
       // Save payment transaction to database
       const paymentTransaction = new PaymentTransaction({
         orderId,
-        paymentUrl: responseData.payment_url,
+        paymentUrl: paymentUrl,
         transactionId: responseData.transaction_id || undefined, // Use undefined instead of null
         amount,
         currency: 'BDT',
@@ -2287,7 +2341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         message: "Payment initialized successfully",
-        paymentUrl: responseData.payment_url,
+        paymentUrl: paymentUrl,
         orderId: orderId,
         transactionId: responseData.transaction_id || null
       });
