@@ -76,8 +76,8 @@ export default function RepackFood() {
           <div className="overflow-x-auto scrollbar-hide pb-2">
             <div className="flex gap-4 min-w-max px-4">
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-2xl shadow-md h-[380px] animate-pulse border border-gray-100">
-                  <div className="bg-gray-200 h-40 rounded-t-2xl"></div>
+                <div key={i} className="flex-shrink-0 w-52 bg-white rounded-2xl shadow-md h-[320px] animate-pulse border border-gray-100">
+                  <div className="bg-gray-200 h-32 rounded-t-2xl"></div>
                   <div className="p-4 space-y-3">
                     <div className="bg-gray-200 h-4 rounded w-3/4"></div>
                     <div className="bg-gray-200 h-3 rounded w-full"></div>
@@ -126,7 +126,7 @@ export default function RepackFood() {
               const isLiked = likedItems[productId];
 
               return (
-                <Card key={productId} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-64">
+                <Card key={productId} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-52">
                   {/* Discount Badge */}
                   {savings > 0 && (
                     <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -163,7 +163,7 @@ export default function RepackFood() {
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="w-full h-40 object-contain transition-transform duration-500 group-hover:scale-110" 
+                      className="w-full h-32 object-contain transition-transform duration-500 group-hover:scale-110" 
                       loading="lazy"
                       decoding="async"
                     />
