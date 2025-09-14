@@ -2246,11 +2246,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success_url: `${baseUrl}/payment/success`,
         cancel_url: `${baseUrl}/payment/cancel`,
         webhook_url: `${baseUrl}/api/payments/webhook`,
-        metadata: JSON.stringify({
+        metadata: {
           orderId,
           customerPhone: customerInfo.phone || '',
           ...metadata
-        })
+        }
       };
 
       console.log('Sending payment request to RupantorPay:', {
