@@ -37,7 +37,7 @@ export default function PaymentProcessor({
 }: PaymentProcessorProps) {
   const { toast } = useToast();
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
-  
+
   const createPaymentMutation = useMutation({
     mutationFn: async (): Promise<PaymentResponse> => {
       console.log('Initializing payment for order:', orderId);
@@ -58,7 +58,7 @@ export default function PaymentProcessor({
             metadata
           }),
         });
-        
+
         console.log('Payment API response:', response);
         return response;
       } catch (error) {
@@ -68,7 +68,7 @@ export default function PaymentProcessor({
     },
     onSuccess: (data) => {
       console.log('Payment initialization success:', data);
-      
+
       if (data.success && data.paymentUrl) {
         setPaymentUrl(data.paymentUrl);
         toast({
@@ -87,19 +87,18 @@ export default function PaymentProcessor({
       }
     },
     onError: (error: any) => {
-      console.error('Payment mutation error:', error);
-      
       let errorMessage = "Payment initialization failed";
-      
-      if (error?.response) {
-        // API returned an error response
-        errorMessage = error.response.message || error.response.error || errorMessage;
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const response = (error as any).response;
+        errorMessage = response?.error || response?.message || errorMessage;
       } else if (typeof error === 'string') {
         errorMessage = error;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
-      
+
+      console.error('Payment initialization error:', error);
+
       onError?.(errorMessage);
       toast({
         title: "Payment Error",
@@ -113,7 +112,7 @@ export default function PaymentProcessor({
     if (paymentUrl) {
       // Open payment URL in new tab/window
       window.open(paymentUrl, '_blank', 'noopener,noreferrer');
-      
+
       // Start checking payment status
       checkPaymentStatus();
     }
@@ -125,7 +124,7 @@ export default function PaymentProcessor({
       try {
         const response = await fetch(`/api/payments/status/${orderId}`);
         const data = await response.json();
-        
+
         if (data.status === 'completed') {
           clearInterval(statusInterval);
           onSuccess?.(data.transactionId);
@@ -180,7 +179,7 @@ export default function PaymentProcessor({
               <span className="text-sm">{customerInfo.fullname}</span>
             </div>
           </div>
-          
+
           <Button 
             onClick={handlePayNow}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
@@ -189,13 +188,13 @@ export default function PaymentProcessor({
             <ExternalLink className="w-4 h-4 mr-2" />
             Pay Now with RupantorPay
           </Button>
-          
+
           <div className="text-center">
             <Badge variant="secondary" className="text-xs">
               Secure payment powered by RupantorPay
             </Badge>
           </div>
-          
+
           <p className="text-xs text-gray-500 text-center">
             After clicking "Pay Now", a new window will open. Complete your payment there and return to this page.
           </p>
@@ -230,7 +229,7 @@ export default function PaymentProcessor({
             <span className="text-sm">{customerInfo.fullname}</span>
           </div>
         </div>
-        
+
         <Button 
           onClick={() => createPaymentMutation.mutate()}
           disabled={createPaymentMutation.isPending}
@@ -249,7 +248,7 @@ export default function PaymentProcessor({
             </>
           )}
         </Button>
-        
+
         <div className="text-center">
           <Badge variant="secondary" className="text-xs">
             Secure payment powered by RupantorPay

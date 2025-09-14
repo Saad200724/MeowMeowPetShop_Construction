@@ -2169,13 +2169,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Validate API key
-      if (!process.env.RUPANTORPAY_API_KEY) {
+      const apiKey = process.env.RUPANTORPAY_API_KEY;
+      if (!apiKey || apiKey.trim() === '') {
         console.error('RupantorPay API key not configured');
         return res.status(500).json({
           message: "Payment gateway not configured",
           error: "API key missing"
         });
       }
+
+      console.log('API Key configured:', !!apiKey, 'Length:', apiKey.length);
 
       // Get domain for URLs
       const host = req.get('host') || 'localhost:5000';
@@ -2209,12 +2212,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-KEY': process.env.RUPANTORPAY_API_KEY,
+          'X-API-KEY': apiKey,
           'X-CLIENT': host,
           'Accept': 'application/json',
           'User-Agent': 'MeowMeowPetShop/1.0'
         },
         body: JSON.stringify(paymentData),
+        timeout: 30000, // 30 second timeout
       });
 
       console.log('RupantorPay response status:', rupantorPayResponse.status);
@@ -2235,16 +2239,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if response indicates success
-      if (!rupantorPayResponse.ok || !responseData || responseData.status === false) {
-        console.error('RupantorPay API error:', responseData);
+      if (!rupantorPayResponse.ok) {
+        console.error('RupantorPay API HTTP error:', rupantorPayResponse.status, responseData);
         return res.status(400).json({
           message: "Payment initialization failed",
           error: responseData?.message || responseData?.error || "Payment gateway rejected the request"
         });
       }
 
+      // Check if RupantorPay returned error status
+      if (responseData && responseData.status === false) {
+        console.error('RupantorPay API business error:', responseData);
+        return res.status(400).json({
+          message: "Payment initialization failed",
+          error: responseData.message || "Payment gateway error"
+        });
+      }
+
       // Validate required response fields
-      if (!responseData.payment_url) {
+      if (!responseData || !responseData.payment_url) {
         console.error('Missing payment_url in response:', responseData);
         return res.status(500).json({
           message: "Payment initialization failed",
@@ -2287,6 +2300,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ 
           message: "Unable to connect to payment gateway",
           error: "Network connection failed"
+        });
+      }
+      
+      if (error instanceof SyntaxError) {
+        return res.status(500).json({ 
+          message: "Invalid response from payment gateway",
+          error: "Response parsing failed"
         });
       }
       

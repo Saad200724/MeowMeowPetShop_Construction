@@ -96,13 +96,15 @@ export default function PaymentSuccessPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  onClick={() => setLocation('/invoice/' + paymentInfo.orderId)}
-                  className="flex-1 bg-[#26732d] hover:bg-[#1e5d26]"
-                >
-                  <Receipt className="w-4 h-4 mr-2" />
-                  View Invoice
-                </Button>
+                {paymentInfo.orderId && (
+                  <Button 
+                    onClick={() => setLocation('/invoice/' + paymentInfo.orderId)}
+                    className="flex-1 bg-[#26732d] hover:bg-[#1e5d26]"
+                  >
+                    <Receipt className="w-4 h-4 mr-2" />
+                    View Invoice
+                  </Button>
+                )}
                 <Button 
                   onClick={() => setLocation('/')}
                   variant="outline"
