@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon } from "@shared/models";
+import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook } from "@shared/models";
 import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
 import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
 import { z } from "zod";
@@ -2101,6 +2101,322 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Error validating coupon:', error);
       res.status(500).json({ message: "Failed to validate coupon" });
     }
+  });
+
+  // ===== PAYMENT ENDPOINTS (RupantorPay Integration) =====
+
+  // Payment Schemas
+  const createPaymentSchema = z.object({
+    orderId: z.string().min(1, "Order ID is required"),
+    amount: z.number().min(0.1, "Amount must be greater than 0"),
+    customerInfo: z.object({
+      fullname: z.string().min(1, "Customer name is required"),
+      email: z.string().email("Valid email is required"),
+      phone: z.string().optional(),
+    }),
+    metadata: z.any().optional(),
+  });
+
+  const verifyPaymentSchema = z.object({
+    transactionId: z.string().min(1, "Transaction ID is required"),
+  });
+
+  // Create Payment (Initialize payment with RupantorPay)
+  app.post("/api/payments/create", async (req, res) => {
+    try {
+      const result = createPaymentSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: result.error.flatten().fieldErrors
+        });
+      }
+
+      const { orderId, amount, customerInfo, metadata } = result.data;
+
+      // Check if payment already exists for this order
+      const existingPayment = await PaymentTransaction.findOne({ orderId });
+      if (existingPayment) {
+        return res.status(400).json({ 
+          message: "Payment already initiated for this order" 
+        });
+      }
+
+      // Get domain for URLs
+      const domain = process.env.REPLIT_DOMAINS || `${req.get('host')}`;
+      const baseUrl = `https://${domain}`;
+
+      // Prepare RupantorPay request
+      const paymentData = {
+        fullname: customerInfo.fullname,
+        email: customerInfo.email,
+        amount: amount.toString(),
+        success_url: `${baseUrl}/payment/success`,
+        cancel_url: `${baseUrl}/payment/cancel`,
+        webhook_url: `${baseUrl}/api/payments/webhook`,
+        metadata: {
+          orderId,
+          ...metadata
+        }
+      };
+
+      // Make request to RupantorPay
+      const rupantorPayResponse = await fetch('https://payment.rupantorpay.com/api/payment/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': process.env.RUPANTORPAY_API_KEY!,
+          'X-CLIENT': req.get('host') || 'localhost',
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      const responseData = await rupantorPayResponse.json();
+
+      if (!responseData.status) {
+        return res.status(400).json({
+          message: "Payment initialization failed",
+          error: responseData.message
+        });
+      }
+
+      // Save payment transaction to database
+      const paymentTransaction = new PaymentTransaction({
+        orderId,
+        paymentUrl: responseData.payment_url,
+        amount,
+        currency: 'BDT',
+        customerInfo,
+        status: 'pending',
+        metadata,
+        successUrl: paymentData.success_url,
+        cancelUrl: paymentData.cancel_url,
+        webhookUrl: paymentData.webhook_url,
+      });
+
+      await paymentTransaction.save();
+
+      res.json({
+        success: true,
+        message: "Payment initialized successfully",
+        paymentUrl: responseData.payment_url,
+        orderId: orderId
+      });
+
+    } catch (error) {
+      console.error('Payment creation error:', error);
+      res.status(500).json({ 
+        message: "Failed to initialize payment",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Verify Payment Status
+  app.post("/api/payments/verify", async (req, res) => {
+    try {
+      const result = verifyPaymentSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: result.error.flatten().fieldErrors
+        });
+      }
+
+      const { transactionId } = result.data;
+
+      // Make verification request to RupantorPay
+      const verificationResponse = await fetch('https://payment.rupantorpay.com/api/payment/verify-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': process.env.RUPANTORPAY_API_KEY!,
+        },
+        body: JSON.stringify({ transaction_id: transactionId }),
+      });
+
+      const verificationData = await verificationResponse.json();
+
+      if (!verificationData.status) {
+        return res.status(400).json({
+          message: "Payment verification failed",
+          error: verificationData.message
+        });
+      }
+
+      // Update payment transaction in database
+      const paymentTransaction = await PaymentTransaction.findOne({ transactionId });
+      if (paymentTransaction) {
+        paymentTransaction.status = verificationData.payment_status === 'COMPLETED' ? 'completed' : 'failed';
+        paymentTransaction.verifiedAt = new Date();
+        paymentTransaction.callbackData = verificationData;
+        await paymentTransaction.save();
+      }
+
+      res.json({
+        success: true,
+        transactionId,
+        status: verificationData.payment_status,
+        amount: verificationData.amount,
+        paymentMethod: verificationData.payment_method
+      });
+
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      res.status(500).json({ 
+        message: "Failed to verify payment",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Payment Webhook (for real-time payment status updates)
+  app.post("/api/payments/webhook", async (req, res) => {
+    try {
+      const webhookData = req.body;
+      
+      // Log webhook for debugging
+      const webhook = new PaymentWebhook({
+        transactionId: webhookData.transactionId || 'unknown',
+        paymentStatus: webhookData.status || 'unknown',
+        rawData: webhookData,
+        processed: false,
+      });
+
+      try {
+        await webhook.save();
+
+        // Process the webhook
+        if (webhookData.transactionId) {
+          const paymentTransaction = await PaymentTransaction.findOne({ 
+            transactionId: webhookData.transactionId 
+          });
+
+          if (paymentTransaction) {
+            paymentTransaction.status = webhookData.status === 'COMPLETED' ? 'completed' : 
+                                      webhookData.status === 'FAILED' ? 'failed' : 
+                                      'processing';
+            paymentTransaction.paymentMethod = webhookData.paymentMethod;
+            paymentTransaction.paymentFee = webhookData.paymentFee;
+            paymentTransaction.callbackData = webhookData;
+            
+            if (webhookData.status === 'COMPLETED') {
+              paymentTransaction.verifiedAt = new Date();
+            }
+
+            await paymentTransaction.save();
+
+            // Update order status if payment is completed
+            if (webhookData.status === 'COMPLETED') {
+              await Order.findOneAndUpdate(
+                { _id: paymentTransaction.orderId },
+                { 
+                  status: 'confirmed',
+                  paymentMethod: webhookData.paymentMethod || 'rupantorpay'
+                }
+              );
+            }
+          }
+
+          webhook.processed = true;
+          await webhook.save();
+        }
+
+      } catch (processingError) {
+        webhook.errorMessage = processingError instanceof Error ? processingError.message : 'Unknown error';
+        await webhook.save();
+        console.error('Webhook processing error:', processingError);
+      }
+
+      // Always respond with 200 to acknowledge receipt
+      res.status(200).json({ received: true });
+
+    } catch (error) {
+      console.error('Webhook error:', error);
+      res.status(200).json({ received: true }); // Still acknowledge to avoid retries
+    }
+  });
+
+  // Get Payment Status by Order ID
+  app.get("/api/payments/status/:orderId", async (req, res) => {
+    try {
+      const { orderId } = req.params;
+
+      const paymentTransaction = await PaymentTransaction.findOne({ orderId });
+      if (!paymentTransaction) {
+        return res.status(404).json({ message: "Payment not found" });
+      }
+
+      res.json({
+        orderId: paymentTransaction.orderId,
+        transactionId: paymentTransaction.transactionId,
+        status: paymentTransaction.status,
+        amount: paymentTransaction.amount,
+        currency: paymentTransaction.currency,
+        paymentMethod: paymentTransaction.paymentMethod,
+        createdAt: paymentTransaction.createdAt,
+        verifiedAt: paymentTransaction.verifiedAt,
+      });
+
+    } catch (error) {
+      console.error('Payment status error:', error);
+      res.status(500).json({ message: "Failed to get payment status" });
+    }
+  });
+
+  // Handle Payment Success/Cancel callbacks (for frontend redirects)
+  app.get("/payment/success", async (req, res) => {
+    const { transactionId, paymentMethod, paymentAmount, status } = req.query;
+    
+    if (transactionId && status === 'COMPLETED') {
+      // Update payment status
+      try {
+        const paymentTransaction = await PaymentTransaction.findOne({ transactionId });
+        if (paymentTransaction) {
+          paymentTransaction.status = 'completed';
+          paymentTransaction.transactionId = transactionId as string;
+          paymentTransaction.paymentMethod = paymentMethod as string;
+          paymentTransaction.verifiedAt = new Date();
+          paymentTransaction.callbackData = req.query;
+          await paymentTransaction.save();
+
+          // Update order status
+          await Order.findOneAndUpdate(
+            { _id: paymentTransaction.orderId },
+            { 
+              status: 'confirmed',
+              paymentMethod: paymentMethod as string || 'rupantorpay'
+            }
+          );
+        }
+      } catch (error) {
+        console.error('Payment success callback error:', error);
+      }
+    }
+
+    // Redirect to frontend success page
+    res.redirect(`/?payment=success&transactionId=${transactionId}`);
+  });
+
+  app.get("/payment/cancel", async (req, res) => {
+    const { transactionId } = req.query;
+    
+    if (transactionId) {
+      try {
+        await PaymentTransaction.findOneAndUpdate(
+          { transactionId },
+          { 
+            status: 'cancelled',
+            callbackData: req.query 
+          }
+        );
+      } catch (error) {
+        console.error('Payment cancel callback error:', error);
+      }
+    }
+
+    // Redirect to frontend cancel page
+    res.redirect(`/?payment=cancelled&transactionId=${transactionId}`);
   });
 
   const server = createServer(app);
