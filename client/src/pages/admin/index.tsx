@@ -133,6 +133,8 @@ interface Coupon {
 export default function AdminPage() {
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
+  
+  // All state hooks declared at the top level (not conditionally)
   const [activeTab, setActiveTab] = useState('products');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -154,39 +156,175 @@ export default function AdminPage() {
   const [orderSearchTerm, setOrderSearchTerm] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
 
-  // Function to parse announcement text for bold formatting
-  const parseAnnouncementText = (text: string) => {
-    if (!text) return text;
-
-    // Replace **text** with bold
-    let parsed = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Replace *text* with bold
-    parsed = parsed.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
-
-    return parsed;
-  };
-
-  // Fetch products, categories, and brands from database
+  // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
     queryKey: ['/api/products'],
+    enabled: !!user && user.role === 'admin', // Only run if user is admin
   });
 
-  // Fetch repack products separately for admin management
   const { data: repackProducts = [], isLoading: isLoadingRepackProducts, refetch: refetchRepackProducts } = useQuery({
     queryKey: ['/api/admin/repack-products'],
+    enabled: !!user && user.role === 'admin',
   });
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories'],
+    enabled: !!user && user.role === 'admin',
   });
 
   const { data: brands = [] } = useQuery({
     queryKey: ['/api/brands'],
+    enabled: !!user && user.role === 'admin',
   });
 
-  // Announcements queries
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery({
     queryKey: ['/api/announcements'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  const { data: blogPosts = [], refetch: refetchBlogs } = useQuery({
+    queryKey: ['/api/blog'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  const { data: coupons = [], refetch: refetchCoupons } = useQuery({
+    queryKey: ['/api/coupons'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  const { data: orders = [], refetch: refetchOrders } = useQuery({
+    queryKey: ['/api/orders'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  // All forms declared at the top level
+  const form = useForm<ProductFormData>({
+    resolver: zodResolver(productFormSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      originalPrice: '',
+      categoryId: '',
+      brandId: '',
+      image: '',
+      stockQuantity: 0,
+      tags: '',
+      isNew: false,
+      isBestseller: false,
+      isOnSale: false,
+      isActive: true,
+    },
+  });
+
+  const repackForm = useForm<RepackFormData>({
+    resolver: zodResolver(repackFormSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      originalPrice: '',
+      categoryId: '',
+      brandId: '',
+      image: '',
+      stockQuantity: 0,
+    },
+  });
+
+  const announcementForm = useForm<AnnouncementFormData>({
+    resolver: zodResolver(announcementFormSchema),
+    defaultValues: {
+      text: '',
+      isActive: true,
+    },
+  });
+
+  const couponForm = useForm<CouponFormData>({
+    resolver: zodResolver(couponFormSchema),
+    defaultValues: {
+      code: '',
+      description: '',
+      discountType: 'percentage',
+      discountValue: 0,
+      minOrderAmount: undefined,
+      maxDiscountAmount: undefined,
+      usageLimit: undefined,
+      validFrom: new Date(),
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      isActive: true,
+    },
+  });
+
+  // All mutations declared at the top level
+  const createProductMutation = useMutation({
+    mutationFn: async (data: ProductFormData) => {
+      const response = await apiRequest('POST', '/api/products', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      setShowProductDialog(false);
+      form.reset();
+      toast({
+        title: 'Success',
+        description: 'Product created successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create product',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const updateProductMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: ProductFormData }) => {
+      const response = await apiRequest('PUT', `/api/products/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      setEditingProduct(null);
+      setShowProductDialog(false);
+      form.reset();
+      toast({
+        title: 'Success',
+        description: 'Product updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update product',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest('DELETE', `/api/products/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      toast({
+        title: 'Success',
+        description: 'Product deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete product',
+        variant: 'destructive',
+      });
+    },
   });
 
   const createAnnouncementMutation = useMutation({
@@ -270,138 +408,6 @@ export default function AdminPage() {
     },
   });
 
-  // Form for product creation/editing
-  const form = useForm<ProductFormData>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      price: '',
-      originalPrice: '',
-      categoryId: '',
-      brandId: '',
-      image: '',
-      stockQuantity: 0,
-      tags: '',
-      isNew: false,
-      isBestseller: false,
-      isOnSale: false,
-      isActive: true,
-    },
-  });
-
-  // Form for repack food creation/editing
-  const repackForm = useForm<RepackFormData>({
-    resolver: zodResolver(repackFormSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      price: '',
-      originalPrice: '',
-      categoryId: '',
-      brandId: '',
-      image: '',
-      stockQuantity: 0,
-    },
-  });
-
-  const announcementForm = useForm<AnnouncementFormData>({
-    resolver: zodResolver(announcementFormSchema),
-    defaultValues: {
-      text: '',
-      isActive: true,
-    },
-  });
-
-  const couponForm = useForm<CouponFormData>({
-    resolver: zodResolver(couponFormSchema),
-    defaultValues: {
-      code: '',
-      description: '',
-      discountType: 'percentage',
-      discountValue: 0,
-      minOrderAmount: undefined,
-      maxDiscountAmount: undefined,
-      usageLimit: undefined,
-      validFrom: new Date(),
-      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      isActive: true,
-    },
-  });
-
-  // Product mutations
-  const createProductMutation = useMutation({
-    mutationFn: async (data: ProductFormData) => {
-      const response = await apiRequest('POST', '/api/products', data);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
-      setShowProductDialog(false);
-      form.reset();
-      toast({
-        title: 'Success',
-        description: 'Product created successfully',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to create product',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  const updateProductMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: ProductFormData }) => {
-      const response = await apiRequest('PUT', `/api/products/${id}`, data);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
-      setEditingProduct(null);
-      setShowProductDialog(false);
-      form.reset();
-      toast({
-        title: 'Success',
-        description: 'Product updated successfully',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to update product',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  const deleteProductMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await apiRequest('DELETE', `/api/products/${id}`);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
-      toast({
-        title: 'Success',
-        description: 'Product deleted successfully',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to delete product',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // Repack food mutations
   const createRepackMutation = useMutation({
     mutationFn: async (data: RepackFormData) => {
       // Add repack-food tag automatically
@@ -462,22 +468,6 @@ export default function AdminPage() {
     },
   });
 
-  // Fetch blogs from API
-  const { data: blogPosts = [], refetch: refetchBlogs } = useQuery({
-    queryKey: ['/api/blog'],
-  });
-
-  // Fetch coupons from API
-  const { data: coupons = [], refetch: refetchCoupons } = useQuery({
-    queryKey: ['/api/coupons'],
-  });
-
-  // Fetch orders from API
-  const { data: orders = [], refetch: refetchOrders } = useQuery({
-    queryKey: ['/api/orders'],
-  });
-
-  // Blog mutations
   const createBlogMutation = useMutation({
     mutationFn: async (data: BlogFormData) => {
       const slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -571,7 +561,6 @@ export default function AdminPage() {
     },
   });
 
-  // Coupon mutations
   const createCouponMutation = useMutation({
     mutationFn: async (data: CouponFormData) => {
       const response = await fetch('/api/coupons', {
@@ -653,6 +642,74 @@ export default function AdminPage() {
     },
   });
 
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+      const response = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!response.ok) throw new Error('Failed to update order status');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      toast({
+        title: 'Success',
+        description: 'Order status updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update order status',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (orderId: string) => {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete order');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      toast({
+        title: 'Success',
+        description: 'Order deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete order',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto shadow-lg">
+          <CardContent className="pt-6 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Loading...</h2>
+            <p className="text-gray-600">Checking authentication</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show access denied if not admin
   if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
@@ -672,7 +729,19 @@ export default function AdminPage() {
         </Card>
       </div>
     );
-  }
+  }</old_str>
+
+  // Function to parse announcement text for bold formatting
+  const parseAnnouncementText = (text: string) => {
+    if (!text) return text;
+
+    // Replace **text** with bold
+    let parsed = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Replace *text* with bold
+    parsed = parsed.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+
+    return parsed;
+  };</old_str>
 
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -809,56 +878,7 @@ export default function AdminPage() {
     }
   };
 
-  // Order status update mutation
-  const updateOrderStatusMutation = useMutation({
-    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
-      const response = await fetch(`/api/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (!response.ok) throw new Error('Failed to update order status');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-      toast({
-        title: 'Success',
-        description: 'Order status updated successfully',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to update order status',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  const deleteOrderMutation = useMutation({
-    mutationFn: async (orderId: string) => {
-      const response = await fetch(`/api/orders/${orderId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete order');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-      toast({
-        title: 'Success',
-        description: 'Order deleted successfully',
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to delete order',
-        variant: 'destructive',
-      });
-    },
-  });
+  
 
   // Order handlers
   const handleUpdateOrderStatus = (orderId: string, status: string) => {

@@ -1,104 +1,96 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import { onAuthStateChange, type AuthUser } from '@/lib/supabase'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Extended user type that matches our database schema
-interface ExtendedUser extends AuthUser {
-  role?: string
-  firstName?: string
-  lastName?: string
+interface User {
+  id: string;
+  username: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
 }
 
 interface AuthContextType {
-  user: ExtendedUser | null
-  loading: boolean
-  signOut: () => void
-  refreshAuth: () => void
+  user: User | null;
+  signIn: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  signOut: () => void;
+  loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
-  signOut: () => {},
-  refreshAuth: () => {},
-})
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<ExtendedUser | null>(null)
-  const [loading, setLoading] = useState(true)
+const AUTH_STORAGE_KEY = 'meow_meow_auth_user';
 
-  const signOut = async () => {
-    // Sign out from Supabase if it's a regular user
-    if (user && user.role !== 'admin') {
-      const { signOut: supabaseSignOut } = await import('@/lib/supabase')
-      await supabaseSignOut()
-    }
-    
-    // Clear local state for all users (including admin)
-    setUser(null)
-    localStorage.removeItem('auth_user')
-  }
-
-  const refreshAuth = () => {
-    const storedUser = localStorage.getItem('auth_user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    } else {
-      setUser(null)
-    }
-  }
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize with stored user for admin access
-    const storedUser = localStorage.getItem('auth_user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
+    // Check for existing session on mount
+    checkAuth();
+  }, []);
 
-    // Set up Supabase auth state listener
-    const { data: { subscription } } = onAuthStateChange((supabaseUser) => {
-      if (supabaseUser) {
-        // Convert Supabase user to our user format
-        const user: ExtendedUser = {
-          id: supabaseUser.id,
-          email: supabaseUser.email!,
-          name: supabaseUser.user_metadata?.name || `${supabaseUser.user_metadata?.firstName || ''} ${supabaseUser.user_metadata?.lastName || ''}`.trim(),
-          role: supabaseUser.user_metadata?.role || 'user',
-          firstName: supabaseUser.user_metadata?.firstName,
-          lastName: supabaseUser.user_metadata?.lastName
-        }
-        setUser(user)
-        // Also store in localStorage for consistency
-        localStorage.setItem('auth_user', JSON.stringify(user))
-      } else {
-        // Only clear if it's not an admin user from localStorage
-        const storedUser = localStorage.getItem('auth_user')
-        if (storedUser) {
-          const parsed = JSON.parse(storedUser)
-          if (parsed.role !== 'admin') {
-            setUser(null)
-            localStorage.removeItem('auth_user')
-          }
-        } else {
-          setUser(null)
+  const checkAuth = async () => {
+    try {
+      // Check localStorage for persisted user
+      const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          console.log('Found stored user:', parsedUser);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error('Failed to parse stored user:', error);
+          localStorage.removeItem(AUTH_STORAGE_KEY);
         }
       }
-      setLoading(false)
-    })
+    } catch (error) {
+      console.error('Auth check failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return () => subscription.unsubscribe()
-  }, [])
+  const signIn = async (email: string, password: string) => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUser(data.user);
+        // Persist user to localStorage
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data.user));
+        console.log('User signed in and stored:', data.user);
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      return { success: false, message: 'Network error' };
+    }
+  };
+
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    console.log('User signed out and storage cleared');
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut, refreshAuth }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, loading }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
-export const useAuth = () => {
-  const context = useContext(AuthContext)
+export function useAuth() {
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
+  return context;
 }
