@@ -119,7 +119,7 @@ function App() {
           <ChatProvider>
             <TooltipProvider>
               <SidebarProvider>
-                <div className="min-h-screen bg-white">
+                <div className="min-h-screen bg-white mobile-safe-bottom">
                   <Router />
                   <FloatingCart />
                   <Toaster />
