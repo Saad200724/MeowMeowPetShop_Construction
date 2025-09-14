@@ -729,7 +729,7 @@ export default function AdminPage() {
         </Card>
       </div>
     );
-  }</old_str>
+  }
 
   // Function to parse announcement text for bold formatting
   const parseAnnouncementText = (text: string) => {
@@ -741,7 +741,7 @@ export default function AdminPage() {
     parsed = parsed.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
 
     return parsed;
-  };</old_str>
+  };
 
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
