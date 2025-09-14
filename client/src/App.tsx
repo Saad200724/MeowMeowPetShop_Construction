@@ -41,6 +41,7 @@ import DashboardPage from "@/pages/dashboard";
 import CartPage from "@/pages/cart";
 import CheckoutPage from "@/pages/checkout";
 import InvoicePage from "@/pages/invoice";
+import TrackOrderPage from "@/pages/track-order";
 import ProfilePage from "@/pages/profile";
 import MessengerPage from "@/pages/messenger";
 import ContactPage from "@/pages/contact";
@@ -95,6 +96,7 @@ function Router() {
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
         <Route path="/invoice/:invoiceId" component={InvoicePage} />
+        <Route path="/track-order/:orderId" component={TrackOrderPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />

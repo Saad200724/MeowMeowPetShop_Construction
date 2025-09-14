@@ -301,8 +301,12 @@ export default function DashboardPage() {
               ))}
             </div>
             <div className="mt-4 flex space-x-2">
-              <Button variant="outline" size="sm">View Details</Button>
-              <Button variant="outline" size="sm">Track Order</Button>
+              <Link href={`/invoice/${order.id}`}>
+                <Button variant="outline" size="sm">View Details</Button>
+              </Link>
+              <Link href={`/track-order/${order.id}`}>
+                <Button variant="outline" size="sm">Track Order</Button>
+              </Link>
             </div>
           </Card>
         ))}
