@@ -2256,7 +2256,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const paymentTransaction = new PaymentTransaction({
         orderId,
         paymentUrl: responseData.payment_url,
-        transactionId: responseData.transaction_id || null,
+        transactionId: responseData.transaction_id || undefined, // Use undefined instead of null
         amount,
         currency: 'BDT',
         customerInfo,

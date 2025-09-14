@@ -331,7 +331,7 @@ export interface IPaymentTransaction extends Document {
 
 const paymentTransactionSchema = new Schema<IPaymentTransaction>({
   orderId: { type: String, required: true, unique: true },
-  transactionId: { type: String, sparse: true, unique: true },
+  transactionId: { type: String, sparse: true },
   paymentUrl: String,
   amount: { type: Number, required: true, min: 0 },
   currency: { type: String, default: 'BDT' },
