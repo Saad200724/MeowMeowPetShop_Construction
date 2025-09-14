@@ -304,6 +304,75 @@ const couponSchema = new Schema<ICoupon>({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
+// Payment Transaction Schema (for RupantorPay integration)
+export interface IPaymentTransaction extends Document {
+  orderId: string;
+  transactionId?: string; // RupantorPay transaction ID
+  paymentUrl?: string; // Generated payment URL from RupantorPay
+  amount: number;
+  currency: string;
+  customerInfo: {
+    fullname: string;
+    email: string;
+    phone?: string;
+  };
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  paymentMethod?: string; // Received from RupantorPay callback
+  paymentFee?: number; // Transaction fee
+  metadata?: any; // Additional data
+  successUrl: string;
+  cancelUrl: string;
+  webhookUrl?: string;
+  verifiedAt?: Date;
+  callbackData?: any; // Data received from RupantorPay callback
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const paymentTransactionSchema = new Schema<IPaymentTransaction>({
+  orderId: { type: String, required: true, unique: true },
+  transactionId: { type: String, sparse: true, unique: true },
+  paymentUrl: String,
+  amount: { type: Number, required: true, min: 0 },
+  currency: { type: String, default: 'BDT' },
+  customerInfo: {
+    fullname: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: String,
+  },
+  status: { 
+    type: String, 
+    enum: ['pending', 'processing', 'completed', 'failed', 'cancelled'], 
+    default: 'pending' 
+  },
+  paymentMethod: String,
+  paymentFee: { type: Number, min: 0 },
+  metadata: Schema.Types.Mixed,
+  successUrl: { type: String, required: true },
+  cancelUrl: { type: String, required: true },
+  webhookUrl: String,
+  verifiedAt: Date,
+  callbackData: Schema.Types.Mixed,
+}, { timestamps: true });
+
+// Payment Webhook Log Schema (for debugging and audit)
+export interface IPaymentWebhook extends Document {
+  transactionId: string;
+  paymentStatus: string;
+  rawData: any; // Complete webhook payload
+  processed: boolean;
+  errorMessage?: string;
+  createdAt: Date;
+}
+
+const paymentWebhookSchema = new Schema<IPaymentWebhook>({
+  transactionId: { type: String, required: true },
+  paymentStatus: { type: String, required: true },
+  rawData: { type: Schema.Types.Mixed, required: true },
+  processed: { type: Boolean, default: false },
+  errorMessage: String,
+}, { timestamps: true });
+
 // Export Models
 export const User = mongoose.model<IUser>('User', userSchema);
 export const Category = mongoose.model<ICategory>('Category', categorySchema);
@@ -315,6 +384,8 @@ export const Announcement = mongoose.model<IAnnouncement>('Announcement', announ
 export const Cart = mongoose.model<ICart>('Cart', cartSchema);
 export const Invoice = mongoose.model<IInvoice>('Invoice', invoiceSchema);
 export const Coupon = mongoose.model<ICoupon>('Coupon', couponSchema);
+export const PaymentTransaction = mongoose.model<IPaymentTransaction>('PaymentTransaction', paymentTransactionSchema);
+export const PaymentWebhook = mongoose.model<IPaymentWebhook>('PaymentWebhook', paymentWebhookSchema);
 
 // Export types for compatibility with existing code
 export type UserType = IUser;
@@ -328,3 +399,5 @@ export type CartType = ICart;
 export type CartItemType = ICartItem;
 export type InvoiceType = IInvoice;
 export type CouponType = ICoupon;
+export type PaymentTransactionType = IPaymentTransaction;
+export type PaymentWebhookType = IPaymentWebhook;
