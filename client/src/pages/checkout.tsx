@@ -18,6 +18,7 @@ import Footer from '@/components/layout/footer';
 import { ChevronDown, ChevronUp, CreditCard, Truck, User, MapPin, MessageSquare, ShoppingBag, Tag } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useMutation } from '@tanstack/react-query';
+import PaymentProcessor from '@/components/ui/payment-processor';
 
 interface CustomerInfo {
   name: string;
@@ -71,6 +72,8 @@ export default function CheckoutPage() {
   const [orderNotes, setOrderNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -176,12 +179,23 @@ export default function CheckoutPage() {
       return response.json();
     },
     onSuccess: (data) => {
-      clearCart();
-      toast({
-        title: "Order placed successfully!",
-        description: `Order #${data.invoice.invoiceNumber} has been created.`,
-      });
-      setLocation(`/invoice/${data.invoice._id}`);
+      if (paymentMethod === 'RupantorPay') {
+        // For online payment, store order ID and show payment processor
+        setCreatedOrderId(data.order._id);
+        setShowPayment(true);
+        toast({
+          title: "Order created successfully!",
+          description: "Please complete your payment to confirm the order.",
+        });
+      } else {
+        // For COD and other methods, proceed as usual
+        clearCart();
+        toast({
+          title: "Order placed successfully!",
+          description: `Order #${data.invoice.invoiceNumber} has been created.`,
+        });
+        setLocation(`/invoice/${data.invoice._id}`);
+      }
     },
     onError: (error) => {
       toast({
@@ -279,8 +293,78 @@ export default function CheckoutPage() {
     }
   };
 
+  const handlePaymentSuccess = (transactionId: string) => {
+    clearCart();
+    setShowPayment(false);
+    toast({
+      title: "Payment successful!",
+      description: `Payment completed successfully. Transaction ID: ${transactionId}`,
+    });
+    setLocation(`/invoice/${createdOrderId}`);
+  };
+
+  const handlePaymentError = (error: string) => {
+    setShowPayment(false);
+    toast({
+      title: "Payment failed",
+      description: error,
+      variant: "destructive",
+    });
+  };
+
   if (cartState.items.length === 0) {
     return null; // Will redirect via useEffect
+  }
+
+  // Show payment processor if payment is required
+  if (showPayment && createdOrderId) {
+    const finalTotal = getFinalTotal();
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="py-8">
+          <div className="max-w-2xl mx-auto px-4">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-[#26732d]">Complete Payment</h1>
+              <p className="text-gray-600 mt-2">
+                Your order has been created. Please complete the payment to confirm.
+              </p>
+            </div>
+            
+            <PaymentProcessor
+              orderId={createdOrderId}
+              amount={finalTotal}
+              customerInfo={{
+                fullname: billingDetails.name,
+                email: billingDetails.email,
+                phone: billingDetails.phone,
+              }}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+              metadata={{
+                orderType: 'ecommerce',
+                items: cartState.items.length,
+                coupon: cartState.appliedCoupon?.code || null,
+              }}
+            />
+            
+            <div className="mt-8 text-center">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowPayment(false);
+                  setCreatedOrderId(null);
+                }}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                ← Back to Checkout
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -657,6 +741,13 @@ export default function CheckoutPage() {
                         <Label htmlFor="bkash" className="flex items-center cursor-pointer font-medium text-[#26732d]">
                           <CreditCard className="mr-2 h-5 w-5 text-pink-600" />
                           Bkash & Card
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-3 p-4 border border-blue-300 rounded-lg bg-blue-50/30">
+                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d]" />
+                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d]">
+                          <CreditCard className="mr-2 h-5 w-5 text-blue-600" />
+                          RupantorPay (Online Payment)
                         </Label>
                       </div>
                     </RadioGroup>
