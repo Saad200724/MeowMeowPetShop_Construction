@@ -5,23 +5,21 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { signUp } from '@/lib/supabase'
+import { sendOtp } from '@/lib/supabase'
+import { OtpVerification } from '@/components/ui/otp-verification'
 import { useToast } from '@/hooks/use-toast'
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, PawPrint, User, Check } from 'lucide-react'
+import { Mail, ArrowLeft, PawPrint, User, Loader2 } from 'lucide-react'
 const logoPath = '/logo.png'
 
 export default function SignUpPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [showOtpVerification, setShowOtpVerification] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    email: ''
   })
   const { toast } = useToast()
 
@@ -37,19 +35,19 @@ export default function SignUpPage() {
       return
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
       toast({
-        title: 'Password Mismatch',
-        description: 'Passwords do not match',
+        title: 'Name Required',
+        description: 'Please enter your first and last name',
         variant: 'destructive',
       })
       return
     }
 
-    if (formData.password.length < 6) {
+    if (!formData.email.trim()) {
       toast({
-        title: 'Password Too Short',
-        description: 'Password must be at least 6 characters long',
+        title: 'Email Required',
+        description: 'Please enter your email address',
         variant: 'destructive',
       })
       return
@@ -58,36 +56,31 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      console.log('Starting sign up process...')
-      const result = await signUp(
-        formData.email, 
-        formData.password, 
-        formData.firstName, 
-        formData.lastName
-      )
+      console.log('Sending OTP for sign up...')
+      const result = await sendOtp(formData.email, true) // true = isSignUp
       
-      console.log('Sign up result:', result)
+      console.log('OTP send result:', result)
       
       if (result.error) {
-        console.error('Sign up error:', result.error)
+        console.error('OTP send error:', result.error)
         toast({
           title: 'Sign Up Failed',
-          description: result.error.message || 'An error occurred during sign up',
+          description: result.error.message || 'Failed to send verification code',
           variant: 'destructive',
         })
       } else {
-        console.log('Sign up successful')
+        console.log('OTP sent successfully')
         toast({
-          title: 'Account Created!',
-          description: 'Please check your email to verify your account.',
+          title: 'Verification Code Sent!',
+          description: 'Please check your email for the 6-digit code.',
         })
-        setLocation('/sign-in')
+        setShowOtpVerification(true)
       }
     } catch (error) {
-      console.error('Unexpected error during sign up:', error)
+      console.error('Unexpected error during OTP send:', error)
       toast({
         title: 'Network Error',
-        description: 'Unable to connect to authentication service. Please try again.',
+        description: 'Unable to send verification code. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -99,26 +92,33 @@ export default function SignUpPage() {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const passwordStrength = (password: string) => {
-    let strength = 0
-    if (password.length >= 6) strength++
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++
-    if (password.match(/\d/)) strength++
-    if (password.match(/[^a-zA-Z\d]/)) strength++
-    return strength
+  const handleOtpSuccess = (user: any) => {
+    console.log('OTP verification successful:', user)
+    toast({
+      title: 'Welcome to Meow Meow Pet Shop! 🐾',
+      description: 'Your account has been created successfully.',
+    })
+    setLocation('/') // Redirect to home page
   }
 
-  const getStrengthColor = (strength: number) => {
-    if (strength === 0) return 'bg-gray-200'
-    if (strength === 1) return 'bg-red-400'
-    if (strength === 2) return 'bg-yellow-400'
-    if (strength === 3) return 'bg-blue-400'
-    return 'bg-green-400'
+  const handleBackToSignUp = () => {
+    setShowOtpVerification(false)
   }
 
-  const getStrengthText = (strength: number) => {
-    if (strength === 0) return 'Enter password'
-    if (strength === 1) return 'Weak'
+  // Show OTP verification component if needed
+  if (showOtpVerification) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+        <OtpVerification
+          email={formData.email}
+          isSignUp={true}
+          onSuccess={handleOtpSuccess}
+          onBack={handleBackToSignUp}
+        />
+      </div>
+    )
+  }
+
     if (strength === 2) return 'Fair'
     if (strength === 3) return 'Good'
     return 'Strong'
