@@ -873,7 +873,7 @@ export default function CheckoutPage() {
                           <img 
                             src="https://rupantorpay.com/public/assets/img/logo.webp" 
                             alt="RupantorPay" 
-                            className="mr-2 h-5 w-auto"
+                            className="mr-2 h-4 w-auto"
                           />
                           RupantorPay(Online Payment)
                         </Label>
