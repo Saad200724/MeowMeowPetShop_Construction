@@ -226,12 +226,22 @@ export default function InvoicePage() {
                     <p>{invoice.customerInfo.email}</p>
                     <p>{invoice.customerInfo.phone}</p>
                     {invoice.customerInfo.address && (
-                      <p className="text-gray-600">
-                        {typeof invoice.customerInfo.address === 'string' 
-                          ? invoice.customerInfo.address 
-                          : `${invoice.customerInfo.address.address}, ${invoice.customerInfo.address.city}`
-                        }
-                      </p>
+                      <div className="text-gray-600 space-y-1">
+                        {typeof invoice.customerInfo.address === 'string' ? (
+                          <p>{invoice.customerInfo.address}</p>
+                        ) : (
+                          <>
+                            <p>{invoice.customerInfo.address.address}</p>
+                            {invoice.customerInfo.address.thanaUpazilla && (
+                              <p>{invoice.customerInfo.address.thanaUpazilla}</p>
+                            )}
+                            <p>
+                              {invoice.customerInfo.address.district}, {invoice.customerInfo.address.division}
+                              {invoice.customerInfo.address.postCode && ` - ${invoice.customerInfo.address.postCode}`}
+                            </p>
+                          </>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
