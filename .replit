@@ -15,14 +15,14 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 41353
+localPort = 34087
 externalPort = 3000
 
 [env]
 PORT = "5000"
 
 [workflows]
-runButton = "Start Application"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Start Server"
