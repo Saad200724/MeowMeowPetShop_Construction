@@ -30,13 +30,16 @@ interface CustomerInfo {
 }
 
 interface BillingDetails {
-  name: string;
+  firstName: string;
+  lastName: string;
   phone: string;
-  email: string;
+  alternativePhone: string;
+  division: string;
+  district: string;
+  thanaUpazilla: string;
+  postCode: string;
   address: string;
-  city: string;
-  area: string;
-  zipCode: string;
+  email: string;
 }
 
 export default function CheckoutPage() {
@@ -61,13 +64,16 @@ export default function CheckoutPage() {
     createAccount: false
   });
   const [billingDetails, setBillingDetails] = useState<BillingDetails>({
-    name: '',
+    firstName: '',
+    lastName: '',
     phone: '',
-    email: '',
+    alternativePhone: '',
+    division: '',
+    district: '',
+    thanaUpazilla: '',
+    postCode: '',
     address: '',
-    city: '',
-    area: '',
-    zipCode: ''
+    email: ''
   });
   const [orderNotes, setOrderNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('COD');
@@ -92,8 +98,9 @@ export default function CheckoutPage() {
       }));
       setBillingDetails(prev => ({
         ...prev,
-        email: user.email || '',
-        name: `${user.firstName || ''} ${user.lastName || ''}`.trim()
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || ''
       }));
     }
   }, [user]);
@@ -211,12 +218,12 @@ export default function CheckoutPage() {
     
     // Comprehensive form validation
     const missingFields = [];
-    if (!billingDetails.name.trim()) missingFields.push("Full Name");
+    if (!billingDetails.firstName.trim()) missingFields.push("First Name");
     if (!billingDetails.phone.trim()) missingFields.push("Phone Number");
     if (!billingDetails.email.trim()) missingFields.push("Email Address");
     if (!billingDetails.address.trim()) missingFields.push("Full Address");
-    if (!billingDetails.city.trim()) missingFields.push("City");
-    if (!billingDetails.area.trim()) missingFields.push("Area");
+    if (!billingDetails.division.trim()) missingFields.push("Division");
+    if (!billingDetails.district.trim()) missingFields.push("District");
 
     if (missingFields.length > 0) {
       toast({
@@ -256,14 +263,16 @@ export default function CheckoutPage() {
     const orderData = {
       userId: user?.id || 'guest',
       customerInfo: {
-        name: billingDetails.name,
+        name: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
         email: billingDetails.email,
         phone: billingDetails.phone,
+        alternativePhone: billingDetails.alternativePhone,
         address: {
           address: billingDetails.address,
-          city: billingDetails.city,
-          area: billingDetails.area,
-          zipCode: billingDetails.zipCode
+          division: billingDetails.division,
+          district: billingDetails.district,
+          thanaUpazilla: billingDetails.thanaUpazilla,
+          postCode: billingDetails.postCode
         }
       },
       items: cartState.items.map(item => ({
@@ -277,9 +286,10 @@ export default function CheckoutPage() {
       paymentMethod,
       shippingAddress: {
         address: billingDetails.address,
-        city: billingDetails.city,
-        area: billingDetails.area,
-        zipCode: billingDetails.zipCode
+        division: billingDetails.division,
+        district: billingDetails.district,
+        thanaUpazilla: billingDetails.thanaUpazilla,
+        postCode: billingDetails.postCode
       },
       orderNotes
     };
@@ -335,7 +345,7 @@ export default function CheckoutPage() {
               orderId={createdOrderId}
               amount={finalTotal}
               customerInfo={{
-                fullname: billingDetails.name,
+                fullname: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
                 email: billingDetails.email,
                 phone: billingDetails.phone,
               }}
@@ -383,7 +393,7 @@ export default function CheckoutPage() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-lg font-semibold text-[#26732d]">📞 01405588433</p>
+              <p className="text-lg font-semibold text-[#26732d]">📞 01405-045023</p>
               <p className="text-sm text-gray-600">Customer Support</p>
             </div>
           </div>
@@ -479,79 +489,195 @@ export default function CheckoutPage() {
                 </CardHeader>
                 <CardContent className="pt-6">
                   <form className="space-y-4">
-                    <div>
-                      <Label htmlFor="customer-name" className="text-[#26732d] font-medium">Full Name *</Label>
-                      <Input
-                        id="customer-name"
-                        value={billingDetails.name}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Enter your name"
-                        required
-                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="customer-first-name" className="text-[#26732d] font-medium">First Name *</Label>
+                        <Input
+                          id="customer-first-name"
+                          value={billingDetails.firstName}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, firstName: e.target.value }))}
+                          placeholder="Enter your first name"
+                          required
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-first-name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="customer-last-name" className="text-[#26732d] font-medium">Last Name</Label>
+                        <Input
+                          id="customer-last-name"
+                          value={billingDetails.lastName}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, lastName: e.target.value }))}
+                          placeholder="Enter your last name"
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-last-name"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="customer-phone" className="text-[#26732d] font-medium">Phone *</Label>
-                      <Input
-                        id="customer-phone"
-                        type="tel"
-                        value={billingDetails.phone}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))}
-                        placeholder="Ex: 01XXXXXXXX"
-                        required
-                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="customer-phone" className="text-[#26732d] font-medium">Phone *</Label>
+                        <Input
+                          id="customer-phone"
+                          type="tel"
+                          value={billingDetails.phone}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))}
+                          placeholder="Ex: 01XXXXXXXX"
+                          required
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-phone"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="customer-alt-phone" className="text-[#26732d] font-medium">Alternative Phone</Label>
+                        <Input
+                          id="customer-alt-phone"
+                          type="tel"
+                          value={billingDetails.alternativePhone}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, alternativePhone: e.target.value }))}
+                          placeholder="Ex: 01XXXXXXXX"
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-alternative-phone"
+                        />
+                      </div>
                     </div>
                   </form>
                 </CardContent>
               </Card>
 
-              {/* Billing Details */}
+              {/* Select Location */}
               <Card className="border-[#26732d]/30">
                 <CardHeader className="bg-[#26732d]/5">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-xl text-[#26732d]">Select city</CardTitle>
+                    <CardTitle className="text-xl text-[#26732d]">Select Location</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <form className="space-y-4">
-                    <div>
-                      <Label htmlFor="billing-city" className="text-[#26732d] font-medium">State</Label>
-                      <select 
-                        className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
-                        value={billingDetails.city}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, city: e.target.value }))}
-                      >
-                        <option value="">Select state</option>
-                        <option value="dhaka">Dhaka</option>
-                        <option value="chittagong">Chittagong</option>
-                        <option value="sylhet">Sylhet</option>
-                        <option value="rajshahi">Rajshahi</option>
-                        <option value="khulna">Khulna</option>
-                        <option value="barisal">Barisal</option>
-                        <option value="rangpur">Rangpur</option>
-                        <option value="mymensingh">Mymensingh</option>
-                      </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="billing-division" className="text-[#26732d] font-medium">Division *</Label>
+                        <select 
+                          className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                          value={billingDetails.division}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, division: e.target.value }))}
+                          data-testid="select-division"
+                        >
+                          <option value="">Select Division</option>
+                          <option value="dhaka">Dhaka</option>
+                          <option value="chittagong">Chittagong</option>
+                          <option value="sylhet">Sylhet</option>
+                          <option value="rajshahi">Rajshahi</option>
+                          <option value="khulna">Khulna</option>
+                          <option value="barisal">Barisal</option>
+                          <option value="rangpur">Rangpur</option>
+                          <option value="mymensingh">Mymensingh</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="billing-district" className="text-[#26732d] font-medium">District *</Label>
+                        <select 
+                          className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                          value={billingDetails.district}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value }))}
+                          data-testid="select-district"
+                        >
+                          <option value="">Select District</option>
+                          <option value="bagerhat">Bagerhat</option>
+                          <option value="bandarban">Bandarban</option>
+                          <option value="barguna">Barguna</option>
+                          <option value="barisal">Barisal</option>
+                          <option value="bhola">Bhola</option>
+                          <option value="bogra">Bogra</option>
+                          <option value="brahmanbaria">Brahmanbaria</option>
+                          <option value="chandpur">Chandpur</option>
+                          <option value="chittagong">Chittagong</option>
+                          <option value="chuadanga">Chuadanga</option>
+                          <option value="comilla">Comilla</option>
+                          <option value="cox's-bazar">Cox's Bazar</option>
+                          <option value="cumilla">Cumilla</option>
+                          <option value="dhaka">Dhaka</option>
+                          <option value="dinajpur">Dinajpur</option>
+                          <option value="faridpur">Faridpur</option>
+                          <option value="feni">Feni</option>
+                          <option value="gaibandha">Gaibandha</option>
+                          <option value="gazipur">Gazipur</option>
+                          <option value="gopalganj">Gopalganj</option>
+                          <option value="habiganj">Habiganj</option>
+                          <option value="jamalpur">Jamalpur</option>
+                          <option value="jessore">Jessore</option>
+                          <option value="jhalokati">Jhalokati</option>
+                          <option value="jhenaidah">Jhenaidah</option>
+                          <option value="joypurhat">Joypurhat</option>
+                          <option value="khagrachhari">Khagrachhari</option>
+                          <option value="khulna">Khulna</option>
+                          <option value="kishoreganj">Kishoreganj</option>
+                          <option value="kurigram">Kurigram</option>
+                          <option value="kushtia">Kushtia</option>
+                          <option value="lakshmipur">Lakshmipur</option>
+                          <option value="lalmonirhat">Lalmonirhat</option>
+                          <option value="madaripur">Madaripur</option>
+                          <option value="magura">Magura</option>
+                          <option value="manikganj">Manikganj</option>
+                          <option value="meherpur">Meherpur</option>
+                          <option value="moulvibazar">Moulvibazar</option>
+                          <option value="munshiganj">Munshiganj</option>
+                          <option value="mymensingh">Mymensingh</option>
+                          <option value="naogaon">Naogaon</option>
+                          <option value="narail">Narail</option>
+                          <option value="narayanganj">Narayanganj</option>
+                          <option value="narsingdi">Narsingdi</option>
+                          <option value="natore">Natore</option>
+                          <option value="chapainawabganj">Chapainawabganj</option>
+                          <option value="netrokona">Netrokona</option>
+                          <option value="nilphamari">Nilphamari</option>
+                          <option value="noakhali">Noakhali</option>
+                          <option value="pabna">Pabna</option>
+                          <option value="panchagarh">Panchagarh</option>
+                          <option value="patuakhali">Patuakhali</option>
+                          <option value="pirojpur">Pirojpur</option>
+                          <option value="rajbari">Rajbari</option>
+                          <option value="rajshahi">Rajshahi</option>
+                          <option value="rangamati">Rangamati</option>
+                          <option value="rangpur">Rangpur</option>
+                          <option value="satkhira">Satkhira</option>
+                          <option value="shariatpur">Shariatpur</option>
+                          <option value="sherpur">Sherpur</option>
+                          <option value="sirajganj">Sirajganj</option>
+                          <option value="sunamganj">Sunamganj</option>
+                          <option value="sylhet">Sylhet</option>
+                          <option value="tangail">Tangail</option>
+                          <option value="thakurgaon">Thakurgaon</option>
+                        </select>
+                      </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="billing-area" className="text-[#26732d] font-medium">Area</Label>
-                      <select 
-                        className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
-                        value={billingDetails.area}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, area: e.target.value }))}
-                      >
-                        <option value="">Select area</option>
-                        <option value="dhanmondi">Dhanmondi</option>
-                        <option value="gulshan">Gulshan</option>
-                        <option value="uttara">Uttara</option>
-                        <option value="mirpur">Mirpur</option>
-                        <option value="mohammadpur">Mohammadpur</option>
-                        <option value="wari">Wari</option>
-                        <option value="old-dhaka">Old Dhaka</option>
-                      </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="billing-thana" className="text-[#26732d] font-medium">Thana/Upazilla</Label>
+                        <Input
+                          id="billing-thana"
+                          value={billingDetails.thanaUpazilla}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
+                          placeholder="Enter your thana/upazilla"
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-thana"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="billing-postcode" className="text-[#26732d] font-medium">Post Code</Label>
+                        <Input
+                          id="billing-postcode"
+                          value={billingDetails.postCode}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, postCode: e.target.value }))}
+                          placeholder="Enter post code"
+                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          data-testid="input-postcode"
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -563,18 +689,21 @@ export default function CheckoutPage() {
                         placeholder="Your full address"
                         className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
                         rows={3}
+                        data-testid="input-address"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium">Email address</Label>
+                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium">Email *</Label>
                       <Input
                         id="billing-email"
                         type="email"
                         value={billingDetails.email}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="your.email@example.com"
+                        required
                         className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                        data-testid="input-email"
                       />
                     </div>
                   </form>
@@ -772,13 +901,13 @@ export default function CheckoutPage() {
                   <div className="mt-6 p-4 bg-[#26732d]/5 rounded-lg">
                     <h5 className="font-semibold text-[#26732d] mb-2">Meow Meow Pet Shop</h5>
                     <p className="text-sm text-gray-600 mb-1">
-                      <strong>ADDRESS:</strong> House No. 64, Level 4, 5th, Near Bhaatpara High School, Bank Colony, Savar, Dhaka
+                      <strong>ADDRESS:</strong> Pakiza Bus Stand, Chapra Mosjid Road<br />Bank Colony, Savar, Dhaka
                     </p>
                     <p className="text-sm text-gray-600 mb-1">
-                      <strong>Hotline:</strong> 01405588433
+                      <strong>Hotline:</strong> 01405-045023
                     </p>
                     <p className="text-sm text-gray-600">
-                      <strong>Email:</strong> meowmeow@example.com
+                      <strong>Email:</strong> meowmeowpetshop1@gmail.com
                     </p>
                   </div>
                 </CardContent>
