@@ -4,58 +4,63 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signIn } from '@/lib/supabase'
+import { sendOtp } from '@/lib/supabase'
+import { OtpVerification } from '@/components/ui/otp-verification'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, PawPrint, Shield } from 'lucide-react'
+import { Mail, ArrowLeft, PawPrint, Loader2 } from 'lucide-react'
 const logoPath = '/logo.png'
 
 export default function SignInPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [showOtpVerification, setShowOtpVerification] = useState(false)
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const [adminFormData, setAdminFormData] = useState({
-    username: '',
-    password: ''
+    email: ''
   })
   const { toast } = useToast()
   const { user } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!formData.email.trim()) {
+      toast({
+        title: 'Email Required',
+        description: 'Please enter your email address',
+        variant: 'destructive',
+      })
+      return
+    }
+
     setLoading(true)
 
     try {
-      const { data, error } = await signIn(formData.email, formData.password)
+      console.log('Sending OTP for sign in...')
+      const result = await sendOtp(formData.email, false) // false = isSignIn
       
-      if (error) {
+      console.log('OTP send result:', result)
+      
+      if (result.error) {
+        console.error('OTP send error:', result.error)
         toast({
           title: 'Sign In Failed',
-          description: error.message,
+          description: result.error.message || 'Failed to send verification code',
           variant: 'destructive',
         })
-      } else if (data?.user) {
-        // Auth state will be updated by the auth context
-        
+      } else {
+        console.log('OTP sent successfully')
         toast({
-          title: 'Welcome back!',
-          description: 'You have successfully signed in.',
+          title: 'Verification Code Sent!',
+          description: 'Please check your email for the 6-digit code.',
         })
-        
-        // Small delay to ensure auth state is updated
-        setTimeout(() => {
-          setLocation('/')
-        }, 100)
+        setShowOtpVerification(true)
       }
     } catch (error) {
+      console.error('Unexpected error during OTP send:', error)
       toast({
-        title: 'Error',
-        description: 'An unexpected error occurred',
+        title: 'Network Error',
+        description: 'Unable to send verification code. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -67,55 +72,31 @@ export default function SignInPage() {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleAdminInputChange = (field: string, value: string) => {
-    setAdminFormData(prev => ({ ...prev, [field]: value }))
+  const handleOtpSuccess = (user: any) => {
+    console.log('OTP verification successful:', user)
+    toast({
+      title: 'Welcome back!',
+      description: 'You have successfully signed in.',
+    })
+    setLocation('/') // Redirect to home page
   }
 
-  const handleAdminSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  const handleBackToSignIn = () => {
+    setShowOtpVerification(false)
+  }
 
-    try {
-      // Check admin credentials
-      if (adminFormData.username === 'admin' && adminFormData.password === 'admin123') {
-        const adminUser = {
-          id: 'admin-123',
-          email: 'admin@meowmeowpetshop.com',
-          name: 'Admin',
-          role: 'admin',
-          firstName: 'Admin',
-          lastName: 'User'
-        }
-        
-        localStorage.setItem('auth_user', JSON.stringify(adminUser))
-        
-        // Auth state will be updated by the auth context
-        
-        toast({
-          title: 'Admin Login Successful',
-          description: 'Welcome to admin panel!',
-        })
-        
-        // Small delay to ensure auth state is updated, then redirect
-        setTimeout(() => {
-          setLocation('/admin')
-        }, 100)
-      } else {
-        toast({
-          title: 'Invalid Credentials',
-          description: 'Please check your admin username and password.',
-          variant: 'destructive',
-        })
-      }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred',
-        variant: 'destructive',
-      })
-    } finally {
-      setLoading(false)
-    }
+  // Show OTP verification component if needed
+  if (showOtpVerification) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+        <OtpVerification
+          email={formData.email}
+          isSignUp={false}
+          onSuccess={handleOtpSuccess}
+          onBack={handleBackToSignIn}
+        />
+      </div>
+    )
   }
 
   return (
@@ -152,7 +133,7 @@ export default function SignInPage() {
               Welcome Back
             </CardTitle>
             <CardDescription className="text-gray-600 text-base sm:text-lg">
-              Sign in to your Meow Meow Pet Shop account
+              Enter your email to receive a verification code
             </CardDescription>
           </CardHeader>
 
@@ -168,63 +149,30 @@ export default function SignInPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email address"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="pl-9 sm:pl-10 h-10 sm:h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm sm:text-base"
                     required
+                    data-testid="input-email"
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="password" className="text-meow-green font-medium text-sm sm:text-base">
-                  Password
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="pl-9 sm:pl-10 pr-9 sm:pr-10 h-10 sm:h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm sm:text-base"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Forgot Password Link */}
-              <div className="text-right">
-                <Link href="/forgot-password">
-                  <Button variant="link" className="text-meow-green hover:text-meow-green-dark p-0 h-auto text-sm sm:text-base">
-                    Forgot your password?
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Sign In Button */}
+              {/* Send Code Button */}
               <Button
                 type="submit"
                 disabled={loading}
                 className="w-full h-10 sm:h-12 bg-gradient-to-r from-meow-yellow to-yellow-400 hover:from-yellow-400 hover:to-meow-yellow text-meow-green-dark font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                data-testid="button-send-code"
               >
                 {loading ? (
                   <div className="flex items-center">
-                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-meow-green-dark border-t-transparent rounded-full animate-spin mr-2" />
-                    Signing In...
+                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
+                    Sending Code...
                   </div>
                 ) : (
-                  'Sign In'
+                  'Send Verification Code'
                 )}
               </Button>
             </form>
@@ -249,96 +197,6 @@ export default function SignInPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Admin Login Section */}
-        <div className="mt-4 sm:mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-xs sm:text-sm">
-              <span className="px-3 sm:px-4 bg-gradient-to-br from-green-50 via-white to-yellow-50 text-gray-500">or</span>
-            </div>
-          </div>
-          
-          <div className="mt-3 sm:mt-6">
-            <Button
-              onClick={() => setShowAdminLogin(!showAdminLogin)}
-              variant="outline"
-              className="w-full h-10 sm:h-12 border-2 border-red-200 text-red-600 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-600 focus:!bg-white focus:!border-red-200 focus:!text-red-600 active:!bg-white active:!text-red-600 font-semibold text-sm sm:text-base"
-            >
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              {showAdminLogin ? 'Hide Admin Login' : 'Admin Login'}
-            </Button>
-          </div>
-
-          {/* Admin Login Form */}
-          {showAdminLogin && (
-            <Card className="mt-3 sm:mt-4 shadow-lg border-2 border-red-100 bg-red-50/50 backdrop-blur-sm">
-              <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6 pt-3 sm:pt-6">
-                <CardTitle className="text-lg sm:text-xl font-bold text-red-600 flex items-center justify-center">
-                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                  Admin Access
-                </CardTitle>
-                <CardDescription className="text-red-500 text-sm">
-                  Authorized personnel only
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-                <form onSubmit={handleAdminSubmit} className="space-y-3 sm:space-y-4">
-                  {/* Admin Username */}
-                  <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="admin-username" className="text-red-600 font-medium text-sm">
-                      Username
-                    </Label>
-                    <Input
-                      id="admin-username"
-                      type="text"
-                      placeholder="Enter admin username"
-                      value={adminFormData.username}
-                      onChange={(e) => handleAdminInputChange('username', e.target.value)}
-                      className="h-9 sm:h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20 text-sm"
-                      required
-                    />
-                  </div>
-
-                  {/* Admin Password */}
-                  <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="admin-password" className="text-red-600 font-medium text-sm">
-                      Password
-                    </Label>
-                    <Input
-                      id="admin-password"
-                      type="password"
-                      placeholder="Enter admin password"
-                      value={adminFormData.password}
-                      onChange={(e) => handleAdminInputChange('password', e.target.value)}
-                      className="h-9 sm:h-10 border-red-200 focus:border-red-400 focus:ring-red-400/20 text-sm"
-                      required
-                    />
-                  </div>
-
-                  {/* Admin Login Button */}
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full h-9 sm:h-10 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm"
-                  >
-                    {loading ? (
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Signing In...
-                      </div>
-                    ) : (
-                      'Access Admin Panel'
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          )}
-        </div>
 
         {/* Footer */}
         <div className="text-center mt-4 sm:mt-6 text-gray-500 text-xs sm:text-sm">

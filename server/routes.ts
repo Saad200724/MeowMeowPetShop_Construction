@@ -2595,6 +2595,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.redirect(`/?payment=cancelled&transactionId=${transactionId}`);
   });
 
+  // Backward compatibility for payment callbacks
+  // Third-party providers might still be configured to use the old URLs
+  app.get("/payment/success", (req, res) => {
+    // Redirect to the API endpoint for actual processing
+    const queryString = new URLSearchParams(req.query as any).toString()
+    res.redirect(`/api/payment/success${queryString ? '?' + queryString : ''}`)
+  })
+  
+  app.get("/payment/cancel", (req, res) => {
+    // Redirect to the API endpoint for actual processing
+    const queryString = new URLSearchParams(req.query as any).toString()
+    res.redirect(`/api/payment/cancel${queryString ? '?' + queryString : ''}`)
+  })
+
   const server = createServer(app);
   return server;
 }
