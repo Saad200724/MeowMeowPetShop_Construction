@@ -104,6 +104,12 @@ export async function verifyOtp(email: string, token: string) {
   }
 }
 
+export async function signIn(email: string, password?: string) {
+  // This app uses OTP authentication, so we redirect to OTP flow
+  // For consistency, we'll use the sendOtp function for sign-in
+  return sendOtp(email, false) // false = not a sign-up
+}
+
 export async function signOut() {
   if (!supabase) {
     return { error: { message: 'Authentication service not configured.' } }
