@@ -2524,7 +2524,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Handle Payment Success/Cancel callbacks (for frontend redirects)
-  app.get("/payment/success", async (req, res) => {
+  app.get("/api/payment/success", async (req, res) => {
     const { transactionId, paymentMethod, paymentAmount, status } = req.query;
     
     console.log('Payment success callback received:', req.query);
@@ -2574,7 +2574,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.redirect(`/payment-success?transactionId=${transactionId}&amount=${paymentAmount}&status=COMPLETED`);
   });
 
-  app.get("/payment/cancel", async (req, res) => {
+  app.get("/api/payment/cancel", async (req, res) => {
     const { transactionId } = req.query;
     
     if (transactionId) {

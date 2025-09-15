@@ -24,7 +24,7 @@ export default function SignInPage() {
     password: ''
   })
   const { toast } = useToast()
-  const { user, refreshAuth } = useAuth()
+  const { user } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,8 +40,7 @@ export default function SignInPage() {
           variant: 'destructive',
         })
       } else if (data?.user) {
-        // Refresh auth state to ensure UI updates
-        refreshAuth()
+        // Auth state will be updated by the auth context
         
         toast({
           title: 'Welcome back!',
@@ -90,8 +89,7 @@ export default function SignInPage() {
         
         localStorage.setItem('auth_user', JSON.stringify(adminUser))
         
-        // Refresh auth state immediately
-        refreshAuth()
+        // Auth state will be updated by the auth context
         
         toast({
           title: 'Admin Login Successful',
