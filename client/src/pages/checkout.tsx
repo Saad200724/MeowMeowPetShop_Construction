@@ -867,15 +867,15 @@ export default function CheckoutPage() {
                           Bkash
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-3 p-4 border border-blue-300 rounded-lg bg-blue-50/30">
-                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d]" />
-                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d]">
+                      <div className="flex items-center space-x-3 p-4 border border-blue-300 rounded-lg bg-blue-50/30 min-h-[60px]">
+                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d] flex-shrink-0" />
+                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d] flex-wrap">
                           <img 
                             src="https://rupantorpay.com/public/assets/img/logo.webp" 
                             alt="RupantorPay" 
-                            className="mr-2 h-4 w-auto"
+                            className="mr-2 h-3 w-auto flex-shrink-0"
                           />
-                          RupantorPay(Online Payment)
+                          <span className="text-sm">RupantorPay(Online Payment)</span>
                         </Label>
                       </div>
                     </RadioGroup>
