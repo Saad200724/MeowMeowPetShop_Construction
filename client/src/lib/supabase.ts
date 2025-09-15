@@ -34,71 +34,73 @@ export type AuthUser = {
   name?: string
 }
 
-export async function signUp(email: string, password: string, firstName?: string, lastName?: string) {
+export async function sendOtp(email: string, isSignUp: boolean = false) {
   if (!supabase) {
-    console.error('Supabase client not initialized, using fallback authentication')
-    const { fallbackSignUp } = await import('./auth-fallback')
-    return fallbackSignUp(email, password, firstName, lastName)
+    console.error('Supabase client not initialized')
+    return { data: null, error: { message: 'Authentication service not configured.' } }
   }
   
-  console.log('Attempting Supabase sign up for:', email)
+  console.log('Sending OTP to:', email, isSignUp ? '(signup)' : '(signin)')
   
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signInWithOtp({
       email,
-      password,
       options: {
-        data: {
-          firstName: firstName,
-          lastName: lastName,
-          name: firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName || '',
+        // For signup, auto-create user. For signin, don't create if user doesn't exist
+        shouldCreateUser: isSignUp,
+        data: isSignUp ? {
           role: 'user'
-        }
+        } : undefined
       }
     })
     
-    console.log('Supabase sign up response:', { data: !!data, error: error?.message })
+    console.log('OTP send response:', { data: !!data, error: error?.message })
     
-    // If Supabase fails, try fallback
-    if (error && error.message.includes('fetch')) {
-      console.log('Supabase network error, using fallback authentication')
-      const { fallbackSignUp } = await import('./auth-fallback')
-      return fallbackSignUp(email, password, firstName, lastName)
+    if (!error) {
+      return { 
+        data: { message: 'OTP sent successfully' }, 
+        error: null 
+      }
     }
     
     return { data, error }
   } catch (err) {
-    console.error('Supabase sign up error, using fallback:', err)
-    const { fallbackSignUp } = await import('./auth-fallback')
-    return fallbackSignUp(email, password, firstName, lastName)
+    console.error('OTP send error:', err)
+    return { 
+      data: null, 
+      error: { message: 'Failed to send OTP. Please try again.' } 
+    }
   }
 }
 
-export async function signIn(email: string, password: string) {
+export async function verifyOtp(email: string, token: string) {
   if (!supabase) {
-    console.log('Supabase not available, using fallback authentication')
-    const { fallbackSignIn } = await import('./auth-fallback')
-    return fallbackSignIn(email, password)
+    console.error('Supabase client not initialized')
+    return { data: null, error: { message: 'Authentication service not configured.' } }
   }
   
+  console.log('Verifying OTP for:', email)
+  
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.verifyOtp({
       email,
-      password,
+      token,
+      type: 'email'
     })
     
-    // If Supabase fails, try fallback
-    if (error && error.message.includes('fetch')) {
-      console.log('Supabase network error, using fallback authentication')
-      const { fallbackSignIn } = await import('./auth-fallback')
-      return fallbackSignIn(email, password)
-    }
+    console.log('OTP verification response:', { 
+      session: !!data?.session, 
+      user: !!data?.user, 
+      error: error?.message 
+    })
     
     return { data, error }
   } catch (err) {
-    console.error('Supabase sign in error, using fallback:', err)
-    const { fallbackSignIn } = await import('./auth-fallback')
-    return fallbackSignIn(email, password)
+    console.error('OTP verification error:', err)
+    return { 
+      data: null, 
+      error: { message: 'Invalid or expired code. Please try again.' } 
+    }
   }
 }
 
