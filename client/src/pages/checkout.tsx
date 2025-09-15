@@ -171,24 +171,16 @@ export default function CheckoutPage() {
 
   const createOrderMutation = useMutation({
     mutationFn: async (orderData: any) => {
-      const response = await fetch('/api/orders', {
+      const response = await apiRequest('/api/orders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(orderData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
-      
-      return response.json();
+      return response;
     },
     onSuccess: (data) => {
       if (paymentMethod === 'RupantorPay') {
-        // For online payment, store order ID and show payment processor
-        setCreatedOrderId(data.order._id);
+        // For online payment, store invoice ID (not order ID) and show payment processor
+        setCreatedOrderId(data.invoice._id);
         setShowPayment(true);
         toast({
           title: "Order created successfully!",
@@ -310,7 +302,7 @@ export default function CheckoutPage() {
       title: "Payment successful!",
       description: `Payment completed successfully. Transaction ID: ${transactionId}`,
     });
-    setLocation(`/invoice/${createdOrderId}`);
+    setLocation(`/invoice/${createdOrderId}`); // createdOrderId now stores invoice._id
   };
 
   const handlePaymentError = (error: string) => {
@@ -591,14 +583,14 @@ export default function CheckoutPage() {
                           <option value="barguna">Barguna</option>
                           <option value="barisal">Barisal</option>
                           <option value="bhola">Bhola</option>
-                          <option value="bogra">Bogra</option>
+                          <option value="bogura">Bogura</option>
                           <option value="brahmanbaria">Brahmanbaria</option>
                           <option value="chandpur">Chandpur</option>
-                          <option value="chittagong">Chittagong</option>
+                          <option value="chapainawabganj">Chapainawabganj</option>
+                          <option value="chattogram">Chattogram</option>
                           <option value="chuadanga">Chuadanga</option>
-                          <option value="comilla">Comilla</option>
-                          <option value="cox's-bazar">Cox's Bazar</option>
                           <option value="cumilla">Cumilla</option>
+                          <option value="coxs-bazar">Cox's Bazar</option>
                           <option value="dhaka">Dhaka</option>
                           <option value="dinajpur">Dinajpur</option>
                           <option value="faridpur">Faridpur</option>
@@ -608,7 +600,7 @@ export default function CheckoutPage() {
                           <option value="gopalganj">Gopalganj</option>
                           <option value="habiganj">Habiganj</option>
                           <option value="jamalpur">Jamalpur</option>
-                          <option value="jessore">Jessore</option>
+                          <option value="jashore">Jashore</option>
                           <option value="jhalokati">Jhalokati</option>
                           <option value="jhenaidah">Jhenaidah</option>
                           <option value="joypurhat">Joypurhat</option>
@@ -631,7 +623,6 @@ export default function CheckoutPage() {
                           <option value="narayanganj">Narayanganj</option>
                           <option value="narsingdi">Narsingdi</option>
                           <option value="natore">Natore</option>
-                          <option value="chapainawabganj">Chapainawabganj</option>
                           <option value="netrokona">Netrokona</option>
                           <option value="nilphamari">Nilphamari</option>
                           <option value="noakhali">Noakhali</option>
@@ -886,6 +877,7 @@ export default function CheckoutPage() {
                     onClick={handlePlaceOrder}
                     className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold py-4 text-lg border-2 border-[#26732d] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                     disabled={isProcessing || cartState.items.length === 0}
+                    data-testid="button-place-order"
                   >
                     {isProcessing ? (
                       <div className="flex items-center justify-center">
