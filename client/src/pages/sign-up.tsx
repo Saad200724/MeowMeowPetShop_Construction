@@ -93,6 +93,7 @@ export default function SignUpPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username: formData.email, // Use email as username
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
