@@ -39,20 +39,20 @@ export default function ProfilePage() {
               <div className="flex items-center space-x-4">
                 <Avatar className="h-20 w-20">
                   <AvatarFallback className="bg-green-100 text-green-800 text-xl">
-                    {user.firstName?.[0] || user.name?.[0] || user.email[0].toUpperCase()}
+                    {user.firstName?.[0] || user.username?.[0] || user.email[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <h3 className="text-xl font-semibold">
                     {user.firstName && user.lastName 
                       ? `${user.firstName} ${user.lastName}` 
-                      : user.name || 'User'}
+                      : user.username || 'User'}
                   </h3>
                   <p className="text-gray-600">{user.email}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
@@ -69,7 +69,15 @@ export default function ProfilePage() {
                     disabled
                   />
                 </div>
-                <div className="md:col-span-2">
+                <div>
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    value={user.username || ''}
+                    disabled
+                  />
+                </div>
+                <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
