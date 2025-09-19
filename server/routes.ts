@@ -12,6 +12,30 @@ import { promises as fs } from "fs";
 import sharp from "sharp";
 // EmailJS handles email sending on the client side
 
+// In-memory OTP storage (in production, use Redis or database)
+interface OTPRecord {
+  code: string;
+  email: string;
+  expiresAt: number;
+  attempts: number;
+}
+
+const otpStore = new Map<string, OTPRecord>();
+
+// Clean up expired OTPs every minute
+setInterval(() => {
+  const now = Date.now();
+  Array.from(otpStore.entries()).forEach(([key, record]) => {
+    if (record.expiresAt < now) {
+      otpStore.delete(key);
+    }
+  });
+}, 60000);
+
+function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
   const uploadDir = path.join(process.cwd(), 'uploads');
