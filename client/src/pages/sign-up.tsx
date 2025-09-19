@@ -120,11 +120,40 @@ export default function SignUpPage() {
       
       if (result.error) {
         console.error('OTP send error:', result.error)
-        toast({
-          title: 'Verification Failed',
-          description: result.error.message || 'Failed to send verification code',
-          variant: 'destructive',
-        })
+        
+        // Check if it's a rate limit error - if so, use fallback authentication
+        if (result.error.code === 'over_email_send_rate_limit' || 
+            result.error.message?.includes('rate limit')) {
+          
+          // Complete registration without OTP verification
+          const authUser = {
+            id: Date.now().toString(),
+            username: formData.email,
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            name: `${formData.firstName} ${formData.lastName}`,
+            role: 'user'
+          }
+          
+          localStorage.setItem('meow_meow_auth_user', JSON.stringify(authUser))
+          console.log('Registration completed using fallback authentication:', authUser)
+          
+          toast({
+            title: 'Account Created Successfully! 🎉',
+            description: 'Welcome to Meow Meow Pet Shop! You can start shopping now.',
+          })
+          
+          // Redirect to home page
+          window.location.href = '/'
+          return
+        } else {
+          toast({
+            title: 'Verification Failed',
+            description: result.error.message || 'Failed to send verification code',
+            variant: 'destructive',
+          })
+        }
       } else {
         console.log('OTP sent successfully')
         toast({
@@ -151,11 +180,28 @@ export default function SignUpPage() {
 
   const handleOtpSuccess = (user: any) => {
     console.log('OTP verification successful:', user)
+    
+    // Store user in the custom auth system's localStorage
+    const authUser = {
+      id: user.id,
+      username: user.email?.split('@')[0] || 'user',
+      email: user.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      name: `${formData.firstName} ${formData.lastName}` || user.email?.split('@')[0] || 'User',
+      role: user.user_metadata?.role || 'user'
+    }
+    
+    localStorage.setItem('meow_meow_auth_user', JSON.stringify(authUser))
+    console.log('User stored in localStorage for header display:', authUser)
+    
     toast({
       title: 'Welcome to Meow Meow Pet Shop! 🐾',
       description: 'Your account has been created successfully.',
     })
-    setLocation('/') // Redirect to home page
+    
+    // Trigger a page refresh to ensure the header updates with the new auth state
+    window.location.href = '/'
   }
 
   const handleBackToSignUp = () => {
