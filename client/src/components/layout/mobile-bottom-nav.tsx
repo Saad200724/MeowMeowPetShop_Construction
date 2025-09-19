@@ -75,10 +75,10 @@ export default function MobileBottomNav() {
         </Link>
 
         {/* My Profile */}
-        <Link href="/profile">
+        <Link href="/dashboard">
           <div
             className={`flex flex-col items-center justify-center py-2 px-3 transition-colors ${
-              isActive("/profile") || isActive("/dashboard")
+              isActive("/dashboard") || isActive("/profile")
                 ? "text-[#26732d]"
                 : "text-gray-600"
             }`}
