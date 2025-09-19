@@ -77,11 +77,49 @@ export default function SignInPage() {
       
       if (result.error) {
         console.error('OTP send error:', result.error)
-        toast({
-          title: 'Verification Failed',
-          description: result.error.message || 'Failed to send verification code',
-          variant: 'destructive',
-        })
+        
+        // Check if it's a rate limit error
+        if (result.error.code === 'over_email_send_rate_limit' || 
+            result.error.message?.includes('rate limit')) {
+          toast({
+            title: 'Too Many Attempts',
+            description: 'Please wait 5-10 minutes before trying again, or use direct login below.',
+            variant: 'destructive',
+          })
+          
+          // Enable fallback authentication for rate limit cases
+          try {
+            const fallbackResult = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: formData.email,
+                password: formData.password
+              }),
+            })
+
+            if (fallbackResult.ok) {
+              const data = await fallbackResult.json()
+              localStorage.setItem('meow_meow_auth_user', JSON.stringify(data.user))
+              toast({
+                title: 'Sign In Successful!',
+                description: 'Logged in using direct authentication.',
+              })
+              setLocation('/')
+              return
+            }
+          } catch (fallbackError) {
+            console.error('Fallback auth failed:', fallbackError)
+          }
+        } else {
+          toast({
+            title: 'Verification Failed',
+            description: result.error.message || 'Failed to send verification code',
+            variant: 'destructive',
+          })
+        }
       } else {
         console.log('OTP sent successfully')
         toast({
