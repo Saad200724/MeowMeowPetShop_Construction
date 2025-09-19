@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { sendOtp } from '@/lib/supabase'
 import { OtpVerification } from '@/components/ui/otp-verification'
 import { useToast } from '@/hooks/use-toast'
-import { Mail, ArrowLeft, PawPrint, User, Loader2 } from 'lucide-react'
+import { Mail, ArrowLeft, PawPrint, User, Loader2, Lock } from 'lucide-react'
 const logoPath = '/logo.png'
 
 export default function SignUpPage() {
@@ -19,7 +19,9 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    password: '',
+    confirmPassword: ''
   })
   const { toast } = useToast()
 
@@ -53,10 +55,64 @@ export default function SignUpPage() {
       return
     }
 
+    if (!formData.password.trim()) {
+      toast({
+        title: 'Password Required',
+        description: 'Please enter a password',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: 'Password Too Short',
+        description: 'Password must be at least 6 characters long',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: 'Passwords Do Not Match',
+        description: 'Please make sure both passwords match',
+        variant: 'destructive',
+      })
+      return
+    }
+
     setLoading(true)
 
     try {
-      console.log('Sending OTP for sign up...')
+      // First, register the user with password validation
+      console.log('Registering user...')
+      const registerResponse = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword
+        }),
+      })
+
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json()
+        toast({
+          title: 'Registration Failed',
+          description: errorData.message || 'Failed to create account',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // If registration successful, send OTP for verification
+      console.log('Registration successful, sending OTP...')
       const result = await sendOtp(formData.email, true) // true = isSignUp
       
       console.log('OTP send result:', result)
@@ -64,23 +120,23 @@ export default function SignUpPage() {
       if (result.error) {
         console.error('OTP send error:', result.error)
         toast({
-          title: 'Sign Up Failed',
+          title: 'Verification Failed',
           description: result.error.message || 'Failed to send verification code',
           variant: 'destructive',
         })
       } else {
         console.log('OTP sent successfully')
         toast({
-          title: 'Verification Code Sent!',
-          description: 'Please check your email for the 6-digit code.',
+          title: 'Account Created! 🎉',
+          description: 'Please check your email for the verification code to complete signup.',
         })
         setShowOtpVerification(true)
       }
     } catch (error) {
-      console.error('Unexpected error during OTP send:', error)
+      console.error('Unexpected error during signup:', error)
       toast({
         title: 'Network Error',
-        description: 'Unable to send verification code. Please try again.',
+        description: 'Unable to create account. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -212,6 +268,46 @@ export default function SignUpPage() {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
                     required
+                  />
+                </div>
+              </div>
+
+              {/* Password Field */}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-meow-green font-medium">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-meow-green font-medium">
+                  Confirm Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
+                    required
+                    data-testid="input-confirm-password"
                   />
                 </div>
               </div>

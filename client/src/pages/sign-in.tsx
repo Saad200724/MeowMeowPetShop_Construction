@@ -8,7 +8,7 @@ import { sendOtp } from '@/lib/supabase'
 import { OtpVerification } from '@/components/ui/otp-verification'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
-import { Mail, ArrowLeft, PawPrint, Loader2 } from 'lucide-react'
+import { Mail, ArrowLeft, PawPrint, Loader2, Lock } from 'lucide-react'
 const logoPath = '/logo.png'
 
 export default function SignInPage() {
@@ -16,7 +16,8 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false)
   const [showOtpVerification, setShowOtpVerification] = useState(false)
   const [formData, setFormData] = useState({
-    email: ''
+    email: '',
+    password: ''
   })
   const { toast } = useToast()
   const { user } = useAuth()
@@ -33,10 +34,43 @@ export default function SignInPage() {
       return
     }
 
+    if (!formData.password.trim()) {
+      toast({
+        title: 'Password Required',
+        description: 'Please enter your password',
+        variant: 'destructive',
+      })
+      return
+    }
+
     setLoading(true)
 
     try {
-      console.log('Sending OTP for sign in...')
+      // First, validate email and password
+      console.log('Validating credentials...')
+      const loginResponse = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      })
+
+      if (!loginResponse.ok) {
+        const errorData = await loginResponse.json()
+        toast({
+          title: 'Sign In Failed',
+          description: errorData.message || 'Invalid email or password',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // If login successful, send OTP for additional verification
+      console.log('Credentials validated, sending OTP...')
       const result = await sendOtp(formData.email, false) // false = isSignIn
       
       console.log('OTP send result:', result)
@@ -44,23 +78,23 @@ export default function SignInPage() {
       if (result.error) {
         console.error('OTP send error:', result.error)
         toast({
-          title: 'Sign In Failed',
+          title: 'Verification Failed',
           description: result.error.message || 'Failed to send verification code',
           variant: 'destructive',
         })
       } else {
         console.log('OTP sent successfully')
         toast({
-          title: 'Verification Code Sent!',
-          description: 'Please check your email for the 6-digit code.',
+          title: 'Verification Code Sent! 📧',
+          description: 'Please check your email for the 6-digit code to complete sign in.',
         })
         setShowOtpVerification(true)
       }
     } catch (error) {
-      console.error('Unexpected error during OTP send:', error)
+      console.error('Unexpected error during signin:', error)
       toast({
         title: 'Network Error',
-        description: 'Unable to send verification code. Please try again.',
+        description: 'Unable to sign in. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -133,7 +167,7 @@ export default function SignInPage() {
               Welcome Back
             </CardTitle>
             <CardDescription className="text-gray-600 text-base sm:text-lg">
-              Enter your email to receive a verification code
+              Enter your email and password to sign in
             </CardDescription>
           </CardHeader>
 
@@ -159,6 +193,26 @@ export default function SignInPage() {
                 </div>
               </div>
 
+              {/* Password Field */}
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="password" className="text-meow-green font-medium text-sm sm:text-base">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    className="pl-9 sm:pl-10 h-10 sm:h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm sm:text-base"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
+              </div>
+
               {/* Send Code Button */}
               <Button
                 type="submit"
@@ -172,7 +226,7 @@ export default function SignInPage() {
                     Sending Code...
                   </div>
                 ) : (
-                  'Send Verification Code'
+                  'Sign In'
                 )}
               </Button>
             </form>
