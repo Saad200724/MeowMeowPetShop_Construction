@@ -146,11 +146,28 @@ export default function SignInPage() {
 
   const handleOtpSuccess = (user: any) => {
     console.log('OTP verification successful:', user)
+    
+    // Store user in the custom auth system's localStorage
+    const authUser = {
+      id: user.id,
+      username: user.email?.split('@')[0] || 'user',
+      email: user.email,
+      firstName: user.user_metadata?.firstName || '',
+      lastName: user.user_metadata?.lastName || '',
+      name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+      role: user.user_metadata?.role || 'user'
+    }
+    
+    localStorage.setItem('meow_meow_auth_user', JSON.stringify(authUser))
+    console.log('User stored in localStorage for header display:', authUser)
+    
     toast({
       title: 'Welcome back!',
       description: 'You have successfully signed in.',
     })
-    setLocation('/') // Redirect to home page
+    
+    // Trigger a page refresh to ensure the header updates with the new auth state
+    window.location.href = '/'
   }
 
   const handleBackToSignIn = () => {
