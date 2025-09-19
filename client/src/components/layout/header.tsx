@@ -21,7 +21,7 @@ export default function Header() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAnnouncement, setShowAnnouncement] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
-  const { user, loading } = useAuth();
+  const { user, signOut: authSignOut, loading } = useAuth();
   const { toast } = useToast();
   const { state: cartState } = useCart();
   const { toggle: toggleSidebar } = useSidebar();
@@ -53,22 +53,22 @@ export default function Header() {
   };
 
   const handleSignOut = async () => {
-    // Check if it's an admin user (stored in localStorage)
-    const storedUser = localStorage.getItem('auth_user');
-    if (storedUser) {
-      localStorage.removeItem('auth_user');
-      window.location.reload(); // Refresh to update auth state
-      toast({ title: 'Signed out successfully', description: 'Come back soon!' });
-      return;
+    // Use the auth context's signOut function for consistency
+    authSignOut();
+    
+    // Regular Supabase sign out for users with Supabase accounts
+    try {
+      const { error } = await signOut();
+      if (error && error.message !== 'Invalid session') {
+        // Only show error if it's not an invalid session error
+        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      }
+    } catch (error) {
+      // Ignore Supabase errors for users who don't have Supabase accounts
+      console.log('Supabase signout failed (this is normal for non-Supabase users):', error);
     }
-
-    // Regular Supabase sign out
-    const { error } = await signOut();
-    if (error) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Signed out successfully', description: 'Come back soon!' });
-    }
+    
+    toast({ title: 'Signed out successfully', description: 'Come back soon!' });
   };
 
   // Fetch products for search

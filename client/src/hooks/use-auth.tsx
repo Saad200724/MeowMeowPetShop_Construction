@@ -6,6 +6,7 @@ interface User {
   email?: string;
   firstName?: string;
   lastName?: string;
+  name?: string; // Add name property
   role?: string;
 }
 
@@ -77,6 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = () => {
     setUser(null);
     localStorage.removeItem(AUTH_STORAGE_KEY);
+    // Also remove any potential old auth keys for compatibility
+    localStorage.removeItem('auth_user');
     console.log('User signed out and storage cleared');
   };
 
