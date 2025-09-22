@@ -8,15 +8,20 @@ import { sendOtp } from '@/lib/supabase'
 import { OtpVerification } from '@/components/ui/otp-verification'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
-import { Mail, ArrowLeft, PawPrint, Loader2, Lock } from 'lucide-react'
+import { Mail, ArrowLeft, PawPrint, Loader2, Lock, Shield, User } from 'lucide-react'
 const logoPath = '/logo.png'
 
 export default function SignInPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
+  const [adminLoading, setAdminLoading] = useState(false)
   const [showOtpVerification, setShowOtpVerification] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
+    password: ''
+  })
+  const [adminFormData, setAdminFormData] = useState({
+    username: '',
     password: ''
   })
   const { toast } = useToast()
@@ -142,6 +147,76 @@ export default function SignInPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleAdminInputChange = (field: string, value: string) => {
+    setAdminFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleAdminSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!adminFormData.username.trim()) {
+      toast({
+        title: 'Username Required',
+        description: 'Please enter admin username',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (!adminFormData.password.trim()) {
+      toast({
+        title: 'Password Required',
+        description: 'Please enter admin password',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Check admin credentials
+    if (adminFormData.username !== 'admin' || adminFormData.password !== 'admin123') {
+      toast({
+        title: 'Invalid Admin Credentials',
+        description: 'Incorrect username or password',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setAdminLoading(true)
+
+    try {
+      // Create admin user object
+      const adminUser = {
+        id: 'admin',
+        username: 'admin',
+        email: 'admin@meowmeowpetshop.com',
+        firstName: 'Admin',
+        lastName: 'User',
+        name: 'Admin User',
+        role: 'admin'
+      }
+      
+      localStorage.setItem('meow_meow_auth_user', JSON.stringify(adminUser))
+      
+      toast({
+        title: 'Admin Login Successful!',
+        description: 'Welcome to the admin panel.',
+      })
+      
+      // Redirect to admin panel
+      setLocation('/admin')
+    } catch (error) {
+      console.error('Admin login error:', error)
+      toast({
+        title: 'Login Error',
+        description: 'An error occurred during admin login.',
+        variant: 'destructive',
+      })
+    } finally {
+      setAdminLoading(false)
+    }
   }
 
   const handleOtpSuccess = (user: any) => {
@@ -304,6 +379,85 @@ export default function SignInPage() {
                 </Button>
               </Link>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Admin Login Section */}
+        <Card className="shadow-2xl border-0 bg-gradient-to-r from-orange-50 to-red-50 backdrop-blur-sm mt-4 sm:mt-6">
+          <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6 pt-3 sm:pt-4">
+            <div className="flex justify-center mb-1 sm:mb-2">
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />
+            </div>
+            <CardTitle className="text-lg sm:text-xl font-bold text-orange-600">
+              Admin Access
+            </CardTitle>
+            <CardDescription className="text-gray-600 text-sm sm:text-base">
+              Login with admin credentials
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6 pb-3 sm:pb-4">
+            <form onSubmit={handleAdminSubmit} className="space-y-2 sm:space-y-3">
+              {/* Username Field */}
+              <div className="space-y-1">
+                <Label htmlFor="admin-username" className="text-orange-600 font-medium text-sm">
+                  Username
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="admin-username"
+                    type="text"
+                    placeholder="Enter admin username"
+                    value={adminFormData.username}
+                    onChange={(e) => handleAdminInputChange('username', e.target.value)}
+                    className="pl-9 h-9 sm:h-10 border-orange-200 focus:border-orange-300 focus:ring-orange-200/20 text-sm"
+                    required
+                    data-testid="input-admin-username"
+                  />
+                </div>
+              </div>
+
+              {/* Password Field */}
+              <div className="space-y-1">
+                <Label htmlFor="admin-password" className="text-orange-600 font-medium text-sm">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="admin-password"
+                    type="password"
+                    placeholder="Enter admin password"
+                    value={adminFormData.password}
+                    onChange={(e) => handleAdminInputChange('password', e.target.value)}
+                    className="pl-9 h-9 sm:h-10 border-orange-200 focus:border-orange-300 focus:ring-orange-200/20 text-sm"
+                    required
+                    data-testid="input-admin-password"
+                  />
+                </div>
+              </div>
+
+              {/* Admin Login Button */}
+              <Button
+                type="submit"
+                disabled={adminLoading}
+                className="w-full h-9 sm:h-10 bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-200"
+                data-testid="button-admin-login"
+              >
+                {adminLoading ? (
+                  <div className="flex items-center">
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Logging in...
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Admin Login
+                  </div>
+                )}
+              </Button>
+            </form>
           </CardContent>
         </Card>
 
