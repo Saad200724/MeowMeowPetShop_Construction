@@ -170,16 +170,16 @@ export default function DashboardPage() {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Avatar className="h-16 w-16">
+      <div className="flex items-center space-x-3 sm:space-x-4">
+        <Avatar className="h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0">
           <AvatarImage src="/api/placeholder/64/64" />
-          <AvatarFallback className="bg-green-100 text-green-800 text-lg">
-            {user.firstName?.[0] || user.name?.[0] || user.email[0].toUpperCase()}
+          <AvatarFallback className="bg-green-100 text-green-800 text-sm sm:text-lg">
+            {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <h2 className="text-2xl font-bold">Hello {user.firstName || user.name || 'User'}!</h2>
-          <p className="text-gray-600">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold truncate">Hello {user.firstName || user.name || 'User'}!</h2>
+          <p className="text-gray-600 text-xs sm:text-sm md:text-base">
             From your account dashboard you can easily manage your profile by checking your orders history, 
             reward points lists, your wishlists, coupons info
           </p>
@@ -187,85 +187,85 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-1">
         <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">TOTAL SPENT</CardTitle>
+          <CardHeader className="pb-2 sm:pb-3">
+            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL SPENT</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">${userStats.totalSpent.toFixed(2)}</div>
+            <div className="text-2xl sm:text-3xl font-bold">${userStats.totalSpent.toFixed(2)}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-r from-green-400 to-emerald-500 text-white">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">TOTAL WALLET</CardTitle>
+          <CardHeader className="pb-2 sm:pb-3">
+            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL WALLET</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{userStats.walletBalance}</div>
+            <div className="text-2xl sm:text-3xl font-bold">{userStats.walletBalance}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-r from-pink-400 to-rose-500 text-white">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">TOTAL WISHLIST</CardTitle>
+          <CardHeader className="pb-2 sm:pb-3">
+            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL WISHLIST</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{userStats.wishlistCount}</div>
+            <div className="text-2xl sm:text-3xl font-bold">{userStats.wishlistCount}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Order Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-1">
         <Card className="text-center">
-          <CardHeader className="pb-2">
-            <CheckCircle className="h-8 w-8 text-green-600 mx-auto" />
-            <CardTitle className="text-sm text-gray-600">DELIVERED ORDER</CardTitle>
+          <CardHeader className="pb-1 sm:pb-2">
+            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 mx-auto" />
+            <CardTitle className="text-xs sm:text-sm text-gray-600">DELIVERED ORDER</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userStats.deliveredOrders}</div>
+            <div className="text-xl sm:text-2xl font-bold">{userStats.deliveredOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-2">
-            <Truck className="h-8 w-8 text-blue-600 mx-auto" />
-            <CardTitle className="text-sm text-gray-600">PENDING ORDER</CardTitle>
+          <CardHeader className="pb-1 sm:pb-2">
+            <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mx-auto" />
+            <CardTitle className="text-xs sm:text-sm text-gray-600">PENDING ORDER</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userStats.pendingOrders}</div>
+            <div className="text-xl sm:text-2xl font-bold">{userStats.pendingOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-2">
-            <Clock className="h-8 w-8 text-yellow-600 mx-auto" />
-            <CardTitle className="text-sm text-gray-600">PROCESSING ORDER</CardTitle>
+          <CardHeader className="pb-1 sm:pb-2">
+            <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-600 mx-auto" />
+            <CardTitle className="text-xs sm:text-sm text-gray-600">PROCESSING ORDER</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userStats.processingOrders}</div>
+            <div className="text-xl sm:text-2xl font-bold">{userStats.processingOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-2">
-            <Gift className="h-8 w-8 text-purple-600 mx-auto" />
-            <CardTitle className="text-sm text-gray-600">ACTIVE COUPON</CardTitle>
+          <CardHeader className="pb-1 sm:pb-2">
+            <Gift className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 mx-auto" />
+            <CardTitle className="text-xs sm:text-sm text-gray-600">ACTIVE COUPON</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userStats.activeCoupons}</div>
+            <div className="text-xl sm:text-2xl font-bold">{userStats.activeCoupons}</div>
           </CardContent>
         </Card>
       </div>
 
       <Card className="text-center">
-        <CardHeader className="pb-2">
-          <MessageCircle className="h-8 w-8 text-indigo-600 mx-auto" />
-          <CardTitle className="text-sm text-gray-600">REQUEST PRODUCT</CardTitle>
+        <CardHeader className="pb-1 sm:pb-2">
+          <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600 mx-auto" />
+          <CardTitle className="text-xs sm:text-sm text-gray-600">REQUEST PRODUCT</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{userStats.requestedProducts}</div>
+          <div className="text-xl sm:text-2xl font-bold">{userStats.requestedProducts}</div>
         </CardContent>
       </Card>
     </div>
@@ -322,12 +322,12 @@ export default function DashboardPage() {
           <div className="flex items-center space-x-4">
             <Avatar className="h-20 w-20">
               <AvatarFallback className="bg-green-100 text-green-800 text-xl">
-                {user.firstName?.[0] || user.name?.[0] || user.email[0].toUpperCase()}
+                {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="space-y-1">
-              <h3 className="text-xl font-semibold">{user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name || 'User'}</h3>
-              <p className="text-gray-600">{user.email}</p>
+            <div className="space-y-1 flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl font-semibold truncate">{user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name || 'User'}</h3>
+              <p className="text-gray-600 truncate break-all">{user.email || ''}</p>
               <Button variant="outline" size="sm">Edit Profile</Button>
             </div>
           </div>
@@ -343,7 +343,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
-              <p className="mt-1">{user.email}</p>
+              <p className="mt-1 truncate break-all">{user.email || ''}</p>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Member Since</label>
@@ -371,31 +371,25 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-1">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-2 sm:gap-1">
           {/* Sidebar */}
           <div className="w-full lg:w-80">
-            <Card className="p-4">
+            <Card className="p-3 sm:p-4">
               {/* User Info */}
               <div className="flex items-center space-x-3 mb-6">
-                <Avatar>
+                <Avatar className="flex-shrink-0">
                   <AvatarFallback className="bg-green-100 text-green-800">
-                    {user.firstName?.[0] || user.name?.[0] || user.email[0].toUpperCase()}
+                    {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <h3 className="font-semibold">{user.firstName || user.name || 'User'}</h3>
-                  <p className="text-sm text-gray-600">{user.email}</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold truncate">{user.firstName || user.name || 'User'}</h3>
+                  <p className="text-sm text-gray-600 truncate">{user.email || ''}</p>
                 </div>
               </div>
 
-              {/* QR Code Section */}
-              <div className="bg-gray-100 p-4 rounded-lg mb-6 text-center">
-                <div className="w-16 h-16 bg-gray-300 mx-auto mb-2 rounded"></div>
-                <p className="text-xs text-gray-600">Scan QR for mobile app</p>
-                <Button variant="outline" size="sm" className="mt-2">Manage Rewards</Button>
-              </div>
 
               {/* Navigation */}
               <div className="space-y-2">
@@ -440,8 +434,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1">
-            <Card className="p-6">
+          <div className="flex-1 min-w-0">
+            <Card className="p-3 sm:p-6">
               {renderContent()}
             </Card>
           </div>
