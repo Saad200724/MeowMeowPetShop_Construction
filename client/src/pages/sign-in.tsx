@@ -24,6 +24,7 @@ export default function SignInPage() {
     username: '',
     password: ''
   })
+  const [showAdminAccess, setShowAdminAccess] = useState(false)
   const { toast } = useToast()
   const { user } = useAuth()
 
@@ -381,10 +382,24 @@ export default function SignInPage() {
                 </Button>
               </Link>
             </div>
+
+            {/* Admin Access Toggle */}
+            <div className="text-center">
+              <Button 
+                variant="ghost" 
+                onClick={() => setShowAdminAccess(!showAdminAccess)}
+                className="w-full h-8 sm:h-10 text-orange-600 hover:text-orange-700 hover:bg-orange-50 font-medium text-xs sm:text-sm"
+                data-testid="button-toggle-admin"
+              >
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                {showAdminAccess ? 'Hide Admin Access' : 'Admin Access'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         {/* Admin Login Section */}
+        {showAdminAccess && (
         <Card className="shadow-2xl border-0 bg-gradient-to-r from-orange-50 to-red-50 backdrop-blur-sm mt-4 sm:mt-6">
           <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6 pt-3 sm:pt-4">
             <div className="flex justify-center mb-1 sm:mb-2">
@@ -462,6 +477,7 @@ export default function SignInPage() {
             </form>
           </CardContent>
         </Card>
+        )}
 
         {/* Footer */}
         <div className="text-center mt-4 sm:mt-6 text-gray-500 text-xs sm:text-sm">
