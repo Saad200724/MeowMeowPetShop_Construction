@@ -6,6 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useToast } from '@/hooks/use-toast'
 import { 
   User, 
   Package, 
@@ -22,7 +29,10 @@ import {
   CheckCircle,
   Truck,
   Star,
-  CreditCard
+  CreditCard,
+  Edit,
+  Save,
+  X
 } from 'lucide-react'
 
 interface Order {
@@ -44,10 +54,41 @@ interface UserStats {
   requestedProducts: number
 }
 
+const profileFormSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Valid email is required"),
+});
+
+type ProfileFormData = z.infer<typeof profileFormSchema>;
+
 export default function DashboardPage() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, updateProfile } = useAuth()
+  const { toast } = useToast()
   const [, setLocation] = useLocation()
   const [activeSection, setActiveSection] = useState('dashboard')
+  const [isEditingProfile, setIsEditingProfile] = useState(false)
+
+  // Profile form - moved to top level to avoid hooks rules violation
+  const profileForm = useForm<ProfileFormData>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+    }
+  })
+
+  // Update form defaults when user changes
+  useEffect(() => {
+    if (user) {
+      profileForm.reset({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+      })
+    }
+  }, [user, profileForm])
 
   const [userStats, setUserStats] = useState<UserStats>({
     totalSpent: 1250.50,
@@ -314,46 +355,137 @@ export default function DashboardPage() {
     </div>
   )
 
-  const renderProfile = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">My Profile</h2>
-      <Card className="p-6">
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="bg-green-100 text-green-800 text-xl">
-                {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="space-y-1 flex-1 min-w-0">
-              <h3 className="text-lg sm:text-xl font-semibold truncate">{user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name || 'User'}</h3>
-              <p className="text-gray-600 truncate break-all">{user.email || ''}</p>
-              <Button variant="outline" size="sm">Edit Profile</Button>
-            </div>
-          </div>
-          <Separator />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-            <div>
-              <label className="text-sm font-medium text-gray-700">First Name</label>
-              <p className="mt-1">{user.firstName || 'Not set'}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Last Name</label>
-              <p className="mt-1">{user.lastName || 'Not set'}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Email</label>
-              <p className="mt-1 truncate break-all">{user.email || ''}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Member Since</label>
-              <p className="mt-1">January 2025</p>
-            </div>
-          </div>
+  const onProfileSubmit = async (data: ProfileFormData) => {
+    const result = await updateProfile(data);
+    if (result.success) {
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+      setIsEditingProfile(false);
+    } else {
+      toast({
+        title: "Update Failed",
+        description: result.message || "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const renderProfile = () => {
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">My Profile</h2>
+          {!isEditingProfile && (
+            <Button variant="outline" size="sm" onClick={() => setIsEditingProfile(true)} data-testid="button-edit-profile">
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
         </div>
-      </Card>
-    </div>
-  )
+        
+        <Card className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                <AvatarFallback className="bg-green-100 text-green-800 text-xl">
+                  {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-1 flex-1 min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold truncate">{user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name || 'User'}</h3>
+                <p className="text-gray-600 truncate break-all">{user.email || ''}</p>
+              </div>
+            </div>
+            
+            <Separator />
+            
+            {isEditingProfile ? (
+              <Form {...profileForm}>
+                <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={profileForm.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-firstName" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={profileForm.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-lastName" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={profileForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="email" data-testid="input-email" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={profileForm.formState.isSubmitting} data-testid="button-save-profile">
+                      <Save className="h-4 w-4 mr-2" />
+                      {profileForm.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => setIsEditingProfile(false)} data-testid="button-cancel-edit">
+                      <X className="h-4 w-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700">First Name</label>
+                  <p className="mt-1" data-testid="text-firstName">{user.firstName || 'Not set'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700">Last Name</label>
+                  <p className="mt-1" data-testid="text-lastName">{user.lastName || 'Not set'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700">Email</label>
+                  <p className="mt-1 truncate break-all" data-testid="text-email">{user.email || ''}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700">Member Since</label>
+                  <p className="mt-1">January 2025</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (activeSection) {

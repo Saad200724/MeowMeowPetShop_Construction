@@ -14,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   signIn: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
   signOut: () => void;
+  updateProfile: (profileData: Partial<User>) => Promise<{ success: boolean; message?: string }>;
   loading: boolean;
 }
 
@@ -82,8 +83,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('User signed out and storage cleared');
   };
 
+  const updateProfile = async (profileData: Partial<User>) => {
+    if (!user) {
+      return { success: false, message: 'No user logged in' };
+    }
+
+    try {
+      const response = await fetch(`/api/auth/profile/${user.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const updatedUser = { ...user, ...data.user };
+        setUser(updatedUser);
+        // Update localStorage with new user data
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+        console.log('Profile updated successfully:', updatedUser);
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      return { success: false, message: 'Network error' };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, loading }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, updateProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );
