@@ -37,9 +37,7 @@ export default function Home() {
           <NewlyLaunched />
           <MembershipBanner />
           <BlogPreview />
-          <div className="mb-0">
-            <Testimonials />
-          </div>
+          <Testimonials />
         </div>
       </main>
 
