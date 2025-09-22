@@ -2048,7 +2048,7 @@ export default function AdminPage() {
 
       {/* Product Dialog */}
       <Dialog open={showProductDialog} onOpenChange={setShowProductDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader>
             <DialogTitle>
               {editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -2063,7 +2063,7 @@ export default function AdminPage() {
               onSubmit={form.handleSubmit(editingProduct ? handleUpdateProduct : handleCreateProduct)} 
               className="space-y-6"
             >
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -2111,7 +2111,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-3 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -2194,7 +2194,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="originalPrice"
@@ -2240,7 +2240,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium">Product Flags</h4>
                   <div className="space-y-3">
@@ -2364,7 +2364,7 @@ export default function AdminPage() {
               onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : handleCreateRepack)} 
               className="space-y-6"
             >
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={repackForm.control}
                   name="name"
@@ -2412,7 +2412,7 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="grid grid-cols-3 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField
                   control={repackForm.control}
                   name="categoryId"
@@ -2492,7 +2492,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={repackForm.control}
                   name="originalPrice"
@@ -2605,7 +2605,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="blog-category">Category</Label>
                   <Select value={(editingBlog as any).category || ''} onValueChange={(value) => setEditingBlog({...editingBlog, category: value} as any)}>
