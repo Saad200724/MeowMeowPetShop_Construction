@@ -1261,7 +1261,7 @@ export default function AdminPage() {
                             </td>
                             <td className="px-4 py-4">
                               <Badge variant="outline" className="text-xs">
-                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
+                                {(categories as any[]).find((c: any) => c.id === product.category)?.name || product.categoryName || product.category}
                               </Badge>
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
@@ -1412,16 +1412,16 @@ export default function AdminPage() {
                         {products
                           .filter((product: any) => 
                             product.tags?.includes(selectedShopCategory) ||
-                            (selectedShopCategory === 'cat-food' && product.categoryId === 'cat-food') ||
-                            (selectedShopCategory === 'dog-food' && product.categoryId === 'dog-food') ||
-                            (selectedShopCategory === 'cat-toys' && product.categoryId === 'cat-toys') ||
-                            (selectedShopCategory === 'cat-litter' && product.categoryId === 'cat-litter') ||
-                            (selectedShopCategory === 'cat-care' && product.categoryId === 'cat-care') ||
-                            (selectedShopCategory === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
-                            (selectedShopCategory === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
-                            (selectedShopCategory === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
-                            (selectedShopCategory === 'rabbit' && product.categoryId === 'rabbit') ||
-                            (selectedShopCategory === 'bird' && product.categoryId === 'bird')
+                            (selectedShopCategory === 'cat-food' && product.category === 'cat-food') ||
+                            (selectedShopCategory === 'dog-food' && product.category === 'dog-food') ||
+                            (selectedShopCategory === 'cat-toys' && product.category === 'cat-toys') ||
+                            (selectedShopCategory === 'cat-litter' && product.category === 'cat-litter') ||
+                            (selectedShopCategory === 'cat-care' && product.category === 'cat-care') ||
+                            (selectedShopCategory === 'clothing-beds-carrier' && product.category === 'clothing-beds-carrier') ||
+                            (selectedShopCategory === 'cat-accessories' && product.category === 'cat-accessories') ||
+                            (selectedShopCategory === 'dog-accessories' && product.category === 'dog-accessories') ||
+                            (selectedShopCategory === 'rabbit' && product.category === 'rabbit') ||
+                            (selectedShopCategory === 'bird' && product.category === 'bird')
                           )
                           .map((product: any) => (
                             <Card key={product.id} className="hover:shadow-md transition-shadow">
@@ -1455,16 +1455,16 @@ export default function AdminPage() {
                         {products
                           .filter((product: any) => 
                             product.tags?.includes(selectedShopCategory) ||
-                            (selectedShopCategory === 'cat-food' && product.categoryId === 'cat-food') ||
-                            (selectedShopCategory === 'dog-food' && product.categoryId === 'dog-food') ||
-                            (selectedShopCategory === 'cat-toys' && product.categoryId === 'cat-toys') ||
-                            (selectedShopCategory === 'cat-litter' && product.categoryId === 'cat-litter') ||
-                            (selectedShopCategory === 'cat-care' && product.categoryId === 'cat-care') ||
-                            (selectedShopCategory === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
-                            (selectedShopCategory === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
-                            (selectedShopCategory === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
-                            (selectedShopCategory === 'rabbit' && product.categoryId === 'rabbit') ||
-                            (selectedShopCategory === 'bird' && product.categoryId === 'bird')
+                            (selectedShopCategory === 'cat-food' && product.category === 'cat-food') ||
+                            (selectedShopCategory === 'dog-food' && product.category === 'dog-food') ||
+                            (selectedShopCategory === 'cat-toys' && product.category === 'cat-toys') ||
+                            (selectedShopCategory === 'cat-litter' && product.category === 'cat-litter') ||
+                            (selectedShopCategory === 'cat-care' && product.category === 'cat-care') ||
+                            (selectedShopCategory === 'clothing-beds-carrier' && product.category === 'clothing-beds-carrier') ||
+                            (selectedShopCategory === 'cat-accessories' && product.category === 'cat-accessories') ||
+                            (selectedShopCategory === 'dog-accessories' && product.category === 'dog-accessories') ||
+                            (selectedShopCategory === 'rabbit' && product.category === 'rabbit') ||
+                            (selectedShopCategory === 'bird' && product.category === 'bird')
                           ).length === 0 && (
                           <div className="col-span-full text-center py-8 text-gray-500">
                             <Grid3X3 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
@@ -1516,16 +1516,16 @@ export default function AdminPage() {
                     ].map((category) => {
                       const count = products.filter((product: any) => 
                         product.tags?.includes(category) ||
-                        (category === 'cat-food' && product.categoryId === 'cat-food') ||
-                        (category === 'dog-food' && product.categoryId === 'dog-food') ||
-                        (category === 'cat-toys' && product.categoryId === 'cat-toys') ||
-                        (category === 'cat-litter' && product.categoryId === 'cat-litter') ||
-                        (category === 'cat-care' && product.categoryId === 'cat-care') ||
-                        (category === 'clothing-beds-carrier' && product.categoryId === 'clothing-beds-carrier') ||
-                        (category === 'cat-accessories' && product.categoryId === 'cat-accessories') ||
-                        (category === 'dog-accessories' && product.categoryId === 'dog-accessories') ||
-                        (category === 'rabbit' && product.categoryId === 'rabbit') ||
-                        (category === 'bird' && product.categoryId === 'bird')
+                        (category === 'cat-food' && product.category === 'cat-food') ||
+                        (category === 'dog-food' && product.category === 'dog-food') ||
+                        (category === 'cat-toys' && product.category === 'cat-toys') ||
+                        (category === 'cat-litter' && product.category === 'cat-litter') ||
+                        (category === 'cat-care' && product.category === 'cat-care') ||
+                        (category === 'clothing-beds-carrier' && product.category === 'clothing-beds-carrier') ||
+                        (category === 'cat-accessories' && product.category === 'cat-accessories') ||
+                        (category === 'dog-accessories' && product.category === 'dog-accessories') ||
+                        (category === 'rabbit' && product.category === 'rabbit') ||
+                        (category === 'bird' && product.category === 'bird')
                       ).length;
 
                       return (
