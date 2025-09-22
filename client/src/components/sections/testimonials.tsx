@@ -39,7 +39,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="section-spacing bg-gray-50">
+    <section className="pt-12 md:pt-16 pb-6 md:pb-8 bg-gray-50">
       <div className="responsive-container">
         <h2 className="text-lg md:text-3xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 mb-8">
           <MessageCircle size={20} className="text-[#26732d] md:w-8 md:h-8" />
