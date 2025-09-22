@@ -205,8 +205,8 @@ export default function SignInPage() {
         description: 'Welcome to the admin panel.',
       })
       
-      // Redirect to admin panel
-      setLocation('/admin')
+      // Trigger a page refresh to ensure the auth context updates with the new admin user
+      window.location.href = '/admin'
     } catch (error) {
       console.error('Admin login error:', error)
       toast({
