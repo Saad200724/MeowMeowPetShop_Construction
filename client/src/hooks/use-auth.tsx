@@ -37,14 +37,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-          console.log('Found stored user:', parsedUser);
           setUser(parsedUser);
         } catch (error) {
           console.error('Failed to parse stored user:', error);
           localStorage.removeItem(AUTH_STORAGE_KEY);
         }
-      } else {
-        console.log('No stored user found in localStorage');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
