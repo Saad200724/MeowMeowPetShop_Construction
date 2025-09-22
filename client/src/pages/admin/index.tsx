@@ -2048,7 +2048,7 @@ export default function AdminPage() {
 
       {/* Product Dialog */}
       <Dialog open={showProductDialog} onOpenChange={setShowProductDialog}>
-        <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
+        <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -2058,8 +2058,10 @@ export default function AdminPage() {
             </DialogDescription>
           </DialogHeader>
 
+          <div className="flex-1 overflow-y-auto px-1">
           <Form {...form}>
             <form 
+              id="product-form"
               onSubmit={form.handleSubmit(editingProduct ? handleUpdateProduct : handleCreateProduct)} 
               className="space-y-6"
             >
@@ -2320,30 +2322,32 @@ export default function AdminPage() {
                   </div>
                 </div>
               </div>
-
-              <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  onClick={() => setShowProductDialog(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  className="bg-blue-600 hover:bg-blue-700"
-                  disabled={createProductMutation.isPending || updateProductMutation.isPending}
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {createProductMutation.isPending || updateProductMutation.isPending 
-                    ? 'Saving...' 
-                    : editingProduct ? 'Update Product' : 'Save Product'
-                  }
-                </Button>
-              </DialogFooter>
             </form>
           </Form>
+          </div>
+
+          <DialogFooter className="border-t pt-4 mt-0 flex-shrink-0">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              onClick={() => setShowProductDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              form="product-form"
+              className="bg-blue-600 hover:bg-blue-700"
+              disabled={createProductMutation.isPending || updateProductMutation.isPending}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {createProductMutation.isPending || updateProductMutation.isPending 
+                ? 'Saving...' 
+                : editingProduct ? 'Update Product' : 'Save Product'
+              }
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
