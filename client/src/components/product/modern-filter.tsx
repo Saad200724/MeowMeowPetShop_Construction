@@ -45,8 +45,8 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
       {/* Mobile: Side by side layout, Desktop: Stacked */}
       <div className="grid grid-cols-2 gap-2 md:block md:space-y-2">
         {/* Price Filter - Left on mobile */}
-        <Card className="bg-white shadow-sm" data-testid="card-price-filter">
-          <CardHeader className="pb-1 md:pb-1 py-1 md:py-2">
+        <Card className="bg-white shadow-sm min-h-[120px] md:min-h-[140px]" data-testid="card-price-filter">
+          <CardHeader className="pb-1 md:pb-1 py-2 md:py-3">
             <CardTitle className="flex items-center gap-1 text-xs md:text-sm font-medium">
               <Filter className="h-2.5 w-2.5 md:h-3 md:w-3" />
               Filter By Price
@@ -172,16 +172,16 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
         </Card>
 
         {/* Sort Options - Right on mobile */}
-        <Card className="bg-white shadow-sm md:mt-0" data-testid="card-sort-options">
-          <CardHeader className="pb-1 md:pb-1 py-1 md:py-2">
+        <Card className="bg-white shadow-sm md:mt-0 min-h-[120px] md:min-h-[140px]" data-testid="card-sort-options">
+          <CardHeader className="pb-1 md:pb-1 py-2 md:py-3">
             <CardTitle className="flex items-center gap-1 text-xs md:text-sm font-medium">
               <ArrowUpDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
               Sort By
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0 pb-1 md:pb-2">
+          <CardContent className="pt-0 pb-2 md:pb-3">
             <Select value={sortBy} onValueChange={handleSortChange}>
-              <SelectTrigger className="w-full text-black h-8 md:h-9 text-xs md:text-sm">
+              <SelectTrigger className="w-full text-black h-9 md:h-10 text-xs md:text-sm">
                 <SelectValue placeholder="Sort by relevance" className="text-black" />
               </SelectTrigger>
               <SelectContent className="bg-white">
@@ -200,7 +200,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
       {/* Clear Filters */}
       <Button 
         variant="outline" 
-        className="w-28 md:w-36 text-xs md:text-sm py-1 md:py-1.5 h-7 md:h-8 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
+        className="w-full text-xs md:text-sm py-1 md:py-1.5 h-8 md:h-9 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
         onClick={resetFilters}
       >
         Clear Filters

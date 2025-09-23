@@ -116,7 +116,7 @@ export default function CatFoodPage() {
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 md:h-5 md:w-5 text-gray-400" />
             <Input
               placeholder="Search cat food products..."
-              className="pl-7 pr-2 py-1 md:py-2 text-xs md:text-sm bg-white text-gray-900"
+              className="pl-7 pr-2 py-2 md:py-3 h-10 md:h-12 text-xs md:text-sm bg-white text-gray-900"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               data-testid="input-search-cat-food"
