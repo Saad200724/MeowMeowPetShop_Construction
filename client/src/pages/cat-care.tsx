@@ -91,17 +91,21 @@ export default function CatCarePage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-16 pb-2 md:pb-8 px-4 bg-gradient-to-r from-green-500 to-teal-500 text-white">
+      <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-green-500 to-teal-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-lg md:text-4xl lg:text-5xl font-bold mb-1 md:mb-4">Cat Care & Health</h1>
-          <p className="text-xs md:text-xl opacity-90 mb-2 md:mb-6">Keep your feline friends healthy and happy</p>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4">
+            Cat Care & Health
+          </h1>
+          <p className="text-sm md:text-lg opacity-90 mb-4 md:mb-6">
+            Keep your feline friends healthy and happy
+          </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
               placeholder="Search cat care products..."
-              className="pl-10 bg-white text-gray-900"
+              className="h-10 sm:h-11 rounded-full pl-11 pr-4 text-sm bg-white text-gray-900 shadow-md border-0 focus:ring-2 focus:ring-green-400 placeholder:text-gray-500"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               data-testid="input-search-cat-care"
@@ -111,45 +115,46 @@ export default function CatCarePage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
+      <section className="py-4 px-4 md:py-8 md:px-8">
+        <div className="max-w-7xl mx-auto lg:flex lg:gap-6">
           {/* Modern Filter Sidebar */}
-          <aside className="lg:w-1/4 mb-8 lg:mb-0">
-            <ModernFilter 
+          <aside className="lg:w-1/4 mb-4 md:mb-8 lg:mb-0">
+            <ModernFilter
               onFilterChange={handleFilterChange}
               maxPrice={20000}
             />
           </aside>
 
           {/* Main Content Area */}
-          <main className="lg:w-3/4">
+          <main className="lg:w-3/4 space-y-4">
             {/* Analytics Bar */}
-            <AnalyticsBar categoryId="cat-care" />
+            <AnalyticsBar categoryId="cat-care" className="" />
 
-            {/* Products Grid */}
-            <div className="mt-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Cat Care & Health Products</h2>
-                <p className="text-gray-600">{filteredProducts.length} products found</p>
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg md:text-2xl font-bold">
+                Cat Care & Health Products
+              </h2>
+              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+                {filteredProducts.length} products
               </div>
-
-              {filteredProducts.length === 0 ? (
-                <Card className="p-8">
-                  <div className="text-center">
-                    <p className="text-gray-500 mb-4">No products found</p>
-                    <p className="text-sm text-gray-400">
-                      {searchQuery ? 'Try adjusting your search terms' : 'Products coming soon!'}
-                    </p>
-                  </div>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 justify-items-center">
-                  {filteredProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              )}
             </div>
+
+            {filteredProducts.length === 0 ? (
+              <Card className="p-8">
+                <div className="text-center">
+                  <p className="text-gray-500 mb-4">No products found</p>
+                  <p className="text-sm text-gray-400">
+                    {searchQuery ? 'Try adjusting your search terms' : 'Products coming soon!'}
+                  </p>
+                </div>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
           </main>
         </div>
       </section>

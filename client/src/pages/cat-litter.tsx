@@ -100,17 +100,21 @@ export default function CatLitterPage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-16 pb-2 md:pb-8 px-4 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
+      <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-lg md:text-4xl lg:text-5xl font-bold mb-1 md:mb-4">Cat Litter & Accessories</h1>
-          <p className="text-xs md:text-xl opacity-90 mb-2 md:mb-6">Everything you need for your cat's hygiene and comfort</p>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4">
+            Cat Litter & Accessories
+          </h1>
+          <p className="text-sm md:text-lg opacity-90 mb-4 md:mb-6">
+            Everything you need for your cat's hygiene and comfort
+          </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
               placeholder="Search cat litter products..."
-              className="pl-10 bg-white text-gray-900"
+              className="h-10 sm:h-11 rounded-full pl-11 pr-4 text-sm bg-white text-gray-900 shadow-md border-0 focus:ring-2 focus:ring-blue-400 placeholder:text-gray-500"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               data-testid="input-search-cat-litter"
@@ -120,27 +124,31 @@ export default function CatLitterPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
+      <section className="py-4 px-4 md:py-8 md:px-8">
+        <div className="max-w-7xl mx-auto lg:flex lg:gap-6">
           {/* Modern Filter Sidebar */}
-          <aside className="lg:w-1/4 mb-8 lg:mb-0">
-            <ModernFilter 
+          <aside className="lg:w-1/4 mb-4 md:mb-8 lg:mb-0">
+            <ModernFilter
               onFilterChange={handleFilterChange}
               maxPrice={20000}
             />
           </aside>
 
           {/* Products Grid */}
-          <main className="lg:w-3/4">
+          <main className="lg:w-3/4 space-y-4">
             {/* Analytics Bar */}
-            <AnalyticsBar categoryId="cat-litter" className="mb-6" />
+            <AnalyticsBar categoryId="cat-litter" className="" />
 
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Cat Litter & Accessories</h2>
-              <p className="text-gray-600">{filteredProducts.length} products found</p>
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg md:text-2xl font-bold">
+                Cat Litter & Accessories
+              </h2>
+              <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+                {filteredProducts.length} products
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 justify-items-center">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
