@@ -91,10 +91,10 @@ export default function CatCarePage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-24 pb-4 md:pb-8 px-4 bg-gradient-to-r from-green-500 to-teal-500 text-white">
+      <section className="pt-16 pb-2 md:pb-8 px-4 bg-gradient-to-r from-green-500 to-teal-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Cat Care & Health</h1>
-          <p className="text-sm md:text-xl opacity-90 mb-4 md:mb-6">Keep your feline friends healthy and happy</p>
+          <h1 className="text-lg md:text-4xl lg:text-5xl font-bold mb-1 md:mb-4">Cat Care & Health</h1>
+          <p className="text-xs md:text-xl opacity-90 mb-2 md:mb-6">Keep your feline friends healthy and happy</p>
 
           {/* Search Bar */}
           <div className="relative max-w-md">

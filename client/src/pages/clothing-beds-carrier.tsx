@@ -91,10 +91,10 @@ export default function ClothingBedsCarrierPage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-24 pb-4 md:pb-8 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+      <section className="pt-16 pb-2 md:pb-8 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Clothing, Beds & Carrier</h1>
-          <p className="text-sm md:text-xl opacity-90 mb-4 md:mb-6">Comfort and style for your beloved pets</p>
+          <h1 className="text-lg md:text-4xl lg:text-5xl font-bold mb-1 md:mb-4">Clothing, Beds & Carrier</h1>
+          <p className="text-xs md:text-xl opacity-90 mb-2 md:mb-6">Comfort and style for your beloved pets</p>
 
           {/* Search Bar */}
           <div className="relative max-w-md">

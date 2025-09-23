@@ -90,17 +90,17 @@ export default function CatFoodPage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-24 pb-4 md:pb-8 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white">
+      <section className="pt-14 pb-1 md:pb-8 px-2 bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Cat Food Collection</h1>
-          <p className="text-sm md:text-xl opacity-90 mb-4 md:mb-6">Premium nutrition for your feline friends</p>
+          <h1 className="text-base md:text-4xl lg:text-5xl font-bold mb-0.5 md:mb-4">Cat Food Collection</h1>
+          <p className="text-xs md:text-xl opacity-90 mb-1 md:mb-6">Premium nutrition for your feline friends</p>
 
           {/* Search Bar */}
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 md:h-5 md:w-5 text-gray-400" />
             <Input
               placeholder="Search cat food products..."
-              className="pl-10 bg-white text-gray-900"
+              className="pl-7 pr-2 py-1 md:py-2 text-xs md:text-sm bg-white text-gray-900"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               data-testid="input-search-cat-food"
@@ -110,10 +110,10 @@ export default function CatFoodPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 px-4">
+      <section className="py-1 md:py-8 px-2 md:px-4">
         <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
           {/* Modern Filter Sidebar */}
-          <aside className="lg:w-1/4 mb-8 lg:mb-0">
+          <aside className="lg:w-1/4 mb-2 md:mb-8 lg:mb-0">
             <ModernFilter 
               onFilterChange={handleFilterChange}
               maxPrice={20000}
@@ -123,14 +123,14 @@ export default function CatFoodPage() {
           {/* Products Grid */}
           <main className="lg:w-3/4">
             {/* Analytics Bar */}
-            <AnalyticsBar categoryId="cat-food" className="mb-6" />
+            <AnalyticsBar categoryId="cat-food" className="mb-1 md:mb-6" />
 
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Cat Food Products</h2>
-              <p className="text-gray-600">{filteredProducts.length} products found</p>
+            <div className="flex justify-between items-center mb-1 md:mb-6">
+              <h2 className="text-sm md:text-2xl font-bold">Cat Food Products</h2>
+              <p className="text-xs md:text-base text-gray-600">{filteredProducts.length} products found</p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-0.5 md:gap-1">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

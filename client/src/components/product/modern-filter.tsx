@@ -40,16 +40,16 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-1.5 md:space-y-4 ${className}`}>
       {/* Sort Options */}
       <Card>
-        <CardHeader className="pb-2 md:pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm md:text-lg">
-            <ArrowUpDown className="h-3 w-3 md:h-4 md:w-4" />
+        <CardHeader className="pb-1 md:pb-3">
+          <CardTitle className="flex items-center gap-1 text-xs md:text-lg">
+            <ArrowUpDown className="h-2.5 w-2.5 md:h-4 md:w-4" />
             Sort By
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 pb-2 md:pb-6">
           <Select value={sortBy} onValueChange={handleSortChange}>
             <SelectTrigger className="w-full text-black">
               <SelectValue placeholder="Sort by relevance" className="text-black" />
@@ -68,13 +68,13 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
 
       {/* Price Filter */}
       <Card>
-        <CardHeader className="pb-2 md:pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm md:text-lg">
-            <Filter className="h-3 w-3 md:h-4 md:w-4" />
+        <CardHeader className="pb-1 md:pb-3">
+          <CardTitle className="flex items-center gap-1 text-xs md:text-lg">
+            <Filter className="h-2.5 w-2.5 md:h-4 md:w-4" />
             Filter By Price
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 md:space-y-4 pt-0">
+        <CardContent className="space-y-1 md:space-y-4 pt-0 pb-2 md:pb-6">
           <div className="px-1 md:px-2">
             <Slider
               value={priceRange}
@@ -85,8 +85,8 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
               className="w-full"
             />
           </div>
-          <div className="flex justify-between items-center gap-1 md:gap-2 mt-2 md:mt-3">
-            <div className="flex items-center gap-1">
+          <div className="flex justify-between items-center gap-0.5 md:gap-2 mt-1 md:mt-3">
+            <div className="flex items-center gap-0.5">
               <span className="text-xs md:text-sm text-gray-600">৳</span>
               <Input
                 type="number"
@@ -97,13 +97,13 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-16 md:w-24 h-8 md:h-10 text-xs md:text-sm px-1 md:px-2"
+                className="w-12 md:w-24 h-6 md:h-10 text-xs md:text-sm px-1 md:px-2"
                 min="1"
                 max={maxPrice}
               />
             </div>
             <span className="text-xs md:text-sm text-gray-400">to</span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <span className="text-xs md:text-sm text-gray-600">৳</span>
               <Input
                 type="number"
@@ -114,7 +114,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-20 md:w-28 h-8 md:h-10 text-xs md:text-sm px-1 md:px-2"
+                className="w-14 md:w-28 h-6 md:h-10 text-xs md:text-sm px-1 md:px-2"
                 min="1"
                 max={maxPrice}
               />
@@ -126,7 +126,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
       {/* Clear Filters */}
       <Button 
         variant="outline" 
-        className="w-full text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
+        className="w-full text-xs md:text-sm py-1 md:py-2 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
         onClick={resetFilters}
       >
         Clear Filters
