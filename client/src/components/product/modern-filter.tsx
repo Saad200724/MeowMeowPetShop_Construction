@@ -43,15 +43,15 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
     <div className={`space-y-1 md:space-y-2 ${className}`}>
       {/* Sort Options */}
       <Card className="bg-white shadow-sm">
-        <CardHeader className="pb-1 md:pb-2 py-2 md:py-3">
+        <CardHeader className="pb-1 md:pb-1 py-1 md:py-2">
           <CardTitle className="flex items-center gap-1 text-xs md:text-sm font-medium">
             <ArrowUpDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
             Sort By
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0 pb-2 md:pb-3">
+        <CardContent className="pt-0 pb-1 md:pb-2">
           <Select value={sortBy} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-full text-black">
+            <SelectTrigger className="w-full text-black h-8 md:h-9 text-xs md:text-sm">
               <SelectValue placeholder="Sort by relevance" className="text-black" />
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -68,13 +68,13 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
 
       {/* Price Filter */}
       <Card className="bg-white shadow-sm">
-        <CardHeader className="pb-1 md:pb-2 py-2 md:py-3">
+        <CardHeader className="pb-1 md:pb-1 py-1 md:py-2">
           <CardTitle className="flex items-center gap-1 text-xs md:text-sm font-medium">
             <Filter className="h-2.5 w-2.5 md:h-3 md:w-3" />
             Filter By Price
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-1 md:space-y-2 pt-0 pb-2 md:pb-3">
+        <CardContent className="space-y-1 md:space-y-2 pt-0 pb-1 md:pb-2">
           <div className="px-1 md:px-2">
             <Slider
               value={priceRange}
@@ -126,7 +126,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
       {/* Clear Filters */}
       <Button 
         variant="outline" 
-        className="w-full text-xs md:text-sm py-1 md:py-1.5 h-8 md:h-9 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
+        className="w-28 md:w-36 text-xs md:text-sm py-1 md:py-1.5 h-7 md:h-8 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
         onClick={resetFilters}
       >
         Clear Filters

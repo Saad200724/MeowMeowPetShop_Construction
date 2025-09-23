@@ -112,7 +112,7 @@ export default function CatFoodPage() {
           </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-md">
+          <div className="relative max-w-xs">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 md:h-5 md:w-5 text-gray-400" />
             <Input
               placeholder="Search cat food products..."
