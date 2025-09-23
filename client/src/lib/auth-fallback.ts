@@ -83,11 +83,52 @@ export async function fallbackSignIn(email: string, password: string) {
     };
   }
   
-  // Store as current user
-  localStorage.setItem('auth_user', JSON.stringify(user));
+  // Store as current user with auth method
+  const userWithAuthMethod = { ...user, authMethod: 'fallback' };
+  localStorage.setItem('auth_user', JSON.stringify(userWithAuthMethod));
   
   return { 
-    data: { user }, 
+    data: { user: userWithAuthMethod }, 
     error: null 
+  };
+}
+
+// Fallback OTP verification
+export async function fallbackVerifyOtp(email: string, token: string) {
+  const storedOtp = localStorage.getItem(`otp_${email}`);
+  
+  if (!storedOtp || storedOtp !== token) {
+    return {
+      data: null,
+      error: { message: 'Invalid or expired OTP code' }
+    };
+  }
+  
+  // OTP is valid, create or login user
+  const users = getUsers();
+  let user = users.find(u => u.email === email);
+  
+  if (!user) {
+    // Create new user for sign up
+    user = {
+      id: Date.now().toString(),
+      email,
+      name: email.split('@')[0],
+      role: 'user'
+    };
+    users.push(user);
+    saveUsers(users);
+  }
+  
+  // Clean up OTP
+  localStorage.removeItem(`otp_${email}`);
+  
+  // Store as current user
+  const userWithAuthMethod = { ...user, authMethod: 'fallback' };
+  localStorage.setItem('auth_user', JSON.stringify(userWithAuthMethod));
+  
+  return {
+    data: { user: userWithAuthMethod, session: { user: userWithAuthMethod } },
+    error: null
   };
 }

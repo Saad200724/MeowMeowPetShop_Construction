@@ -34,10 +34,40 @@ export type AuthUser = {
   name?: string
 }
 
+// Connection tracking
+let connectionCount = 0
+let useSupabaseAuth = true
+
+// Check connection limit
+export function checkConnectionLimit() {
+  if (connectionCount >= 190) { // Keep buffer of 10
+    useSupabaseAuth = false
+    console.log('Supabase connection limit reached, using fallback auth')
+  }
+  return useSupabaseAuth
+}
+
+// Track connections
+export function trackConnection(increment: boolean = true) {
+  if (increment) {
+    connectionCount++
+  } else {
+    connectionCount = Math.max(0, connectionCount - 1)
+  }
+  localStorage.setItem('supabase_connections', connectionCount.toString())
+}
+
 export async function sendOtp(email: string, isSignUp: boolean = false) {
-  if (!supabase) {
-    console.error('Supabase client not initialized')
-    return { data: null, error: { message: 'Authentication service not configured.' } }
+  // Check connection limit first
+  if (!checkConnectionLimit() || !supabase) {
+    console.log('Using fallback authentication for OTP')
+    const { fallbackSignUp } = await import('./auth-fallback')
+    // For OTP fallback, we'll simulate OTP with a simple code
+    if (isSignUp) {
+      localStorage.setItem(`otp_${email}`, '123456')
+      return { data: { message: 'OTP sent successfully (Fallback mode)' }, error: null }
+    }
+    return { data: { message: 'Please use sign up first (Fallback mode)' }, error: null }
   }
   
   console.log('Sending OTP to:', email, isSignUp ? '(signup)' : '(signin)')

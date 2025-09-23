@@ -133,7 +133,7 @@ interface Coupon {
 export default function AdminPage() {
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
-  
+
   // All state hooks declared at the top level (not conditionally)
   const [activeTab, setActiveTab] = useState('products');
   const [searchTerm, setSearchTerm] = useState('');
@@ -878,7 +878,7 @@ export default function AdminPage() {
     }
   };
 
-  
+
 
   // Order handlers
   const handleUpdateOrderStatus = (orderId: string, status: string) => {
@@ -1024,10 +1024,10 @@ export default function AdminPage() {
                 .filter((order: any) => {
                   const searchTerm = orderSearchTerm.toLowerCase();
                   const invoiceNumber = order.invoiceNumber?.toLowerCase() || '';
-                  
+
                   // Remove # from search term if present for comparison
                   const cleanSearchTerm = searchTerm.startsWith('#') ? searchTerm.substring(1) : searchTerm;
-                  
+
                   const matchesSearch = 
                     order.customerInfo?.name?.toLowerCase().includes(searchTerm) ||
                     order._id.toLowerCase().includes(searchTerm) ||
@@ -1037,7 +1037,7 @@ export default function AdminPage() {
                     // Also check if invoice number starts with search term when # is added
                     (searchTerm.startsWith('#') && invoiceNumber.includes(cleanSearchTerm)) ||
                     (!searchTerm.startsWith('#') && invoiceNumber.includes(searchTerm));
-                    
+
                   const matchesStatus = orderStatusFilter === 'all' || order.status?.toLowerCase() === orderStatusFilter;
                   return matchesSearch && matchesStatus;
                 })
@@ -2762,7 +2762,7 @@ export default function AdminPage() {
 
           <Form {...couponForm}>
             <form 
-              onSubmit={couponForm.handleSubmit(editingCoupon ? handleUpdateCoupon : handleCreateCoupon)} 
+              onSubmit={couponForm.handleSubmit(editingCoupon ? handleUpdateCoupon : createCouponMutation.mutate)} 
               className="space-y-6"
             >
               <div className="grid grid-cols-2 gap-4">
