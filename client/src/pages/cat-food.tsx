@@ -92,7 +92,7 @@ export default function CatFoodPage() {
       {/* Hero Section */}
       <section className="pt-14 pb-1 md:pb-8 px-2 bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-base md:text-4xl lg:text-5xl font-bold mb-0.5 md:mb-4">Cat Food Collection</h1>
+          <h1 className="text-2xl md:text-5xl lg:text-7xl font-bold mb-0.5 md:mb-4">Cat Food Collection</h1>
           <p className="text-xs md:text-xl opacity-90 mb-1 md:mb-6">Premium nutrition for your feline friends</p>
 
           {/* Search Bar */}
