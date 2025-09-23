@@ -43,13 +43,13 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
     <div className={`space-y-4 ${className}`}>
       {/* Sort Options */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <ArrowUpDown className="h-4 w-4" />
+        <CardHeader className="pb-2 md:pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm md:text-lg">
+            <ArrowUpDown className="h-3 w-3 md:h-4 md:w-4" />
             Sort By
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <Select value={sortBy} onValueChange={handleSortChange}>
             <SelectTrigger className="w-full text-black">
               <SelectValue placeholder="Sort by relevance" className="text-black" />
@@ -68,14 +68,14 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
 
       {/* Price Filter */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Filter className="h-4 w-4" />
+        <CardHeader className="pb-2 md:pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm md:text-lg">
+            <Filter className="h-3 w-3 md:h-4 md:w-4" />
             Filter By Price
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="px-2">
+        <CardContent className="space-y-3 md:space-y-4 pt-0">
+          <div className="px-1 md:px-2">
             <Slider
               value={priceRange}
               onValueChange={handlePriceChange}
@@ -85,9 +85,9 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
               className="w-full"
             />
           </div>
-          <div className="flex justify-between items-center gap-2 mt-3">
+          <div className="flex justify-between items-center gap-1 md:gap-2 mt-2 md:mt-3">
             <div className="flex items-center gap-1">
-              <span className="text-sm text-gray-600">৳</span>
+              <span className="text-xs md:text-sm text-gray-600">৳</span>
               <Input
                 type="number"
                 value={priceRange[0]}
@@ -97,14 +97,14 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-24 h-10 text-sm px-2"
+                className="w-16 md:w-24 h-8 md:h-10 text-xs md:text-sm px-1 md:px-2"
                 min="1"
                 max={maxPrice}
               />
             </div>
-            <span className="text-sm text-gray-400">to</span>
+            <span className="text-xs md:text-sm text-gray-400">to</span>
             <div className="flex items-center gap-1">
-              <span className="text-sm text-gray-600">৳</span>
+              <span className="text-xs md:text-sm text-gray-600">৳</span>
               <Input
                 type="number"
                 value={priceRange[1]}
@@ -114,7 +114,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                   setPriceRange(newRange);
                   onFilterChange({ priceRange: newRange, sortBy });
                 }}
-                className="w-28 h-10 text-sm px-2"
+                className="w-20 md:w-28 h-8 md:h-10 text-xs md:text-sm px-1 md:px-2"
                 min="1"
                 max={maxPrice}
               />

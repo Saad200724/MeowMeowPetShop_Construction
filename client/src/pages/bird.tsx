@@ -91,10 +91,10 @@ export default function BirdPage() {
       <NavigationSidebar />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-8 px-4 bg-gradient-to-r from-sky-500 to-blue-500 text-white">
+      <section className="pt-24 pb-4 md:pb-8 px-4 bg-gradient-to-r from-sky-500 to-blue-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Bird Food & Accessories</h1>
-          <p className="text-xl opacity-90 mb-6">Everything for your feathered companions</p>
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Bird Food & Accessories</h1>
+          <p className="text-sm md:text-xl opacity-90 mb-4 md:mb-6">Everything for your feathered companions</p>
           
           {/* Search Bar */}
           <div className="relative max-w-md">
