@@ -65,17 +65,17 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
           <SheetTrigger asChild>
             <Button 
               variant="outline" 
-              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm text-gray-900"
+              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-100 hover:text-gray-900 shadow-sm text-gray-900"
               data-testid="button-price-filter"
             >
               <Filter className="h-4 w-4 mr-2 text-gray-700" />
               Price Filter
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[350px]">
+          <SheetContent side="bottom" className="h-[350px] bg-white">
             <SheetHeader>
-              <SheetTitle className="flex items-center gap-2">
-                <Filter className="h-5 w-5" />
+              <SheetTitle className="flex items-center gap-2 text-gray-900">
+                <Filter className="h-5 w-5 text-gray-700" />
                 Filter By Price
               </SheetTitle>
             </SheetHeader>
@@ -92,7 +92,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
               </div>
               <div className="flex justify-between items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 font-medium">৳</span>
+                  <span className="text-sm text-gray-900 font-medium">৳</span>
                   <Input
                     type="number"
                     value={priceRange[0]}
@@ -102,14 +102,14 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                       setPriceRange(newRange);
                       onFilterChange({ priceRange: newRange, sortBy });
                     }}
-                    className="w-24 h-11 text-sm px-3 rounded-lg"
+                    className="w-24 h-11 text-sm px-3 rounded-lg bg-white text-gray-900 border-gray-300"
                     min="1"
                     max={maxPrice}
                   />
                 </div>
-                <span className="text-sm text-gray-400 font-medium">to</span>
+                <span className="text-sm text-gray-700 font-medium">to</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 font-medium">৳</span>
+                  <span className="text-sm text-gray-900 font-medium">৳</span>
                   <Input
                     type="number"
                     value={priceRange[1]}
@@ -119,7 +119,7 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
                       setPriceRange(newRange);
                       onFilterChange({ priceRange: newRange, sortBy });
                     }}
-                    className="w-28 h-11 text-sm px-3 rounded-lg"
+                    className="w-28 h-11 text-sm px-3 rounded-lg bg-white text-gray-900 border-gray-300"
                     min="1"
                     max={maxPrice}
                   />
@@ -133,32 +133,32 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
           <SheetTrigger asChild>
             <Button 
               variant="outline" 
-              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm text-gray-900"
+              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-100 hover:text-gray-900 shadow-sm text-gray-900"
               data-testid="button-sort-filter"
             >
               <ArrowUpDown className="h-4 w-4 mr-2 text-gray-700" />
               Sort
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[300px]">
+          <SheetContent side="bottom" className="h-[300px] bg-white">
             <SheetHeader>
-              <SheetTitle className="flex items-center gap-2">
-                <ArrowUpDown className="h-5 w-5" />
+              <SheetTitle className="flex items-center gap-2 text-gray-900">
+                <ArrowUpDown className="h-5 w-5 text-gray-700" />
                 Sort Options
               </SheetTitle>
             </SheetHeader>
             <div className="mt-6">
               <Select value={sortBy} onValueChange={handleSortChange}>
-                <SelectTrigger className="w-full h-12 text-sm rounded-lg">
-                  <SelectValue placeholder="Sort by relevance" />
+                <SelectTrigger className="w-full h-12 text-sm rounded-lg bg-white text-gray-900 border-gray-300">
+                  <SelectValue placeholder="Sort by relevance" className="text-gray-900" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="relevance">Sort By Relevance</SelectItem>
-                  <SelectItem value="latest">Latest</SelectItem>
-                  <SelectItem value="a-z">A-Z Order</SelectItem>
-                  <SelectItem value="z-a">Z-A Order</SelectItem>
-                  <SelectItem value="price-high-low">Price: High to Low</SelectItem>
-                  <SelectItem value="price-low-high">Price: Low to High</SelectItem>
+                  <SelectItem value="relevance" className="text-gray-900 hover:bg-gray-100">Sort By Relevance</SelectItem>
+                  <SelectItem value="latest" className="text-gray-900 hover:bg-gray-100">Latest</SelectItem>
+                  <SelectItem value="a-z" className="text-gray-900 hover:bg-gray-100">A-Z Order</SelectItem>
+                  <SelectItem value="z-a" className="text-gray-900 hover:bg-gray-100">Z-A Order</SelectItem>
+                  <SelectItem value="price-high-low" className="text-gray-900 hover:bg-gray-100">Price: High to Low</SelectItem>
+                  <SelectItem value="price-low-high" className="text-gray-900 hover:bg-gray-100">Price: Low to High</SelectItem>
                 </SelectContent>
               </Select>
             </div>
