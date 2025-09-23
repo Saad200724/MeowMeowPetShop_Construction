@@ -1,47 +1,59 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import NavigationSidebar from '@/components/layout/sidebar';
-import ProductCard from '@/components/product/product-card';
-import AnalyticsBar from '@/components/product/analytics-bar';
-import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
-import { useProducts, type Product } from '@/hooks/use-products';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import NavigationSidebar from "@/components/layout/sidebar";
+import ProductCard from "@/components/product/product-card";
+import AnalyticsBar from "@/components/product/analytics-bar";
+import ModernFilter, {
+  type FilterOptions,
+} from "@/components/product/modern-filter";
+import { useProducts, type Product } from "@/hooks/use-products";
 
 export default function CatFoodPage() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<FilterOptions>({
     priceRange: [1, 20000],
-    sortBy: 'relevance'
+    sortBy: "relevance",
   });
 
-  const { loading, error, getProductsByCategory } = useProducts()
+  const { loading, error, getProductsByCategory } = useProducts();
 
   // Get dynamic products from API
-  const allProducts = getProductsByCategory('cat-food');
+  const allProducts = getProductsByCategory("cat-food");
 
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
-    .filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           (product.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchesPrice = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
+    .filter((product) => {
+      const matchesSearch =
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.description || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        product.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+      const matchesPrice =
+        product.price >= filters.priceRange[0] &&
+        product.price <= filters.priceRange[1];
       return matchesSearch && matchesPrice;
     })
     .sort((a, b) => {
       switch (filters.sortBy) {
-        case 'latest':
-          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
-        case 'a-z':
+        case "latest":
+          return (
+            new Date(b.createdAt || 0).getTime() -
+            new Date(a.createdAt || 0).getTime()
+          );
+        case "a-z":
           return a.name.localeCompare(b.name);
-        case 'z-a':
+        case "z-a":
           return b.name.localeCompare(a.name);
-        case 'price-high-low':
+        case "price-high-low":
           return b.price - a.price;
-        case 'price-low-high':
+        case "price-low-high":
           return a.price - b.price;
         default:
           return 0;
@@ -92,8 +104,12 @@ export default function CatFoodPage() {
       {/* Hero Section */}
       <section className="pt-14 pb-1 md:pb-8 px-2 bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-5xl lg:text-7xl font-bold mb-0.5 md:mb-4">Cat Food Collection</h1>
-          <p className="text-xs md:text-xl opacity-90 mb-1 md:mb-6">Premium nutrition for your feline friends</p>
+          <h1 className="text-2xl md:text-15xl lg:text-18xl font-bold mb-0.5 md:mb-4">
+            Cat Food Collection
+          </h1>
+          <p className="text-xs md:text-xl opacity-90 mb-1 md:mb-6">
+            Premium nutrition for your feline friends
+          </p>
 
           {/* Search Bar */}
           <div className="relative max-w-md">
@@ -114,7 +130,7 @@ export default function CatFoodPage() {
         <div className="max-w-7xl mx-auto lg:flex lg:gap-1">
           {/* Modern Filter Sidebar */}
           <aside className="lg:w-1/4 mb-2 md:mb-8 lg:mb-0">
-            <ModernFilter 
+            <ModernFilter
               onFilterChange={handleFilterChange}
               maxPrice={20000}
             />
@@ -126,8 +142,12 @@ export default function CatFoodPage() {
             <AnalyticsBar categoryId="cat-food" className="mb-1 md:mb-6" />
 
             <div className="flex justify-between items-center mb-1 md:mb-6">
-              <h2 className="text-sm md:text-2xl font-bold">Cat Food Products</h2>
-              <p className="text-xs md:text-base text-gray-600">{filteredProducts.length} products found</p>
+              <h2 className="text-sm md:text-2xl font-bold">
+                Cat Food Products
+              </h2>
+              <p className="text-xs md:text-base text-gray-600">
+                {filteredProducts.length} products found
+              </p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 justify-items-center">
@@ -139,13 +159,15 @@ export default function CatFoodPage() {
             {/* No Products Message */}
             {filteredProducts.length === 0 && !loading && (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+                <p className="text-gray-500 text-lg">
+                  No products found matching your criteria.
+                </p>
                 <Button
                   variant="outline"
                   className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
-                    setSearchQuery('');
-                    setFilters({ priceRange: [1, 20000], sortBy: 'relevance' });
+                    setSearchQuery("");
+                    setFilters({ priceRange: [1, 20000], sortBy: "relevance" });
                   }}
                 >
                   Clear Filters
