@@ -151,7 +151,7 @@ export default function ClothingBedsCarrierPage() {
             )}
 
               {!loading && filteredProducts.length > 0 && (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 justify-items-center">
                   {filteredProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}

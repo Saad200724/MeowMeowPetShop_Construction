@@ -85,7 +85,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const hasDiscount = product.originalPrice && product.originalPrice > product.price
 
   return (
-    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[140px] md:max-w-[280px] h-[200px] md:h-[420px] flex flex-col', className)}>
+    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[180px] md:max-w-[280px] h-[280px] md:h-[420px] flex flex-col', className)}>
       {/* Discount Badge */}
       {hasDiscount && (
         <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -122,7 +122,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-2 md:p-4 h-24 md:h-48 flex-shrink-0">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-32 md:h-48 flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
@@ -133,7 +133,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="p-2 md:p-4 flex flex-col flex-1 justify-between">
+      <CardContent className="p-3 md:p-4 flex flex-col flex-1 justify-between">
         <div className="space-y-3 flex-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
@@ -143,7 +143,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-900 text-xs md:text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2rem] md:min-h-[2.5rem]">
+          <h3 className="font-semibold text-gray-900 text-sm md:text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem] md:min-h-[2.5rem]">
             {product.name}
           </h3>
 
@@ -162,11 +162,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           {/* Price Section */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-base md:text-lg font-bold text-[#26732d]">
+              <span className="text-lg md:text-lg font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-xs md:text-sm text-gray-500 line-through">
+                <span className="text-sm md:text-sm text-gray-500 line-through">
                   ৳{product.originalPrice.toLocaleString()}
                 </span>
               )}
