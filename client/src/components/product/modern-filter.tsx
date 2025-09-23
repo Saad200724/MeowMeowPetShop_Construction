@@ -65,10 +65,10 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
           <SheetTrigger asChild>
             <Button 
               variant="outline" 
-              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm"
+              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm text-gray-900"
               data-testid="button-price-filter"
             >
-              <Filter className="h-4 w-4 mr-2" />
+              <Filter className="h-4 w-4 mr-2 text-gray-700" />
               Price Filter
             </Button>
           </SheetTrigger>
@@ -133,10 +133,10 @@ export default function ModernFilter({ onFilterChange, maxPrice = 20000, classNa
           <SheetTrigger asChild>
             <Button 
               variant="outline" 
-              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm"
+              className="flex-1 h-11 rounded-full text-sm font-medium border-gray-300 bg-white hover:bg-gray-50 shadow-sm text-gray-900"
               data-testid="button-sort-filter"
             >
-              <ArrowUpDown className="h-4 w-4 mr-2" />
+              <ArrowUpDown className="h-4 w-4 mr-2 text-gray-700" />
               Sort
             </Button>
           </SheetTrigger>
