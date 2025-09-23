@@ -130,7 +130,7 @@ export default function DogFoodPage() {
               <p className="text-gray-600">{filteredProducts.length} products found</p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-1">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

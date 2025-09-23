@@ -142,7 +142,7 @@ export default function RabbitPage() {
                   </div>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
                   {filteredProducts.map((product) => (
                     <ProductCard key={product._id} product={product} />
                   ))}
