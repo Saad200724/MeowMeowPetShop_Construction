@@ -85,7 +85,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const hasDiscount = product.originalPrice && product.originalPrice > product.price
 
   return (
-    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[180px] md:max-w-[280px] h-[280px] md:h-[420px] flex flex-col', className)}>
+    <Card className={cn('group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] md:max-w-[320px] h-[320px] md:h-[460px] flex flex-col', className)}>
       {/* Discount Badge */}
       {hasDiscount && (
         <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -122,7 +122,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-32 md:h-48 flex-shrink-0">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-40 md:h-56 flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name} 
