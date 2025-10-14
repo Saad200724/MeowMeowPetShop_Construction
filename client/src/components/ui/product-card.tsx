@@ -169,7 +169,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Image - E-commerce Standard */}
-        <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0"></div>
+        <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0">
           <img
             src={product.image}
             alt={product.name}
@@ -181,7 +181,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Layout */}
-        <div className="px-2 pt-2 pb-2 flex flex-col space-y-1 flex-1"></div>
+        <div className="px-2 pt-2 pb-2 flex flex-col space-y-1 flex-1">
           {/* Product Name - Left Aligned */}
           <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
             {product.name}
