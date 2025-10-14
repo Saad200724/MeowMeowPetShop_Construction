@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] h-[240px] sm:h-[260px] cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] min-h-[280px] sm:min-h-[300px] cursor-pointer"></div>
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -169,7 +169,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Image - E-commerce Standard */}
-        <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 flex items-center justify-center flex-shrink-0">
+        <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0"></div>
           <img
             src={product.image}
             alt={product.name}
@@ -181,7 +181,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Layout */}
-        <div className="px-2 pt-2 pb-0 flex flex-col space-y-1 flex-1">
+        <div className="px-2 pt-2 pb-2 flex flex-col space-y-1 flex-1"></div>
           {/* Product Name - Left Aligned */}
           <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
             {product.name}
@@ -220,12 +220,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* Add to Cart Button */}
-          <div>
+          <div className="mt-auto pt-1">
             <Button
               variant={isInCart ? "default" : "outline"}
               size="sm"
               className={cn(
-                "w-full rounded-full py-1 text-xs transition-all duration-200 border-2",
+                "w-full rounded-full py-1.5 text-xs transition-all duration-200 border-2",
                 isInCart
                   ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                   : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
