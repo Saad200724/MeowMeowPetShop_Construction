@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] min-h-[280px] sm:min-h-[300px] cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] h-[280px] sm:h-[300px] cursor-pointer">
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -169,7 +169,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Image - E-commerce Standard */}
-        <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex items-center justify-center flex-shrink-0">
+        <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 flex items-center justify-center flex-shrink-0">
           <img
             src={product.image}
             alt={product.name}
@@ -181,46 +181,41 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Layout */}
-        <div className="px-2 pt-2 pb-2 flex flex-col space-y-1 flex-1">
-          {/* Product Name - Left Aligned */}
-          <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
-            {product.name}
-          </h4>
+        <div className="px-2 pt-2 pb-2 flex flex-col flex-1 justify-between">
+          <div className="space-y-1">
+            {/* Product Name - Left Aligned */}
+            <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
+              {product.name}
+            </h4>
 
-          {/* Rating - Left Aligned */}
-          <div className="flex items-center justify-start">
-            {renderStars(product.rating)}
-          </div>
+            {/* Rating - Left Aligned */}
+            <div className="flex items-center justify-start">
+              {renderStars(product.rating)}
+            </div>
 
-          {/* Price Section - Left Aligned and Well Structured */}
-          <div className="text-left">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold text-[#26732d]">
-                ৳
-                {typeof product.price === "string"
-                  ? product.price
-                  : product.price.toLocaleString()}
-              </span>
-              {oldPriceValue && (
-                <span className="text-xs text-gray-500 line-through">
+            {/* Price Section - Left Aligned and Well Structured */}
+            <div className="text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-bold text-[#26732d]">
                   ৳
-                  {typeof oldPriceValue === "string"
-                    ? oldPriceValue
-                    : oldPriceValue.toLocaleString()}
+                  {typeof product.price === "string"
+                    ? product.price
+                    : product.price.toLocaleString()}
                 </span>
-              )}
+                {oldPriceValue && (
+                  <span className="text-xs text-gray-500 line-through">
+                    ৳
+                    {typeof oldPriceValue === "string"
+                      ? oldPriceValue
+                      : oldPriceValue.toLocaleString()}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-
-          {/* Stock Display - Only visible on desktop/laptop (hidden on mobile) */}
-          {(product.stock || product.stockStatus) && (
-            <div className="hidden sm:block text-sm text-gray-600 mb-1">
-              {product.stock ? `Stock: ${product.stock}` : product.stockStatus}
-            </div>
-          )}
 
           {/* Add to Cart Button */}
-          <div className="mt-auto pt-1">
+          <div className="pt-1">
             <Button
               variant={isInCart ? "default" : "outline"}
               size="sm"
