@@ -101,7 +101,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {Array.from({ length: 5 }, (_, index) => (
           <Star
             key={index}
-            size={12}
+            size={10}
             className={
               index < displayRating
                 ? "text-yellow-400 fill-current"
@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[160px] h-[280px] sm:h-[306px] cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] h-[240px] sm:h-[260px] cursor-pointer">
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -169,7 +169,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Image - E-commerce Standard */}
-        <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 flex items-center justify-center flex-shrink-0">
+        <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 flex items-center justify-center flex-shrink-0">
           <img
             src={product.image}
             alt={product.name}
@@ -181,9 +181,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Layout */}
-        <div className="px-3 pt-3 pb-0 flex flex-col space-y-1 flex-1">
+        <div className="px-2 pt-2 pb-0 flex flex-col space-y-1 flex-1">
           {/* Product Name - Left Aligned */}
-          <h4 className="font-semibold text-sm text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
+          <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
             {product.name}
           </h4>
 
@@ -194,15 +194,15 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Price Section - Left Aligned and Well Structured */}
           <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-base font-bold text-[#26732d]">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-[#26732d]">
                 ৳
                 {typeof product.price === "string"
                   ? product.price
                   : product.price.toLocaleString()}
               </span>
               {oldPriceValue && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-xs text-gray-500 line-through">
                   ৳
                   {typeof oldPriceValue === "string"
                     ? oldPriceValue
@@ -225,7 +225,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               variant={isInCart ? "default" : "outline"}
               size="sm"
               className={cn(
-                "w-full rounded-full py-2 transition-all duration-200 border-2",
+                "w-full rounded-full py-1 text-xs transition-all duration-200 border-2",
                 isInCart
                   ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                   : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
@@ -239,15 +239,15 @@ export default function ProductCard({ product }: ProductCardProps) {
               data-testid={`add-to-cart-${productSlug}`}
             >
               {isAddingToCart ? (
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
               ) : isInCart ? (
                 <>
-                  <Check size={16} className="mr-1" />
+                  <Check size={14} className="mr-1" />
                   Added
                 </>
               ) : (
                 <>
-                  <ShoppingCart size={16} className="mr-1" />
+                  <ShoppingCart size={14} className="mr-1" />
                   Add to Cart
                 </>
               )}

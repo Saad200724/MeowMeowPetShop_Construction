@@ -60,7 +60,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        size={12}
+        size={10}
         className={
           index < rating ? "text-yellow-500 fill-current" : "text-gray-300"
         }
@@ -89,7 +89,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[240px] md:max-w-[380px] h-[450px] md:h-[580px] flex flex-col",
+        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[180px] md:max-w-[240px] h-[320px] md:h-[380px] flex flex-col",
         className,
       )}
     >
@@ -131,7 +131,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </Button>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4 md:p-5 h-56 md:h-80 flex-shrink-0">
+      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-36 md:h-48 flex-shrink-0">
         <img
           src={product.image}
           alt={product.name}
@@ -142,7 +142,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="p-4 md:p-5 flex flex-col flex-1 justify-between">
+      <CardContent className="p-3 md:p-4 flex flex-col flex-1 justify-between">
         <div className="space-y-3 flex-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
@@ -152,7 +152,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-900 text-base md:text-lg leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[3rem] md:min-h-[3.5rem]">
+          <h3 className="font-semibold text-gray-900 text-sm md:text-base leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem] md:min-h-[3rem]">
             {product.name}
           </h3>
 
@@ -169,11 +169,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           {/* Price Section */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl font-bold text-[#26732d]">
+              <span className="text-base md:text-xl font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-base md:text-lg text-gray-500 line-through">
+                <span className="text-sm md:text-base text-gray-500 line-through">
                   ৳{product.originalPrice.toLocaleString()}
                 </span>
               )}
