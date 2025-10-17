@@ -215,7 +215,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Add to Cart Button */}
-          <div className="pt-1">
+          <div>
             <Button
               variant={isInCart ? "default" : "outline"}
               size="sm"
