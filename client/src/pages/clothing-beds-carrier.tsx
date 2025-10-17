@@ -93,10 +93,10 @@ export default function ClothingBedsCarrierPage() {
       {/* Hero Section */}
       <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-gray-900">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-white">
             Clothing, Beds & Carrier
           </h1>
-          <p className="text-sm md:text-lg mb-4 md:mb-6 text-gray-800">
+          <p className="text-sm md:text-lg mb-4 md:mb-6 text-white">
             Comfort and style for your beloved pets
           </p>
 

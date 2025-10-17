@@ -93,10 +93,10 @@ export default function CatCarePage() {
       {/* Hero Section */}
       <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-green-500 to-teal-500 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-gray-900">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-white">
             Cat Care & Health
           </h1>
-          <p className="text-sm md:text-lg mb-4 md:mb-6 text-gray-800">
+          <p className="text-sm md:text-lg mb-4 md:mb-6 text-white">
             Keep your feline friends healthy and happy
           </p>
 
