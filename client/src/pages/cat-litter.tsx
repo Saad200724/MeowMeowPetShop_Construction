@@ -102,10 +102,10 @@ export default function CatLitterPage() {
       {/* Hero Section */}
       <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-gray-900">
             Cat Litter & Accessories
           </h1>
-          <p className="text-sm md:text-lg opacity-90 mb-4 md:mb-6">
+          <p className="text-sm md:text-lg mb-4 md:mb-6 text-gray-800">
             Everything you need for your cat's hygiene and comfort
           </p>
 
