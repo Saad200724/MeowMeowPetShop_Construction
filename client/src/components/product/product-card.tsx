@@ -140,7 +140,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="px-3 pt-2.5 pb-2.5 flex flex-col flex-1">
+      <CardContent className="px-3 pt-2.5 pb-1.5 flex flex-col flex-1">
         <div className="space-y-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
@@ -180,7 +180,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-2">
+        <div className="mt-1.5">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
