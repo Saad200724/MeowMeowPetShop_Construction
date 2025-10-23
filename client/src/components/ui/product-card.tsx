@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] h-[280px] sm:h-[300px] cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[140px] h-[240px] cursor-pointer">
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -181,7 +181,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Layout */}
-        <div className="px-2 pt-2 pb-2 flex flex-col flex-1">
+        <div className="px-2 pt-1.5 pb-1.5 flex flex-col flex-1">
           <div className="space-y-0.5">
             {/* Product Name - Left Aligned */}
             <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
