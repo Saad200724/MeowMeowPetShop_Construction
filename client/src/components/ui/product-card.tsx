@@ -182,7 +182,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Content - Improved Layout */}
         <div className="px-2 pt-2 pb-2 flex flex-col flex-1">
-          <div className="space-y-1 mb-2">
+          <div className="space-y-0.5">
             {/* Product Name - Left Aligned */}
             <h4 className="font-semibold text-xs text-gray-900 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left">
               {product.name}
@@ -215,7 +215,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Add to Cart Button */}
-          <div className="mt-auto">
+          <div className="mt-1">
             <Button
               variant={isInCart ? "default" : "outline"}
               size="sm"
