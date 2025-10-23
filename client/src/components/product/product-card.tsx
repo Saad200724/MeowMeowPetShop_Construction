@@ -89,61 +89,59 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[180px] md:max-w-[240px] h-[320px] md:h-[380px] flex flex-col",
+        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-[140px] h-[240px] flex flex-col",
         className,
       )}
     >
       {/* Discount Badge */}
       {hasDiscount && (
-        <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
           -৳{(product.originalPrice! - product.price).toLocaleString()}
-        </Badge>
+        </div>
       )}
 
       {/* Other Badges */}
       {badgeText && !hasDiscount && (
-        <Badge
+        <div
           className={cn(
-            "absolute top-3 left-3 z-10 text-xs font-bold px-2 py-1 rounded-full",
+            "absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold z-10",
             getBadgeColor(product),
           )}
         >
           {badgeText}
-        </Badge>
+        </div>
       )}
 
       {/* Like Button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-sm"
-        onClick={() => setIsLiked(!isLiked)}
-      >
-        <Heart
-          size={16}
-          className={cn(
-            "transition-colors",
-            isLiked
-              ? "text-red-500 fill-current"
-              : "text-gray-400 hover:text-red-500",
-          )}
-        />
-      </Button>
+      <div className="absolute top-2 right-2 z-10">
+        <button
+          onClick={() => setIsLiked(!isLiked)}
+          className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95"
+        >
+          <Heart
+            size={14}
+            className={cn(
+              "transition-colors",
+              isLiked ? "text-red-500 fill-current" : "",
+            )}
+          />
+        </button>
+      </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-3 md:p-4 h-36 md:h-48 flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 flex-shrink-0">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="p-3 md:p-4 flex flex-col flex-1 justify-between">
-        <div className="space-y-3 flex-1">
+      <CardContent className="px-2 pt-1.5 pb-1.5 flex flex-col flex-1">
+        <div className="space-y-0.5">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
             <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
@@ -152,7 +150,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-900 text-sm md:text-base leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem] md:min-h-[3rem]">
+          <h3 className="font-semibold text-xs text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left">
             {product.name}
           </h3>
 
@@ -167,65 +165,49 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           )}
 
           {/* Price Section */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-base md:text-xl font-bold text-[#26732d]">
+          <div className="text-left">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-sm md:text-base text-gray-500 line-through">
+                <span className="text-xs text-gray-500 line-through">
                   ৳{product.originalPrice.toLocaleString()}
                 </span>
-              )}
-            </div>
-
-            {/* Stock Status */}
-            <div className="text-xs text-gray-500">
-              {product.stock > 0 ? (
-                <span
-                  className={cn(
-                    "font-medium",
-                    product.stock < 10 ? "text-orange-600" : "text-green-600",
-                  )}
-                >
-                  {product.stock < 10
-                    ? `Only ${product.stock} left`
-                    : "In Stock"}
-                </span>
-              ) : (
-                <span className="text-red-600 font-medium">Out of Stock</span>
               )}
             </div>
           </div>
         </div>
 
         {/* Add to Cart Button */}
-        <Button
-          variant={isInCart ? "default" : "outline"}
-          size="sm"
-          className={cn(
-            "w-full rounded-full py-2 transition-all duration-200 border-2 mt-4",
-            isInCart
-              ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
-              : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
-          )}
-          disabled={product.stock === 0 || isAddingToCart}
-          onClick={handleAddToCart}
-        >
-          {isAddingToCart ? (
-            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          ) : isInCart ? (
-            <>
-              <Check size={16} className="mr-1" />
-              Added
-            </>
-          ) : (
-            <>
-              <ShoppingCart size={16} className="mr-1" />
-              Add to Cart
-            </>
-          )}
-        </Button>
+        <div className="mt-1">
+          <Button
+            variant={isInCart ? "default" : "outline"}
+            size="sm"
+            className={cn(
+              "w-full rounded-full py-1.5 text-xs transition-all duration-200 border-2",
+              isInCart
+                ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+                : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
+            )}
+            disabled={product.stock === 0 || isAddingToCart}
+            onClick={handleAddToCart}
+          >
+            {isAddingToCart ? (
+              <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : isInCart ? (
+              <>
+                <Check size={14} className="mr-1" />
+                Added
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={14} className="mr-1" />
+                Add to Cart
+              </>
+            )}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
