@@ -139,6 +139,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState<any>(null);
@@ -757,7 +758,12 @@ export default function AdminPage() {
       (stockFilter === 'low-stock' && stockQuantity > 0 && stockQuantity < 10) ||
       (stockFilter === 'high-stock' && stockQuantity >= 10);
 
-    return matchesSearch && matchesCategory && matchesStock;
+    const isActive = product.isActive !== false;
+    const matchesActive = activeFilter === 'all' || 
+      (activeFilter === 'active' && isActive) ||
+      (activeFilter === 'inactive' && !isActive);
+
+    return matchesSearch && matchesCategory && matchesStock && matchesActive;
   });
 
   const handleCreateProduct = (data: ProductFormData) => {
@@ -1198,6 +1204,16 @@ export default function AdminPage() {
                   <SelectItem value="out-of-stock" className="text-black hover:bg-gray-100">Out of Stock</SelectItem>
                   <SelectItem value="low-stock" className="text-black hover:bg-gray-100">Low Stock (&lt;10)</SelectItem>
                   <SelectItem value="high-stock" className="text-black hover:bg-gray-100">High Stock (≥10)</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={activeFilter} onValueChange={setActiveFilter}>
+                <SelectTrigger className="w-full sm:w-48 text-black">
+                  <SelectValue placeholder="Product Status" className="text-black" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="all" className="text-black hover:bg-gray-100">All Products</SelectItem>
+                  <SelectItem value="active" className="text-black hover:bg-gray-100">Active Products</SelectItem>
+                  <SelectItem value="inactive" className="text-black hover:bg-gray-100">Inactive Products</SelectItem>
                 </SelectContent>
               </Select>
               <div className="flex border rounded-lg">
