@@ -153,13 +153,8 @@ export default function Header() {
   };
 
   const handleSearchSelect = (product: SearchableProduct) => {
-    // Check if it's a product detail route (starts with /products/)
-    if (product.route.startsWith('/products/')) {
-      setLocation(product.route);
-    } else {
-      // For category routes, navigate to that category
-      setLocation(product.route);
-    }
+    // Navigate to the product route
+    setLocation(product.route);
     setSearchQuery('');
     setShowSearchResults(false);
   };
