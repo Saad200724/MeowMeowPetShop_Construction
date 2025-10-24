@@ -97,7 +97,7 @@ export default function CatAccessoriesPage() {
             <AnalyticsBar categoryId="cat-accessories" className="" />
 
             <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-2xl font-bold">
+              <h2 className="text-lg md:text-2xl font-bold text-black">
                 Cat Accessories
               </h2>
               <div className="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">

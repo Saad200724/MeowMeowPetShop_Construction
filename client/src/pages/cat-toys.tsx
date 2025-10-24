@@ -100,7 +100,7 @@ export default function CatToysPage() {
             <AnalyticsBar categoryId="cat-toys" className="" />
 
             <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-2xl font-bold">
+              <h2 className="text-lg md:text-2xl font-bold text-black">
                 Cat Toys
               </h2>
               <div className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">

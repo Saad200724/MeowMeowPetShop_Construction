@@ -140,7 +140,7 @@ export default function CatLitterPage() {
             <AnalyticsBar categoryId="cat-litter" className="" />
 
             <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-2xl font-bold">
+              <h2 className="text-lg md:text-2xl font-bold text-black">
                 Cat Litter & Accessories
               </h2>
               <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">

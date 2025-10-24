@@ -131,7 +131,7 @@ export default function BirdPage() {
             <AnalyticsBar categoryId="bird" className="" />
 
             <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-2xl font-bold">
+              <h2 className="text-lg md:text-2xl font-bold text-black">
                 Bird Food & Accessories
               </h2>
               <div className="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
