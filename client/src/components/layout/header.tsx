@@ -116,7 +116,7 @@ export default function Header() {
           brand: product.brandName || product.brand,
           price: `৳${product.price}`,
           page: product.categoryName || product.category,
-          route: `/products/${productSlug}`,
+          route: `/product/${productSlug}`,
           keywords: product.tags || []
         });
       }
