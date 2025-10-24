@@ -165,7 +165,11 @@ export default function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      // Check if the click is on a search result link
+      const target = event.target as HTMLElement;
+      const isSearchResultClick = target.closest('[data-testid^="search-result-"]');
+      
+      if (searchRef.current && !searchRef.current.contains(event.target as Node) && !isSearchResultClick) {
         setShowSearchResults(false);
       }
     };
@@ -350,9 +354,12 @@ export default function Header() {
                           <Link 
                             key={product.id} 
                             href={product.route}
-                            onClick={() => {
-                              setSearchQuery('');
-                              setShowSearchResults(false);
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTimeout(() => {
+                                setSearchQuery('');
+                                setShowSearchResults(false);
+                              }, 100);
                             }}
                           >
                             <div 
@@ -521,9 +528,12 @@ export default function Header() {
                     <Link 
                       key={product.id} 
                       href={product.route}
-                      onClick={() => {
-                        setSearchQuery('');
-                        setShowSearchResults(false);
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setTimeout(() => {
+                          setSearchQuery('');
+                          setShowSearchResults(false);
+                        }, 100);
                       }}
                     >
                       <div 
