@@ -1156,7 +1156,7 @@ export default function AdminPage() {
                   form.reset();
                   setShowProductDialog(true);
                 }}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
