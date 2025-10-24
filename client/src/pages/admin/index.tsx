@@ -158,7 +158,7 @@ export default function AdminPage() {
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
-    queryKey: ['/api/products'],
+    queryKey: ['/api/admin/products'],
     enabled: !!user && user.role === 'admin', // Only run if user is admin
   });
 
@@ -264,7 +264,7 @@ export default function AdminPage() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setShowProductDialog(false);
       form.reset();
@@ -290,7 +290,7 @@ export default function AdminPage() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setEditingProduct(null);
       setShowProductDialog(false);
@@ -316,7 +316,7 @@ export default function AdminPage() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       toast({
         title: 'Success',
@@ -425,7 +425,7 @@ export default function AdminPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setShowRepackDialog(false);
       repackForm.reset();
@@ -454,7 +454,7 @@ export default function AdminPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
       setEditingRepackProduct(null);
       setShowRepackDialog(false);

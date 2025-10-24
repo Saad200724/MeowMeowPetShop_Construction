@@ -296,6 +296,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all products for admin management (includes inactive products)
+  app.get("/api/admin/products", async (req, res) => {
+    try {
+      // Fetch all data in parallel to avoid N+1 queries
+      const [dbProducts, allCategories, allBrands] = await Promise.all([
+        Product.find({
+          tags: {
+            $not: {
+              $in: ['repack-food', 'repack', 'bulk-save', 'bulk']
+            }
+          }
+          // Note: Don't filter by isActive for admin - they need to see all products
+        }),
+        Category.find({}),
+        Brand.find({})
+      ]);
+
+      // Create lookup maps for fast O(1) access
+      const categoryByIdMap = new Map();
+      const categoryBySlugMap = new Map();
+      const categoryByNameMap = new Map();
+
+      for (const cat of allCategories) {
+        if (cat._id) categoryByIdMap.set(cat._id.toString(), cat);
+        if (cat.slug) categoryBySlugMap.set(cat.slug, cat);
+        if (cat.name) categoryByNameMap.set(cat.name, cat);
+      }
+
+      const brandByIdMap = new Map();
+      const brandBySlugMap = new Map();
+      const brandByNameMap = new Map();
+
+      for (const br of allBrands) {
+        if (br._id) brandByIdMap.set(br._id.toString(), br);
+        if (br.slug) brandBySlugMap.set(br.slug, br);
+        if (br.name) brandByNameMap.set(br.name, br);
+      }
+
+      // Process products using in-memory lookups
+      const products = [];
+
+      for (const product of dbProducts) {
+        try {
+          // Fast category lookup using Maps
+          let category = null;
+          if (product.categoryId) {
+            category = categoryByIdMap.get(product.categoryId.toString()) ||
+                      categoryBySlugMap.get(product.categoryId) ||
+                      categoryByNameMap.get(product.categoryId);
+          }
+
+          // Fast brand lookup using Maps
+          let brand = null;
+          if (product.brandId) {
+            brand = brandByIdMap.get(product.brandId.toString()) ||
+                   brandBySlugMap.get(product.brandId) ||
+                   brandByNameMap.get(product.brandId);
+          }
+
+          products.push({
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            originalPrice: product.originalPrice || null,
+            category: category?.slug || 'uncategorized',
+            categoryId: product.categoryId,
+            categoryName: category?.name || 'Uncategorized',
+            brandId: product.brandId,
+            brandName: brand?.name || 'No Brand',
+            brandSlug: brand?.slug || 'no-brand',
+            image: product.image,
+            images: product.images || [],
+            rating: product.rating || 0,
+            reviews: product.reviews || 0,
+            stock: product.stockQuantity || 0,
+            stockQuantity: product.stockQuantity || 0,
+            stockStatus: product.stockStatus || 'In Stock',
+            tags: product.tags || [],
+            features: product.features || [],
+            isNew: product.isNew || false,
+            isBestseller: product.isBestseller || false,
+            isOnSale: product.isOnSale || false,
+            discount: product.discount || 0,
+            description: product.description || '',
+            specifications: product.specifications || {},
+            isActive: product.isActive !== false,
+            subcategory: product.subcategory || ''
+          });
+        } catch (err: any) {
+          console.warn('Skipping product with invalid data:', product.name || 'Unknown', err.message);
+        }
+      }
+
+      console.log(`Successfully fetched ${products.length} products for admin (including inactive)`);
+      res.json(products);
+    } catch (error) {
+      console.error('Error fetching admin products:', error);
+      res.status(500).json({ message: "Failed to fetch products" });
+    }
+  });
+
   app.get("/api/products/:id", async (req, res) => {
     try {
       const { id } = req.params;
