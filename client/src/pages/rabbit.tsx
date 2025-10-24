@@ -9,7 +9,7 @@ import NavigationSidebar from '@/components/layout/sidebar';
 import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
 import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
-import { useProducts, type Product } from '@/hooks/use-products';
+import { useProducts } from '@/hooks/use-products';
 
 export default function RabbitPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,10 +18,10 @@ export default function RabbitPage() {
     sortBy: 'relevance'
   });
   
-  const { loading, error, getProductsByCategory } = useProducts()
+  const { loading, error, getProductsByCategory } = useProducts();
   
-  // Get dynamic products from API
-  const allProducts = getProductsByCategory('rabbit');
+  // Get products from API for rabbit-food-accessories category (also accepts 'rabbit')
+  const allProducts = getProductsByCategory('rabbit-food-accessories');
   
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
@@ -35,7 +35,7 @@ export default function RabbitPage() {
     .sort((a, b) => {
       switch (filters.sortBy) {
         case 'latest':
-          return 0; // No createdAt available
+          return 0;
         case 'a-z':
           return a.name.localeCompare(b.name);
         case 'z-a':
@@ -128,7 +128,7 @@ export default function RabbitPage() {
           {/* Main Content Area */}
           <main className="lg:w-3/4 space-y-4">
             {/* Analytics Bar */}
-            <AnalyticsBar categoryId="rabbit" className="" />
+            <AnalyticsBar categoryId="rabbit-food-accessories" className="" />
 
             <div className="flex justify-between items-center">
               <h2 className="text-lg md:text-2xl font-bold text-black">
