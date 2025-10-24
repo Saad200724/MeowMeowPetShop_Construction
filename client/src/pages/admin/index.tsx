@@ -257,8 +257,10 @@ export default function AdminPage() {
   // All mutations declared at the top level
   const createProductMutation = useMutation({
     mutationFn: async (data: ProductFormData) => {
-      const response = await apiRequest('POST', '/api/products', data);
-      return response.json();
+      return await apiRequest('/api/products', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
@@ -281,8 +283,10 @@ export default function AdminPage() {
 
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: ProductFormData }) => {
-      const response = await apiRequest('PUT', `/api/products/${id}`, data);
-      return response.json();
+      return await apiRequest(`/api/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
@@ -306,8 +310,9 @@ export default function AdminPage() {
 
   const deleteProductMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiRequest('DELETE', `/api/products/${id}`);
-      return response.json();
+      return await apiRequest(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
