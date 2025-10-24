@@ -23,8 +23,7 @@ export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { 
-      server,
-      port: 5001 // Use different port for HMR to reduce conflicts
+      server
     },
     allowedHosts: true as const,
   };
