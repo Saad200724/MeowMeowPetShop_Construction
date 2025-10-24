@@ -3,10 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Package, ShoppingCart, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Link } from 'wouter';
 
 export default function RepackFood() {
   const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
@@ -126,118 +127,130 @@ export default function RepackFood() {
               const isLiked = likedItems[productId];
 
               return (
-                <Card key={productId} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-52">
-                  {/* Discount Badge */}
-                  {savings > 0 && (
-                    <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      -{savings}%
-                    </Badge>
-                  )}
-
-                  {/* Repack Badge */}
-                  {!savings && (
-                    <Badge className="absolute top-3 left-3 z-10 bg-yellow-400 text-[#26732d] text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                      <Package size={12} />
-                      {badge}
-                    </Badge>
-                  )}
-
-                  {/* Like Button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-sm"
-                    onClick={() => toggleLike(productId)}
+                <Link href={`/product/${product.slug || 'product'}`} key={productId}>
+                  <Card 
+                    className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-52 cursor-pointer"
                   >
-                    <Heart 
-                      size={16} 
-                      className={cn(
-                        'transition-colors',
-                        isLiked ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'
-                      )} 
-                    />
-                  </Button>
+                    {/* Discount Badge */}
+                    {savings > 0 && (
+                      <Badge className="absolute top-3 left-3 z-10 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        -{savings}%
+                      </Badge>
+                    )}
 
-                  {/* Product Image */}
-                  <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4">
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="w-full h-32 object-contain transition-transform duration-500 group-hover:scale-110" 
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
+                    {/* Repack Badge */}
+                    {!savings && (
+                      <Badge className="absolute top-3 left-3 z-10 bg-yellow-400 text-[#26732d] text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                        <Package size={12} />
+                        {badge}
+                      </Badge>
+                    )}
 
-                  <CardContent className="p-3 space-y-2">
-                    {/* Category Tag */}
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-                      Repack Food
-                    </div>
-
-                    {/* Product Name */}
-                    <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem]">
-                      {product.name}
-                    </h3>
-
-                    {/* Price Section */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-[#26732d]">
-                          ৳{product.price?.toLocaleString()}
-                        </span>
-                        {product.originalPrice && (
-                          <span className="text-sm text-gray-500 line-through">
-                            ৳{product.originalPrice?.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Stock Status */}
-                      <div className="text-xs text-gray-500">
-                        {stockAvailable > 0 ? (
-                          <span className={cn(
-                            'font-medium',
-                            stockAvailable < 10 ? 'text-orange-600' : 'text-green-600'
-                          )}>
-                            {stockAvailable < 10 ? `Only ${stockAvailable} left` : `${stockAvailable} available`}
-                          </span>
-                        ) : (
-                          <span className="text-red-600 font-medium">Out of Stock</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Add to Cart Button */}
+                    {/* Like Button */}
                     <Button 
-                      variant={isInCart ? "default" : "outline"}
+                      variant="ghost"
                       size="sm"
-                      className={cn(
-                        "w-full rounded-full py-2 transition-all duration-200 border-2",
-                        isInCart 
-                          ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]" 
-                          : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
-                      )}
-                      disabled={stockAvailable === 0}
-                      onClick={() => handleAddToCart(product)}
+                      className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-sm"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent link navigation
+                        e.stopPropagation(); // Stop event from bubbling up
+                        toggleLike(productId)
+                      }}
                     >
-                      {stockAvailable === 0 ? (
-                        'Out of Stock'
-                      ) : isInCart ? (
-                        <>
-                          <Check size={16} className="mr-1" />
-                          Added
-                        </>
-                      ) : (
-                        <>
-                          <ShoppingCart size={16} className="mr-1" />
-                          Add to Cart
-                        </>
-                      )}
+                      <Heart 
+                        size={16} 
+                        className={cn(
+                          'transition-colors',
+                          isLiked ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'
+                        )} 
+                      />
                     </Button>
-                  </CardContent>
-                </Card>
+
+                    {/* Product Image */}
+                    <div className="relative overflow-hidden bg-gray-50 rounded-t-2xl p-4">
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="w-full h-32 object-contain transition-transform duration-500 group-hover:scale-110" 
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+
+                    <CardContent className="p-3 space-y-2">
+                      {/* Category Tag */}
+                      <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                        Repack Food
+                      </div>
+
+                      {/* Product Name */}
+                      <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors min-h-[2.5rem]">
+                        {product.name}
+                      </h3>
+
+                      {/* Price Section */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-[#26732d]">
+                            ৳{product.price?.toLocaleString()}
+                          </span>
+                          {product.originalPrice && (
+                            <span className="text-sm text-gray-500 line-through">
+                              ৳{product.originalPrice?.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Stock Status */}
+                        <div className="text-xs text-gray-500">
+                          {stockAvailable > 0 ? (
+                            <span className={cn(
+                              'font-medium',
+                              stockAvailable < 10 ? 'text-orange-600' : 'text-green-600'
+                            )}>
+                              {stockAvailable < 10 ? `Only ${stockAvailable} left` : `${stockAvailable} available`}
+                            </span>
+                          ) : (
+                            <span className="text-red-600 font-medium">Out of Stock</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Add to Cart Button */}
+                      <Button 
+                        variant={isInCart ? "default" : "outline"}
+                        size="sm"
+                        className={cn(
+                          "w-full rounded-full py-2 transition-all duration-200 border-2",
+                          isInCart 
+                            ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]" 
+                            : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"
+                        )}
+                        disabled={stockAvailable === 0}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent link navigation
+                          e.stopPropagation(); // Stop event from bubbling up
+                          handleAddToCart(product)
+                        }}
+                      >
+                        {stockAvailable === 0 ? (
+                          'Out of Stock'
+                        ) : isInCart ? (
+                          <>
+                            <Check size={16} className="mr-1" />
+                            Added
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingCart size={16} className="mr-1" />
+                            Add to Cart
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Link>
               );
             })}
           </div>
