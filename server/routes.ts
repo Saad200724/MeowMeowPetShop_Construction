@@ -498,11 +498,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'cat-toys': { name: 'Cat Toys', slug: 'cat-toys' },
         'cat-litter': { name: 'Cat Litter', slug: 'cat-litter' },
         'cat-care': { name: 'Cat Care & Health', slug: 'cat-care' },
+        'cat-care-health': { name: 'Cat Care & Health', slug: 'cat-care' },
         'clothing-beds-carrier': { name: 'Clothing, Beds & Carrier', slug: 'clothing-beds-carrier' },
         'cat-accessories': { name: 'Cat Accessories', slug: 'cat-accessories' },
         'dog-accessories': { name: 'Dog Health & Accessories', slug: 'dog-accessories' },
+        'dog-health-accessories': { name: 'Dog Health & Accessories', slug: 'dog-accessories' },
         'rabbit': { name: 'Rabbit Food & Accessories', slug: 'rabbit' },
-        'bird': { name: 'Bird Food & Accessories', slug: 'bird' }
+        'rabbit-food-accessories': { name: 'Rabbit Food & Accessories', slug: 'rabbit' },
+        'bird': { name: 'Bird Food & Accessories', slug: 'bird' },
+        'bird-food-accessories': { name: 'Bird Food & Accessories', slug: 'bird' }
       };
 
       // Brand mapping for proper slug creation
@@ -523,11 +527,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // First try to find existing category
       if (productData.categoryId) {
+        console.log('Looking up category with ID:', productData.categoryId);
         // Check if it's a valid ObjectId first
         const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(productData.categoryId);
 
         if (isValidObjectId) {
           categoryRecord = await Category.findById(productData.categoryId);
+          console.log('Found category by ObjectId:', categoryRecord?.name);
         } else {
           // Look up by slug or name
           categoryRecord = await Category.findOne({
@@ -536,6 +542,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               { name: productData.categoryId }
             ]
           });
+          console.log('Found category by slug/name:', categoryRecord?.name);
         }
       }
 
@@ -601,6 +608,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           price: parseFloat(productData.price),
           originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
           category: categoryRecord._id,
+          categoryId: categoryRecord._id.toString(),
           categoryName: categoryRecord.name,
           brand: brandRecord._id,
           brandId: brandRecord._id.toString(),

@@ -766,6 +766,8 @@ export default function AdminPage() {
 
   const handleUpdateProduct = (data: ProductFormData) => {
     if (editingProduct) {
+      console.log('Updating product with form data:', data);
+      console.log('Editing product ID:', editingProduct.id);
       updateProductMutation.mutate({ id: editingProduct.id, data });
     }
   };
