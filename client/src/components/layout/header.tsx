@@ -107,14 +107,16 @@ export default function Header() {
       ].join(' ').toLowerCase();
       
       if (searchableText.includes(searchTerm)) {
+        // Use slug for the route if available, otherwise use id
+        const productSlug = product.slug || product.id || product._id;
         results.push({
-          id: product.id,
+          id: product.id || product._id,
           name: product.name,
           category: product.categoryName || product.category,
           brand: product.brandName || product.brand,
           price: `৳${product.price}`,
           page: product.categoryName || product.category,
-          route: `/products/${product.id}`,
+          route: `/products/${productSlug}`,
           keywords: product.tags || []
         });
       }
@@ -151,7 +153,13 @@ export default function Header() {
   };
 
   const handleSearchSelect = (product: SearchableProduct) => {
-    setLocation(product.route);
+    // Check if it's a product detail route (starts with /products/)
+    if (product.route.startsWith('/products/')) {
+      setLocation(product.route);
+    } else {
+      // For category routes, navigate to that category
+      setLocation(product.route);
+    }
     setSearchQuery('');
     setShowSearchResults(false);
   };
