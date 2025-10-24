@@ -948,17 +948,30 @@ export default function AdminPage() {
               <Badge className="bg-green-100 text-green-800">Meow Meow Pet Shop</Badge>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {user.firstName}</span>
-              <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50">
-                POS
+              <span className="text-sm font-medium text-gray-700">Welcome, <span className="text-gray-900 font-semibold">{user.firstName}</span></span>
+              <Button 
+                size="sm" 
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <Grid3X3 className="w-4 h-4 mr-2" />
+                POS System
               </Button>
               <Link href="/">
-                <Button size="sm" variant="outline" className="text-gray-600">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 font-medium shadow-sm hover:shadow transition-all duration-200"
+                >
                   <Home className="w-4 h-4 mr-2" />
                   Store
                 </Button>
               </Link>
-              <Button size="sm" variant="outline" onClick={signOut} className="text-red-600 border-red-200 hover:bg-red-50">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={signOut} 
+                className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 font-medium shadow-sm hover:shadow transition-all duration-200"
+              >
                 Sign Out
               </Button>
             </div>
@@ -1167,7 +1180,7 @@ export default function AdminPage() {
                   form.reset();
                   setShowProductDialog(true);
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
@@ -1384,7 +1397,7 @@ export default function AdminPage() {
                   repackForm.reset();
                   setShowRepackDialog(true);
                 }}
-                className="bg-orange-600 hover:bg-orange-700 text-white"
+                className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Repack Food
@@ -1601,7 +1614,7 @@ export default function AdminPage() {
                   announcementForm.reset();
                   setShowAnnouncementDialog(true);
                 }}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                className="bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Announcement
@@ -1692,7 +1705,7 @@ export default function AdminPage() {
                   couponForm.reset();
                   setShowCouponDialog(true);
                 }}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
                 data-testid="add-coupon-button"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -1830,7 +1843,7 @@ export default function AdminPage() {
                   } as any);
                   setShowBlogDialog(true);
                 }}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Blog Post
