@@ -153,10 +153,15 @@ export default function Header() {
   };
 
   const handleSearchSelect = (product: SearchableProduct) => {
-    // Navigate to the product route
-    setLocation(product.route);
+    console.log('Search select clicked:', product.route);
+    // Close search first
     setSearchQuery('');
     setShowSearchResults(false);
+    // Navigate to the product route after a small delay to ensure state updates
+    setTimeout(() => {
+      console.log('Navigating to:', product.route);
+      setLocation(product.route);
+    }, 0);
   };
 
   useEffect(() => {
@@ -346,7 +351,11 @@ export default function Header() {
                           <div 
                             key={product.id} 
                             className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
-                            onClick={() => handleSearchSelect(product)} 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleSearchSelect(product);
+                            }} 
                             data-testid={`search-result-${product.id}`}
                           >
                             <div className="flex justify-between items-start">
@@ -510,7 +519,11 @@ export default function Header() {
                     <div 
                       key={product.id} 
                       className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
-                      onClick={() => handleSearchSelect(product)} 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSearchSelect(product);
+                      }} 
                       data-testid={`search-result-${product.id}`}
                     >
                       <div className="flex justify-between items-start">
