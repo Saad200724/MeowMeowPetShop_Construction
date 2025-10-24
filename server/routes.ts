@@ -701,6 +701,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Handle subcategory - convert 'none' to empty string
       const subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
 
+      // Build tags array - include subcategory if it exists
+      const productTags = subcategory ? [subcategory] : [];
+
       // Update product directly in database with all fields
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
@@ -719,7 +722,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           stockQuantity: productData.stockQuantity || 0,
           stock: productData.stockQuantity || 0,
           subcategory: subcategory,
-          tags: tags,
+          tags: productTags,
           isNew: productData.isNew || false,
           isBestseller: productData.isBestseller || false,
           isOnSale: productData.isOnSale || false,
