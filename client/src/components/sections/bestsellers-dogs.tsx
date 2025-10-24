@@ -9,7 +9,7 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto scrollbar-hide">
       <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
         {products.slice(0, 15).map((product: any) => (
           <div 
@@ -58,7 +58,7 @@ export default function BestsellersDogs() {
           </div>
         </div>
         {isLoading ? (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex-shrink-0 w-[160px] h-[320px] bg-white rounded-lg shadow-md animate-pulse">
