@@ -1580,7 +1580,7 @@ export default function AdminPage() {
                   announcementForm.reset();
                   setShowAnnouncementDialog(true);
                 }}
-                className="bg-yellow-600 hover:bg-yellow-700"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Announcement
@@ -1647,7 +1647,7 @@ export default function AdminPage() {
                         announcementForm.reset();
                         setShowAnnouncementDialog(true);
                       }}
-                      className="bg-yellow-600 hover:bg-yellow-700"
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add First Announcement
@@ -1671,7 +1671,7 @@ export default function AdminPage() {
                   couponForm.reset();
                   setShowCouponDialog(true);
                 }}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-purple-600 hover:bg-purple-700 text-white"
                 data-testid="add-coupon-button"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -1773,7 +1773,7 @@ export default function AdminPage() {
                         couponForm.reset();
                         setShowCouponDialog(true);
                       }}
-                      className="bg-purple-600 hover:bg-purple-700"
+                      className="bg-purple-600 hover:bg-purple-700 text-white"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add First Coupon
@@ -1809,7 +1809,7 @@ export default function AdminPage() {
                   } as any);
                   setShowBlogDialog(true);
                 }}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-purple-600 hover:bg-purple-700 text-white"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Blog Post
@@ -2157,7 +2157,7 @@ export default function AdminPage() {
             <Button 
               type="submit" 
               form="product-form"
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
               disabled={createProductMutation.isPending || updateProductMutation.isPending}
             >
               <Save className="w-4 h-4 mr-2" />
@@ -2362,7 +2362,7 @@ export default function AdminPage() {
                 </Button>
                 <Button 
                   type="submit" 
-                  className="bg-orange-600 hover:bg-orange-700"
+                  className="bg-orange-600 hover:bg-orange-700 text-white"
                   disabled={createRepackMutation.isPending || updateRepackMutation.isPending}
                 >
                   <Save className="w-4 h-4 mr-2" />
@@ -2483,7 +2483,7 @@ export default function AdminPage() {
             <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={() => setShowBlogDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSaveBlog} className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={handleSaveBlog} className="bg-purple-600 hover:bg-purple-700 text-white">
               <Save className="w-4 h-4 mr-2" />
               Save Blog Post
             </Button>
@@ -2560,7 +2560,7 @@ export default function AdminPage() {
                 </Button>
                 <Button 
                   type="submit" 
-                  className="bg-yellow-600 hover:bg-yellow-700"
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white"
                   disabled={createAnnouncementMutation.isPending || updateAnnouncementMutation.isPending}
                 >
                   <Save className="w-4 h-4 mr-2" />
@@ -2809,7 +2809,7 @@ export default function AdminPage() {
                 </Button>
                 <Button 
                   type="submit" 
-                  className="bg-purple-600 hover:bg-purple-700"
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
                   disabled={createCouponMutation.isPending || updateCouponMutation.isPending}
                 >
                   <Save className="w-4 h-4 mr-2" />
