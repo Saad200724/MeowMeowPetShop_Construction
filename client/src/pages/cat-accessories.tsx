@@ -8,7 +8,7 @@ import NavigationSidebar from '@/components/layout/sidebar';
 import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
 import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
-import { getProductsByCategory, type Product } from '@/lib/product-data';
+import { useProducts } from '@/hooks/use-products';
 
 export default function CatAccessoriesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,14 +17,16 @@ export default function CatAccessoriesPage() {
     sortBy: 'relevance'
   });
   
-  // Get dynamic products from centralized data
+  const { loading, error, getProductsByCategory } = useProducts();
+  
+  // Get products from API for cat-accessories category
   const allProducts = getProductsByCategory('cat-accessories');
   
   // Filter and sort products based on search, price range, and sort option
   const filteredProducts = allProducts
     .filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           (product.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                            product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesPrice = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
       return matchesSearch && matchesPrice;
@@ -32,7 +34,7 @@ export default function CatAccessoriesPage() {
     .sort((a, b) => {
       switch (filters.sortBy) {
         case 'latest':
-          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+          return 0;
         case 'a-z':
           return a.name.localeCompare(b.name);
         case 'z-a':
@@ -53,6 +55,34 @@ export default function CatAccessoriesPage() {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading cat accessories...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center pt-32">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">Error loading products: {error}</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
