@@ -200,48 +200,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Products API - Excludes bulk/repack products from general listings
   app.get("/api/products", async (req, res) => {
     try {
-      // Get products directly from MongoDB to avoid storage layer issues
-      // Exclude bulk/repack products from general product listings
-      const dbProducts = await Product.find({
-        isActive: true,
-        tags: {
-          $not: {
-            $in: ['repack-food', 'repack', 'bulk-save', 'bulk']
+      // Fetch all data in parallel to avoid N+1 queries
+      const [dbProducts, allCategories, allBrands] = await Promise.all([
+        Product.find({
+          isActive: true,
+          tags: {
+            $not: {
+              $in: ['repack-food', 'repack', 'bulk-save', 'bulk']
+            }
           }
-        }
-      });
+        }),
+        Category.find({}),
+        Brand.find({})
+      ]);
+
+      // Create lookup maps for fast O(1) access
+      const categoryByIdMap = new Map();
+      const categoryBySlugMap = new Map();
+      const categoryByNameMap = new Map();
+
+      for (const cat of allCategories) {
+        if (cat._id) categoryByIdMap.set(cat._id.toString(), cat);
+        if (cat.slug) categoryBySlugMap.set(cat.slug, cat);
+        if (cat.name) categoryByNameMap.set(cat.name, cat);
+      }
+
+      const brandByIdMap = new Map();
+      const brandBySlugMap = new Map();
+      const brandByNameMap = new Map();
+
+      for (const br of allBrands) {
+        if (br._id) brandByIdMap.set(br._id.toString(), br);
+        if (br.slug) brandBySlugMap.set(br.slug, br);
+        if (br.name) brandByNameMap.set(br.name, br);
+      }
+
+      // Process products using in-memory lookups
       const products = [];
 
       for (const product of dbProducts) {
         try {
+          // Fast category lookup using Maps
           let category = null;
-
-          // Try to find category by ObjectId first
-          try {
-            category = await Category.findById(product.categoryId);
-          } catch (objectIdError) {
-            // If ObjectId lookup fails, try slug lookup
-            category = await Category.findOne({ slug: product.categoryId });
+          if (product.categoryId) {
+            category = categoryByIdMap.get(product.categoryId.toString()) ||
+                      categoryBySlugMap.get(product.categoryId) ||
+                      categoryByNameMap.get(product.categoryId);
           }
 
-          // If still not found, try by name
-          if (!category) {
-            category = await Category.findOne({ name: product.categoryId });
-          }
-
-          // Resolve brand information
+          // Fast brand lookup using Maps
           let brand = null;
           if (product.brandId) {
-            try {
-              brand = await Brand.findById(product.brandId);
-            } catch (brandError) {
-              // If ObjectId lookup fails, try slug lookup
-              brand = await Brand.findOne({ slug: product.brandId });
-            }
-            // If still not found, try by name
-            if (!brand) {
-              brand = await Brand.findOne({ name: product.brandId });
-            }
+            brand = brandByIdMap.get(product.brandId.toString()) ||
+                   brandBySlugMap.get(product.brandId) ||
+                   brandByNameMap.get(product.brandId);
           }
 
           products.push({
