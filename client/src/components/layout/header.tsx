@@ -152,16 +152,15 @@ export default function Header() {
     }
   };
 
-  const handleSearchSelect = (product: SearchableProduct) => {
-    console.log('Search select clicked:', product.route);
-    // Close search first
-    setSearchQuery('');
-    setShowSearchResults(false);
-    // Navigate to the product route after a small delay to ensure state updates
+  const handleSearchSelect = (route: string) => {
+    console.log('Search select clicked, navigating to:', route);
+    // Navigate immediately
+    setLocation(route);
+    // Then close search and clear query
     setTimeout(() => {
-      console.log('Navigating to:', product.route);
-      setLocation(product.route);
-    }, 0);
+      setSearchQuery('');
+      setShowSearchResults(false);
+    }, 100);
   };
 
   useEffect(() => {
@@ -348,25 +347,28 @@ export default function Header() {
                     <Card className="absolute top-full left-0 right-0 mt-1 z-[9999] max-h-96 overflow-y-auto">
                       <CardContent className="p-0">
                         {searchResults.map((product) => (
-                          <div 
+                          <Link 
                             key={product.id} 
-                            className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleSearchSelect(product);
-                            }} 
-                            data-testid={`search-result-${product.id}`}
+                            href={product.route}
+                            onClick={() => {
+                              setSearchQuery('');
+                              setShowSearchResults(false);
+                            }}
                           >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h4 className="font-medium text-sm">{product.name}</h4>
-                                <p className="text-xs text-gray-600">{product.brand} • {product.category}</p>
-                                <p className="text-xs text-blue-600">{product.page}</p>
+                            <div 
+                              className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
+                              data-testid={`search-result-${product.id}`}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-medium text-sm">{product.name}</h4>
+                                  <p className="text-xs text-gray-600">{product.brand} • {product.category}</p>
+                                  <p className="text-xs text-blue-600">{product.page}</p>
+                                </div>
+                                <span className="text-sm font-bold text-green-600">{product.price}</span>
                               </div>
-                              <span className="text-sm font-bold text-green-600">{product.price}</span>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                       </CardContent>
                     </Card>
@@ -516,25 +518,28 @@ export default function Header() {
               <Card className="absolute top-full left-0 right-0 mt-1 z-[9999] max-h-96 overflow-y-auto">
                 <CardContent className="p-0">
                   {searchResults.map((product) => (
-                    <div 
+                    <Link 
                       key={product.id} 
-                      className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleSearchSelect(product);
-                      }} 
-                      data-testid={`search-result-${product.id}`}
+                      href={product.route}
+                      onClick={() => {
+                        setSearchQuery('');
+                        setShowSearchResults(false);
+                      }}
                     >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-sm">{product.name}</h4>
-                          <p className="text-xs text-gray-600">{product.brand} • {product.category}</p>
-                          <p className="text-xs text-blue-600">{product.page}</p>
+                      <div 
+                        className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0" 
+                        data-testid={`search-result-${product.id}`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-medium text-sm">{product.name}</h4>
+                            <p className="text-xs text-gray-600">{product.brand} • {product.category}</p>
+                            <p className="text-xs text-blue-600">{product.page}</p>
+                          </div>
+                          <span className="text-sm font-bold text-green-600">{product.price}</span>
                         </div>
-                        <span className="text-sm font-bold text-green-600">{product.price}</span>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </CardContent>
               </Card>
