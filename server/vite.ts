@@ -44,7 +44,14 @@ export async function setupVite(app: Express, server: Server) {
     logLevel: 'warn' // Reduce verbose logging
   });
 
-  app.use(vite.middlewares);
+  // Wrap vite middlewares to skip API routes
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    return vite.middlewares(req, res, next);
+  });
+  
   app.get("*", async (req, res, next) => {
     const url = req.originalUrl;
 
