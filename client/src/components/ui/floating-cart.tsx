@@ -51,6 +51,17 @@ export function FloatingCart() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const handleToggleChat = () => {
+      toggleChat();
+    };
+
+    window.addEventListener('toggleChat', handleToggleChat);
+    return () => {
+      window.removeEventListener('toggleChat', handleToggleChat);
+    };
+  }, [toggleChat]);
+
   const handlePlatformSelect = (platform: 'messenger' | 'whatsapp') => {
     setSelectedPlatform(platform);
     setShowPlatformSelection(false);

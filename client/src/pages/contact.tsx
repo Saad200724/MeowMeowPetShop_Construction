@@ -191,12 +191,12 @@ export default function ContactPage() {
                 >
                   <Instagram size={20} />
                 </a>
-                <a
-                  href="/messenger"
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('toggleChat'))}
                   className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors"
                 >
                   <MessageCircle size={20} />
-                </a>
+                </button>
               </div>
             </div>
           </div>
