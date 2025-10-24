@@ -150,7 +150,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-sm text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left">
+          <h3 className="font-semibold text-base text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left">
             {product.name}
           </h3>
 
