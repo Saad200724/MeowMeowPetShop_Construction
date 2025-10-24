@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -87,12 +88,13 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     product.originalPrice && product.originalPrice > product.price;
 
   return (
-    <Card
-      className={cn(
-        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[260px] sm:h-[260px] md:h-[260px] lg:h-[260px] flex flex-col",
-        className,
-      )}
-    >
+    <Link href={`/product/${productSlug}`}>
+      <Card
+        className={cn(
+          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[260px] sm:h-[260px] md:h-[260px] lg:h-[260px] flex flex-col cursor-pointer",
+          className,
+        )}
+      >
       {/* Discount Badge */}
       {hasDiscount && (
         <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
@@ -115,7 +117,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       {/* Like Button */}
       <div className="absolute top-2 right-2 z-10">
         <button
-          onClick={() => setIsLiked(!isLiked)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsLiked(!isLiked);
+          }}
           className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95"
         >
           <Heart
@@ -191,7 +197,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
             )}
             disabled={product.stock === 0 || isAddingToCart}
-            onClick={handleAddToCart}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAddToCart();
+            }}
           >
             {isAddingToCart ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -210,5 +220,6 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 }
