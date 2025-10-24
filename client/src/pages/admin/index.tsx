@@ -2378,7 +2378,7 @@ export default function AdminPage() {
 
           <Form {...repackForm}>
             <form 
-              onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : handleCreateRepack)} 
+              onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : createRepackMutation.mutate)} 
               className="space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2573,8 +2573,8 @@ export default function AdminPage() {
 
       {/* Blog Dialog */}
       <Dialog open={showBlogDialog} onOpenChange={setShowBlogDialog}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>
               {editingBlog?._id === 'new' ? 'Add New Blog Post' : 'Edit Blog Post'}
             </DialogTitle>
@@ -2583,97 +2583,99 @@ export default function AdminPage() {
             </DialogDescription>
           </DialogHeader>
 
-          {editingBlog && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="blog-title">Title</Label>
-                <Input
-                  id="blog-title"
-                  value={editingBlog.title}
-                  onChange={(e) => setEditingBlog({...editingBlog, title: e.target.value})}
-                  placeholder="Enter blog title"
-                  className="text-gray-900 bg-white border-gray-300"
-                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="blog-image">Blog Image</Label>
-                <ImageUpload
-                  value={editingBlog.image || ''}
-                  onChange={(url) => setEditingBlog({...editingBlog, image: url})}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="blog-excerpt">Excerpt</Label>
-                <Input
-                  id="blog-excerpt"
-                  value={editingBlog.excerpt}
-                  onChange={(e) => setEditingBlog({...editingBlog, excerpt: e.target.value})}
-                  placeholder="Brief description of the blog post"
-                  className="text-gray-900 bg-white border-gray-300"
-                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="blog-content">Content</Label>
-                <Textarea
-                  id="blog-content"
-                  value={editingBlog.content}
-                  onChange={(e) => setEditingBlog({...editingBlog, content: e.target.value})}
-                  placeholder="Write your blog content here..."
-                  rows={8}
-                  className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
-                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex-1 overflow-y-auto px-1">
+            {editingBlog && (
+              <div className="space-y-4 pb-4">
                 <div>
-                  <Label htmlFor="blog-category">Category</Label>
-                  <Select value={(editingBlog as any).category || ''} onValueChange={(value) => setEditingBlog({...editingBlog, category: value} as any)}>
-                    <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                      <SelectValue placeholder="Select a category" className="text-gray-900" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border-gray-300">
-                      {blogCategories.map(category => (
-                        <SelectItem key={category} value={category} className="text-gray-900 hover:bg-gray-100">
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="blog-author">Author</Label>
+                  <Label htmlFor="blog-title">Title</Label>
                   <Input
-                    id="blog-author"
-                    value={editingBlog.author}
-                    onChange={(e) => setEditingBlog({...editingBlog, author: e.target.value})}
-                    placeholder="Author name"
+                    id="blog-title"
+                    value={editingBlog.title}
+                    onChange={(e) => setEditingBlog({...editingBlog, title: e.target.value})}
+                    placeholder="Enter blog title"
                     className="text-gray-900 bg-white border-gray-300"
                     style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                   />
                 </div>
+
                 <div>
-                  <Label htmlFor="blog-status">Status</Label>
-                  <Select value={editingBlog.isPublished ? 'published' : 'draft'} onValueChange={(value) => setEditingBlog({...editingBlog, isPublished: value === 'published'})}>
-                    <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                      <SelectValue className="text-gray-900" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border-gray-300">
-                      <SelectItem value="draft" className="text-gray-900 hover:bg-gray-100">Draft</SelectItem>
-                      <SelectItem value="published" className="text-gray-900 hover:bg-gray-100">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="blog-image">Blog Image</Label>
+                  <ImageUpload
+                    value={editingBlog.image || ''}
+                    onChange={(url) => setEditingBlog({...editingBlog, image: url})}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="blog-excerpt">Excerpt</Label>
+                  <Input
+                    id="blog-excerpt"
+                    value={editingBlog.excerpt}
+                    onChange={(e) => setEditingBlog({...editingBlog, excerpt: e.target.value})}
+                    placeholder="Brief description of the blog post"
+                    className="text-gray-900 bg-white border-gray-300"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="blog-content">Content</Label>
+                  <Textarea
+                    id="blog-content"
+                    value={editingBlog.content}
+                    onChange={(e) => setEditingBlog({...editingBlog, content: e.target.value})}
+                    placeholder="Write your blog content here..."
+                    rows={6}
+                    className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500 resize-none"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="blog-category">Category</Label>
+                    <Select value={(editingBlog as any).category || ''} onValueChange={(value) => setEditingBlog({...editingBlog, category: value} as any)}>
+                      <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                        <SelectValue placeholder="Select a category" className="text-gray-900" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-gray-300">
+                        {blogCategories.map(category => (
+                          <SelectItem key={category} value={category} className="text-gray-900 hover:bg-gray-100">
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="blog-author">Author</Label>
+                    <Input
+                      id="blog-author"
+                      value={editingBlog.author}
+                      onChange={(e) => setEditingBlog({...editingBlog, author: e.target.value})}
+                      placeholder="Author name"
+                      className="text-gray-900 bg-white border-gray-300"
+                      style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="blog-status">Status</Label>
+                    <Select value={editingBlog.isPublished ? 'published' : 'draft'} onValueChange={(value) => setEditingBlog({...editingBlog, isPublished: value === 'published'})}>
+                      <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                        <SelectValue className="text-gray-900" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-gray-300">
+                        <SelectItem value="draft" className="text-gray-900 hover:bg-gray-100">Draft</SelectItem>
+                        <SelectItem value="published" className="text-gray-900 hover:bg-gray-100">Published</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          <DialogFooter>
+          <DialogFooter className="border-t pt-4 mt-0 flex-shrink-0">
             <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={() => setShowBlogDialog(false)}>
               Cancel
             </Button>
