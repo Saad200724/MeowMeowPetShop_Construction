@@ -1363,7 +1363,7 @@ export default function AdminPage() {
                   repackForm.reset();
                   setShowRepackDialog(true);
                 }}
-                className="bg-orange-600 hover:bg-orange-700"
+                className="bg-orange-600 hover:bg-orange-700 text-white"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Repack Food
