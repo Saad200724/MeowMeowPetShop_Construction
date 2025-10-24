@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,11 +13,62 @@ export default function RepackFood() {
   const [likedItems, setLikedItems] = useState<{ [key: string]: boolean }>({});
   const { addItem, getItemQuantity } = useCart();
   const { toast } = useToast();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const userInteractedRef = useRef(false);
 
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['/api/repack-products'],
   });
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || (products as any[]).length === 0 || userInteractedRef.current) return;
+
+    const startAutoScroll = () => {
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (userInteractedRef.current) {
+          if (autoScrollIntervalRef.current) {
+            clearInterval(autoScrollIntervalRef.current);
+          }
+          return;
+        }
+
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const currentScroll = container.scrollLeft;
+
+        if (currentScroll >= maxScroll) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+      }, 3000);
+    };
+
+    const handleUserInteraction = () => {
+      userInteractedRef.current = true;
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+        autoScrollIntervalRef.current = null;
+      }
+    };
+
+    container.addEventListener('touchstart', handleUserInteraction);
+    container.addEventListener('mousedown', handleUserInteraction);
+    container.addEventListener('wheel', handleUserInteraction);
+
+    startAutoScroll();
+
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      container.removeEventListener('touchstart', handleUserInteraction);
+      container.removeEventListener('mousedown', handleUserInteraction);
+      container.removeEventListener('wheel', handleUserInteraction);
+    };
+  }, [(products as any[]).length]);
 
   const toggleLike = (id: string) => {
     setLikedItems(prev => ({
@@ -115,7 +166,7 @@ export default function RepackFood() {
             </a>
           </div>
         </div>
-        <div className="overflow-x-auto scrollbar-hide pb-2">
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide pb-2">
           <div className="flex gap-4 min-w-max px-4">
             {(products as any[]).slice(0, 15).map((product: any) => {
               const productId = product.id || product._id;

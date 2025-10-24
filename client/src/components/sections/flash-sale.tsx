@@ -1,14 +1,66 @@
 import { Flame } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
 import { useQuery } from '@tanstack/react-query';
+import { useRef, useEffect } from 'react';
 
 export default function FlashSale() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const userInteractedRef = useRef(false);
+
   const { data: allProducts = [], isLoading } = useQuery({
     queryKey: ['/api/products'],
   });
 
-  // Filter products that are on sale
   const flashSaleProducts = (allProducts as any[]).filter((product: any) => product.isOnSale);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || flashSaleProducts.length === 0 || userInteractedRef.current) return;
+
+    const startAutoScroll = () => {
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (userInteractedRef.current) {
+          if (autoScrollIntervalRef.current) {
+            clearInterval(autoScrollIntervalRef.current);
+          }
+          return;
+        }
+
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const currentScroll = container.scrollLeft;
+
+        if (currentScroll >= maxScroll) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+      }, 3000);
+    };
+
+    const handleUserInteraction = () => {
+      userInteractedRef.current = true;
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+        autoScrollIntervalRef.current = null;
+      }
+    };
+
+    container.addEventListener('touchstart', handleUserInteraction);
+    container.addEventListener('mousedown', handleUserInteraction);
+    container.addEventListener('wheel', handleUserInteraction);
+
+    startAutoScroll();
+
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      container.removeEventListener('touchstart', handleUserInteraction);
+      container.removeEventListener('mousedown', handleUserInteraction);
+      container.removeEventListener('wheel', handleUserInteraction);
+    };
+  }, [flashSaleProducts.length]);
 
   if (isLoading) {
     return (
@@ -38,7 +90,7 @@ export default function FlashSale() {
   }
 
   if (flashSaleProducts.length === 0) {
-    return null; // Don't show section if no flash sale products
+    return null;
   }
 
   return (
@@ -63,7 +115,7 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div className="overflow-x-auto scrollbar-hide">
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
           <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
             {flashSaleProducts.slice(0, 15).map((product: any, index: number) => (
               <div 

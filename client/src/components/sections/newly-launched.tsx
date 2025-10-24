@@ -1,15 +1,67 @@
 import { Sparkles } from 'lucide-react';
 import ProductCard from '@/components/ui/product-card';
 import { useQuery } from '@tanstack/react-query';
+import { useRef, useEffect } from 'react';
 
 function NewlyLaunchedDisplay({ products }: { products: any[] }) {
-  // Don't render anything if no products
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const userInteractedRef = useRef(false);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || products.length === 0 || userInteractedRef.current) return;
+
+    const startAutoScroll = () => {
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (userInteractedRef.current) {
+          if (autoScrollIntervalRef.current) {
+            clearInterval(autoScrollIntervalRef.current);
+          }
+          return;
+        }
+
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const currentScroll = container.scrollLeft;
+
+        if (currentScroll >= maxScroll) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+      }, 3000);
+    };
+
+    const handleUserInteraction = () => {
+      userInteractedRef.current = true;
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+        autoScrollIntervalRef.current = null;
+      }
+    };
+
+    container.addEventListener('touchstart', handleUserInteraction);
+    container.addEventListener('mousedown', handleUserInteraction);
+    container.addEventListener('wheel', handleUserInteraction);
+
+    startAutoScroll();
+
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      container.removeEventListener('touchstart', handleUserInteraction);
+      container.removeEventListener('mousedown', handleUserInteraction);
+      container.removeEventListener('wheel', handleUserInteraction);
+    };
+  }, [products.length]);
+
   if (products.length === 0) {
     return null;
   }
 
   return (
-    <div className="overflow-x-auto scrollbar-hide">
+    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
       <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
         {products.slice(0, 15).map((product: any) => (
           <div 
@@ -33,7 +85,6 @@ export default function NewlyLaunched() {
     queryKey: ['/api/products'],
   });
 
-  // Filter products that are newly launched
   const products = (allProducts as any[]).filter((product: any) => product.isNew);
 
   if (isLoading) {
@@ -65,7 +116,7 @@ export default function NewlyLaunched() {
   }
 
   if (products.length === 0) {
-    return null; // Don't show section if no new products
+    return null;
   }
 
   return (
