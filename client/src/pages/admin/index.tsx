@@ -898,6 +898,7 @@ export default function AdminPage() {
       title: editingBlog.title,
       excerpt: editingBlog.excerpt,
       content: editingBlog.content,
+      image: editingBlog.image || undefined,
       author: editingBlog.author,
       category: (editingBlog as any).category,
       isPublished: editingBlog.isPublished,
@@ -2013,11 +2014,23 @@ export default function AdminPage() {
               {blogPosts.map((blog) => (
                 <Card key={blog._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <CardTitle className="text-xl">{blog.title}</CardTitle>
-                        <CardDescription className="mt-2">{blog.excerpt}</CardDescription>
-                        <div className="flex items-center gap-1 mt-3 text-sm text-gray-500">
+                    <div className="flex justify-between items-start gap-4">
+                      {blog.image && (
+                        <div className="flex-shrink-0">
+                          <img 
+                            src={blog.image} 
+                            alt={blog.title}
+                            className="w-32 h-32 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.currentTarget.src = '/api/placeholder/128/128';
+                            }}
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-xl line-clamp-2">{blog.title}</CardTitle>
+                        <CardDescription className="mt-2 line-clamp-2">{blog.excerpt}</CardDescription>
+                        <div className="flex items-center gap-1 mt-3 text-sm text-gray-500 flex-wrap">
                           <span>By {blog.author}</span>
                           <span>•</span>
                           <span>{new Date(blog.publishedAt || blog.createdAt).toLocaleDateString()}</span>
@@ -2026,7 +2039,7 @@ export default function AdminPage() {
                           </Badge>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 flex-shrink-0">
                         <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700" onClick={() => {
                           setEditingBlog(blog);
                           setShowBlogDialog(true);
@@ -2581,6 +2594,14 @@ export default function AdminPage() {
                   placeholder="Enter blog title"
                   className="text-gray-900 bg-white border-gray-300"
                   style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="blog-image">Blog Image</Label>
+                <ImageUpload
+                  value={editingBlog.image || ''}
+                  onChange={(url) => setEditingBlog({...editingBlog, image: url})}
                 />
               </div>
 
