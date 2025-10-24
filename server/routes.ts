@@ -719,7 +719,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           stockQuantity: productData.stockQuantity || 0,
           stock: productData.stockQuantity || 0,
           subcategory: subcategory,
-          tags: subcategory ? [subcategory] : [],
+          tags: tags,
           isNew: productData.isNew || false,
           isBestseller: productData.isBestseller || false,
           isOnSale: productData.isOnSale || false,
