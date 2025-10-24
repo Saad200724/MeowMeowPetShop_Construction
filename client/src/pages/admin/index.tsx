@@ -42,7 +42,7 @@ const productFormSchema = z.object({
   brandId: z.string().min(1, 'Brand is required'),
   image: z.string().min(1, 'Image is required'),
   stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
-  tags: z.string().optional(),
+  subcategory: z.string().optional(),
   isNew: z.boolean().optional(),
   isBestseller: z.boolean().optional(),
   isOnSale: z.boolean().optional(),
@@ -208,7 +208,7 @@ export default function AdminPage() {
       brandId: '',
       image: '',
       stockQuantity: 0,
-      tags: '',
+      subcategory: '',
       isNew: false,
       isBestseller: false,
       isOnSale: false,
@@ -791,7 +791,7 @@ export default function AdminPage() {
       brandId: product.brandId || '',
       image: product.image,
       stockQuantity: product.stock || product.stockQuantity || 0,
-      tags: product.tags?.join(', ') || '',
+      subcategory: product.subcategory || '',
       isNew: product.isNew || false,
       isBestseller: product.isBestseller || false,
       isOnSale: product.isOnSale || false,
@@ -2040,13 +2040,30 @@ export default function AdminPage() {
                 />
                 <FormField
                   control={form.control}
-                  name="tags"
+                  name="subcategory"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Tags (comma separated)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="premium, adult, dry food" className="text-gray-900 bg-white border-gray-300" {...field} />
-                      </FormControl>
+                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Subcategory (Shop by Category)</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                            <SelectValue placeholder="Select subcategory" className="text-gray-900" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white border-gray-300">
+                          <SelectItem value="" className="text-black hover:bg-gray-100">No Category</SelectItem>
+                          <SelectItem value="adult-food" className="text-black hover:bg-gray-100">Adult Food</SelectItem>
+                          <SelectItem value="kitten-food" className="text-black hover:bg-gray-100">Kitten Food</SelectItem>
+                          <SelectItem value="collar" className="text-black hover:bg-gray-100">Collar</SelectItem>
+                          <SelectItem value="clumping-cat-litter" className="text-black hover:bg-gray-100">Clumping Cat Litter</SelectItem>
+                          <SelectItem value="cat-litter-accessories" className="text-black hover:bg-gray-100">Cat Litter Accessories</SelectItem>
+                          <SelectItem value="harness" className="text-black hover:bg-gray-100">Harness</SelectItem>
+                          <SelectItem value="cat-tick-flea-control" className="text-black hover:bg-gray-100">Cat Tick & Flea Control</SelectItem>
+                          <SelectItem value="deworming-tablet" className="text-black hover:bg-gray-100">Deworming Tablet</SelectItem>
+                          <SelectItem value="cat-pouches" className="text-black hover:bg-gray-100">Cat Pouches</SelectItem>
+                          <SelectItem value="sunglass" className="text-black hover:bg-gray-100">Sunglass</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

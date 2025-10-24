@@ -447,28 +447,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const productSlug = await generateUniqueProductSlug(productData.name);
 
       // Create product directly in database with all fields
-      const newProduct = new Product({
+      const product = new Product({
         name: productData.name,
-        slug: productSlug,
         description: productData.description,
-        price: productData.price,
-        originalPrice: productData.originalPrice || undefined,
-        categoryId: categoryRecord._id,
-        brandId: brandRecord._id,
+        price: parseFloat(productData.price),
+        originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
+        category: categoryRecord._id,
+        categoryName: categoryRecord.name,
+        brand: brandRecord._id,
+        brandId: brandRecord._id.toString(),
+        brandName: brandRecord.name,
         image: productData.image,
-        stockQuantity: parseInt(productData.stockQuantity) || 0,
-        tags: tags,
+        stockQuantity: productData.stockQuantity || 0,
+        stock: productData.stockQuantity || 0,
+        subcategory: productData.subcategory || '',
+        tags: productData.subcategory ? [productData.subcategory] : [],
         isNew: productData.isNew || false,
         isBestseller: productData.isBestseller || false,
         isOnSale: productData.isOnSale || false,
         isActive: productData.isActive !== false,
-        rating: 4.5, // Default rating
+        slug: productSlug,
       });
 
-      await newProduct.save();
+      await product.save();
 
-      console.log('Created product:', newProduct);
-      res.status(201).json(newProduct);
+      console.log('Created product:', product);
+      res.status(201).json(product);
     } catch (error) {
       console.error('Create product error:', error);
       res.status(500).json({ message: "Failed to create product", error: error instanceof Error ? error.message : 'Unknown error' });
@@ -587,20 +591,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id,
         {
           name: productData.name,
-          slug: productSlug,
           description: productData.description,
-          price: productData.price,
-          originalPrice: productData.originalPrice || undefined,
-          categoryId: categoryRecord._id,
-          brandId: brandRecord._id,
+          price: parseFloat(productData.price),
+          originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
+          category: categoryRecord._id,
+          categoryName: categoryRecord.name,
+          brand: brandRecord._id,
+          brandId: brandRecord._id.toString(),
+          brandName: brandRecord.name,
           image: productData.image,
-          stockQuantity: parseInt(productData.stockQuantity) || 0,
-          tags: tags,
+          stockQuantity: productData.stockQuantity || 0,
+          stock: productData.stockQuantity || 0,
+          subcategory: productData.subcategory || '',
+          tags: productData.subcategory ? [productData.subcategory] : [],
           isNew: productData.isNew || false,
           isBestseller: productData.isBestseller || false,
           isOnSale: productData.isOnSale || false,
           isActive: productData.isActive !== false,
-          updatedAt: new Date(),
+          slug: productSlug,
         },
         { new: true }
       );
@@ -1526,18 +1534,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const invoice = await Invoice.findOne({ orderId: orderId });
           if (invoice) {
             console.log(`Found invoice:`, !!invoice, `with customerInfo: ${!!invoice.customerInfo}`);
-            
+
             // Add invoice number if missing
             if (!orderObj.invoiceNumber && invoice.invoiceNumber) {
               orderObj.invoiceNumber = invoice.invoiceNumber;
             }
-            
+
             // Add customer info if missing
             if ((!orderObj.customerInfo || !orderObj.customerInfo.name) && invoice.customerInfo) {
               console.log(`Enhancing order ${orderId} with customer info:`, invoice.customerInfo.name);
               orderObj.customerInfo = invoice.customerInfo;
             }
-            
+
             // Add invoice ID if missing
             if (!orderObj.invoiceId) {
               orderObj.invoiceId = invoice._id?.toString();
@@ -2146,7 +2154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const hasApiKey = !!process.env.RUPANTORPAY_API_KEY;
       const apiKeyLength = process.env.RUPANTORPAY_API_KEY?.length || 0;
-      
+
       res.json({
         hasApiKey,
         apiKeyLength,
@@ -2195,7 +2203,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const data = await response.json();
-      
+
       res.json({
         httpStatus: response.status,
         responseData: data,
@@ -2317,7 +2325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Failed to parse RupantorPay response:', parseError);
         const responseText = await rupantorPayResponse.text();
         console.error('Raw response:', responseText);
-        
+
         return res.status(500).json({
           message: "Payment gateway error",
           error: "Invalid response from payment provider"
@@ -2384,7 +2392,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error) {
       console.error('Payment creation error:', error);
-      
+
       // Provide more specific error messages
       if (error instanceof TypeError && error.message.includes('fetch')) {
         return res.status(500).json({ 
@@ -2392,14 +2400,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           error: "Network connection failed"
         });
       }
-      
+
       if (error instanceof SyntaxError) {
         return res.status(500).json({ 
           message: "Invalid response from payment gateway",
           error: "Response parsing failed"
         });
       }
-      
+
       res.status(500).json({ 
         message: "Failed to initialize payment",
         error: error instanceof Error ? error.message : "Unknown error"
@@ -2469,7 +2477,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/payments/webhook", async (req, res) => {
     try {
       const webhookData = req.body;
-      
+
       // Log webhook for debugging
       const webhook = new PaymentWebhook({
         transactionId: webhookData.transactionId || 'unknown',
@@ -2494,7 +2502,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             paymentTransaction.paymentMethod = webhookData.paymentMethod;
             paymentTransaction.paymentFee = webhookData.paymentFee;
             paymentTransaction.callbackData = webhookData;
-            
+
             if (webhookData.status === 'COMPLETED') {
               paymentTransaction.verifiedAt = new Date();
             }
@@ -2562,16 +2570,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Handle Payment Success/Cancel callbacks (for frontend redirects)
   app.get("/api/payment/success", async (req, res) => {
     const { transactionId, paymentMethod, paymentAmount, status } = req.query;
-    
+
     console.log('Payment success callback received:', req.query);
-    
+
     if (transactionId && status === 'COMPLETED') {
       // Update payment status
       try {
         const paymentTransaction = await PaymentTransaction.findOne({ transactionId });
         if (paymentTransaction) {
           console.log('Updating payment transaction:', paymentTransaction.orderId);
-          
+
           paymentTransaction.status = 'completed';
           paymentTransaction.transactionId = transactionId as string;
           paymentTransaction.paymentMethod = paymentMethod as string;
@@ -2612,7 +2620,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/payment/cancel", async (req, res) => {
     const { transactionId } = req.query;
-    
+
     if (transactionId) {
       try {
         await PaymentTransaction.findOneAndUpdate(
@@ -2638,7 +2646,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const queryString = new URLSearchParams(req.query as any).toString()
     res.redirect(`/api/payment/success${queryString ? '?' + queryString : ''}`)
   })
-  
+
   app.get("/payment/cancel", (req, res) => {
     // Redirect to the API endpoint for actual processing
     const queryString = new URLSearchParams(req.query as any).toString()

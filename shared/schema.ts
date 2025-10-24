@@ -54,6 +54,7 @@ export const products = pgTable('products', {
   reviews: integer('reviews').notNull().default(0),
   stockStatus: varchar('stockStatus', { length: 50 }).notNull().default('in_stock'),
   stockQuantity: integer('stockQuantity').notNull().default(0),
+  subcategory: varchar('subcategory', { length: 255 }).notNull().default(''), // Added subcategory field
   tags: json('tags'),
   features: json('features'),
   specifications: json('specifications'),
