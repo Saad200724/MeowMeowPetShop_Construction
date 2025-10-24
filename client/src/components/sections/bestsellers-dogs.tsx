@@ -11,7 +11,7 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   return (
     <div className="overflow-x-auto">
       <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
-        {products.slice(0, 3).map((product: any) => (
+        {products.slice(0, 15).map((product: any) => (
           <div 
             key={product.id || product._id} 
             className="flex-shrink-0"
@@ -76,7 +76,7 @@ export default function BestsellersDogs() {
             <p className="text-gray-600">No bestselling dog products available.</p>
           </div>
         ) : (
-          <BestsellerDisplay products={products.slice(0, 3)} />
+          <BestsellerDisplay products={products.slice(0, 15)} />
         )}
       </div>
     </section>

@@ -65,7 +65,7 @@ export default function FlashSale() {
 
         <div className="overflow-x-auto">
           <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
-            {flashSaleProducts.slice(0, 3).map((product: any, index: number) => (
+            {flashSaleProducts.slice(0, 15).map((product: any, index: number) => (
               <div 
                 key={product.id} 
                 className="flex-shrink-0 animate-fade-in"
