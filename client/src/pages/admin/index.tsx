@@ -949,6 +949,9 @@ export default function AdminPage() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">Welcome, {user.firstName}</span>
+              <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50">
+                POS
+              </Button>
               <Link href="/">
                 <Button size="sm" variant="outline" className="text-gray-600">
                   <Home className="w-4 h-4 mr-2" />
