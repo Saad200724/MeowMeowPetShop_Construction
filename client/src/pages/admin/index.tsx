@@ -2003,10 +2003,19 @@ export default function AdminPage() {
                       <FormControl>
                         <Input 
                           type="number" 
+                          min="0"
                           placeholder="0" 
                           className="text-gray-900 bg-white border-gray-300"
                           {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value) || 0;
+                            field.onChange(Math.max(0, value));
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -2303,10 +2312,19 @@ export default function AdminPage() {
                       <FormControl>
                         <Input 
                           type="number" 
+                          min="0"
                           placeholder="0" 
                           className="text-gray-900 bg-white border-gray-300"
                           {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                          onChange={(e) => {
+                            const value = Number(e.target.value) || 0;
+                            field.onChange(Math.max(0, value));
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
