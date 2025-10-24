@@ -208,7 +208,7 @@ export default function AdminPage() {
       brandId: '',
       image: '',
       stockQuantity: 0,
-      subcategory: '',
+      subcategory: 'none',
       isNew: false,
       isBestseller: false,
       isOnSale: false,
@@ -791,7 +791,7 @@ export default function AdminPage() {
       brandId: product.brandId || '',
       image: product.image,
       stockQuantity: product.stock || product.stockQuantity || 0,
-      subcategory: product.subcategory || '',
+      subcategory: product.subcategory || 'none',
       isNew: product.isNew || false,
       isBestseller: product.isBestseller || false,
       isOnSale: product.isOnSale || false,
@@ -2044,14 +2044,14 @@ export default function AdminPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Subcategory (Shop by Category)</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value || "none"}>
                         <FormControl>
                           <SelectTrigger className="bg-white text-gray-900 border-gray-300">
                             <SelectValue placeholder="Select subcategory" className="text-gray-900" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
-                          <SelectItem value="" className="text-black hover:bg-gray-100">No Category</SelectItem>
+                          <SelectItem value="none" className="text-black hover:bg-gray-100">No Category</SelectItem>
                           <SelectItem value="adult-food" className="text-black hover:bg-gray-100">Adult Food</SelectItem>
                           <SelectItem value="kitten-food" className="text-black hover:bg-gray-100">Kitten Food</SelectItem>
                           <SelectItem value="collar" className="text-black hover:bg-gray-100">Collar</SelectItem>

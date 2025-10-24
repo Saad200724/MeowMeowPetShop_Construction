@@ -446,6 +446,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique slug for the product
       const productSlug = await generateUniqueProductSlug(productData.name);
 
+      // Handle subcategory - convert 'none' to empty string
+      const subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+
       // Create product directly in database with all fields
       const product = new Product({
         name: productData.name,
@@ -460,8 +463,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         image: productData.image,
         stockQuantity: productData.stockQuantity || 0,
         stock: productData.stockQuantity || 0,
-        subcategory: productData.subcategory || '',
-        tags: productData.subcategory ? [productData.subcategory] : [],
+        subcategory: subcategory,
+        tags: subcategory ? [subcategory] : [],
         isNew: productData.isNew || false,
         isBestseller: productData.isBestseller || false,
         isOnSale: productData.isOnSale || false,
@@ -586,6 +589,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         productSlug = await generateUniqueProductSlug(productData.name, id);
       }
 
+      // Handle subcategory - convert 'none' to empty string
+      const subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+
       // Update product directly in database with all fields
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
@@ -602,8 +608,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           image: productData.image,
           stockQuantity: productData.stockQuantity || 0,
           stock: productData.stockQuantity || 0,
-          subcategory: productData.subcategory || '',
-          tags: productData.subcategory ? [productData.subcategory] : [],
+          subcategory: subcategory,
+          tags: subcategory ? [subcategory] : [],
           isNew: productData.isNew || false,
           isBestseller: productData.isBestseller || false,
           isOnSale: productData.isOnSale || false,
