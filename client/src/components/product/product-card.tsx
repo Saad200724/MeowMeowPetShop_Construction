@@ -89,7 +89,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[265px] sm:h-[265px] md:h-[265px] lg:h-[265px] flex flex-col",
+        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[280px] sm:h-[280px] md:h-[280px] lg:h-[280px] flex flex-col",
         className,
       )}
     >
