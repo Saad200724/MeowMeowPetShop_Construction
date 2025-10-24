@@ -89,7 +89,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full h-[300px] flex flex-col",
+        "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full h-[260px] flex flex-col",
         className,
       )}
     >
@@ -129,7 +129,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 flex-shrink-0">
         <img
           src={product.image}
           alt={product.name}
@@ -140,7 +140,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="px-3 pt-2.5 pb-1.5 flex flex-col flex-1">
+      <CardContent className="px-3 pt-2 pb-0 flex flex-col flex-1">
         <div className="space-y-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
@@ -180,12 +180,12 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-1.5">
+        <div className="mt-auto">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
             className={cn(
-              "w-full rounded-full py-2 text-sm transition-all duration-200 border-2",
+              "w-full rounded-full py-1.5 text-sm transition-all duration-200 border-2",
               isInCart
                 ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
