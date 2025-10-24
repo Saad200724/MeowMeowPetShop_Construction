@@ -180,7 +180,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-auto">
+        <div className="mt-2">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
