@@ -1436,7 +1436,7 @@ export default function AdminPage() {
                     placeholder="Search repack food products..."
                     value={repackSearchTerm}
                     onChange={(e) => setRepackSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 text-black placeholder:text-gray-500"
                   />
                 </div>
               </div>
