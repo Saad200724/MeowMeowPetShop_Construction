@@ -84,6 +84,7 @@ export interface IProduct extends Document {
   reviews: number;
   stockStatus: string;
   stockQuantity: number;
+  subcategory?: string;
   tags?: string[];
   features?: string[];
   specifications?: any;
@@ -110,6 +111,7 @@ const productSchema = new Schema<IProduct>({
   reviews: { type: Number, default: 0 },
   stockStatus: { type: String, default: 'In Stock' },
   stockQuantity: { type: Number, default: 0 },
+  subcategory: { type: String, default: '' },
   tags: [String],
   features: [String],
   specifications: Schema.Types.Mixed,
