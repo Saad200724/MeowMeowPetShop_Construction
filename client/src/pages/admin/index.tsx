@@ -966,9 +966,9 @@ export default function AdminPage() {
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 font-medium shadow-sm hover:shadow transition-all duration-200"
+                  className="text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:text-black font-medium shadow-sm hover:shadow transition-all duration-200"
                 >
-                  <Home className="w-4 h-4 mr-2" />
+                  <Home className="w-4 h-4 mr-2 text-gray-700 hover:text-black" />
                   Store
                 </Button>
               </Link>
