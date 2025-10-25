@@ -750,7 +750,13 @@ export default function AdminPage() {
 
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.categoryId === selectedCategory;
+    
+    // Check both category and categoryId fields, handle different formats
+    const productCategory = product.category || product.categoryId || '';
+    const matchesCategory = selectedCategory === 'all' || 
+      productCategory === selectedCategory ||
+      productCategory.toLowerCase() === selectedCategory.toLowerCase() ||
+      productCategory.replace(/\s+/g, '-').toLowerCase() === selectedCategory.toLowerCase();
 
     const stockQuantity = product.stockQuantity || product.stock || 0;
     const matchesStock = stockFilter === 'all' || 
@@ -1206,9 +1212,16 @@ export default function AdminPage() {
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   <SelectItem value="all" className="text-black hover:bg-gray-100">All Categories</SelectItem>
-                  {(categories as any[]).map((cat: any) => (
-                    <SelectItem key={cat.id} value={cat.id} className="text-black hover:bg-gray-100">{cat.name}</SelectItem>
-                  ))}
+                  <SelectItem value="cat-food" className="text-black hover:bg-gray-100">Cat Food</SelectItem>
+                  <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
+                  <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
+                  <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
+                  <SelectItem value="cat-care" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
+                  <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
+                  <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
+                  <SelectItem value="dog-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
+                  <SelectItem value="rabbit" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
+                  <SelectItem value="bird" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={stockFilter} onValueChange={setStockFilter}>
