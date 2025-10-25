@@ -357,33 +357,7 @@ export default function ProductsPage() {
                   </SelectContent>
                 </Select>
 
-                {/* View Mode */}
-                <div className="flex rounded-lg border border-gray-200 overflow-hidden flex-shrink-0 bg-white">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className={cn(
-                      "rounded-none h-10 sm:h-11 px-3 sm:px-4",
-                      viewMode === 'grid' ? "bg-[#26732d] text-white hover:bg-[#1f5d26]" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                    )}
-                    data-testid="button-view-grid"
-                  >
-                    <Grid size={16} className={viewMode === 'grid' ? 'text-white' : 'text-gray-700'} />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className={cn(
-                      "rounded-none h-10 sm:h-11 px-3 sm:px-4",
-                      viewMode === 'list' ? "bg-[#26732d] text-white hover:bg-[#1f5d26]" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                    )}
-                    data-testid="button-view-list"
-                  >
-                    <List size={16} className={viewMode === 'list' ? 'text-white' : 'text-gray-700'} />
-                  </Button>
-                </div>
+                
               </div>
             </div>
 
