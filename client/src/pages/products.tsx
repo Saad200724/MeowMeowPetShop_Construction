@@ -328,12 +328,12 @@ export default function ProductsPage() {
                 {/* Mobile Filter Button */}
                 <Button
                   variant="outline"
-                  className="lg:hidden h-10 sm:h-11 gap-1.5 sm:gap-2 px-3 sm:px-4 flex-shrink-0"
+                  className="lg:hidden h-10 sm:h-11 gap-1.5 sm:gap-2 px-3 sm:px-4 flex-shrink-0 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400"
                   onClick={() => setShowFilters(!showFilters)}
                   data-testid="button-toggle-filters"
                 >
-                  <SlidersHorizontal size={16} className="sm:w-[18px] sm:h-[18px]" />
-                  <span className="hidden xs:inline">Filters</span>
+                  <SlidersHorizontal size={16} className="sm:w-[18px] sm:h-[18px] text-gray-700" />
+                  <span className="hidden xs:inline text-gray-900">Filters</span>
                   {hasActiveFilters && (
                     <Badge className="bg-[#26732d] text-white ml-0.5 sm:ml-1 h-5 min-w-[20px] px-1.5">{selectedBrands.length + (minRating > 0 ? 1 : 0) + (showOnlyInStock ? 1 : 0)}</Badge>
                   )}
@@ -369,7 +369,7 @@ export default function ProductsPage() {
                     )}
                     data-testid="button-view-grid"
                   >
-                    <Grid size={16} />
+                    <Grid size={16} className={viewMode === 'grid' ? 'text-white' : 'text-gray-700'} />
                   </Button>
                   <Button
                     variant={viewMode === 'list' ? 'default' : 'ghost'}
@@ -381,7 +381,7 @@ export default function ProductsPage() {
                     )}
                     data-testid="button-view-list"
                   >
-                    <List size={16} />
+                    <List size={16} className={viewMode === 'list' ? 'text-white' : 'text-gray-700'} />
                   </Button>
                 </div>
               </div>
