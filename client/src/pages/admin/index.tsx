@@ -1744,7 +1744,7 @@ export default function AdminPage() {
                   placeholder="Search coupons..."
                   value={couponSearchTerm}
                   onChange={(e) => setCouponSearchTerm(e.target.value)}
-                  className="pl-10 bg-white border-gray-300"
+                  className="pl-10 bg-white border-gray-300 text-black placeholder:text-gray-500"
                 />
               </div>
             </div>
