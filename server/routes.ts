@@ -549,8 +549,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique slug for the product
       const productSlug = await generateUniqueProductSlug(productData.name);
 
-      // Handle subcategory - convert 'none' to empty string
-      const subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+      // Handle subcategory - convert 'none' to empty string and convert to slug format
+      let subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+      // Convert subcategory to slug format (e.g., "Adult Food" -> "adult-food")
+      if (subcategory) {
+        subcategory = subcategory.toLowerCase().trim().replace(/\s+/g, '-');
+      }
 
       // Create product directly in database with all fields
       const product = new Product({
@@ -699,8 +703,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         productSlug = await generateUniqueProductSlug(productData.name, id);
       }
 
-      // Handle subcategory - convert 'none' to empty string
-      const subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+      // Handle subcategory - convert 'none' to empty string and convert to slug format
+      let subcategory = productData.subcategory === 'none' ? '' : (productData.subcategory || '');
+      // Convert subcategory to slug format (e.g., "Adult Food" -> "adult-food")
+      if (subcategory) {
+        subcategory = subcategory.toLowerCase().trim().replace(/\s+/g, '-');
+      }
 
       // Build tags array - include subcategory if it exists
       const productTags = subcategory ? [subcategory] : [];
