@@ -1,12 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Package, Search, Filter, ShoppingCart } from 'lucide-react';
+import { Package, ShoppingCart } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCart } from '@/contexts/cart-context';
@@ -15,8 +13,6 @@ import { useSidebar } from '@/contexts/sidebar-context';
 
 export default function RepackProducts() {
   const { isVisible: sidebarVisible } = useSidebar();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('name');
   const { addItem } = useCart();
   const { toast } = useToast();
 
@@ -29,30 +25,11 @@ export default function RepackProducts() {
     refetchOnMount: false,
   });
 
-  // Optimized filtering with useMemo
+  // Display all products without filtering
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(repackProducts)) return [];
-    return repackProducts
-      .filter((product: any) => 
-        product.name?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      .sort((a: any, b: any) => {
-        switch (sortBy) {
-          case 'price-low':
-            return (a.price || 0) - (b.price || 0);
-          case 'price-high':
-            return (b.price || 0) - (a.price || 0);
-          case 'savings':
-            const savingsA = calculateSavings(a.price, a.originalPrice);
-            const savingsB = calculateSavings(b.price, b.originalPrice);
-            return savingsB - savingsA;
-          case 'name':
-            return (a.name || '').localeCompare(b.name || '');
-          default:
-            return 0;
-        }
-      });
-  }, [repackProducts, searchQuery, sortBy]);
+    return repackProducts;
+  }, [repackProducts]);
 
   const calculateSavings = (price: number, originalPrice: number) => {
     if (!originalPrice || originalPrice <= price) return 0;
@@ -123,35 +100,6 @@ export default function RepackProducts() {
           </div>
         </section>
 
-        {/* Filters Section */}
-        <section className="py-6 px-4 bg-white border-b">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search repack products..."
-                  className="pl-10 text-black placeholder:text-gray-500"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full md:w-48">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Sort by Name</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="savings">Highest Savings</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </section>
-
         {/* Products Section */}
         <section className="py-8 px-4">
           <div className="max-w-7xl mx-auto">
@@ -172,10 +120,10 @@ export default function RepackProducts() {
               <div className="text-center py-12">
                 <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-medium text-gray-600 mb-2">
-                  {searchQuery ? 'No products found' : 'No repack products available'}
+                  No repack products available
                 </h3>
                 <p className="text-gray-500">
-                  {searchQuery ? 'Try adjusting your search terms' : 'Check back later for repack deals!'}
+                  Check back later for repack deals!
                 </p>
               </div>
             ) : (
