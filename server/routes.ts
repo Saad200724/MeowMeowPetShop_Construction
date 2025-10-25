@@ -197,18 +197,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Products API - Excludes bulk/repack products from general listings
+  // Products API - Now includes repack products so they appear in category pages
   app.get("/api/products", async (req, res) => {
     try {
       // Fetch all data in parallel to avoid N+1 queries
       const [dbProducts, allCategories, allBrands] = await Promise.all([
         Product.find({
-          isActive: true,
-          tags: {
-            $not: {
-              $in: ['repack-food', 'repack', 'bulk-save', 'bulk']
-            }
-          }
+          isActive: true
         }),
         Category.find({}),
         Brand.find({})
@@ -289,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      console.log(`Successfully fetched ${products.length} products (excluding bulk/repack products)`);
+      console.log(`Successfully fetched ${products.length} products (including repack products)`);
       res.json(products);
     } catch (error) {
       console.error('Error fetching products:', error);

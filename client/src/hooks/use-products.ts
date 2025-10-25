@@ -64,28 +64,17 @@ export function useProducts() {
   }, []);
 
   const getProductsByCategory = (categoryId: string) => {
-    // Filter out bulk/repack products from all category listings
-    const filteredProducts = products.filter(product => {
-      const isBulkProduct = product.tags?.some(tag => 
-        ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
-      );
-      return !isBulkProduct;
-    });
-
-    if (categoryId === 'all' || !categoryId) return filteredProducts;
-    return filteredProducts.filter(product => 
+    // Include all products including repack products in category listings
+    // Repack products will appear in both their category page and the repack section
+    if (categoryId === 'all' || !categoryId) return products;
+    return products.filter(product => 
       product.category === categoryId || product.subcategory === categoryId
     );
   };
 
   const getProductsByBrand = (brandSlug: string) => {
     return products.filter(product => {
-      // Exclude bulk/repack products from brand listings
-      const isBulkProduct = product.tags?.some(tag => 
-        ['repack-food', 'repack', 'bulk-save', 'bulk'].includes(tag.toLowerCase())
-      );
-
-      if (isBulkProduct) return false;
+      // Include repack products in brand listings too
 
       // Brand mapping for proper filtering
       const brandMappings: { [key: string]: string[] } = {

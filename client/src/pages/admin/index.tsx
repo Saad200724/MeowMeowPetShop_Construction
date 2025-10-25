@@ -421,8 +421,10 @@ export default function AdminPage() {
         tags: 'repack-food',
         isActive: true,
       };
-      const response = await apiRequest('POST', '/api/products', repackData);
-      return response.json();
+      return await apiRequest('/api/products', {
+        method: 'POST',
+        body: JSON.stringify(repackData),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
@@ -450,8 +452,10 @@ export default function AdminPage() {
         ...data,
         tags: 'repack-food',
       };
-      const response = await apiRequest('PUT', `/api/products/${id}`, repackData);
-      return response.json();
+      return await apiRequest(`/api/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(repackData),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
@@ -2407,39 +2411,40 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={repackForm.control}
-                  name="originalPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Original Price (৳) - Optional</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter original price (if on sale)" className="text-gray-900 bg-white border-gray-300" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={repackForm.control}
+                name="originalPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Original Price (৳) - Optional</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter original price (if on sale)" className="text-gray-900 bg-white border-gray-300" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={repackForm.control}
-                  name="image"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Image</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter image URL" className="text-gray-900 bg-white border-gray-300" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={repackForm.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <p className="text-sm text-orange-800">
-                  <strong>Note:</strong> This product will automatically be tagged as "repack-food" and appear in the bulk/repack sections only.
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Note:</strong> This product will be tagged as "repack-food" and will appear in <strong>BOTH</strong> the repack section and the selected category page (e.g., Cat Food, Dog Food).
                 </p>
               </div>
 
