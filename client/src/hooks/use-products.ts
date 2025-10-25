@@ -12,6 +12,7 @@ export interface Product {
   reviews: number;
   category: string;
   categoryName?: string;
+  subcategory?: string;
   brandId?: string;
   brandName?: string;
   brandSlug?: string;
@@ -72,7 +73,9 @@ export function useProducts() {
     });
 
     if (categoryId === 'all' || !categoryId) return filteredProducts;
-    return filteredProducts.filter(product => product.category === categoryId);
+    return filteredProducts.filter(product => 
+      product.category === categoryId || product.subcategory === categoryId
+    );
   };
 
   const getProductsByBrand = (brandSlug: string) => {

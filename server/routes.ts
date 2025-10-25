@@ -264,6 +264,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             originalPrice: product.originalPrice || null,
             category: category?.slug || 'uncategorized',
             categoryName: category?.name || 'Uncategorized',
+            subcategory: product.subcategory || '',
             brandId: product.brandId,
             brandName: brand?.name || 'No Brand',
             brandSlug: brand?.slug || 'no-brand',
