@@ -1463,6 +1463,7 @@ export default function AdminPage() {
                   <thead className="bg-gray-50 border-b">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
@@ -1473,7 +1474,7 @@ export default function AdminPage() {
                   <tbody className="divide-y divide-gray-200">
                     {isLoadingRepackProducts ? (
                       <tr>
-                        <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                        <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                           Loading repack food products...
                         </td>
                       </tr>
@@ -1486,7 +1487,7 @@ export default function AdminPage() {
 
                         return filteredRepackProducts.length === 0 ? (
                           <tr>
-                            <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                            <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                               <Coffee className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                               <p className="text-sm">No repack food products found</p>
                               <p className="text-xs mt-1">
@@ -1499,19 +1500,20 @@ export default function AdminPage() {
                             <td className="px-4 py-4">
                               <div className="flex items-center">
                                 <img src={product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover mr-3" />
-                                <div>
-                                  <div className="font-medium text-gray-900">{product.name}</div>
-                                  <div className="text-sm text-gray-500">
-                                    {product.brandName || 
-                                     (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
-                                     'Unknown Brand'}
-                                  </div>
-                                </div>
+                                <div className="font-medium text-gray-900">{product.name}</div>
                               </div>
+                            </td>
+                            <td className="px-4 py-4 text-gray-700">
+                              {product.brandName || 
+                               (brands as any[]).find((b: any) => b.id === product.brandId || b.slug === product.brandId)?.name || 
+                               'No Brand'}
                             </td>
                             <td className="px-4 py-4">
                               <Badge variant="outline" className="border-orange-200 text-orange-800">
-                                {(categories as any[]).find((c: any) => c.id === product.categoryId)?.name || product.categoryId}
+                                {product.categoryName || 
+                                 (categories as any[]).find((c: any) => c.id === product.categoryId || c.slug === product.categoryId || c.slug === product.category)?.name || 
+                                 product.category || 
+                                 'Uncategorized'}
                               </Badge>
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
@@ -2259,8 +2261,8 @@ export default function AdminPage() {
 
       {/* Repack Food Dialog */}
       <Dialog open={showRepackDialog} onOpenChange={setShowRepackDialog}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>
               {editingRepackProduct ? 'Edit Repack Food' : 'Add New Repack Food'}
             </DialogTitle>
@@ -2269,10 +2271,12 @@ export default function AdminPage() {
             </DialogDescription>
           </DialogHeader>
 
+          <div className="flex-1 overflow-y-auto px-1">
           <Form {...repackForm}>
             <form 
+              id="repack-form"
               onSubmit={repackForm.handleSubmit(editingRepackProduct ? handleUpdateRepack : handleCreateRepack)} 
-              className="space-y-6"
+              className="space-y-4 py-2"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
@@ -2442,35 +2446,37 @@ export default function AdminPage() {
                 )}
               />
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-sm text-blue-800">
                   <strong>Note:</strong> This product will be tagged as "repack-food" and will appear in <strong>BOTH</strong> the repack section and the selected category page (e.g., Cat Food, Dog Food).
                 </p>
               </div>
-
-              <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  onClick={() => setShowRepackDialog(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  className="bg-orange-600 hover:bg-orange-700 text-white"
-                  disabled={createRepackMutation.isPending || updateRepackMutation.isPending}
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {createRepackMutation.isPending || updateRepackMutation.isPending 
-                    ? 'Saving...' 
-                    : editingRepackProduct ? 'Update Repack Food' : 'Save Repack Food'
-                  }
-                </Button>
-              </DialogFooter>
             </form>
           </Form>
+          </div>
+
+          <DialogFooter className="flex-shrink-0 border-t pt-4 mt-0">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              onClick={() => setShowRepackDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              form="repack-form"
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+              disabled={createRepackMutation.isPending || updateRepackMutation.isPending}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {createRepackMutation.isPending || updateRepackMutation.isPending 
+                ? 'Saving...' 
+                : editingRepackProduct ? 'Update Repack Food' : 'Save Repack Food'
+              }
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
