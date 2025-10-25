@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Package, ShoppingCart } from 'lucide-react';
+import { Package, ShoppingCart, Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCart } from '@/contexts/cart-context';
@@ -13,6 +14,7 @@ import { useSidebar } from '@/contexts/sidebar-context';
 
 export default function RepackProducts() {
   const { isVisible: sidebarVisible } = useSidebar();
+  const [searchQuery, setSearchQuery] = useState('');
   const { addItem } = useCart();
   const { toast } = useToast();
 
@@ -25,11 +27,13 @@ export default function RepackProducts() {
     refetchOnMount: false,
   });
 
-  // Display all products without filtering
+  // Filter products by search query
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(repackProducts)) return [];
-    return repackProducts;
-  }, [repackProducts]);
+    return repackProducts.filter((product: any) => 
+      product.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [repackProducts, searchQuery]);
 
   const calculateSavings = (price: number, originalPrice: number) => {
     if (!originalPrice || originalPrice <= price) return 0;
@@ -100,6 +104,21 @@ export default function RepackProducts() {
           </div>
         </section>
 
+        {/* Search Section */}
+        <section className="py-6 px-4 bg-white border-b">
+          <div className="max-w-7xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search repack products..."
+                className="pl-10 text-black placeholder:text-gray-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Products Section */}
         <section className="py-8 px-4">
           <div className="max-w-7xl mx-auto">
@@ -120,10 +139,10 @@ export default function RepackProducts() {
               <div className="text-center py-12">
                 <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-medium text-gray-600 mb-2">
-                  No repack products available
+                  {searchQuery ? 'No products found' : 'No repack products available'}
                 </h3>
                 <p className="text-gray-500">
-                  Check back later for repack deals!
+                  {searchQuery ? 'Try adjusting your search terms' : 'Check back later for repack deals!'}
                 </p>
               </div>
             ) : (
