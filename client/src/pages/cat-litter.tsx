@@ -100,12 +100,12 @@ export default function CatLitterPage() {
       <NavigationSidebar />
 
       {/* Hero Section */}
-      <section className="pt-6 pb-6 px-4 md:pt-10 md:pb-10 md:px-8 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
+      <section className="pt-6 pb-6 px-4 md:pt-8 md:pb-8 lg:pt-10 lg:pb-10 md:px-8 bg-gradient-to-r from-gray-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 text-white">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 md:mb-3 lg:mb-4 text-white leading-tight">
             Cat Litter & Accessories
           </h1>
-          <p className="text-sm md:text-lg mb-4 md:mb-6 text-white">
+          <p className="text-sm sm:text-base md:text-lg mb-4 md:mb-6 text-white opacity-95">
             Everything you need for your cat's hygiene and comfort
           </p>
 
@@ -124,10 +124,10 @@ export default function CatLitterPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-4 px-4 md:py-8 md:px-8">
-        <div className="max-w-7xl mx-auto lg:flex lg:gap-6">
+      <section className="py-4 px-4 md:py-6 lg:py-8 md:px-8">
+        <div className="max-w-7xl mx-auto lg:flex lg:gap-6 xl:gap-8">
           {/* Modern Filter Sidebar */}
-          <aside className="lg:w-1/4 mb-4 md:mb-8 lg:mb-0">
+          <aside className="lg:w-1/4 mb-4 lg:mb-0">
             <ModernFilter
               onFilterChange={handleFilterChange}
               maxPrice={20000}
@@ -135,20 +135,20 @@ export default function CatLitterPage() {
           </aside>
 
           {/* Products Grid */}
-          <main className="lg:w-3/4 space-y-4">
+          <main className="lg:w-3/4 space-y-4 md:space-y-6">
             {/* Analytics Bar */}
             <AnalyticsBar categoryId="cat-litter" className="" />
 
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-2xl font-bold text-black">
+            <div className="flex flex-wrap gap-2 justify-between items-center">
+              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-black">
                 Cat Litter & Accessories
               </h2>
-              <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+              <div className="bg-blue-100 text-blue-800 px-2.5 sm:px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap">
                 {filteredProducts.length} products
               </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -156,8 +156,8 @@ export default function CatLitterPage() {
 
             {/* No Products Message */}
             {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+              <div className="text-center py-8 md:py-12">
+                <p className="text-gray-500 text-base md:text-lg">No products found matching your criteria.</p>
                 <Button
                   variant="outline"
                   className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
