@@ -151,13 +151,20 @@ export function useProducts() {
   };
 }
 
-export const useProductsByCategory = (category?: string, brand?: string, searchTerm?: string) => {
+export const useProductsByCategory = (category?: string, brand?: string, searchTerm?: string, subcategory?: string) => {
   return useQuery({
-    queryKey: ['/api/products', category, brand, searchTerm],
+    queryKey: ['/api/products', category, brand, searchTerm, subcategory],
     select: (data: any[]) => {
       return data.filter((product: any) => {
-        // Filter by category if specified
-        if (category && category !== 'all') {
+        // Filter by subcategory first if specified (takes priority)
+        if (subcategory && subcategory !== 'all') {
+          const productSubcategory = product.subcategory || '';
+          if (productSubcategory !== subcategory) {
+            return false;
+          }
+        }
+        // Filter by category if specified and no subcategory filter
+        else if (category && category !== 'all') {
           const productCategory = product.category || product.categoryId;
           // Handle category mapping for the 10 specific categories
           const categoryMappings: { [key: string]: string[] } = {

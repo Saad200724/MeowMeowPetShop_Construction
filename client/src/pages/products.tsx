@@ -22,11 +22,16 @@ export default function ProductsPage() {
   
   const { products: allProducts, loading, error, getProductsByCategory } = useProducts()
 
-  // Handle URL parameters for category selection
+  // Handle URL parameters for category and subcategory selection
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const categoryParam = urlParams.get('category')
-    if (categoryParam) {
+    const subcategoryParam = urlParams.get('subcategory')
+    
+    if (subcategoryParam) {
+      // If subcategory is provided, use it directly (it's already in slug format)
+      setSelectedCategory(subcategoryParam)
+    } else if (categoryParam) {
       setSelectedCategory(categoryParam)
     }
   }, [location])

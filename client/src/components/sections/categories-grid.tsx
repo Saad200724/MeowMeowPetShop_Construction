@@ -122,7 +122,7 @@ export default function CategoriesGrid() {
             return (
               <Link
                 key={category.id}
-                href={`/products?category=${category.id}`}
+                href={`/products?subcategory=${category.id}`}
                 className="group cursor-pointer hover-lift animate-fade-in block"
                 style={
                   { animationDelay: `${index * 0.1}s` } as React.CSSProperties
@@ -158,7 +158,7 @@ export default function CategoriesGrid() {
             return (
               <Link
                 key={category.id}
-                href={`/products?category=${category.id}`}
+                href={`/products?subcategory=${category.id}`}
                 className="group cursor-pointer hover-lift animate-fade-in block"
                 style={
                   { animationDelay: `${index * 0.1}s` } as React.CSSProperties
