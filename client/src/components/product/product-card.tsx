@@ -91,7 +91,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[260px] sm:h-[260px] md:h-[260px] lg:h-[260px] flex flex-col cursor-pointer",
+          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[280px] sm:h-[280px] md:h-[280px] lg:h-[280px] flex flex-col cursor-pointer",
           className,
         )}
       >
@@ -146,7 +146,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="px-3 pt-2 pb-0 flex flex-col flex-1">
+      <CardContent className="px-3 pt-2 pb-3 flex flex-col flex-1">
         <div className="space-y-1">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
@@ -186,7 +186,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-3">
+        <div className="mt-auto mb-2">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
