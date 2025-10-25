@@ -1272,6 +1272,7 @@ export default function AdminPage() {
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subcategory</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -1281,13 +1282,13 @@ export default function AdminPage() {
                     <tbody className="divide-y divide-gray-200">
                       {isLoadingProducts ? (
                         <tr>
-                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                             Loading products...
                           </td>
                         </tr>
                       ) : filteredProducts.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                             No products found
                           </td>
                         </tr>
@@ -1311,6 +1312,15 @@ export default function AdminPage() {
                               <Badge variant="outline" className="text-xs">
                                 {(categories as any[]).find((c: any) => c.id === product.category)?.name || product.categoryName || product.category}
                               </Badge>
+                            </td>
+                            <td className="px-4 py-4">
+                              {product.subcategory ? (
+                                <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
+                                  {product.subcategory.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                                </Badge>
+                              ) : (
+                                <span className="text-xs text-gray-400">-</span>
+                              )}
                             </td>
                             <td className="px-4 py-4 font-medium text-gray-900">৳{product.price}</td>
                             <td className="px-4 py-4 text-gray-900">{product.stockQuantity || product.stock || 0}</td>
