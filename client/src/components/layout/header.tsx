@@ -442,7 +442,7 @@ export default function Header() {
                     <Link href="/sign-up">
                       <Button 
                         size="sm" 
-                        className="bg-[#ffde59] text-black hover:bg-[#ffd73e] transition-colors"
+                        className="bg-[#ffde59] text-white hover:bg-[#ffd73e] transition-colors"
                         data-testid="button-sign-up"
                       >
                         Sign Up
