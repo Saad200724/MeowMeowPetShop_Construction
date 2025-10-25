@@ -58,7 +58,7 @@ import { ChatProvider } from "@/contexts/chat-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 
-function Router() {
+function AppRoutes() {
   return (
     <>
       <ScrollToTop />
@@ -98,6 +98,8 @@ function Router() {
         <Route path="/checkout" component={CheckoutPage} />
         <Route path="/payment-success" component={PaymentSuccessPage} />
         <Route path="/invoice/:id" component={InvoicePage} />
+        <Route path="/track-order" component={TrackOrderPage} />
+        <Route path="/profile" component={ProfilePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
@@ -122,7 +124,7 @@ function App() {
             <TooltipProvider>
               <SidebarProvider>
                 <div className="min-h-screen bg-white mobile-safe-bottom">
-                  <Router />
+                  <AppRoutes />
                   <FloatingCart />
                   <Toaster />
                 </div>
