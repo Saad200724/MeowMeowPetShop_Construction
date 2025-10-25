@@ -241,10 +241,10 @@ export default function ProductsPage() {
                               onCheckedChange={() => toggleBrand(brand)}
                               data-testid={`checkbox-brand-${brand.toLowerCase().replace(/\s+/g, '-')}`}
                             />
-                            <span className="text-sm text-gray-700 group-hover:text-[#26732d] transition-colors flex-1 truncate">
+                            <span className="text-sm text-black group-hover:text-[#26732d] transition-colors flex-1 truncate">
                               {brand}
                             </span>
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-gray-500">
                               ({products.filter(p => p.brandName === brand).length})
                             </span>
                           </label>
@@ -276,9 +276,9 @@ export default function ProductsPage() {
                           {Array.from({ length: rating }).map((_, i) => (
                             <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />
                           ))}
-                          <span className="text-sm text-gray-600 group-hover:text-[#26732d]">& up</span>
+                          <span className="text-sm text-black group-hover:text-[#26732d]">& up</span>
                         </div>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-gray-500">
                           ({products.filter(p => p.rating >= rating).length})
                         </span>
                       </label>
@@ -296,10 +296,10 @@ export default function ProductsPage() {
                       onCheckedChange={setShowOnlyInStock}
                       data-testid="checkbox-in-stock"
                     />
-                    <span className="text-sm font-semibold text-gray-700 group-hover:text-[#26732d] flex-1">
+                    <span className="text-sm font-semibold text-black group-hover:text-[#26732d] flex-1">
                       In Stock Only
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                       ({products.filter(p => p.stock && p.stock > 0).length})
                     </span>
                   </label>
@@ -320,7 +320,7 @@ export default function ProductsPage() {
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 sm:pl-10 h-10 sm:h-11 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d] text-sm"
+                    className="pl-9 sm:pl-10 h-10 sm:h-11 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d] text-sm text-black placeholder:text-gray-500"
                     data-testid="input-search"
                   />
                 </div>
@@ -344,28 +344,28 @@ export default function ProductsPage() {
               <div className="flex gap-2 sm:gap-3">
                 {/* Sort */}
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="flex-1 sm:flex-none sm:w-56 h-10 sm:h-11 border-gray-200 text-sm" data-testid="select-sort">
-                    <SelectValue placeholder="Sort by" />
+                  <SelectTrigger className="flex-1 sm:flex-none sm:w-56 h-10 sm:h-11 border-gray-200 text-sm text-black" data-testid="select-sort">
+                    <SelectValue placeholder="Sort by" className="text-black" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="name">Name (A-Z)</SelectItem>
-                    <SelectItem value="price-low">Price (Low to High)</SelectItem>
-                    <SelectItem value="price-high">Price (High to Low)</SelectItem>
-                    <SelectItem value="rating">Highest Rated</SelectItem>
-                    <SelectItem value="reviews">Most Reviews</SelectItem>
-                    <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="name" className="text-black">Name (A-Z)</SelectItem>
+                    <SelectItem value="price-low" className="text-black">Price (Low to High)</SelectItem>
+                    <SelectItem value="price-high" className="text-black">Price (High to Low)</SelectItem>
+                    <SelectItem value="rating" className="text-black">Highest Rated</SelectItem>
+                    <SelectItem value="reviews" className="text-black">Most Reviews</SelectItem>
+                    <SelectItem value="newest" className="text-black">Newest First</SelectItem>
                   </SelectContent>
                 </Select>
 
                 {/* View Mode */}
-                <div className="flex rounded-lg border border-gray-200 overflow-hidden flex-shrink-0">
+                <div className="flex rounded-lg border border-gray-200 overflow-hidden flex-shrink-0 bg-white">
                   <Button
                     variant={viewMode === 'grid' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setViewMode('grid')}
                     className={cn(
                       "rounded-none h-10 sm:h-11 px-3 sm:px-4",
-                      viewMode === 'grid' && "bg-[#26732d] text-white hover:bg-[#1f5d26]"
+                      viewMode === 'grid' ? "bg-[#26732d] text-white hover:bg-[#1f5d26]" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                     )}
                     data-testid="button-view-grid"
                   >
@@ -377,7 +377,7 @@ export default function ProductsPage() {
                     onClick={() => setViewMode('list')}
                     className={cn(
                       "rounded-none h-10 sm:h-11 px-3 sm:px-4",
-                      viewMode === 'list' && "bg-[#26732d] text-white hover:bg-[#1f5d26]"
+                      viewMode === 'list' ? "bg-[#26732d] text-white hover:bg-[#1f5d26]" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                     )}
                     data-testid="button-view-list"
                   >
