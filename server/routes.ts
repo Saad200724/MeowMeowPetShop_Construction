@@ -1302,6 +1302,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all announcements for admin (including inactive)
+  app.get("/api/admin/announcements", async (req, res) => {
+    try {
+      const announcements = await Announcement.find({})
+        .sort({ priority: -1, createdAt: -1 });
+      res.json(announcements);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch announcements" });
+    }
+  });
+
 
   app.post("/api/announcements", async (req, res) => {
     try {

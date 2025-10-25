@@ -178,7 +178,7 @@ export default function AdminPage() {
   });
 
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery({
-    queryKey: ['/api/announcements'],
+    queryKey: ['/api/admin/announcements'],
     enabled: !!user && user.role === 'admin',
   });
 
@@ -343,7 +343,7 @@ export default function AdminPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/announcements'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
       announcementForm.reset();
       setShowAnnouncementDialog(false);
       toast({
@@ -371,7 +371,7 @@ export default function AdminPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/announcements'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
       announcementForm.reset();
       setEditingAnnouncement(null);
       setShowAnnouncementDialog(false);
@@ -398,7 +398,7 @@ export default function AdminPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/announcements'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
       toast({
         title: 'Success',
         description: 'Announcement deleted successfully',
