@@ -458,15 +458,18 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+            <Card 
+              className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]"
+              onClick={() => window.location.href = 'tel:+8801405045023'}
+            >
               <CardContent className="p-3 lg:p-6 text-center">
                 <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-emerald-400 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Phone className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
                 <h3 className="font-bold text-gray-900 mb-1 lg:mb-2 text-xs lg:text-lg">Call Us</h3>
-                <a href="tel:+8801405045023" className="text-gray-600 text-[10px] lg:text-sm hover:text-emerald-600 transition-colors">
+                <p className="text-gray-600 text-[10px] lg:text-sm">
                   +880 1405-045023
-                </a>
+                </p>
                 <p className="text-gray-500 text-[9px] lg:text-xs">Daily 10 AM - 10 PM</p>
               </CardContent>
             </Card>
