@@ -447,7 +447,10 @@ export default function ContactPage() {
 
           {/* Quick Action Cards */}
           <div className="grid grid-cols-3 gap-3 lg:gap-6 mt-4 sm:mt-6 lg:mt-8">
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+            <Card 
+              className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]"
+              onClick={() => window.open('https://www.google.com/maps/dir//Meow+Meow+Pet+shop,+Pakiza+Bus+Stand,+Chapra+Mosjid+Road,+Bank+Colony,+Savar,+Dhaka,+Bangladesh/@23.842804,90.254905,17z', '_blank')}
+            >
               <CardContent className="p-3 lg:p-6 text-center">
                 <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <MapPin className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
@@ -474,7 +477,10 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+            <Card 
+              className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]"
+              onClick={() => window.open('https://m.me/meow.meow.pet.shop1', '_blank')}
+            >
               <CardContent className="p-3 lg:p-6 text-center">
                 <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <MessageCircle className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
