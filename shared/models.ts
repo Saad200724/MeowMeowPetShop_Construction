@@ -375,6 +375,38 @@ const paymentWebhookSchema = new Schema<IPaymentWebhook>({
   errorMessage: String,
 }, { timestamps: true });
 
+// Banner Schema (Home Screen Banners)
+export interface IBanner extends Document {
+  imageUrl: string;
+  title?: string;
+  order: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const bannerSchema = new Schema<IBanner>({
+  imageUrl: { type: String, required: true },
+  title: String,
+  order: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });
+
+// Popup Poster Schema
+export interface IPopupPoster extends Document {
+  imageUrl: string;
+  title?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const popupPosterSchema = new Schema<IPopupPoster>({
+  imageUrl: { type: String, required: true },
+  title: String,
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });
+
 // Export Models
 export const User = mongoose.model<IUser>('User', userSchema);
 export const Category = mongoose.model<ICategory>('Category', categorySchema);
@@ -388,6 +420,8 @@ export const Invoice = mongoose.model<IInvoice>('Invoice', invoiceSchema);
 export const Coupon = mongoose.model<ICoupon>('Coupon', couponSchema);
 export const PaymentTransaction = mongoose.model<IPaymentTransaction>('PaymentTransaction', paymentTransactionSchema);
 export const PaymentWebhook = mongoose.model<IPaymentWebhook>('PaymentWebhook', paymentWebhookSchema);
+export const Banner = mongoose.model<IBanner>('Banner', bannerSchema);
+export const PopupPoster = mongoose.model<IPopupPoster>('PopupPoster', popupPosterSchema);
 
 // Export types for compatibility with existing code
 export type UserType = IUser;
@@ -403,3 +437,5 @@ export type InvoiceType = IInvoice;
 export type CouponType = ICoupon;
 export type PaymentTransactionType = IPaymentTransaction;
 export type PaymentWebhookType = IPaymentWebhook;
+export type BannerType = IBanner;
+export type PopupPosterType = IPopupPoster;

@@ -1,5 +1,5 @@
-import { User, Category, Brand, Product, BlogPost, Order } from "@shared/models";
-import type { IUser, ICategory, IBrand, IProduct, IBlogPost } from "@shared/models";
+import { User, Category, Brand, Product, BlogPost, Order, Banner, PopupPoster } from "@shared/models";
+import type { IUser, ICategory, IBrand, IProduct, IBlogPost, IBanner, IPopupPoster } from "@shared/models";
 import { nanoid } from "nanoid";
 
 // Simple storage for the pet shop
@@ -72,6 +72,16 @@ export interface IStorage {
   createBlogPost(blogPost: InsertBlogPost): Promise<IBlogPost>;
   updateBlogPost(id: string, blogPost: Partial<InsertBlogPost>): Promise<IBlogPost | undefined>;
   deleteBlogPost(id: string): Promise<boolean>;
+  getBanners(): Promise<IBanner[]>;
+  getActiveBanners(): Promise<IBanner[]>;
+  createBanner(bannerData: { imageUrl: string; title?: string; order?: number }): Promise<IBanner>;
+  updateBanner(id: string, bannerData: Partial<{ imageUrl: string; title?: string; order?: number; isActive: boolean }>): Promise<IBanner | undefined>;
+  deleteBanner(id: string): Promise<boolean>;
+  getPopupPosters(): Promise<IPopupPoster[]>;
+  getActivePopupPoster(): Promise<IPopupPoster | undefined>;
+  createPopupPoster(posterData: { imageUrl: string; title?: string }): Promise<IPopupPoster>;
+  updatePopupPoster(id: string, posterData: Partial<{ imageUrl: string; title?: string; isActive: boolean }>): Promise<IPopupPoster | undefined>;
+  deletePopupPoster(id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -428,6 +438,134 @@ export class DatabaseStorage implements IStorage {
       return !!result;
     } catch (error) {
       console.error('Error deleting blog post:', error);
+      return false;
+    }
+  }
+
+  async getBanners(): Promise<IBanner[]> {
+    try {
+      const banners = await Banner.find().sort({ order: 1, createdAt: -1 });
+      return banners;
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      return [];
+    }
+  }
+
+  async getActiveBanners(): Promise<IBanner[]> {
+    try {
+      const banners = await Banner.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).limit(3);
+      return banners;
+    } catch (error) {
+      console.error('Error fetching active banners:', error);
+      return [];
+    }
+  }
+
+  async createBanner(bannerData: { imageUrl: string; title?: string; order?: number }): Promise<IBanner> {
+    try {
+      const activeBannerCount = await Banner.countDocuments({ isActive: true });
+      const newBanner = new Banner({
+        ...bannerData,
+        isActive: activeBannerCount < 3,
+        order: bannerData.order ?? 0,
+      });
+      await newBanner.save();
+      return newBanner;
+    } catch (error) {
+      console.error('Error creating banner:', error);
+      throw error;
+    }
+  }
+
+  async updateBanner(id: string, bannerData: Partial<{ imageUrl: string; title?: string; order?: number; isActive: boolean }>): Promise<IBanner | undefined> {
+    try {
+      if (bannerData.isActive) {
+        const activeBannerCount = await Banner.countDocuments({ isActive: true, _id: { $ne: id } });
+        if (activeBannerCount >= 3) {
+          throw new Error('Maximum 3 banners can be active at once');
+        }
+      }
+      const updatedBanner = await Banner.findByIdAndUpdate(
+        id,
+        { ...bannerData, updatedAt: new Date() },
+        { new: true }
+      );
+      return updatedBanner || undefined;
+    } catch (error) {
+      console.error('Error updating banner:', error);
+      throw error;
+    }
+  }
+
+  async deleteBanner(id: string): Promise<boolean> {
+    try {
+      const result = await Banner.findByIdAndDelete(id);
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting banner:', error);
+      return false;
+    }
+  }
+
+  async getPopupPosters(): Promise<IPopupPoster[]> {
+    try {
+      const posters = await PopupPoster.find().sort({ createdAt: -1 });
+      return posters;
+    } catch (error) {
+      console.error('Error fetching popup posters:', error);
+      return [];
+    }
+  }
+
+  async getActivePopupPoster(): Promise<IPopupPoster | undefined> {
+    try {
+      const poster = await PopupPoster.findOne({ isActive: true }).sort({ createdAt: -1 });
+      return poster || undefined;
+    } catch (error) {
+      console.error('Error fetching active popup poster:', error);
+      return undefined;
+    }
+  }
+
+  async createPopupPoster(posterData: { imageUrl: string; title?: string }): Promise<IPopupPoster> {
+    try {
+      await PopupPoster.updateMany({}, { isActive: false });
+      const newPoster = new PopupPoster({
+        ...posterData,
+        isActive: true,
+      });
+      await newPoster.save();
+      return newPoster;
+    } catch (error) {
+      console.error('Error creating popup poster:', error);
+      throw error;
+    }
+  }
+
+  async updatePopupPoster(id: string, posterData: Partial<{ imageUrl: string; title?: string; isActive: boolean }>): Promise<IPopupPoster | undefined> {
+    try {
+      if (posterData.isActive) {
+        await PopupPoster.updateMany({ _id: { $ne: id } }, { isActive: false });
+      }
+      const updatedPoster = await PopupPoster.findByIdAndUpdate(
+        id,
+        { ...posterData, updatedAt: new Date() },
+        { new: true }
+      );
+      return updatedPoster || undefined;
+    } catch (error) {
+      console.error('Error updating popup poster:', error);
+      throw error;
+    }
+  }
+
+  async deletePopupPoster(id: string): Promise<boolean> {
+    try {
+      const result = await PopupPoster.findByIdAndDelete(id);
+      return !!result;
+    } catch (error) {
+      console.error('Error deleting popup poster:', error);
       return false;
     }
   }

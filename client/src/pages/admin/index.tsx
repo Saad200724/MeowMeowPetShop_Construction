@@ -90,11 +90,24 @@ const couponFormSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+const bannerFormSchema = z.object({
+  imageUrl: z.string().url('Please enter a valid URL').min(1, 'Image URL is required'),
+  title: z.string().optional(),
+  order: z.number().min(0).optional(),
+});
+
+const popupPosterFormSchema = z.object({
+  imageUrl: z.string().url('Please enter a valid URL').min(1, 'Image URL is required'),
+  title: z.string().optional(),
+});
+
 type ProductFormData = z.infer<typeof productFormSchema>;
 type RepackFormData = z.infer<typeof repackFormSchema>;
 type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
 type BlogFormData = z.infer<typeof blogFormSchema>;
 type CouponFormData = z.infer<typeof couponFormSchema>;
+type BannerFormData = z.infer<typeof bannerFormSchema>;
+type PopupPosterFormData = z.infer<typeof popupPosterFormSchema>;
 
 interface BlogPost {
   _id: string;
@@ -128,7 +141,24 @@ interface Coupon {
   updatedAt: Date;
 }
 
+interface Banner {
+  _id: string;
+  imageUrl: string;
+  title?: string;
+  order: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
+interface PopupPoster {
+  _id: string;
+  imageUrl: string;
+  title?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export default function AdminPage() {
   const { user, signOut, loading } = useAuth();
@@ -155,6 +185,12 @@ export default function AdminPage() {
   const [couponSearchTerm, setCouponSearchTerm] = useState('');
   const [orderSearchTerm, setOrderSearchTerm] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
+  const [showBannerDialog, setShowBannerDialog] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+  const [bannerImageSource, setBannerImageSource] = useState<'url' | 'upload'>('url');
+  const [showPopupDialog, setShowPopupDialog] = useState(false);
+  const [editingPopupPoster, setEditingPopupPoster] = useState<PopupPoster | null>(null);
+  const [popupImageSource, setPopupImageSource] = useState<'url' | 'upload'>('url');
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
@@ -194,6 +230,16 @@ export default function AdminPage() {
 
   const { data: orders = [], refetch: refetchOrders } = useQuery({
     queryKey: ['/api/orders'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  const { data: banners = [], refetch: refetchBanners } = useQuery({
+    queryKey: ['/api/banners'],
+    enabled: !!user && user.role === 'admin',
+  });
+
+  const { data: popupPosters = [], refetch: refetchPopupPosters } = useQuery({
+    queryKey: ['/api/popup-posters'],
     enabled: !!user && user.role === 'admin',
   });
 
@@ -252,6 +298,23 @@ export default function AdminPage() {
       validFrom: new Date(),
       validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
       isActive: true,
+    },
+  });
+
+  const bannerForm = useForm<BannerFormData>({
+    resolver: zodResolver(bannerFormSchema),
+    defaultValues: {
+      imageUrl: '',
+      title: '',
+      order: 0,
+    },
+  });
+
+  const popupPosterForm = useForm<PopupPosterFormData>({
+    resolver: zodResolver(popupPosterFormSchema),
+    defaultValues: {
+      imageUrl: '',
+      title: '',
     },
   });
 
@@ -991,7 +1054,7 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:grid-cols-6 bg-white border border-gray-200">
+          <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-7 bg-white border border-gray-200">
             <TabsTrigger value="orders" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
               <ShoppingCart className="w-4 h-4 mr-2" />
               Orders
@@ -1015,6 +1078,10 @@ export default function AdminPage() {
             <TabsTrigger value="blogs" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <BookOpen className="w-4 h-4 mr-2" />
               Blog Management
+            </TabsTrigger>
+            <TabsTrigger value="graphics" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
+              <ImageIcon className="w-4 h-4 mr-2" />
+              Graphics
             </TabsTrigger>
           </TabsList>
 
@@ -1925,8 +1992,492 @@ export default function AdminPage() {
               ))}
             </div>
           </TabsContent>
+
+          {/* Graphics Tab */}
+          <TabsContent value="graphics" className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Graphics Management</h2>
+              <p className="text-gray-600">Manage home banners and popup posters</p>
+            </div>
+
+            {/* Banner Management Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Home Banners (1200x400px)</CardTitle>
+                    <CardDescription>Maximum 3 active banners allowed</CardDescription>
+                  </div>
+                  <Button 
+                    onClick={() => {
+                      setEditingBanner(null);
+                      bannerForm.reset();
+                      setBannerImageSource('url');
+                      setShowBannerDialog(true);
+                    }}
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
+                    data-testid="button-add-banner"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Banner
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4">
+                  {banners.map((banner: Banner) => (
+                    <Card key={banner._id} className="overflow-hidden">
+                      <div className="flex items-center gap-4 p-4">
+                        <img 
+                          src={banner.imageUrl} 
+                          alt={banner.title || 'Banner'} 
+                          className="w-32 h-16 object-cover rounded"
+                          data-testid={`img-banner-${banner._id}`}
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-medium">{banner.title || 'Untitled Banner'}</h4>
+                          <p className="text-sm text-gray-500">Order: {banner.order}</p>
+                          <Badge variant={banner.isActive ? 'default' : 'secondary'} className="mt-1">
+                            {banner.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={async () => {
+                              try {
+                                await apiRequest(`/api/banners/${banner._id}`, {
+                                  method: 'PUT',
+                                  body: JSON.stringify({ isActive: !banner.isActive }),
+                                });
+                                refetchBanners();
+                                toast({
+                                  title: 'Success',
+                                  description: `Banner ${banner.isActive ? 'deactivated' : 'activated'} successfully`,
+                                });
+                              } catch (error: any) {
+                                toast({
+                                  title: 'Error',
+                                  description: error.message || 'Failed to update banner',
+                                  variant: 'destructive',
+                                });
+                              }
+                            }}
+                            data-testid={`button-toggle-banner-${banner._id}`}
+                          >
+                            {banner.isActive ? 'Deactivate' : 'Activate'}
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="text-red-600"
+                            onClick={async () => {
+                              if (confirm('Are you sure you want to delete this banner?')) {
+                                try {
+                                  await apiRequest(`/api/banners/${banner._id}`, {
+                                    method: 'DELETE',
+                                  });
+                                  refetchBanners();
+                                  toast({
+                                    title: 'Success',
+                                    description: 'Banner deleted successfully',
+                                  });
+                                } catch (error: any) {
+                                  toast({
+                                    title: 'Error',
+                                    description: error.message || 'Failed to delete banner',
+                                    variant: 'destructive',
+                                  });
+                                }
+                              }
+                            }}
+                            data-testid={`button-delete-banner-${banner._id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                  {banners.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No banners yet. Add your first banner to get started.
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Popup Poster Management Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Popup Poster</CardTitle>
+                    <CardDescription>Appears when loading the website (only one can be active)</CardDescription>
+                  </div>
+                  <Button 
+                    onClick={() => {
+                      setEditingPopupPoster(null);
+                      popupPosterForm.reset();
+                      setPopupImageSource('url');
+                      setShowPopupDialog(true);
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
+                    data-testid="button-add-popup"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Popup Poster
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4">
+                  {popupPosters.map((poster: PopupPoster) => (
+                    <Card key={poster._id} className="overflow-hidden">
+                      <div className="flex items-center gap-4 p-4">
+                        <img 
+                          src={poster.imageUrl} 
+                          alt={poster.title || 'Popup'} 
+                          className="w-32 h-32 object-cover rounded"
+                          data-testid={`img-popup-${poster._id}`}
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-medium">{poster.title || 'Untitled Popup'}</h4>
+                          <Badge variant={poster.isActive ? 'default' : 'secondary'} className="mt-1">
+                            {poster.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={async () => {
+                              try {
+                                await apiRequest(`/api/popup-posters/${poster._id}`, {
+                                  method: 'PUT',
+                                  body: JSON.stringify({ isActive: !poster.isActive }),
+                                });
+                                refetchPopupPosters();
+                                toast({
+                                  title: 'Success',
+                                  description: `Popup poster ${poster.isActive ? 'deactivated' : 'activated'} successfully`,
+                                });
+                              } catch (error: any) {
+                                toast({
+                                  title: 'Error',
+                                  description: error.message || 'Failed to update popup poster',
+                                  variant: 'destructive',
+                                });
+                              }
+                            }}
+                            data-testid={`button-toggle-popup-${poster._id}`}
+                          >
+                            {poster.isActive ? 'Deactivate' : 'Activate'}
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="text-red-600"
+                            onClick={async () => {
+                              if (confirm('Are you sure you want to delete this popup poster?')) {
+                                try {
+                                  await apiRequest(`/api/popup-posters/${poster._id}`, {
+                                    method: 'DELETE',
+                                  });
+                                  refetchPopupPosters();
+                                  toast({
+                                    title: 'Success',
+                                    description: 'Popup poster deleted successfully',
+                                  });
+                                } catch (error: any) {
+                                  toast({
+                                    title: 'Error',
+                                    description: error.message || 'Failed to delete popup poster',
+                                    variant: 'destructive',
+                                  });
+                                }
+                              }
+                            }}
+                            data-testid={`button-delete-popup-${poster._id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                  {popupPosters.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No popup posters yet. Add one to display when users visit your site.
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
+
+      {/* Banner Dialog */}
+      <Dialog open={showBannerDialog} onOpenChange={setShowBannerDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editingBanner ? 'Edit Banner' : 'Add New Banner'}</DialogTitle>
+            <DialogDescription>Banner resolution should be 1200x400 pixels for best results</DialogDescription>
+          </DialogHeader>
+          <Form {...bannerForm}>
+            <form onSubmit={bannerForm.handleSubmit(async (data) => {
+              try {
+                if (editingBanner) {
+                  await apiRequest(`/api/banners/${editingBanner._id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                  });
+                  toast({
+                    title: 'Success',
+                    description: 'Banner updated successfully',
+                  });
+                } else {
+                  await apiRequest('/api/banners', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                  });
+                  toast({
+                    title: 'Success',
+                    description: 'Banner created successfully',
+                  });
+                }
+                refetchBanners();
+                setShowBannerDialog(false);
+                bannerForm.reset();
+              } catch (error: any) {
+                toast({
+                  title: 'Error',
+                  description: error.message || 'Failed to save banner',
+                  variant: 'destructive',
+                });
+              }
+            })} className="space-y-4">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={bannerImageSource === 'url' ? 'default' : 'outline'}
+                  onClick={() => setBannerImageSource('url')}
+                  className="flex-1"
+                >
+                  URL
+                </Button>
+                <Button
+                  type="button"
+                  variant={bannerImageSource === 'upload' ? 'default' : 'outline'}
+                  onClick={() => setBannerImageSource('upload')}
+                  className="flex-1"
+                >
+                  Upload
+                </Button>
+              </div>
+
+              {bannerImageSource === 'url' ? (
+                <FormField
+                  control={bannerForm.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com/banner.jpg" {...field} data-testid="input-banner-url" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <FormField
+                  control={bannerForm.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Image</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={bannerForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Banner title" {...field} data-testid="input-banner-title" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={bannerForm.control}
+                name="order"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Display Order</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        {...field} 
+                        onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                        data-testid="input-banner-order"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowBannerDialog(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" data-testid="button-submit-banner">
+                  {editingBanner ? 'Update' : 'Create'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Popup Poster Dialog */}
+      <Dialog open={showPopupDialog} onOpenChange={setShowPopupDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editingPopupPoster ? 'Edit Popup Poster' : 'Add New Popup Poster'}</DialogTitle>
+            <DialogDescription>This poster will appear when users load your website</DialogDescription>
+          </DialogHeader>
+          <Form {...popupPosterForm}>
+            <form onSubmit={popupPosterForm.handleSubmit(async (data) => {
+              try {
+                if (editingPopupPoster) {
+                  await apiRequest(`/api/popup-posters/${editingPopupPoster._id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                  });
+                  toast({
+                    title: 'Success',
+                    description: 'Popup poster updated successfully',
+                  });
+                } else {
+                  await apiRequest('/api/popup-posters', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                  });
+                  toast({
+                    title: 'Success',
+                    description: 'Popup poster created successfully',
+                  });
+                }
+                refetchPopupPosters();
+                setShowPopupDialog(false);
+                popupPosterForm.reset();
+              } catch (error: any) {
+                toast({
+                  title: 'Error',
+                  description: error.message || 'Failed to save popup poster',
+                  variant: 'destructive',
+                });
+              }
+            })} className="space-y-4">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={popupImageSource === 'url' ? 'default' : 'outline'}
+                  onClick={() => setPopupImageSource('url')}
+                  className="flex-1"
+                >
+                  URL
+                </Button>
+                <Button
+                  type="button"
+                  variant={popupImageSource === 'upload' ? 'default' : 'outline'}
+                  onClick={() => setPopupImageSource('upload')}
+                  className="flex-1"
+                >
+                  Upload
+                </Button>
+              </div>
+
+              {popupImageSource === 'url' ? (
+                <FormField
+                  control={popupPosterForm.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com/poster.jpg" {...field} data-testid="input-popup-url" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <FormField
+                  control={popupPosterForm.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Image</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={popupPosterForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Popup title" {...field} data-testid="input-popup-title" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowPopupDialog(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" data-testid="button-submit-popup">
+                  {editingPopupPoster ? 'Update' : 'Create'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
       {/* Product Dialog */}
       <Dialog open={showProductDialog} onOpenChange={setShowProductDialog}>

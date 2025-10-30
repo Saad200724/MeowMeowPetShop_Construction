@@ -2060,6 +2060,175 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Banner API routes
+  app.get("/api/banners", async (req, res) => {
+    try {
+      const banners = await storage.getBanners();
+      res.json(banners);
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      res.status(500).json({ message: "Failed to fetch banners" });
+    }
+  });
+
+  app.get("/api/banners/active", async (req, res) => {
+    try {
+      const banners = await storage.getActiveBanners();
+      res.json(banners);
+    } catch (error) {
+      console.error('Error fetching active banners:', error);
+      res.status(500).json({ message: "Failed to fetch active banners" });
+    }
+  });
+
+  app.post("/api/banners", async (req, res) => {
+    try {
+      const bannerSchema = z.object({
+        imageUrl: z.string().url().min(1, 'Image URL is required'),
+        title: z.string().optional(),
+        order: z.number().optional()
+      });
+
+      const validatedData = bannerSchema.parse(req.body);
+      const newBanner = await storage.createBanner(validatedData);
+      res.json(newBanner);
+    } catch (error) {
+      console.error('Error creating banner:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create banner" });
+    }
+  });
+
+  app.put("/api/banners/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateSchema = z.object({
+        imageUrl: z.string().url().optional(),
+        title: z.string().optional(),
+        order: z.number().optional(),
+        isActive: z.boolean().optional()
+      });
+
+      const validatedData = updateSchema.parse(req.body);
+      const updatedBanner = await storage.updateBanner(id, validatedData);
+
+      if (!updatedBanner) {
+        return res.status(404).json({ message: "Banner not found" });
+      }
+
+      res.json(updatedBanner);
+    } catch (error) {
+      console.error('Error updating banner:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      if (error instanceof Error && error.message.includes('Maximum 3 banners')) {
+        return res.status(400).json({ message: error.message });
+      }
+      res.status(500).json({ message: "Failed to update banner" });
+    }
+  });
+
+  app.delete("/api/banners/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await storage.deleteBanner(id);
+
+      if (!deleted) {
+        return res.status(404).json({ message: "Banner not found" });
+      }
+
+      res.json({ message: "Banner deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting banner:', error);
+      res.status(500).json({ message: "Failed to delete banner" });
+    }
+  });
+
+  // Popup Poster API routes
+  app.get("/api/popup-posters", async (req, res) => {
+    try {
+      const posters = await storage.getPopupPosters();
+      res.json(posters);
+    } catch (error) {
+      console.error('Error fetching popup posters:', error);
+      res.status(500).json({ message: "Failed to fetch popup posters" });
+    }
+  });
+
+  app.get("/api/popup-posters/active", async (req, res) => {
+    try {
+      const poster = await storage.getActivePopupPoster();
+      res.json(poster || null);
+    } catch (error) {
+      console.error('Error fetching active popup poster:', error);
+      res.status(500).json({ message: "Failed to fetch active popup poster" });
+    }
+  });
+
+  app.post("/api/popup-posters", async (req, res) => {
+    try {
+      const posterSchema = z.object({
+        imageUrl: z.string().url().min(1, 'Image URL is required'),
+        title: z.string().optional()
+      });
+
+      const validatedData = posterSchema.parse(req.body);
+      const newPoster = await storage.createPopupPoster(validatedData);
+      res.json(newPoster);
+    } catch (error) {
+      console.error('Error creating popup poster:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create popup poster" });
+    }
+  });
+
+  app.put("/api/popup-posters/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateSchema = z.object({
+        imageUrl: z.string().url().optional(),
+        title: z.string().optional(),
+        isActive: z.boolean().optional()
+      });
+
+      const validatedData = updateSchema.parse(req.body);
+      const updatedPoster = await storage.updatePopupPoster(id, validatedData);
+
+      if (!updatedPoster) {
+        return res.status(404).json({ message: "Popup poster not found" });
+      }
+
+      res.json(updatedPoster);
+    } catch (error) {
+      console.error('Error updating popup poster:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update popup poster" });
+    }
+  });
+
+  app.delete("/api/popup-posters/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await storage.deletePopupPoster(id);
+
+      if (!deleted) {
+        return res.status(404).json({ message: "Popup poster not found" });
+      }
+
+      res.json({ message: "Popup poster deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting popup poster:', error);
+      res.status(500).json({ message: "Failed to delete popup poster" });
+    }
+  });
+
   // Coupon API routes
   app.get("/api/coupons", async (req, res) => {
     try {
