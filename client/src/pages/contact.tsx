@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { MapPin, Phone, Clock, Facebook, Instagram, MessageCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -85,30 +86,30 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12 px-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-4">Contact Us</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
             Get in touch with our friendly team
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
           {/* Contact Information */}
-          <div className="lg:col-span-1 space-y-4 md:space-y-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">Get In Touch</h2>
+          <div className="lg:col-span-1 space-y-3 sm:space-y-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6 px-1">Get In Touch</h2>
 
             {/* Store Address */}
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start space-x-3 md:space-x-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <MapPin className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3.5 sm:p-4 lg:p-6">
+                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1.5 md:mb-2 text-sm md:text-base">Store Address</h3>
-                    <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Store Address</h3>
+                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed break-words">
                       Pakiza Bus Stand, Chapra Mosjid Road<br />
                       Bank Colony, Savar, Dhaka
                     </p>
@@ -119,15 +120,17 @@ export default function ContactPage() {
 
             {/* Phone */}
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start space-x-3 md:space-x-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Phone className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3.5 sm:p-4 lg:p-6">
+                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Phone className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1.5 md:mb-2 text-sm md:text-base">Phone</h3>
-                    <p className="text-gray-600 text-xs md:text-sm">+880 1405-045023</p>
-                    <p className="text-gray-500 text-xs mt-1">Call us for orders and inquiries</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Phone</h3>
+                    <a href="tel:+8801405045023" className="text-gray-600 text-xs sm:text-sm hover:text-emerald-600 transition-colors">
+                      +880 1405-045023
+                    </a>
+                    <p className="text-gray-500 text-[11px] sm:text-xs mt-0.5 sm:mt-1">Call us for orders and inquiries</p>
                   </div>
                 </div>
               </CardContent>
@@ -135,19 +138,19 @@ export default function ContactPage() {
 
             {/* Facebook Messenger */}
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start space-x-3 md:space-x-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <MessageCircle className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3.5 sm:p-4 lg:p-6">
+                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-1.5 md:mb-2 text-sm md:text-base">Facebook Messenger</h3>
-                    <p className="text-gray-600 text-xs md:text-sm mb-2 md:mb-3">Meow.meow.pet.shop</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Facebook Messenger</h3>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-2.5 lg:mb-3 break-words">Meow.meow.pet.shop</p>
                     <Button
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md text-xs md:text-sm py-2"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md text-xs sm:text-sm py-2 sm:py-2.5 h-auto min-h-[44px] sm:min-h-0"
                       onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
                     >
-                      <MessageCircle className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" />
+                      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                       Message Us
                     </Button>
                   </div>
@@ -157,16 +160,16 @@ export default function ContactPage() {
 
             {/* Opening Hours */}
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start space-x-3 md:space-x-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Clock className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3.5 sm:p-4 lg:p-6">
+                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1.5 md:mb-2 text-sm md:text-base">Opening Hours</h3>
-                    <div className="text-gray-600 text-xs md:text-sm space-y-1">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Opening Hours</h3>
+                    <div className="text-gray-600 text-xs sm:text-sm space-y-0.5 sm:space-y-1">
                       <p>Every Day: 10:00 AM - 10:00 PM</p>
-                      <p className="text-gray-500 text-xs">We're always here for your pets!</p>
+                      <p className="text-gray-500 text-[11px] sm:text-xs">We're always here for your pets!</p>
                     </div>
                   </div>
                 </div>
@@ -174,28 +177,28 @@ export default function ContactPage() {
             </Card>
 
             {/* Follow Us */}
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3 md:mb-4 text-sm md:text-base">Follow Us</h3>
-              <div className="flex space-x-2.5 md:space-x-3">
+            <div className="px-1">
+              <h3 className="font-semibold text-gray-900 mb-2.5 sm:mb-3 lg:mb-4 text-sm sm:text-base">Follow Us</h3>
+              <div className="flex space-x-2.5 sm:space-x-3">
                 <a
                   href="https://facebook.com/meow.meow.pet.shop1"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 md:w-10 md:h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
+                  className="w-11 h-11 sm:w-10 sm:h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors active:scale-95"
                 >
-                  <Facebook size={18} className="md:w-5 md:h-5" />
+                  <Facebook size={20} className="sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="#"
-                  className="w-9 h-9 md:w-10 md:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors"
+                  className="w-11 h-11 sm:w-10 sm:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors active:scale-95"
                 >
-                  <Instagram size={18} className="md:w-5 md:h-5" />
+                  <Instagram size={20} className="sm:w-5 sm:h-5" />
                 </a>
                 <button
                   onClick={() => window.dispatchEvent(new CustomEvent('toggleChat'))}
-                  className="w-9 h-9 md:w-10 md:h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors"
+                  className="w-11 h-11 sm:w-10 sm:h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors active:scale-95"
                 >
-                  <MessageCircle size={18} className="md:w-5 md:h-5" />
+                  <MessageCircle size={20} className="sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>
@@ -204,35 +207,35 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-md">
-              <CardHeader className="p-4 md:p-6">
-                <CardTitle className="text-xl md:text-2xl font-bold text-gray-900">Send us a Message</CardTitle>
+              <CardHeader className="p-3.5 sm:p-4 lg:p-6">
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Send us a Message</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="p-3.5 sm:p-4 lg:p-6">
+                <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 lg:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                     <div>
-                      <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                         Your Name <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="text"
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="w-full text-sm md:text-base h-9 md:h-10"
+                        className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
                         placeholder="Enter your full name"
                         required
                         data-testid="input-contact-name"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                         Phone Number <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="w-full text-sm md:text-base h-9 md:h-10"
+                        className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
                         placeholder="01700-000000"
                         required
                         data-testid="input-contact-phone"
@@ -241,25 +244,25 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                       Email (Optional)
                     </label>
                     <Input
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full text-sm md:text-base h-9 md:h-10"
+                      className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
                       placeholder="your.email@example.com"
                       data-testid="input-contact-email"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                       Subject <span className="text-red-500">*</span>
                     </label>
                     <Select onValueChange={(value) => handleInputChange('subject', value)} required>
-                      <SelectTrigger className="w-full h-9 md:h-10 text-sm md:text-base" data-testid="select-contact-subject">
+                      <SelectTrigger className="w-full h-11 sm:h-10 text-sm sm:text-base touch-manipulation" data-testid="select-contact-subject">
                         <SelectValue placeholder="Select a subject" />
                       </SelectTrigger>
                       <SelectContent>
@@ -274,13 +277,13 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                       Message <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       value={formData.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
-                      className="w-full h-28 md:h-32 resize-none text-sm md:text-base"
+                      className="w-full h-32 sm:h-28 lg:h-32 resize-none text-sm sm:text-base touch-manipulation"
                       placeholder="Tell us how we can help you..."
                       required
                       data-testid="textarea-contact-message"
@@ -290,17 +293,17 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-2.5 md:py-3 text-sm md:text-lg font-medium"
+                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 sm:py-2.5 lg:py-3 text-sm sm:text-base lg:text-lg font-medium min-h-[48px] sm:min-h-0 touch-manipulation active:scale-[0.98] transition-transform"
                     data-testid="button-send-message"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         Sending...
                       </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5 mr-2" />
+                        <Send className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                         Send Message
                       </>
                     )}
@@ -312,10 +315,10 @@ export default function ContactPage() {
         </div>
 
         {/* Map Section */}
-        <div className="mt-8 md:mt-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6 md:mb-8">Find Our Store</h2>
+        <div className="mt-6 sm:mt-8 lg:mt-12">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 text-center mb-4 sm:mb-6 lg:mb-8 px-2">Find Our Store</h2>
           <Card className="border-0 shadow-md overflow-hidden">
-            <div className="h-64 md:h-96 bg-gray-200 relative">
+            <div className="h-56 sm:h-64 lg:h-96 bg-gray-200 relative">
               {/* Embedded Google Map */}
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d912.3297468964263!2d90.25490467115716!3d23.842804035630493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755eb2ecda85ab9%3A0x1aada17efba5882e!2sMeow%20Meow%20Pet%20shop!5e0!3m2!1sen!2sbd!4v1756620179156!5m2!1sen!2sbd"
@@ -330,48 +333,49 @@ export default function ContactPage() {
               
               {/* Directions Button */}
               <Button
-                className="absolute top-4 right-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 shadow-lg z-10"
-                size="sm"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 shadow-lg z-10 text-xs sm:text-sm h-9 sm:h-auto min-h-[44px] sm:min-h-0 px-3 sm:px-4 touch-manipulation active:scale-95"
                 onClick={() => window.open('https://www.google.com/maps/dir//Meow+Meow+Pet+shop,+Pakiza+Bus+Stand,+Chapra+Mosjid+Road,+Bank+Colony,+Savar,+Dhaka,+Bangladesh/@23.842804,90.254905,17z', '_blank')}
               >
-                <MapPin className="w-4 h-4 mr-2" />
+                <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                 Directions
               </Button>
             </div>
           </Card>
 
           {/* Quick Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
-              <CardContent className="p-4 md:p-6 text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MapPin className="w-8 h-8 md:w-10 md:h-10 text-white" strokeWidth={2.5} />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-6 mt-4 sm:mt-6 lg:mt-8">
+            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MapPin className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1.5 md:mb-2 text-base md:text-lg">Visit Our Store</h3>
-                <p className="text-gray-600 text-xs md:text-sm">Bank Colony, Savar</p>
-                <p className="text-gray-500 text-xs">Pakiza Bus Stand</p>
+                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Visit Our Store</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">Bank Colony, Savar</p>
+                <p className="text-gray-500 text-[11px] sm:text-xs">Pakiza Bus Stand</p>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
-              <CardContent className="p-4 md:p-6 text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-emerald-400 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="w-8 h-8 md:w-10 md:h-10 text-white" strokeWidth={2.5} />
+            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-emerald-400 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Phone className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1.5 md:mb-2 text-base md:text-lg">Call Us</h3>
-                <p className="text-gray-600 text-xs md:text-sm">+880 1405-045023</p>
-                <p className="text-gray-500 text-xs">Daily 10 AM - 10 PM</p>
+                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Call Us</h3>
+                <a href="tel:+8801405045023" className="text-gray-600 text-xs sm:text-sm hover:text-emerald-600 transition-colors">
+                  +880 1405-045023
+                </a>
+                <p className="text-gray-500 text-[11px] sm:text-xs">Daily 10 AM - 10 PM</p>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
-              <CardContent className="p-4 md:p-6 text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MessageCircle className="w-8 h-8 md:w-10 md:h-10 text-white" strokeWidth={2.5} />
+            <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
+              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1.5 md:mb-2 text-base md:text-lg">Message Us</h3>
-                <p className="text-gray-600 text-xs md:text-sm">Facebook Messenger</p>
-                <p className="text-gray-500 text-xs">Quick Response</p>
+                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Message Us</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">Facebook Messenger</p>
+                <p className="text-gray-500 text-[11px] sm:text-xs">Quick Response</p>
               </CardContent>
             </Card>
           </div>
