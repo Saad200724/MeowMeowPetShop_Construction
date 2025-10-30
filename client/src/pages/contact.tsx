@@ -95,7 +95,110 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
+        {/* Mobile: Contact Info Cards in Row */}
+        <div className="lg:hidden mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 px-1">Get In Touch</h2>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {/* Store Address */}
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-3">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                    <MapPin className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 text-xs">Store Address</h3>
+                  <p className="text-gray-600 text-[10px] leading-relaxed">
+                    Pakiza Bus Stand, Chapra Mosjid Road<br />
+                    Bank Colony, Savar, Dhaka
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Phone */}
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-3">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                    <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 text-xs">Phone</h3>
+                  <a href="tel:+8801405045023" className="text-gray-600 text-[10px] hover:text-emerald-600 transition-colors">
+                    +880 1405-045023
+                  </a>
+                  <p className="text-gray-500 text-[9px] mt-0.5">Call us for orders and inquiries</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Facebook Messenger */}
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-3">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                    <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 text-xs">Facebook Messenger</h3>
+                  <p className="text-gray-600 text-[10px] mb-2">Meow.meow.pet.shop</p>
+                  <Button
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md text-[10px] py-2 h-auto min-h-[36px]"
+                    onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
+                  >
+                    <MessageCircle className="w-3 h-3 mr-1" />
+                    Message Us
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Opening Hours */}
+            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-3">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                    <Clock className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 text-xs">Opening Hours</h3>
+                  <div className="text-gray-600 text-[10px] space-y-0.5">
+                    <p>Every Day: 10:00 AM - 10:00 PM</p>
+                    <p className="text-gray-500 text-[9px]">We're always here for your pets!</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Follow Us */}
+          <div className="mt-4 px-1">
+            <h3 className="font-semibold text-gray-900 mb-2.5 text-sm">Follow Us</h3>
+            <div className="flex space-x-2.5 justify-center">
+              <a
+                href="https://facebook.com/meow.meow.pet.shop1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-11 h-11 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors active:scale-95"
+              >
+                <Facebook size={20} />
+              </a>
+              <a
+                href="#"
+                className="w-11 h-11 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors active:scale-95"
+              >
+                <Instagram size={20} />
+              </a>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('toggleChat'))}
+                className="w-11 h-11 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors active:scale-95"
+              >
+                <MessageCircle size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop: Original Layout */}
+        <div className="hidden lg:grid lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-3 sm:space-y-4">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6 px-1">Get In Touch</h2>
@@ -343,39 +446,39 @@ export default function ContactPage() {
           </Card>
 
           {/* Quick Action Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-6 mt-4 sm:mt-6 lg:mt-8">
+          <div className="grid grid-cols-3 gap-3 lg:gap-6 mt-4 sm:mt-6 lg:mt-8">
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
-              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MapPin className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3 lg:p-6 text-center">
+                <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MapPin className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Visit Our Store</h3>
-                <p className="text-gray-600 text-xs sm:text-sm">Bank Colony, Savar</p>
-                <p className="text-gray-500 text-[11px] sm:text-xs">Pakiza Bus Stand</p>
+                <h3 className="font-bold text-gray-900 mb-1 lg:mb-2 text-xs lg:text-lg">Visit Our Store</h3>
+                <p className="text-gray-600 text-[10px] lg:text-sm">Bank Colony, Savar</p>
+                <p className="text-gray-500 text-[9px] lg:text-xs">Pakiza Bus Stand</p>
               </CardContent>
             </Card>
 
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
-              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-emerald-400 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3 lg:p-6 text-center">
+                <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-emerald-400 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Phone className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Call Us</h3>
-                <a href="tel:+8801405045023" className="text-gray-600 text-xs sm:text-sm hover:text-emerald-600 transition-colors">
+                <h3 className="font-bold text-gray-900 mb-1 lg:mb-2 text-xs lg:text-lg">Call Us</h3>
+                <a href="tel:+8801405045023" className="text-gray-600 text-[10px] lg:text-sm hover:text-emerald-600 transition-colors">
                   +880 1405-045023
                 </a>
-                <p className="text-gray-500 text-[11px] sm:text-xs">Daily 10 AM - 10 PM</p>
+                <p className="text-gray-500 text-[9px] lg:text-xs">Daily 10 AM - 10 PM</p>
               </CardContent>
             </Card>
 
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group active:scale-[0.98]">
-              <CardContent className="p-4 sm:p-4 lg:p-6 text-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
+              <CardContent className="p-3 lg:p-6 text-center">
+                <div className="w-12 h-12 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MessageCircle className="w-6 h-6 lg:w-10 lg:h-10 text-white" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base lg:text-lg">Message Us</h3>
-                <p className="text-gray-600 text-xs sm:text-sm">Facebook Messenger</p>
-                <p className="text-gray-500 text-[11px] sm:text-xs">Quick Response</p>
+                <h3 className="font-bold text-gray-900 mb-1 lg:mb-2 text-xs lg:text-lg">Message Us</h3>
+                <p className="text-gray-600 text-[10px] lg:text-sm">Facebook Messenger</p>
+                <p className="text-gray-500 text-[9px] lg:text-xs">Quick Response</p>
               </CardContent>
             </Card>
           </div>
