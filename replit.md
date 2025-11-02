@@ -105,3 +105,13 @@ The application follows a modern full-stack architecture with clear separation b
   - Line-clamp for long category names
   - Touch-friendly card sizes on mobile
 - **Section Background**: Gradient background (bg-gradient-to-b from-gray-50 to-white) for visual interest
+
+### November 2, 2025 - Critical Inventory Management Fix
+- **Stock Decrement Implementation**: Fixed critical bug where product stock was not decreasing after orders
+  - Implemented MongoDB transactions for atomic order processing
+  - All operations (order creation, stock decrement, coupon usage, invoice creation, cart clearing) wrapped in a single transaction
+  - Automatic rollback if any operation fails (prevents partial states and inventory inconsistencies)
+  - Atomic stock validation and decrement using `findOneAndUpdate` with `$gte` filter
+  - Race condition protection: ensures stock never goes negative even with concurrent orders
+  - Stock updates now immediately visible in both website and admin panel
+- **Transaction Flow**: Start → Create Order → Decrement Stock (atomic) → Increment Coupon → Create Invoice → Clear Cart → Commit (or Rollback on any failure)
