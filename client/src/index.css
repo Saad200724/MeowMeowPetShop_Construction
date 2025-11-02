@@ -91,14 +91,14 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
+/* Mobile & Tablet responsive adjustments - unified structure */
+@media (max-width: 1023px) {
   .responsive-container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
   
-  /* Ensure mobile content isn't hidden behind bottom nav */
+  /* Ensure mobile/tablet content isn't hidden behind bottom nav */
   .mobile-safe-bottom {
     padding-bottom: calc(70px + env(safe-area-inset-bottom));
   }
@@ -274,17 +274,17 @@ body {
     overflow: hidden;
   }
 
-  /* Responsive utilities */
+  /* Responsive utilities - Mobile & Tablet use same structure */
   .responsive-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6;
+    @apply grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4;
   }
 
   .categories-grid {
-    @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6;
+    @apply grid grid-cols-2 lg:grid-cols-5 gap-4;
   }
 
   .responsive-container {
-    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+    @apply container mx-auto px-4 lg:px-8;
   }
 
   /* Responsive sidebar utilities */

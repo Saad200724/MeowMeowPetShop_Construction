@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { MapPin, Phone, Clock, Facebook, Instagram, MessageCircle, Send } from 'lucide-react';
+import { MapPin, Phone, Clock, Facebook, Instagram, MessageCircle, Send, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -95,10 +94,10 @@ export default function ContactPage() {
           </p>
         </div>
 
-        {/* Mobile: Contact Info Cards in Row */}
-        <div className="lg:hidden mb-6">
+        {/* Mobile & Tablet: Stack Layout for Contact Info */}
+        <div className="lg:hidden space-y-4">
           <h2 className="text-lg font-bold text-gray-900 mb-4 px-1">Get In Touch</h2>
-          
+
           <div className="grid grid-cols-2 gap-3">
             {/* Store Address */}
             <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
@@ -162,7 +161,7 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-gray-900 mb-1 text-xs">Opening Hours</h3>
                   <div className="text-gray-600 text-[10px] space-y-0.5">
                     <p>Every Day: 10:00 AM - 10:00 PM</p>
-                    <p className="text-gray-500 text-[9px]">We're always here for your pets!</p>
+                    <p className="text-gray-500 text-[9px] mt-0.5">We're always here for your pets!</p>
                   </div>
                 </div>
               </CardContent>
@@ -433,7 +432,7 @@ export default function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Meow Meow Pet Shop Location - Pakiza Bus Stand, Savar, Dhaka"
               />
-              
+
               {/* Directions Button */}
               <Button
                 className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 shadow-lg z-10 text-xs sm:text-sm h-9 sm:h-auto min-h-[44px] sm:min-h-0 px-3 sm:px-4 touch-manipulation active:scale-95"
