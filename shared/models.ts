@@ -419,11 +419,11 @@ export interface IOTP extends Document {
 const otpSchema = new Schema<IOTP>({
   email: { type: String, required: true, index: true },
   code: { type: String, required: true },
-  expiresAt: { type: Date, required: true, index: true },
+  expiresAt: { type: Date, required: true },
   verified: { type: Boolean, default: false },
 }, { timestamps: true });
 
-// Create TTL index to automatically delete expired OTPs after 1 hour
+// Create TTL index to automatically delete expired OTPs
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 // Export Models
