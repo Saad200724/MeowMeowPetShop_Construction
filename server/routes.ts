@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook } from "@shared/models";
+import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook, OTP } from "@shared/models";
 import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
 import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
 import { z } from "zod";
@@ -10,31 +10,7 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
-// EmailJS handles email sending on the client side
-
-// In-memory OTP storage (in production, use Redis or database)
-interface OTPRecord {
-  code: string;
-  email: string;
-  expiresAt: number;
-  attempts: number;
-}
-
-const otpStore = new Map<string, OTPRecord>();
-
-// Clean up expired OTPs every minute
-setInterval(() => {
-  const now = Date.now();
-  Array.from(otpStore.entries()).forEach(([key, record]) => {
-    if (record.expiresAt < now) {
-      otpStore.delete(key);
-    }
-  });
-}, 60000);
-
-function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+import { generateOTP, sendOTPEmail } from "./email-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
@@ -1198,6 +1174,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Profile update error:", error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // OTP Routes
+  app.post("/api/auth/send-otp", async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!email || !z.string().email().safeParse(email).success) {
+        return res.status(400).json({ message: "Valid email is required" });
+      }
+
+      const code = generateOTP();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      await OTP.findOneAndDelete({ email });
+
+      const otpRecord = new OTP({
+        email,
+        code,
+        expiresAt,
+        verified: false,
+      });
+
+      await otpRecord.save();
+
+      const emailSent = await sendOTPEmail(email, code);
+
+      if (!emailSent) {
+        console.log(`OTP code for ${email}: ${code}`);
+        return res.json({
+          success: true,
+          message: "OTP generated (check server logs for code - email service not configured)",
+          devMode: true,
+          code: process.env.NODE_ENV === 'development' ? code : undefined
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "OTP sent successfully to your email",
+      });
+    } catch (error) {
+      console.error("Send OTP error:", error);
+      res.status(500).json({ message: "Failed to send OTP" });
+    }
+  });
+
+  app.post("/api/auth/verify-otp", async (req, res) => {
+    try {
+      const { email, code } = req.body;
+
+      if (!email || !code) {
+        return res.status(400).json({ message: "Email and code are required" });
+      }
+
+      const otpRecord = await OTP.findOne({ email, verified: false }).sort({ createdAt: -1 });
+
+      if (!otpRecord) {
+        return res.status(400).json({ message: "No OTP found for this email" });
+      }
+
+      if (otpRecord.expiresAt < new Date()) {
+        await OTP.deleteOne({ _id: otpRecord._id });
+        return res.status(400).json({ message: "OTP has expired. Please request a new one." });
+      }
+
+      if (otpRecord.code !== code) {
+        return res.status(400).json({ message: "Invalid OTP code" });
+      }
+
+      otpRecord.verified = true;
+      await otpRecord.save();
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const userResponse = {
+        id: user._id.toString(),
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        role: user.role,
+      };
+
+      res.json({
+        success: true,
+        message: "Email verified successfully",
+        user: userResponse,
+      });
+    } catch (error) {
+      console.error("Verify OTP error:", error);
+      res.status(500).json({ message: "Failed to verify OTP" });
     }
   });
 

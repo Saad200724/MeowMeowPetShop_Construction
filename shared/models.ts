@@ -407,6 +407,25 @@ const popupPosterSchema = new Schema<IPopupPoster>({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
+// OTP Schema
+export interface IOTP extends Document {
+  email: string;
+  code: string;
+  expiresAt: Date;
+  verified: boolean;
+  createdAt: Date;
+}
+
+const otpSchema = new Schema<IOTP>({
+  email: { type: String, required: true, index: true },
+  code: { type: String, required: true },
+  expiresAt: { type: Date, required: true, index: true },
+  verified: { type: Boolean, default: false },
+}, { timestamps: true });
+
+// Create TTL index to automatically delete expired OTPs after 1 hour
+otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
 // Export Models
 export const User = mongoose.model<IUser>('User', userSchema);
 export const Category = mongoose.model<ICategory>('Category', categorySchema);
@@ -422,6 +441,7 @@ export const PaymentTransaction = mongoose.model<IPaymentTransaction>('PaymentTr
 export const PaymentWebhook = mongoose.model<IPaymentWebhook>('PaymentWebhook', paymentWebhookSchema);
 export const Banner = mongoose.model<IBanner>('Banner', bannerSchema);
 export const PopupPoster = mongoose.model<IPopupPoster>('PopupPoster', popupPosterSchema);
+export const OTP = mongoose.model<IOTP>('OTP', otpSchema);
 
 // Export types for compatibility with existing code
 export type UserType = IUser;
@@ -439,3 +459,4 @@ export type PaymentTransactionType = IPaymentTransaction;
 export type PaymentWebhookType = IPaymentWebhook;
 export type BannerType = IBanner;
 export type PopupPosterType = IPopupPoster;
+export type OTPType = IOTP;

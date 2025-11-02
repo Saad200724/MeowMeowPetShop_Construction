@@ -16,6 +16,7 @@ import { connectDB } from "./mongodb";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { createAdminAccount } from "./admin-setup";
+import { initializeEmailService } from "./email-service";
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
@@ -54,6 +55,9 @@ app.use((req, res, next) => {
 (async () => {
   // Connect to MongoDB
   await connectDB();
+  
+  // Initialize email service (optional, will work without email config)
+  initializeEmailService();
   
   // Create admin account on server start
   await createAdminAccount();
