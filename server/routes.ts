@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import mongoose from "mongoose";
 import { storage } from "./storage";
 import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook, OTP } from "@shared/models";
 import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
@@ -1530,6 +1531,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Order API endpoints
   app.post("/api/orders", async (req, res) => {
+    // Start a MongoDB session for transaction support
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
       const {
         userId,
@@ -1543,10 +1548,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Validate required fields
       if (!items || !Array.isArray(items) || items.length === 0) {
+        await session.abortTransaction();
+        await session.endSession();
         return res.status(400).json({ message: "Order items are required" });
       }
 
       if (!customerInfo || !customerInfo.name || !customerInfo.phone || !customerInfo.email) {
+        await session.abortTransaction();
+        await session.endSession();
         return res.status(400).json({ message: "Customer information is required" });
       }
 
@@ -1557,16 +1566,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       for (const item of items) {
         try {
           // Fetch current product price from database
-          const product = await Product.findById(item.productId);
+          const product = await Product.findById(item.productId).session(session);
           if (!product) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: `Product ${item.productId} not found` });
           }
 
           if (!product.isActive) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: `Product ${product.name} is no longer available` });
           }
 
           if (product.stockQuantity < item.quantity) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
           }
 
@@ -1583,6 +1598,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         } catch (error) {
           console.error(`Error validating product ${item.productId}:`, error);
+          await session.abortTransaction();
+          await session.endSession();
           return res.status(400).json({ message: `Invalid product: ${item.productId}` });
         }
       }
@@ -1590,28 +1607,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // SERVER-SIDE SECURITY: Revalidate coupon and calculate discount
       let serverDiscount = 0;
       let validatedCouponCode = null;
+      let couponId = null;
 
       if (discountCode) {
         try {
           const coupon = await Coupon.findOne({ 
             code: discountCode.toUpperCase(),
             isActive: true
-          });
+          }).session(session);
 
           if (!coupon) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: "Invalid coupon code" });
           }
 
           const now = new Date();
           if (now < coupon.validFrom || now > coupon.validUntil) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: "Coupon has expired or is not yet valid" });
           }
 
           if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ message: "Coupon usage limit reached" });
           }
 
           if (coupon.minOrderAmount && serverSubtotal < coupon.minOrderAmount) {
+            await session.abortTransaction();
+            await session.endSession();
             return res.status(400).json({ 
               message: `Minimum order amount of ৳${coupon.minOrderAmount} required` 
             });
@@ -1628,17 +1654,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
 
           validatedCouponCode = coupon.code;
+          couponId = coupon._id;
 
-          // ATOMIC COUPON USAGE TRACKING: Increment usage count
-          await Coupon.findByIdAndUpdate(
-            coupon._id,
-            { $inc: { usedCount: 1 } },
-            { new: true }
-          );
-
-          console.log(`Coupon ${coupon.code} used. New usage count: ${coupon.usedCount + 1}`);
         } catch (error) {
           console.error('Error validating coupon:', error);
+          await session.abortTransaction();
+          await session.endSession();
           return res.status(400).json({ message: "Failed to validate coupon" });
         }
       }
@@ -1649,7 +1670,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate unique invoice number
       const invoiceNumber = `INV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Create order with server-computed values
+      // Create order with server-computed values (within transaction)
       const order = new Order({
         userId,
         status: 'Processing',
@@ -1662,9 +1683,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
         orderNotes
       });
 
-      await order.save();
+      await order.save({ session });
 
-      // Create invoice with server-computed values
+      // ATOMIC OPERATIONS WITHIN TRANSACTION
+      // 1. Decrement stock quantities - if any fail, entire transaction rolls back
+      for (const item of validatedItems) {
+        const result = await Product.findOneAndUpdate(
+          { 
+            _id: item.productId,
+            stockQuantity: { $gte: item.quantity } // Only update if stock >= ordered quantity
+          },
+          { $inc: { stockQuantity: -item.quantity } },
+          { new: true, session }
+        );
+        
+        if (!result) {
+          // Stock became insufficient (race condition caught)
+          console.error(`RACE CONDITION: Stock became insufficient for ${item.name} (ID: ${item.productId})`);
+          await session.abortTransaction();
+          await session.endSession();
+          return res.status(400).json({ 
+            message: `Order failed: ${item.name} is out of stock. Please try again.`
+          });
+        }
+        
+        console.log(`Stock decremented for ${item.name}: ${result.stockQuantity + item.quantity} → ${result.stockQuantity}`);
+      }
+
+      // 2. Increment coupon usage count (within transaction)
+      if (couponId) {
+        await Coupon.findByIdAndUpdate(
+          couponId,
+          { $inc: { usedCount: 1 } },
+          { new: true, session }
+        );
+        console.log(`Coupon ${validatedCouponCode} used (transaction)`);
+      }
+
+      // 3. Create invoice (within transaction)
       const invoice = new Invoice({
         invoiceNumber,
         orderId: order._id?.toString() || order.id,
@@ -1679,22 +1735,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         paymentStatus: order.paymentStatus
       });
 
-      await invoice.save();
+      await invoice.save({ session });
 
-      // Update order with invoice ID for easy reference
+      // 4. Update order with invoice ID (within transaction)
       order.invoiceId = invoice._id?.toString() || invoice.id;
-      await order.save();
+      await order.save({ session });
 
-      // Clear user's cart
+      // 5. Clear user's cart (within transaction)
       await Cart.findOneAndUpdate(
         { userId },
-        { items: [], total: 0 }
+        { items: [], total: 0 },
+        { session }
       );
 
-      console.log(`Order created: Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
+      // Commit transaction - all operations succeed atomically
+      await session.commitTransaction();
+      await session.endSession();
+
+      console.log(`✅ Order created successfully: Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
       res.json({ order, invoice });
+
     } catch (error) {
       console.error('Order creation error:', error);
+      
+      // Rollback all changes automatically
+      await session.abortTransaction();
+      await session.endSession();
+      
       res.status(500).json({ message: "Failed to create order" });
     }
   });
