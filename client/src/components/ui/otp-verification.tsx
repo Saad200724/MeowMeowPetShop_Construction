@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, RefreshCw } from 'lucide-react'
-import { sendOtp, verifyOtp } from '@/lib/supabase'
 import { useToast } from '@/hooks/use-toast'
 
 interface OtpVerificationProps {
@@ -46,12 +45,20 @@ export function OtpVerification({ email, isSignUp, onSuccess, onBack }: OtpVerif
     setError('')
 
     try {
-      const { data, error: verifyError } = await verifyOtp(email, otp)
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code: otp }),
+      })
 
-      if (verifyError) {
-        setError(verifyError.message)
-        setOtp('') // Clear the OTP field on error
-      } else if (data?.session) {
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || 'Verification failed. Please try again.')
+        setOtp('')
+      } else if (data.success && data.user) {
         toast({
           title: 'Success!',
           description: isSignUp ? 'Account created successfully!' : 'Signed in successfully!'
@@ -76,15 +83,31 @@ export function OtpVerification({ email, isSignUp, onSuccess, onBack }: OtpVerif
     setError('')
 
     try {
-      const { error: resendError } = await sendOtp(email, isSignUp)
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
 
-      if (resendError) {
-        setError(resendError.message)
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || 'Failed to resend code. Please try again.')
       } else {
-        toast({
-          title: 'Code sent!',
-          description: 'A new verification code has been sent to your email.'
-        })
+        if (data.devMode && data.code) {
+          toast({
+            title: 'Code sent!',
+            description: `Development Mode: Your verification code is ${data.code}`,
+            duration: 10000,
+          })
+        } else {
+          toast({
+            title: 'Code sent!',
+            description: 'A new verification code has been sent to your email.'
+          })
+        }
         startCooldown()
       }
     } catch (err) {

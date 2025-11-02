@@ -112,56 +112,43 @@ export default function SignUpPage() {
         return
       }
 
-      // If registration successful, send OTP for verification
-      console.log('Registration successful, sending OTP...')
-      const result = await sendOtp(formData.email, true) // true = isSignUp
+      // If registration successful, send OTP for verification using backend
+      console.log('Registration successful, sending OTP via backend...')
+      const otpResponse = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      })
+
+      const otpData = await otpResponse.json()
       
-      console.log('OTP send result:', result)
+      if (!otpResponse.ok) {
+        toast({
+          title: 'Verification Failed',
+          description: otpData.message || 'Failed to send verification code',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      console.log('OTP sent successfully:', otpData)
       
-      if (result.error) {
-        console.error('OTP send error:', result.error)
-        
-        // Check if it's a rate limit error - if so, use fallback authentication
-        if (result.error.code === 'over_email_send_rate_limit' || 
-            result.error.message?.includes('rate limit')) {
-          
-          // Complete registration without OTP verification
-          const authUser = {
-            id: Date.now().toString(),
-            username: formData.email,
-            email: formData.email,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            name: `${formData.firstName} ${formData.lastName}`,
-            role: 'user'
-          }
-          
-          localStorage.setItem('meow_meow_auth_user', JSON.stringify(authUser))
-          console.log('Registration completed using fallback authentication:', authUser)
-          
-          toast({
-            title: 'Account Created Successfully! 🎉',
-            description: 'Welcome to Meow Meow Pet Shop! You can start shopping now.',
-          })
-          
-          // Redirect to home page
-          window.location.href = '/'
-          return
-        } else {
-          toast({
-            title: 'Verification Failed',
-            description: result.error.message || 'Failed to send verification code',
-            variant: 'destructive',
-          })
-        }
+      if (otpData.devMode && otpData.code) {
+        toast({
+          title: 'Account Created! 🎉',
+          description: `Development Mode: Your verification code is ${otpData.code} (Check console logs)`,
+          duration: 10000,
+        })
       } else {
-        console.log('OTP sent successfully')
         toast({
           title: 'Account Created! 🎉',
           description: 'Please check your email for the verification code to complete signup.',
         })
-        setShowOtpVerification(true)
       }
+      
+      setShowOtpVerification(true)
     } catch (error) {
       console.error('Unexpected error during signup:', error)
       toast({
