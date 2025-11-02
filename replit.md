@@ -67,3 +67,23 @@ The application follows a modern full-stack architecture with clear separation b
 - **Authentication Service**: Supabase for user authentication (sign up, sign in, sign out, session persistence).
 - **Email Delivery**: Supabase configured with custom Gmail SMTP for sending OTP verification emails (no rate limits).
 - **OTP Flow**: Email-based one-time password authentication for both signup and signin.
+
+## Recent Changes
+
+### November 2, 2025 - Dashboard Improvements
+- **Fixed Data Accuracy**: Dashboard now displays real user statistics calculated from actual orders instead of hardcoded values
+  - Total spent calculated from all completed orders
+  - Order counts by status (delivered, pending, processing) are accurate
+  - Wishlist count loaded from localStorage
+  - Active coupons fetched from API
+- **Improved Mobile Responsiveness**: Enhanced grid layouts and card spacing for better mobile user experience
+  - Updated responsive breakpoints for better mobile layout
+  - Made order cards stack vertically on mobile with improved touch-friendly buttons
+  - Improved text sizing and spacing for mobile devices
+- **Added Empty States**: Users with no orders see helpful messaging and call-to-action to browse products
+- **Better Error Handling**: Gracefully handle missing API endpoints with fallbacks to prevent crashes
+
+### November 2, 2025 - OTP Email System Fixed
+- Reverted from custom backend OTP to Supabase OTP (which has custom Gmail SMTP configured)
+- OTP emails now successfully delivered to users' mailboxes via Supabase + Gmail SMTP
+- Fixed state management to properly merge statistics from multiple API calls

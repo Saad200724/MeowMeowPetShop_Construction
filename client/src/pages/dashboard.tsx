@@ -120,24 +120,29 @@ export default function DashboardPage() {
           setRecentOrders(formattedOrders)
 
           // Calculate real statistics from orders
-          const stats = formattedOrders.reduce((acc: UserStats, order: Order) => {
+          const orderStats = formattedOrders.reduce((acc: {
+            totalSpent: number;
+            deliveredOrders: number;
+            pendingOrders: number;
+            processingOrders: number;
+          }, order: Order) => {
             acc.totalSpent += order.total
             if (order.status === 'delivered') acc.deliveredOrders++
-            if (order.status === 'pending') acc.pendingOrders++
-            if (order.status === 'processing') acc.processingOrders++
+            else if (order.status === 'pending') acc.pendingOrders++
+            else if (order.status === 'processing') acc.processingOrders++
             return acc
           }, {
             totalSpent: 0,
-            walletBalance: 0,
-            wishlistCount: 0,
             deliveredOrders: 0,
             pendingOrders: 0,
             processingOrders: 0,
-            activeCoupons: 0,
-            requestedProducts: 0
           })
 
-          setUserStats(stats)
+          // Merge with existing stats to preserve wishlist/coupon counts
+          setUserStats(prev => ({
+            ...prev,
+            ...orderStats
+          }))
         })
         .catch(err => console.error('Failed to fetch orders:', err))
 
