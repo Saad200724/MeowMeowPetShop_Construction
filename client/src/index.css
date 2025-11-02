@@ -93,6 +93,18 @@
 
 /* Mobile & Tablet responsive adjustments - unified structure */
 @media (max-width: 1023px) {
+  /* Prevent horizontal overflow on tablet/mobile */
+  body, html {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
   .responsive-container {
     padding-left: 1rem;
     padding-right: 1rem;
