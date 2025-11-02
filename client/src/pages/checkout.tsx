@@ -373,20 +373,22 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header with logo and phone */}
-          <div className="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <img src="/logo.png" alt="Meow Meow Pet Shop" className="w-12 h-12" />
-              <div>
-                <h1 className="text-3xl font-bold text-[#26732d]">Checkout</h1>
-                <p className="text-gray-600">Complete your order</p>
+          {/* Header with logo and phone - Mobile Optimized */}
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-4 sm:mb-8">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <img src="/logo.png" alt="Meow Meow Pet Shop" className="w-10 h-10 sm:w-12 sm:h-12" />
+                <div>
+                  <h1 className="text-xl sm:text-3xl font-bold text-[#26732d]">Checkout</h1>
+                  <p className="text-xs sm:text-base text-gray-600 hidden sm:block">Complete your order</p>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <p className="text-lg font-semibold text-[#26732d]">📞 01405-045023</p>
-              <p className="text-sm text-gray-600">Customer Support</p>
+              <a href="tel:+8801405045023" className="flex flex-col items-end">
+                <p className="text-sm sm:text-lg font-semibold text-[#26732d]">📞 01405-045023</p>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Customer Support</p>
+              </a>
             </div>
           </div>
           
@@ -394,19 +396,19 @@ export default function CheckoutPage() {
             {/* Left Column - Forms */}
             <div className="lg:col-span-2 space-y-6">
               
-              {/* Login Section */}
+              {/* Login Section - Mobile Optimized */}
               {!user && (
                 <Card className="border-[#ffde59] border-2">
-                  <CardHeader className="bg-[#ffde59]/10">
-                    <div className="flex items-center justify-between">
+                  <CardHeader className="bg-[#ffde59]/10 p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <User className="h-5 w-5 text-[#26732d]" />
-                        <CardTitle className="text-lg text-[#26732d]">Already have an account?</CardTitle>
+                        <User className="h-5 w-5 text-[#26732d] flex-shrink-0" />
+                        <CardTitle className="text-base sm:text-lg text-[#26732d]">Already have an account?</CardTitle>
                       </div>
                       <Button 
                         variant="link" 
                         onClick={() => setShowLogin(!showLogin)}
-                        className="text-[#26732d] hover:text-[#1e5d26] font-medium"
+                        className="text-[#26732d] hover:text-[#1e5d26] font-medium text-sm sm:text-base p-0 h-auto justify-start sm:justify-center"
                       >
                         Click here to login
                         {showLogin ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
@@ -471,45 +473,45 @@ export default function CheckoutPage() {
 
               
 
-              {/* Customer Information */}
+              {/* Customer Information - Mobile Optimized */}
               <Card className="border-[#26732d]/30">
-                <CardHeader className="bg-[#26732d]/5">
+                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
                     <User className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-xl text-[#26732d]">Customer Information</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Customer Information</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
-                  <form className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <CardContent className="p-4 sm:pt-6 sm:px-6">
+                  <form className="space-y-3 sm:space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="customer-first-name" className="text-[#26732d] font-medium">First Name *</Label>
+                        <Label htmlFor="customer-first-name" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">First Name *</Label>
                         <Input
                           id="customer-first-name"
                           value={billingDetails.firstName}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, firstName: e.target.value }))}
                           placeholder="Enter your first name"
                           required
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-first-name"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="customer-last-name" className="text-[#26732d] font-medium">Last Name</Label>
+                        <Label htmlFor="customer-last-name" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Last Name</Label>
                         <Input
                           id="customer-last-name"
                           value={billingDetails.lastName}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, lastName: e.target.value }))}
                           placeholder="Enter your last name"
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-last-name"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="customer-phone" className="text-[#26732d] font-medium">Phone *</Label>
+                        <Label htmlFor="customer-phone" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Phone *</Label>
                         <Input
                           id="customer-phone"
                           type="tel"
@@ -517,19 +519,19 @@ export default function CheckoutPage() {
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))}
                           placeholder="Ex: 01XXXXXXXX"
                           required
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-phone"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="customer-alt-phone" className="text-[#26732d] font-medium">Alternative Phone</Label>
+                        <Label htmlFor="customer-alt-phone" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Alternative Phone</Label>
                         <Input
                           id="customer-alt-phone"
                           type="tel"
                           value={billingDetails.alternativePhone}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, alternativePhone: e.target.value }))}
                           placeholder="Ex: 01XXXXXXXX"
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-alternative-phone"
                         />
                       </div>
@@ -538,21 +540,21 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Select Location */}
+              {/* Select Location - Mobile Optimized */}
               <Card className="border-[#26732d]/30">
-                <CardHeader className="bg-[#26732d]/5">
+                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-xl text-[#26732d]">Select Location</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Select Location</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
-                  <form className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <CardContent className="p-4 sm:pt-6 sm:px-6">
+                  <form className="space-y-3 sm:space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="billing-division" className="text-[#26732d] font-medium">Division *</Label>
+                        <Label htmlFor="billing-division" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Division *</Label>
                         <select 
-                          className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                          className="w-full h-11 sm:h-auto p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white text-base"
                           value={billingDetails.division}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, division: e.target.value }))}
                           data-testid="select-division"
@@ -570,9 +572,9 @@ export default function CheckoutPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor="billing-district" className="text-[#26732d] font-medium">District *</Label>
+                        <Label htmlFor="billing-district" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">District *</Label>
                         <select 
-                          className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white"
+                          className="w-full h-11 sm:h-auto p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white text-base"
                           value={billingDetails.district}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value }))}
                           data-testid="select-district"
@@ -646,46 +648,46 @@ export default function CheckoutPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="billing-thana" className="text-[#26732d] font-medium">Thana/Upazilla</Label>
+                        <Label htmlFor="billing-thana" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Thana/Upazilla</Label>
                         <Input
                           id="billing-thana"
                           value={billingDetails.thanaUpazilla}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
                           placeholder="Enter your thana/upazilla"
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-thana"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="billing-postcode" className="text-[#26732d] font-medium">Post Code</Label>
+                        <Label htmlFor="billing-postcode" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Post Code</Label>
                         <Input
                           id="billing-postcode"
                           value={billingDetails.postCode}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, postCode: e.target.value }))}
                           placeholder="Enter post code"
-                          className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                           data-testid="input-postcode"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-address" className="text-[#26732d] font-medium">Full Address *</Label>
+                      <Label htmlFor="billing-address" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Full Address *</Label>
                       <Textarea
                         id="billing-address"
                         value={billingDetails.address}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))}
                         placeholder="Your full address"
-                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                        className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base min-h-[88px]"
                         rows={3}
                         data-testid="input-address"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium">Email *</Label>
+                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Email *</Label>
                       <Input
                         id="billing-email"
                         type="email"
@@ -693,7 +695,7 @@ export default function CheckoutPage() {
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="your.email@example.com"
                         required
-                        className="mt-1 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                        className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                         data-testid="input-email"
                       />
                     </div>
@@ -701,36 +703,36 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Order Notes */}
+              {/* Order Notes - Mobile Optimized */}
               <Card className="border-[#26732d]/30">
-                <CardHeader className="bg-[#26732d]/5">
+                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-xl text-[#26732d]">Order Notes</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Order Notes</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="p-4 sm:pt-6 sm:px-6">
                   <Textarea
                     placeholder="Notes about your order, e.g. special notes for delivery."
                     value={orderNotes}
                     onChange={(e) => setOrderNotes(e.target.value)}
-                    className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
+                    className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base min-h-[100px]"
                     rows={4}
                   />
                 </CardContent>
               </Card>
             </div>
 
-            {/* Right Column - Order Summary */}
-            <div className="space-y-6">
-              <Card className="border-[#26732d]/30 sticky top-4">
-                <CardHeader className="bg-[#26732d]/5">
+            {/* Right Column - Order Summary - Mobile Optimized */}
+            <div className="space-y-4 sm:space-y-6">
+              <Card className="border-[#26732d]/30 lg:sticky lg:top-4">
+                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
                     <ShoppingBag className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-xl text-[#26732d]">Order Overview</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Order Overview</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 space-y-4">
+                <CardContent className="p-4 sm:pt-6 sm:px-6 space-y-3 sm:space-y-4">
                   <div className="flex justify-between font-semibold border-b pb-3 text-[#26732d]">
                     <span>Product</span>
                     <span>Total</span>
@@ -845,37 +847,37 @@ export default function CheckoutPage() {
 
                   <Separator />
 
-                  {/* Payment Methods */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-[#26732d]">Payment Method</h4>
+                  {/* Payment Methods - Mobile Optimized */}
+                  <div className="space-y-3 sm:space-y-4">
+                    <h4 className="font-semibold text-[#26732d] text-base sm:text-lg">Payment Method</h4>
                     <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                      <div className="flex items-center space-x-3 p-4 border-2 border-[#ffde59] rounded-lg bg-[#ffde59]/10">
-                        <RadioGroupItem value="COD" id="cod" className="border-[#26732d] text-[#26732d]" />
-                        <Label htmlFor="cod" className="flex items-center cursor-pointer font-medium text-[#26732d]">
-                          <Truck className="mr-2 h-5 w-5" />
+                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border-2 border-[#ffde59] rounded-lg bg-[#ffde59]/10 min-h-[56px] sm:min-h-[60px]">
+                        <RadioGroupItem value="COD" id="cod" className="border-[#26732d] text-[#26732d] w-5 h-5" />
+                        <Label htmlFor="cod" className="flex items-center cursor-pointer font-medium text-[#26732d] text-sm sm:text-base flex-1">
+                          <Truck className="mr-2 h-5 w-5 flex-shrink-0" />
                           Cash On Delivery
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-3 p-4 border border-gray-300 rounded-lg">
-                        <RadioGroupItem value="Bkash" id="bkash" className="border-[#26732d] text-[#26732d]" />
-                        <Label htmlFor="bkash" className="flex items-center cursor-pointer font-medium text-[#26732d]">
+                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border border-gray-300 rounded-lg min-h-[56px] sm:min-h-[60px]">
+                        <RadioGroupItem value="Bkash" id="bkash" className="border-[#26732d] text-[#26732d] w-5 h-5" />
+                        <Label htmlFor="bkash" className="flex items-center cursor-pointer font-medium text-[#26732d] text-sm sm:text-base flex-1">
                           <img 
                             src="https://upload.wikimedia.org/wikipedia/en/thumb/6/68/BKash_logo.svg/250px-BKash_logo.svg.png" 
                             alt="Bkash" 
-                            className="mr-2 h-5 w-auto"
+                            className="mr-2 h-5 w-auto flex-shrink-0"
                           />
                           Bkash
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-3 p-4 border border-blue-300 rounded-lg bg-blue-50/30 min-h-[60px]">
-                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d] flex-shrink-0" />
-                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d] flex-wrap">
+                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border border-blue-300 rounded-lg bg-blue-50/30 min-h-[56px] sm:min-h-[60px]">
+                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d] w-5 h-5 flex-shrink-0" />
+                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d] flex-wrap flex-1">
                           <img 
                             src="https://rupantorpay.com/public/assets/img/logo.webp" 
                             alt="RupantorPay" 
                             className="mr-2 h-3 w-auto flex-shrink-0"
                           />
-                          <span className="text-sm">RupantorPay(Online Payment)</span>
+                          <span className="text-xs sm:text-sm">RupantorPay(Online Payment)</span>
                         </Label>
                       </div>
                     </RadioGroup>
@@ -883,14 +885,14 @@ export default function CheckoutPage() {
 
                   <Button 
                     onClick={handlePlaceOrder}
-                    className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold py-4 text-lg border-2 border-[#26732d] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold py-3.5 sm:py-4 text-base sm:text-lg border-2 border-[#26732d] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-h-[52px] sm:min-h-auto"
                     disabled={isProcessing || cartState.items.length === 0}
                     data-testid="button-place-order"
                   >
                     {isProcessing ? (
                       <div className="flex items-center justify-center">
                         <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
-                        Processing Order...
+                        <span className="text-sm sm:text-base">Processing Order...</span>
                       </div>
                     ) : (
                       'Place Order'
@@ -918,6 +920,9 @@ export default function CheckoutPage() {
       </div>
 
       <Footer />
+      
+      {/* Mobile bottom spacing for navigation */}
+      <div className="h-20 md:hidden" />
     </div>
   );
 }
