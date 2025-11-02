@@ -91,19 +91,19 @@ export default function DashboardPage() {
   }, [user, profileForm])
 
   const [userStats, setUserStats] = useState<UserStats>({
-    totalSpent: 1250.50,
+    totalSpent: 0,
     walletBalance: 0,
-    wishlistCount: 15,
-    deliveredOrders: 8,
-    pendingOrders: 2,
-    processingOrders: 1,
-    activeCoupons: 4,
+    wishlistCount: 0,
+    deliveredOrders: 0,
+    pendingOrders: 0,
+    processingOrders: 0,
+    activeCoupons: 0,
     requestedProducts: 0
   })
 
   const [recentOrders, setRecentOrders] = useState<Order[]>([])
 
-  // Fetch user orders and invoices
+  // Fetch user orders and calculate statistics
   useEffect(() => {
     if (user?.id) {
       // Fetch orders
@@ -118,42 +118,50 @@ export default function DashboardPage() {
             items: order.items || []
           }))
           setRecentOrders(formattedOrders)
+
+          // Calculate real statistics from orders
+          const stats = formattedOrders.reduce((acc: UserStats, order: Order) => {
+            acc.totalSpent += order.total
+            if (order.status === 'delivered') acc.deliveredOrders++
+            if (order.status === 'pending') acc.pendingOrders++
+            if (order.status === 'processing') acc.processingOrders++
+            return acc
+          }, {
+            totalSpent: 0,
+            walletBalance: 0,
+            wishlistCount: 0,
+            deliveredOrders: 0,
+            pendingOrders: 0,
+            processingOrders: 0,
+            activeCoupons: 0,
+            requestedProducts: 0
+          })
+
+          setUserStats(stats)
         })
         .catch(err => console.error('Failed to fetch orders:', err))
-    } else {
-      // Demo data for non-logged in users
-      setRecentOrders([
-        {
-          id: 'ORD-2025-001',
-          date: '2025-01-27',
-          status: 'delivered',
-          total: 89.99,
-          items: [
-            { name: 'Royal Canin Cat Food 2kg', quantity: 1, price: 45.99 },
-            { name: 'Cat Interactive Toy', quantity: 2, price: 22.00 }
-          ]
-        },
-        {
-          id: 'ORD-2025-002',
-          date: '2025-01-25',
-          status: 'processing',
-          total: 156.50,
-          items: [
-            { name: 'Premium Dog Food 5kg', quantity: 1, price: 78.50 },
-            { name: 'Dog Grooming Kit', quantity: 1, price: 78.00 }
-          ]
-        },
-        {
-          id: 'ORD-2025-003',
-          date: '2025-01-20',
-          status: 'pending',
-          total: 234.75,
-          items: [
-            { name: 'Cat Litter Premium 10kg', quantity: 2, price: 89.90 },
-            { name: 'Cat Tree Large', quantity: 1, price: 144.85 }
-          ]
-        }
-      ])
+
+      // Fetch wishlist count
+      fetch(`/api/wishlist/${user.id}`)
+        .then(res => res.json())
+        .then(wishlist => {
+          setUserStats(prev => ({
+            ...prev,
+            wishlistCount: Array.isArray(wishlist) ? wishlist.length : 0
+          }))
+        })
+        .catch(err => console.error('Failed to fetch wishlist:', err))
+
+      // Fetch active coupons (if you have a user coupons endpoint)
+      fetch(`/api/coupons/active`)
+        .then(res => res.json())
+        .then(coupons => {
+          setUserStats(prev => ({
+            ...prev,
+            activeCoupons: Array.isArray(coupons) ? coupons.length : 0
+          }))
+        })
+        .catch(err => console.error('Failed to fetch coupons:', err))
     }
   }, [user])
   
@@ -228,130 +236,143 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-1">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
-          <CardHeader className="pb-2 sm:pb-3">
-            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL SPENT</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">TOTAL SPENT</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl sm:text-3xl font-bold">${userStats.totalSpent.toFixed(2)}</div>
+            <div className="text-3xl font-bold">${userStats.totalSpent.toFixed(2)}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-r from-green-400 to-emerald-500 text-white">
-          <CardHeader className="pb-2 sm:pb-3">
-            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL WALLET</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">TOTAL WALLET</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl sm:text-3xl font-bold">{userStats.walletBalance}</div>
+            <div className="text-3xl font-bold">${userStats.walletBalance.toFixed(2)}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-r from-pink-400 to-rose-500 text-white">
-          <CardHeader className="pb-2 sm:pb-3">
-            <CardTitle className="text-xs sm:text-sm font-medium">TOTAL WISHLIST</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">TOTAL WISHLIST</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl sm:text-3xl font-bold">{userStats.wishlistCount}</div>
+            <div className="text-3xl font-bold">{userStats.wishlistCount}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Order Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-1">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <Card className="text-center">
-          <CardHeader className="pb-1 sm:pb-2">
-            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 mx-auto" />
-            <CardTitle className="text-xs sm:text-sm text-gray-600">DELIVERED ORDER</CardTitle>
+          <CardHeader className="pb-2">
+            <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-1" />
+            <CardTitle className="text-xs text-gray-600">DELIVERED</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{userStats.deliveredOrders}</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">{userStats.deliveredOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-1 sm:pb-2">
-            <Truck className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mx-auto" />
-            <CardTitle className="text-xs sm:text-sm text-gray-600">PENDING ORDER</CardTitle>
+          <CardHeader className="pb-2">
+            <Truck className="h-8 w-8 text-blue-600 mx-auto mb-1" />
+            <CardTitle className="text-xs text-gray-600">PENDING</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{userStats.pendingOrders}</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">{userStats.pendingOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-1 sm:pb-2">
-            <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-600 mx-auto" />
-            <CardTitle className="text-xs sm:text-sm text-gray-600">PROCESSING ORDER</CardTitle>
+          <CardHeader className="pb-2">
+            <Clock className="h-8 w-8 text-yellow-600 mx-auto mb-1" />
+            <CardTitle className="text-xs text-gray-600">PROCESSING</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{userStats.processingOrders}</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">{userStats.processingOrders}</div>
           </CardContent>
         </Card>
 
         <Card className="text-center">
-          <CardHeader className="pb-1 sm:pb-2">
-            <Gift className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 mx-auto" />
-            <CardTitle className="text-xs sm:text-sm text-gray-600">ACTIVE COUPON</CardTitle>
+          <CardHeader className="pb-2">
+            <Gift className="h-8 w-8 text-purple-600 mx-auto mb-1" />
+            <CardTitle className="text-xs text-gray-600">COUPONS</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{userStats.activeCoupons}</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">{userStats.activeCoupons}</div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="text-center">
-        <CardHeader className="pb-1 sm:pb-2">
-          <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600 mx-auto" />
-          <CardTitle className="text-xs sm:text-sm text-gray-600">REQUEST PRODUCT</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xl sm:text-2xl font-bold">{userStats.requestedProducts}</div>
-        </CardContent>
-      </Card>
+      {userStats.requestedProducts > 0 && (
+        <Card className="text-center">
+          <CardHeader className="pb-2">
+            <MessageCircle className="h-8 w-8 text-indigo-600 mx-auto mb-1" />
+            <CardTitle className="text-xs text-gray-600">REQUESTED PRODUCTS</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">{userStats.requestedProducts}</div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 
   const renderOrders = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">My Orders</h2>
-      <div className="space-y-4">
-        {recentOrders.map((order) => (
-          <Card key={order.id} className="p-4">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="font-semibold">{order.id}</h3>
-                <p className="text-sm text-gray-600">{new Date(order.date).toLocaleDateString()}</p>
-              </div>
-              <div className="text-right">
-                <Badge className={`${getStatusColor(order.status)} mb-2`}>
-                  <div className="flex items-center space-x-1">
-                    {getStatusIcon(order.status)}
-                    <span className="capitalize">{order.status}</span>
-                  </div>
-                </Badge>
-                <p className="font-bold">${order.total.toFixed(2)}</p>
-              </div>
-            </div>
-            <div className="space-y-2">
-              {order.items.map((item, index) => (
-                <div key={index} className="flex justify-between text-sm">
-                  <span>{item.name} x{item.quantity}</span>
-                  <span>${item.price.toFixed(2)}</span>
+    <div className="space-y-4 sm:space-y-6">
+      <h2 className="text-xl sm:text-2xl font-bold">My Orders</h2>
+      {recentOrders.length === 0 ? (
+        <Card className="p-8 text-center">
+          <Package className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-600">No orders yet</p>
+          <p className="text-sm text-gray-500 mt-1">Start shopping to see your orders here</p>
+          <Link href="/products">
+            <Button className="mt-4">Browse Products</Button>
+          </Link>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {recentOrders.map((order) => (
+            <Card key={order.id} className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm sm:text-base truncate">{order.id}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600">{new Date(order.date).toLocaleDateString()}</p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-4 flex space-x-2">
-              <Link href={`/invoice/${order.id}`}>
-                <Button variant="outline" size="sm">View Details</Button>
-              </Link>
-              <Link href={`/track-order/${order.id}`}>
-                <Button variant="outline" size="sm">Track Order</Button>
-              </Link>
-            </div>
-          </Card>
-        ))}
-      </div>
+                <div className="flex justify-between sm:block sm:text-right">
+                  <Badge className={`${getStatusColor(order.status)}`}>
+                    <div className="flex items-center space-x-1">
+                      {getStatusIcon(order.status)}
+                      <span className="capitalize text-xs">{order.status}</span>
+                    </div>
+                  </Badge>
+                  <p className="font-bold sm:mt-2">${order.total.toFixed(2)}</p>
+                </div>
+              </div>
+              <div className="space-y-1.5 mb-3">
+                {order.items.map((item, index) => (
+                  <div key={index} className="flex justify-between text-xs sm:text-sm">
+                    <span className="truncate mr-2">{item.name} x{item.quantity}</span>
+                    <span className="flex-shrink-0">${item.price.toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Link href={`/invoice/${order.id}`} className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full">View Details</Button>
+                </Link>
+                <Link href={`/track-order/${order.id}`} className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full">Track Order</Button>
+                </Link>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 
