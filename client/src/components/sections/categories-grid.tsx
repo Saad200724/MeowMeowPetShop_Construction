@@ -104,44 +104,55 @@ export default function CategoriesGrid() {
   ];
 
   return (
-    <section className="section-spacing bg-white">
+    <section className="section-spacing bg-gradient-to-b from-gray-50 to-white">
       <div className="responsive-container">
-        {/* Header */}
-        <div className="mb-8">
-          <h2 className="text-lg md:text-3xl font-bold text-center text-[#26732d] flex items-center justify-center gap-2 animate-fade-in">
-            <ShoppingBag size={20} className="text-[#26732d] md:w-8 md:h-8" />
-            SHOP BY CATEGORY
-          </h2>
+        {/* Header - Professional and Eye-catching */}
+        <div className="mb-6 md:mb-10">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center gap-2 mb-2">
+              <div className="h-1 w-8 bg-[#26732d] rounded-full"></div>
+              <ShoppingBag className="text-[#26732d] w-6 h-6 md:w-8 md:h-8" />
+              <div className="h-1 w-8 bg-[#26732d] rounded-full"></div>
+            </div>
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+              SHOP BY CATEGORY
+            </h2>
+            <p className="text-sm md:text-base text-gray-600 mt-2">
+              Browse our premium collection for your beloved pets
+            </p>
+          </div>
         </div>
 
-        {/* Categories Grid */}
-        {/* Mobile/Tablet view: Show first 9 categories in 3 columns (3 rows × 3 columns) */}
-        <div className="grid grid-cols-3 gap-4 md:hidden px-4">
+        {/* Categories Grid - Mobile/Tablet view */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 md:hidden px-2">
           {categories.slice(0, 9).map((category, index) => {
-            const IconComponent = category.icon;
             return (
               <Link
                 key={category.id}
                 href={`/products?subcategory=${category.id}`}
-                className="group cursor-pointer hover-lift animate-fade-in block"
+                className="group cursor-pointer block animate-fade-in"
                 style={
-                  { animationDelay: `${index * 0.1}s` } as React.CSSProperties
+                  { animationDelay: `${index * 0.05}s` } as React.CSSProperties
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden h-44 flex flex-col">
-                  <div className="relative overflow-hidden bg-gray-50 p-4 flex-1 flex items-center justify-center">
+                <div className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                  {/* Image Container with Professional Background */}
+                  <div className="relative bg-gradient-to-br from-gray-50 to-white p-4 flex items-center justify-center aspect-square overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 max-h-20"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm"
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {/* Subtle overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#26732d]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-3 text-center bg-white">
-                    <h3 className="text-sm font-bold text-gray-800 leading-tight">
+                  
+                  {/* Text Container - Enhanced for Readability */}
+                  <div className="px-2 py-3 text-center bg-white border-t border-gray-50">
+                    <h3 className="text-sm font-bold text-gray-900 leading-snug line-clamp-2 min-h-[2.5rem] flex items-center justify-center px-1">
                       {category.name}
                     </h3>
                   </div>
@@ -151,36 +162,39 @@ export default function CategoriesGrid() {
           })}
         </div>
 
-        {/* Desktop/Laptop view: Show all 10 categories */}
-        <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        {/* Desktop/Laptop view - All categories with enhanced design */}
+        <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-5 lg:gap-6">
           {categories.map((category, index) => {
-            const IconComponent = category.icon;
             return (
               <Link
                 key={category.id}
                 href={`/products?subcategory=${category.id}`}
-                className="group cursor-pointer hover-lift animate-fade-in block"
+                className="group cursor-pointer block animate-fade-in"
                 style={
-                  { animationDelay: `${index * 0.1}s` } as React.CSSProperties
+                  { animationDelay: `${index * 0.05}s` } as React.CSSProperties
                 }
                 data-testid={`link-category-${category.id}`}
               >
-                <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col">
-                  <div className="relative overflow-hidden bg-gray-50 rounded-t-xl p-4 h-32 sm:h-40 md:h-48 flex-shrink-0">
+                <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                  {/* Image Container */}
+                  <div className="relative bg-gradient-to-br from-gray-50 to-white p-6 flex items-center justify-center h-48 lg:h-56 overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {/* Hover Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#26732d]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="p-3 sm:p-4 text-center flex-grow flex flex-col justify-center min-h-[80px]">
-                    <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1 leading-tight">
+                  
+                  {/* Text Container - Professional Typography */}
+                  <div className="px-4 py-5 text-center bg-white border-t border-gray-50 flex-grow flex flex-col justify-center">
+                    <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-[#26732d] transition-colors duration-300">
                       {category.name}
                     </h3>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs lg:text-sm text-gray-600 font-medium">
                       {category.count}
                     </p>
                   </div>
