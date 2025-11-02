@@ -65,3 +65,5 @@ The application follows a modern full-stack architecture with clear separation b
 
 ### Authentication
 - **Authentication Service**: Supabase for user authentication (sign up, sign in, sign out, session persistence).
+- **Email Delivery**: Supabase configured with custom Gmail SMTP for sending OTP verification emails (no rate limits).
+- **OTP Flow**: Email-based one-time password authentication for both signup and signin.

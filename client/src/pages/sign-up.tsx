@@ -85,68 +85,22 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // First, register the user with password validation
-      console.log('Registering user...')
-      const registerResponse = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.email, // Use email as username
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          confirmPassword: formData.confirmPassword
-        }),
-      })
-
-      if (!registerResponse.ok) {
-        const errorData = await registerResponse.json()
+      // Send OTP using Supabase (which has custom SMTP configured)
+      const { data, error } = await sendOtp(formData.email, true)
+      
+      if (error) {
         toast({
-          title: 'Registration Failed',
-          description: errorData.message || 'Failed to create account',
+          title: 'Signup Failed',
+          description: error.message || 'Failed to send verification code',
           variant: 'destructive',
         })
         return
       }
 
-      // If registration successful, send OTP for verification using backend
-      console.log('Registration successful, sending OTP via backend...')
-      const otpResponse = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email }),
+      toast({
+        title: 'Verification Code Sent! 📧',
+        description: 'Please check your email for the verification code.',
       })
-
-      const otpData = await otpResponse.json()
-      
-      if (!otpResponse.ok) {
-        toast({
-          title: 'Verification Failed',
-          description: otpData.message || 'Failed to send verification code',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      console.log('OTP sent successfully:', otpData)
-      
-      if (otpData.devMode && otpData.code) {
-        toast({
-          title: 'Account Created! 🎉',
-          description: `Development Mode: Your verification code is ${otpData.code} (Check console logs)`,
-          duration: 10000,
-        })
-      } else {
-        toast({
-          title: 'Account Created! 🎉',
-          description: 'Please check your email for the verification code to complete signup.',
-        })
-      }
       
       setShowOtpVerification(true)
     } catch (error) {
