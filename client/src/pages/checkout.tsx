@@ -920,9 +920,6 @@ export default function CheckoutPage() {
       </div>
 
       <Footer />
-      
-      {/* Mobile bottom spacing for navigation */}
-      <div className="h-20 md:hidden" />
     </div>
   );
 }
