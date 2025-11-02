@@ -14,7 +14,7 @@ export function initializeEmailService() {
       return false;
     }
 
-    transporter = nodemailer.createTransporter({
+    transporter = nodemailer.createTransport({
       host: emailHost,
       port: parseInt(emailPort, 10),
       secure: parseInt(emailPort, 10) === 465,
