@@ -141,27 +141,37 @@ export default function DashboardPage() {
         })
         .catch(err => console.error('Failed to fetch orders:', err))
 
-      // Fetch wishlist count
-      fetch(`/api/wishlist/${user.id}`)
-        .then(res => res.json())
-        .then(wishlist => {
-          setUserStats(prev => ({
-            ...prev,
-            wishlistCount: Array.isArray(wishlist) ? wishlist.length : 0
-          }))
-        })
-        .catch(err => console.error('Failed to fetch wishlist:', err))
-
-      // Fetch active coupons (if you have a user coupons endpoint)
+      // Fetch active coupons
       fetch(`/api/coupons/active`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch coupons')
+          return res.json()
+        })
         .then(coupons => {
           setUserStats(prev => ({
             ...prev,
             activeCoupons: Array.isArray(coupons) ? coupons.length : 0
           }))
         })
-        .catch(err => console.error('Failed to fetch coupons:', err))
+        .catch(err => {
+          console.error('Failed to fetch coupons:', err)
+          // Set to 0 if fetch fails
+          setUserStats(prev => ({ ...prev, activeCoupons: 0 }))
+        })
+      
+      // Wishlist count from localStorage (if stored there)
+      try {
+        const wishlistData = localStorage.getItem('meow_meow_wishlist')
+        if (wishlistData) {
+          const wishlist = JSON.parse(wishlistData)
+          setUserStats(prev => ({
+            ...prev,
+            wishlistCount: Array.isArray(wishlist) ? wishlist.length : 0
+          }))
+        }
+      } catch (err) {
+        console.error('Failed to load wishlist from localStorage:', err)
+      }
     }
   }, [user])
   
