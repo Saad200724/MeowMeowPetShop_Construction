@@ -208,8 +208,8 @@ export default function Header() {
   return (
     <>
       {/* Top Announcement Bar - Thin for mobile */}
-      <div className="bg-[#38603d] text-white py-1 md:py-2 text-sm overflow-hidden relative w-full">
-        <div className="max-w-full mx-auto px-4">
+      <div className="bg-[#38603d] text-white py-1 md:py-2 text-sm overflow-hidden relative">
+        <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Mobile: Only announcement and social media */}
             <div className="md:hidden flex-1 flex justify-center items-center relative min-h-[20px] overflow-hidden">
@@ -280,7 +280,7 @@ export default function Header() {
 
       {/* Main Header - Mobile optimized */}
       <header className="bg-white shadow-md sticky top-0 z-[1000] border-b border-gray-200 transition-all duration-300 w-full">
-        <div className="max-w-full mx-auto px-4 py-3 md:py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between gap-3 md:gap-4">
             {/* Mobile: Hamburger + Logo + Cart */}
             <div className="md:hidden flex items-center justify-between w-full">
@@ -468,8 +468,8 @@ export default function Header() {
         </div>
 
         {/* Navigation Menu - Desktop only */}
-        <nav className="hidden md:block border-t border-gray-100 bg-gray-50 relative z-[100] w-full">
-          <div className="max-w-full mx-auto px-4 py-3">
+        <nav className="hidden md:block border-t border-gray-100 bg-gray-50 relative z-[100]">
+          <div className="container mx-auto px-4 py-3">
             <div className="flex items-center space-x-6 overflow-x-auto scrollbar-hide">
               {/* Categories Toggle */}
               <div className="flex-shrink-0">
