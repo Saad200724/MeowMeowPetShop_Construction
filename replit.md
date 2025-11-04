@@ -115,3 +115,22 @@ The application follows a modern full-stack architecture with clear separation b
   - Race condition protection: ensures stock never goes negative even with concurrent orders
   - Stock updates now immediately visible in both website and admin panel
 - **Transaction Flow**: Start → Create Order → Decrement Stock (atomic) → Increment Coupon → Create Invoice → Clear Cart → Commit (or Rollback on any failure)
+
+### November 4, 2025 - Multiple Product Images Feature
+- **Multiple Image Upload System**: Added ability to upload up to 3 images per product
+  - New backend endpoint `/api/upload/images` handles batch uploads with multer.array
+  - All images automatically converted to WebP format for optimal performance
+  - Created MultipleImageUpload component with drag-and-drop, URL input, and preview grid
+  - Image removal and reordering supported with visual feedback
+  - First image marked as "Main" product image
+- **Product Gallery Enhancement**: Updated product detail pages with interactive image gallery
+  - Main image display with zoom functionality preserved
+  - Thumbnail grid (4 columns) below main image for multi-image products
+  - Click thumbnails to switch main display
+  - Selected thumbnail highlighted with green border and ring
+  - Automatic reset to first image when navigating between products
+- **Admin Panel Integration**: Enhanced product creation/edit forms
+  - Main Product Image field for primary display image
+  - Additional Product Images field for up to 3 supplementary images
+  - Real-time preview of all uploaded images with removal buttons
+  - Validation: 5MB per file, image types only, max 3 images
