@@ -25,6 +25,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from '@/components/ui/image-upload';
+import { MultipleImageUpload } from '@/components/ui/multiple-image-upload';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
   Package, FileEdit, Plus, Trash2, ArrowLeft, Search, 
@@ -41,6 +42,7 @@ const productFormSchema = z.object({
   categoryId: z.string().min(1, 'Category is required'),
   brandId: z.string().min(1, 'Brand is required'),
   image: z.string().min(1, 'Image is required'),
+  images: z.array(z.string()).optional(),
   stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
   subcategory: z.string().optional(),
   isNew: z.boolean().optional(),
@@ -254,6 +256,7 @@ export default function AdminPage() {
       categoryId: '',
       brandId: '',
       image: '',
+      images: [],
       stockQuantity: 0,
       subcategory: 'none',
       isNew: false,
@@ -2689,13 +2692,36 @@ export default function AdminPage() {
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Image</FormLabel>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Main Product Image</FormLabel>
                     <FormControl>
                       <ImageUpload
                         value={field.value}
                         onChange={field.onChange}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="images"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">
+                      Additional Product Images (Up to 3)
+                    </FormLabel>
+                    <FormControl>
+                      <MultipleImageUpload
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        maxImages={3}
+                      />
+                    </FormControl>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Upload up to 3 additional images to showcase your product from different angles
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
