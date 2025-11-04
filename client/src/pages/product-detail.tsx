@@ -60,6 +60,8 @@ export default function ProductDetailPage() {
     queryKey: ['/api/products'],
   });
 
+  const productId = product?.id ?? product?._id;
+
   // Filter related products (exclude current product)
   const relatedProducts = allProducts.filter(p => {
     const currentProductId = product?.id ?? product?._id;
@@ -67,7 +69,11 @@ export default function ProductDetailPage() {
     return relatedProductId !== currentProductId;
   }).slice(0, 8);
 
-  const productId = product?.id ?? product?._id;
+  // Reset selected image when product changes
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [productId]);
+
   const isInCart = state.items.some((item) => item.id === productId);
   const isOutOfStock = product?.stockQuantity === 0 || product?.stockStatus === "Out of Stock";
 
@@ -268,6 +274,7 @@ export default function ProductDetailPage() {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Product Images */}
           <div className="space-y-4">
+            {/* Main Image */}
             <div 
               className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden cursor-zoom-in"
               onMouseEnter={() => setIsZoomed(true)}
@@ -275,21 +282,27 @@ export default function ProductDetailPage() {
               onMouseMove={handleImageMouseMove}
               data-testid="product-image-main"
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className={cn(
-                  "w-full h-full object-cover transition-transform duration-300",
-                  isZoomed && "scale-150"
-                )}
-                style={
-                  isZoomed
-                    ? {
-                        transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
-                      }
-                    : {}
-                }
-              />
+              {(() => {
+                const allImages = [product.image, ...(product.images || [])].filter(Boolean);
+                const currentImage = allImages[selectedImage] || product.image;
+                return (
+                  <img
+                    src={currentImage}
+                    alt={`${product.name} - Image ${selectedImage + 1}`}
+                    className={cn(
+                      "w-full h-full object-cover transition-transform duration-300",
+                      isZoomed && "scale-150"
+                    )}
+                    style={
+                      isZoomed
+                        ? {
+                            transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
+                          }
+                        : {}
+                    }
+                  />
+                );
+              })()}
               
               {/* Badges */}
               {hasDiscount && (
@@ -308,6 +321,35 @@ export default function ProductDetailPage() {
                 </Badge>
               )}
             </div>
+
+            {/* Thumbnail Images Gallery */}
+            {(() => {
+              const allImages = [product.image, ...(product.images || [])].filter(Boolean);
+              if (allImages.length > 1) {
+                return (
+                  <div className="grid grid-cols-4 gap-2">
+                    {allImages.map((img, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={cn(
+                          "relative aspect-square bg-gray-50 rounded-lg overflow-hidden border-2 transition-all hover:border-green-500",
+                          selectedImage === index ? "border-green-500 ring-2 ring-green-500 ring-offset-2" : "border-gray-200"
+                        )}
+                        data-testid={`thumbnail-${index}`}
+                      >
+                        <img
+                          src={img}
+                          alt={`${product.name} thumbnail ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </div>
 
           {/* Product Info */}
