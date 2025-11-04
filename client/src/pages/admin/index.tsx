@@ -874,6 +874,7 @@ export default function AdminPage() {
       categoryId: product.category || product.categoryId || '',
       brandId: product.brandId || '',
       image: product.image,
+      images: product.images || [],
       stockQuantity: product.stock || product.stockQuantity || 0,
       subcategory: product.subcategory || 'none',
       isNew: product.isNew || false,

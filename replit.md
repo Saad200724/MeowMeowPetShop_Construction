@@ -134,3 +134,8 @@ The application follows a modern full-stack architecture with clear separation b
   - Additional Product Images field for up to 3 supplementary images
   - Real-time preview of all uploaded images with removal buttons
   - Validation: 5MB per file, image types only, max 3 images
+- **MongoDB Integration Fix**: Fixed critical bug where images array wasn't being saved
+  - Added `images` field to product creation route (POST /api/products)
+  - Added `images` field to product update route (PUT /api/products/:id)
+  - Fixed form reset to include existing `images` array when editing products
+  - Images now properly persist to MongoDB and display in product detail pages
