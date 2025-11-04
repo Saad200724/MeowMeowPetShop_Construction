@@ -139,3 +139,32 @@ The application follows a modern full-stack architecture with clear separation b
   - Added `images` field to product update route (PUT /api/products/:id)
   - Fixed form reset to include existing `images` array when editing products
   - Images now properly persist to MongoDB and display in product detail pages
+
+### November 4, 2025 - Dynamic Banner & Popup Poster Management System
+- **Admin Panel Graphics Section**: Complete banner and popup poster management from admin panel
+  - Graphics tab in admin panel for managing all visual marketing content
+  - Upload, edit, delete, and toggle active/inactive status for banners and posters
+  - Image URL input with real-time preview
+  - Order management for banner display sequence
+- **Dynamic Home Page Banner Carousel**: Transformed static banner to dynamic carousel system
+  - Fetches active banners from `/api/banners/active` API endpoint
+  - Supports 1-3 banners with intelligent UI adaptation:
+    - Single banner: Clean display without navigation controls
+    - Multiple banners: Full carousel with auto-advance, arrows, and dot indicators
+  - Auto-advance every 5 seconds with smooth transitions
+  - Navigation arrows and clickable dot indicators for manual control
+  - Carousel state automatically resets when banner count changes (prevents blank display)
+  - Fallback to default banner image if no banners configured in database
+  - Loading skeleton during data fetch for better UX
+- **Popup Poster System**: Promotional posters appear on website load
+  - Fetches active popup from `/api/popup-posters/active` API endpoint
+  - Shows once per day per user (localStorage tracking)
+  - Appears 1 second after page load for better UX
+  - Fully dismissible with close button
+  - Only one popup can be active at a time (controlled by admin)
+  - Transparent modal design with shadow effects
+  - Integrated into main App component for global availability
+- **Backend API**: MongoDB-backed Banner and PopupPoster models with RESTful APIs
+  - Banner CRUD endpoints with 3-banner maximum validation
+  - PopupPoster CRUD endpoints with single-active-poster logic
+  - Order-based sorting for banner display sequence
