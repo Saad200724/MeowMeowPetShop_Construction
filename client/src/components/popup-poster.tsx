@@ -44,12 +44,19 @@ export default function PopupPoster() {
     localStorage.setItem('popup-poster-closed', new Date().toISOString());
   };
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      localStorage.setItem('popup-poster-closed', new Date().toISOString());
+    }
+  };
+
   if (!poster || !poster.isActive || hasClosedToday) {
     return null;
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
         className="max-w-4xl p-0 overflow-hidden border-none bg-transparent shadow-2xl"
         data-testid="popup-poster-dialog"

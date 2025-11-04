@@ -57,6 +57,7 @@ import { SidebarProvider } from "@/contexts/sidebar-context";
 import { ChatProvider } from "@/contexts/chat-context";
 import { FloatingCart } from "@/components/ui/floating-cart";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
+import PopupPoster from "@/components/popup-poster";
 
 function AppRoutes() {
   return (
@@ -126,6 +127,7 @@ function App() {
                 <div className="min-h-screen bg-white mobile-safe-bottom">
                   <AppRoutes />
                   <FloatingCart />
+                  <PopupPoster />
                   <Toaster />
                 </div>
               </SidebarProvider>
