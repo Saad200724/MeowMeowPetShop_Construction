@@ -85,6 +85,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Multiple images upload endpoint (up to 3 images)
+  app.post('/api/upload/images', upload.array('images', 3), async (req, res) => {
+    try {
+      const files = req.files as Express.Multer.File[];
+      
+      if (!files || files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
+      }
+
+      if (files.length > 3) {
+        return res.status(400).json({ message: 'Maximum 3 images allowed' });
+      }
+
+      const uploadedImages = [];
+
+      for (const file of files) {
+        // Generate unique filename with .webp extension
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const webpFilename = `${file.fieldname}-${uniqueSuffix}.webp`;
+        const outputPath = path.join(uploadDir, webpFilename);
+
+        // Convert image to WebP format using Sharp with optimized compression
+        await sharp(file.buffer)
+          .resize(800, 600, {
+            fit: 'inside',
+            withoutEnlargement: true
+          })
+          .webp({
+            quality: 75,
+            effort: 6,
+            lossless: false
+          })
+          .toFile(outputPath);
+
+        const imageUrl = `/api/uploads/${webpFilename}`;
+        uploadedImages.push(imageUrl);
+      }
+
+      res.json({
+        message: `${uploadedImages.length} image(s) uploaded successfully`,
+        imageUrls: uploadedImages,
+        count: uploadedImages.length
+      });
+    } catch (error) {
+      console.error('Multiple upload error:', error);
+      res.status(500).json({ message: 'Upload failed' });
+    }
+  });
+
   // Serve uploaded images with proper WebP headers
   app.get('/api/uploads/:filename', (req, res) => {
     const filename = req.params.filename;
