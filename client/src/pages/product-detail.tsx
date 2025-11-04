@@ -27,6 +27,7 @@ type DetailProduct = BaseProduct & {
   weight?: string;
   ingredients?: string[];
   features?: string[];
+  images?: string[];
 };
 
 export default function ProductDetailPage() {
