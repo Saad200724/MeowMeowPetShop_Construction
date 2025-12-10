@@ -21,6 +21,14 @@ export default function HeroBanner() {
   // Sort banners by order field to ensure correct sequence
   const banners = [...rawBanners].sort((a, b) => a.order - b.order);
 
+  // Debug: Log banners data
+  useEffect(() => {
+    if (banners.length > 0) {
+      console.log('Active banners loaded:', banners.length);
+      console.log('Banners:', banners.map(b => ({ title: b.title, order: b.order, url: b.imageUrl })));
+    }
+  }, [banners]);
+
   // Reset slide to 0 if current slide is out of bounds
   useEffect(() => {
     if (banners.length > 0 && currentSlide >= banners.length) {
@@ -51,8 +59,18 @@ export default function HeroBanner() {
     setCurrentSlide(index);
   };
 
+  if (isLoading) {
+    return (
+      <section className="hero-banner-wrapper">
+        <div className="hero-banner-content bg-gray-200 animate-pulse">
+          <div className="w-full h-[400px]" />
+        </div>
+      </section>
+    );
+  }
+
   // Show fallback banner if no banners in database
-  if (!isLoading && banners.length === 0) {
+  if (banners.length === 0) {
     return (
       <section className="hero-banner-wrapper">
         <div className="hero-banner-content">
@@ -71,26 +89,16 @@ export default function HeroBanner() {
     );
   }
 
-  if (isLoading) {
-    return (
-      <section className="hero-banner-wrapper">
-        <div className="hero-banner-content bg-gray-200 animate-pulse">
-          <div className="w-full h-[400px]" />
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="hero-banner-wrapper relative">
       <div className="hero-banner-content relative overflow-hidden">
         {/* Banner Images */}
-        <div className="relative">
+        <div className="relative w-full">
           {banners.map((banner, index) => (
             <div
               key={banner._id}
               className={`transition-opacity duration-500 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                index === currentSlide ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
               }`}
               data-testid={`banner-slide-${index}`}
             >
@@ -98,8 +106,11 @@ export default function HeroBanner() {
                 src={banner.imageUrl}
                 alt={banner.title || `Banner ${index + 1}`}
                 loading={index === 0 ? 'eager' : 'lazy'}
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover max-h-[600px]"
                 data-testid={`img-banner-${banner._id}`}
+                onError={(e) => {
+                  console.error('Failed to load banner:', banner.imageUrl);
+                }}
               />
             </div>
           ))}
