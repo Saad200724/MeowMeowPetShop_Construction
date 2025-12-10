@@ -15,7 +15,7 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 42921
+localPort = 35499
 externalPort = 3000
 
 [env]
@@ -65,3 +65,11 @@ args = "npm run dev"
 
 [agent]
 expertMode = true
+
+[userenv]
+
+[userenv.shared]
+MONGODB_URI = "mongodb+srv://saadbintofayeltahsin:Saad20985@meowmeowpetshop.ypghsvp.mongodb.net/?retryWrites=true&w=majority&appName=MeowMeowPetShop"
+VITE_SUPABASE_URL = "https://spddfbrwayehnghfywls.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwZGRmYnJ3YXllaG5naGZ5d2xzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5MDY4NzUsImV4cCI6MjA3MzQ4Mjg3NX0.dPwcH_zzR6atGOeStWhzr6b7p23UE51KTDWq3M95uYc"
+RUPANTORPAY_API_KEY = "ST6A4woCpVKLpNvyJx3t6ev6jrrX17TXv6lOlGZmA5BNAoeOyK"
