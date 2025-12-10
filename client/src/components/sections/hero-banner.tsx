@@ -118,40 +118,16 @@ export default function HeroBanner() {
           ))}
         </div>
 
-        {/* Navigation Arrows (always show if there are banners) */}
-        {banners.length > 0 && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/95 rounded-full shadow-lg"
-              onClick={prevSlide}
-              data-testid="button-banner-prev"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-800" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/95 rounded-full shadow-lg"
-              onClick={nextSlide}
-              data-testid="button-banner-next"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-800" />
-            </Button>
-          </>
-        )}
-
         {/* Dots Indicator (always show if there are banners) */}
         {banners.length > 0 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {banners.map((_, index) => (
               <button
                 key={index}
-                className={`w-3 h-3 rounded-full transition-all ${
+                className={`h-1 rounded-full transition-all ${
                   index === currentSlide
-                    ? 'bg-white w-8'
-                    : 'bg-white/60 hover:bg-white/80'
+                    ? 'bg-white w-6'
+                    : 'bg-white/60 hover:bg-white/80 w-1'
                 }`}
                 onClick={() => goToSlide(index)}
                 data-testid={`button-banner-dot-${index}`}
