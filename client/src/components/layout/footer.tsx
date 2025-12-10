@@ -52,12 +52,12 @@ export default function Footer() {
           <div className="min-w-0 lg:pl-2">
             <h4 className="font-bold text-meow-yellow mb-4">Policies</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Return Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Shipping Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Quality Guarantee</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Helpline</a></li>
+              <li><a href="/privacy-policy" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Privacy Policy</a></li>
+              <li><a href="/return-policy" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Return Policy</a></li>
+              <li><a href="/terms-of-service" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Terms of Service</a></li>
+              <li><a href="/shipping-policy" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Shipping Policy</a></li>
+              <li><a href="/quality-guarantee" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Quality Guarantee</a></li>
+              <li><a href="/contact" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Helpline</a></li>
             </ul>
           </div>
 

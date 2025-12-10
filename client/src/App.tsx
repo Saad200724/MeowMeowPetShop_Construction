@@ -47,6 +47,11 @@ import ProfilePage from "@/pages/profile";
 import MessengerPage from './pages/messenger';
 import ContactPage from "@/pages/contact";
 import AboutPage from "@/pages/about";
+import PrivacyPolicyPage from "@/pages/privacy-policy";
+import ReturnPolicyPage from "@/pages/return-policy";
+import TermsOfServicePage from "@/pages/terms-of-service";
+import ShippingPolicyPage from "@/pages/shipping-policy";
+import QualityGuaranteePage from "@/pages/quality-guarantee";
 import FlashSaleProductsPage from "@/pages/flash-sale-products";
 import BulkProductsPage from "@/pages/bulk-products";
 import NewlyLaunchedPage from "@/pages/newly-launched";
@@ -105,6 +110,11 @@ function AppRoutes() {
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/about" component={AboutPage} />
+        <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+        <Route path="/return-policy" component={ReturnPolicyPage} />
+        <Route path="/terms-of-service" component={TermsOfServicePage} />
+        <Route path="/shipping-policy" component={ShippingPolicyPage} />
+        <Route path="/quality-guarantee" component={QualityGuaranteePage} />
         <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
         <Route path="/bulk-products" component={BulkProductsPage} />
         <Route path="/newly-launched" component={NewlyLaunchedPage} />
