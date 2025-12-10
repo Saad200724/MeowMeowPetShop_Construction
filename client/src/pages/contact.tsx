@@ -181,7 +181,9 @@ export default function ContactPage() {
                 <Facebook size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/meow_meow_pet_shop"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-11 h-11 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors active:scale-95"
               >
                 <Instagram size={20} />
@@ -291,7 +293,9 @@ export default function ContactPage() {
                   <Facebook size={20} className="sm:w-5 sm:h-5" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/meow_meow_pet_shop"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-11 h-11 sm:w-10 sm:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors active:scale-95"
                 >
                   <Instagram size={20} className="sm:w-5 sm:h-5" />

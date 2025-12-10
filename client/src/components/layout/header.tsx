@@ -228,7 +228,7 @@ export default function Header() {
               <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition-colors p-1 rounded">
                 <Facebook size={12} />
               </a>
-              <a href="#" className="text-white hover:text-yellow-300 transition-colors p-1 rounded">
+              <a href="https://www.instagram.com/meow_meow_pet_shop" target="_blank" rel="noopener noreferrer" className="text-white hover:text-yellow-300 transition-colors p-1 rounded">
                 <Instagram size={12} />
               </a>
             </div>
@@ -269,7 +269,7 @@ export default function Header() {
                 <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
                   <Facebook size={14} />
                 </a>
-                <a href="#" className="text-white hover:text-black transition-colors p-1 rounded">
+                <a href="https://www.instagram.com/meow_meow_pet_shop" target="_blank" rel="noopener noreferrer" className="text-white hover:text-black transition-colors p-1 rounded">
                   <Instagram size={14} />
                 </a>
               </div>

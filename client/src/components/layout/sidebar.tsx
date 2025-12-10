@@ -125,17 +125,8 @@ export default function NavigationSidebar() {
                   <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
                     <Facebook size={16} className="text-gray-600" />
                   </a>
-                  <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                  <a href="https://www.instagram.com/meow_meow_pet_shop" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
                     <Instagram size={16} className="text-gray-600" />
-                  </a>
-                  <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                    <Twitter size={16} className="text-gray-600" />
-                  </a>
-                  <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                    <Youtube size={16} className="text-gray-600" />
-                  </a>
-                  <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                    <Linkedin size={16} className="text-gray-600" />
                   </a>
                 </div>
               </div>

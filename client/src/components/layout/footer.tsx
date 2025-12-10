@@ -26,13 +26,10 @@ export default function Footer() {
               <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-meow-yellow hover:text-yellow-300 transition-colors">
+              <a href="https://www.instagram.com/meow_meow_pet_shop" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-meow-yellow hover:text-yellow-300 transition-colors">
-                <Youtube size={20} />
-              </a>
-              <a href="https://wa.me/8801838511583" className="text-meow-yellow hover:text-yellow-300 transition-colors">
+              <a href="https://wa.me/8801838511583" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <MessageCircle size={20} />
               </a>
             </div>
