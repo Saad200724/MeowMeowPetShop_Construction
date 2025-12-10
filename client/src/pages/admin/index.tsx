@@ -309,7 +309,7 @@ export default function AdminPage() {
     defaultValues: {
       imageUrl: '',
       title: '',
-      order: 0,
+      order: 1,
     },
   });
 
@@ -2246,7 +2246,9 @@ export default function AdminPage() {
       <Dialog open={showBannerDialog} onOpenChange={setShowBannerDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editingBanner ? 'Edit Banner' : 'Add New Banner'}</DialogTitle>
+            <DialogTitle>
+              {editingBanner ? 'Edit Banner' : 'Add New Banner'}
+            </DialogTitle>
             <DialogDescription>Banner resolution should be 1200x400 pixels for best results</DialogDescription>
           </DialogHeader>
           <Form {...bannerForm}>
@@ -2320,14 +2322,19 @@ export default function AdminPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Display Order</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        {...field} 
-                        onChange={e => field.onChange(parseInt(e.target.value) || 0)}
-                        data-testid="input-banner-order"
-                      />
-                    </FormControl>
+                    <Select 
+                      value={field.value?.toString() || "1"} 
+                      onValueChange={(value) => field.onChange(parseInt(value) || 1)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Banner Order" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">Order 1</SelectItem>
+                        <SelectItem value="2">Order 2</SelectItem>
+                        <SelectItem value="3">Order 3</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

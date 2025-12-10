@@ -463,7 +463,7 @@ export class DatabaseStorage implements IStorage {
       console.error('Error getting active banners:', error);
       return [];
     }
-  },
+  }
 
   async createBanner(bannerData: { imageUrl: string; title?: string; order?: number }): Promise<IBanner> {
     try {
