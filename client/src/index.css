@@ -427,13 +427,11 @@ main {
   display: block;
 }
 
-/* Hero Banner - Visible display with proper sizing */
+/* Hero Banner - 1200:400 aspect ratio */
 .hero-banner-wrapper {
   position: relative;
   width: 100%;
-  padding: 0.5rem;
   background: white;
-  box-sizing: border-box;
 }
 
 .hero-banner-content {
@@ -442,34 +440,4 @@ main {
   overflow: hidden;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-}
-
-/* Exact 1200:400 ratio for laptop screens */
-@media (min-width: 1024px) and (max-width: 1400px) {
-  .hero-banner-content {
-    padding-bottom: 33.33%; /* Exact 1200:400 = 3:1 ratio - nothing cut off */
-  }
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-  .hero-banner-wrapper {
-    padding: 0.5rem;
-  }
-}
-
-.hero-banner-wrapper {
-  width: 100%;
-  background: transparent;
-}
-
-.hero-banner-content {
-  width: 100%;
-  max-width: 100%;
-}
-
-@media (max-width: 480px) {
-  .hero-banner-wrapper {
-    padding: 0.25rem;
-  }
 }
