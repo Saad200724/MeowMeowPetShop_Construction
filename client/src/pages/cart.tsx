@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -85,7 +84,7 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        
+
         <div className="pt-16 md:pt-24 pb-8">
           <div className="max-w-md mx-auto px-4">
             <div className="text-center py-16">
@@ -114,7 +113,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       <div className="pt-16 md:pt-24 pb-8">
         <div className="max-w-md md:max-w-4xl mx-auto px-4">
           {/* Header Section */}
@@ -154,7 +153,7 @@ export default function CartPage() {
                           className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg border"
                         />
                       </div>
-                      
+
                       {/* Product Details */}
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-sm md:text-base text-gray-900 line-clamp-2 mb-1">
@@ -163,7 +162,15 @@ export default function CartPage() {
                         <p className="text-[#26732d] font-bold text-sm md:text-base mb-3">
                           {formatPrice(item.price)}
                         </p>
-                        
+
+                        {/* Product Description Snippet - Add Shipping Info Here */}
+                        <div className="text-xs text-gray-500 mb-3 line-clamp-2">
+                          {item.description}
+                          <p className="mt-1 font-semibold text-gray-700">
+                            Shipping: Inside Dhaka: ৳80 (up to 2kg), Outside Dhaka: ৳130 (up to 1kg). Additional ৳20 per kg.
+                          </p>
+                        </div>
+
                         {/* Quantity and Remove Controls */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -174,9 +181,9 @@ export default function CartPage() {
                             >
                               <Minus className="h-3 w-3 md:h-4 md:w-4" />
                             </button>
-                            
+
                             <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
-                            
+
                             <button
                               onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                               disabled={item.quantity >= item.maxStock}
@@ -184,14 +191,14 @@ export default function CartPage() {
                             >
                               <Plus className="h-3 w-3 md:h-4 md:w-4" />
                             </button>
-                            
+
                             {item.maxStock && (
                               <Badge variant="secondary" className="text-xs ml-2">
                                 Max: {item.maxStock}
                               </Badge>
                             )}
                           </div>
-                          
+
                           <button
                             onClick={() => removeItem(item.id)}
                             className="bg-red-50 hover:bg-red-100 text-red-600 rounded-full p-1.5 transition-colors"
@@ -200,7 +207,7 @@ export default function CartPage() {
                           </button>
                         </div>
                       </div>
-                      
+
                       {/* Item Total - Right Side */}
                       <div className="text-right flex-shrink-0">
                         <p className="text-sm md:text-base font-bold text-gray-900">
@@ -218,16 +225,21 @@ export default function CartPage() {
               <Card className="sticky top-20">
                 <CardContent className="p-4 md:p-6">
                   <h2 className="text-lg font-bold mb-4">Order Summary</h2>
-                  
+
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm md:text-base">
                       <span>Subtotal ({state.itemCount} items)</span>
                       <span className="font-medium">{formatPrice(state.total)}</span>
                     </div>
-                    
-                    <div className="flex justify-between text-sm md:text-base">
-                      <span>Shipping</span>
-                      <span className="text-green-600 font-medium">Free</span>
+
+                    {/* Updated Delivery Section */}
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-600">Delivery</span>
+                      <div className="text-right">
+                        <span className="font-medium text-gray-600">Calculated at checkout</span>
+                        <p className="text-xs text-gray-500 mt-1">Inside Dhaka: ৳80 (up to 2kg)</p>
+                        <p className="text-xs text-gray-500">Outside Dhaka: ৳130 (up to 1kg)</p>
+                      </div>
                     </div>
 
                     {state.appliedCoupon && (
@@ -236,9 +248,9 @@ export default function CartPage() {
                         <span className="font-medium">-{formatPrice(state.appliedCoupon.discount)}</span>
                       </div>
                     )}
-                    
+
                     <Separator />
-                    
+
                     <div className="flex justify-between text-base md:text-lg font-bold">
                       <span>Total</span>
                       <span className="text-[#26732d]">{formatPrice(finalTotal)}</span>
@@ -250,7 +262,7 @@ export default function CartPage() {
                         <Tag size={16} className="text-[#26732d]" />
                         <span className="text-sm font-medium text-gray-700">Have a coupon?</span>
                       </div>
-                      
+
                       {!state.appliedCoupon ? (
                         <div className="space-y-2">
                           <div className="flex gap-2">
@@ -300,7 +312,7 @@ export default function CartPage() {
                       )}
                     </div>
                   </div>
-                    
+
                   <div className="space-y-4 mt-8">
                     <Link href="/checkout">
                       <Button 
@@ -311,7 +323,7 @@ export default function CartPage() {
                         Proceed to Checkout
                       </Button>
                     </Link>
-                    
+
                     <Link href="/products">
                       <Button 
                         variant="outline" 

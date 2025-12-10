@@ -755,9 +755,21 @@ export default function CheckoutPage() {
                     <span className="font-medium">৳ {cartState.total.toLocaleString()}</span>
                   </div>
 
-                  <div className="flex justify-between py-2">
-                    <span className="text-gray-600">Delivery</span>
-                    <span className="font-medium">৳ 0</span>
+                  <div className="space-y-2 py-2 border-b border-gray-100">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Delivery Charge</span>
+                      <span className="font-medium text-gray-600">See details</span>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <p className="text-xs font-semibold text-blue-900 mb-2">Shipping Rates:</p>
+                      <div className="space-y-1 text-xs text-blue-800">
+                        <p>• Inside Dhaka: ৳80 (up to 2kg)</p>
+                        <p>• Outside Dhaka: ৳130 (up to 1kg)</p>
+                        <p className="text-[10px] text-blue-700 mt-2 italic">
+                          Additional ৳20/kg will be charged for extra weight
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {cartState.appliedCoupon && (

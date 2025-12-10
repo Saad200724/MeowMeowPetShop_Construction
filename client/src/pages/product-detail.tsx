@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { Heart, ShoppingCart, Star, Minus, Plus, Share, Facebook, Twitter, Instagram, Copy, Send } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Minus, Plus, Share, Facebook, Twitter, Instagram, Copy, Send, Truck, MapPin, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -620,24 +620,24 @@ export default function ProductDetailPage() {
           <TabsContent value="description" className="mt-6">
             <Card>
               <CardContent className="p-6">
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {product.description && (
                     <div>
-                      <h3 className="font-semibold mb-2">Product Description</h3>
+                      <h3 className="font-semibold mb-2 text-lg">Product Description</h3>
                       <p className="text-gray-700">{product.description}</p>
                     </div>
                   )}
                   
                   {product.weight && (
                     <div>
-                      <h3 className="font-semibold mb-2">Weight</h3>
+                      <h3 className="font-semibold mb-2 text-lg">Weight</h3>
                       <p className="text-gray-700">{product.weight}</p>
                     </div>
                   )}
                   
                   {product.ingredients && product.ingredients.length > 0 && (
                     <div>
-                      <h3 className="font-semibold mb-2">Ingredients</h3>
+                      <h3 className="font-semibold mb-2 text-lg">Ingredients</h3>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
                         {product.ingredients.map((ingredient: string, index: number) => (
                           <li key={index}>{ingredient}</li>
@@ -648,7 +648,7 @@ export default function ProductDetailPage() {
                   
                   {product.features && product.features.length > 0 && (
                     <div>
-                      <h3 className="font-semibold mb-2">Features</h3>
+                      <h3 className="font-semibold mb-2 text-lg">Features</h3>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
                         {product.features.map((feature: string, index: number) => (
                           <li key={index}>{feature}</li>
@@ -656,6 +656,60 @@ export default function ProductDetailPage() {
                       </ul>
                     </div>
                   )}
+
+                  {/* Shipping Information */}
+                  <div className="border-t pt-6 mt-6">
+                    <h3 className="font-bold mb-4 text-lg text-[#26732d] flex items-center gap-2">
+                      <Truck className="w-5 h-5" />
+                      Delivery Information
+                    </h3>
+                    <div className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200 rounded-lg p-5">
+                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                        <div className="bg-white rounded-lg p-4 shadow-sm border border-blue-100">
+                          <div className="flex items-start gap-3">
+                            <div className="bg-blue-100 rounded-full p-2">
+                              <MapPin className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-blue-900 mb-1">Inside Dhaka</h4>
+                              <p className="text-2xl font-bold text-blue-600">৳80</p>
+                              <p className="text-sm text-blue-700 mt-1">Up to 2kg</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                          <div className="flex items-start gap-3">
+                            <div className="bg-green-100 rounded-full p-2">
+                              <MapPin className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-green-900 mb-1">Outside Dhaka</h4>
+                              <p className="text-2xl font-bold text-green-600">৳130</p>
+                              <p className="text-sm text-green-700 mt-1">Up to 1kg</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-orange-50 border border-orange-300 rounded-lg p-3">
+                        <p className="text-sm font-semibold text-orange-900 mb-1">Additional Weight:</p>
+                        <p className="text-sm text-orange-800">
+                          <strong>৳20 per kg</strong> will be added for extra weight beyond base limits
+                        </p>
+                      </div>
+                      
+                      <div className="bg-green-100 border border-green-300 rounded-lg p-3 mt-3">
+                        <p className="text-sm font-semibold text-green-900 mb-1 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          FREE Delivery!
+                        </p>
+                        <p className="text-sm text-green-800">
+                          Orders above ৳1500 within Dhaka get FREE delivery
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

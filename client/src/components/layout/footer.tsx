@@ -46,6 +46,10 @@ export default function Footer() {
               <li><a href="/contact" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Contact Us</a></li>
               <li><a href="/blog" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Blog</a></li>
             </ul>
+            <div className="mt-4 pt-4 border-t border-gray-600">
+              <p className="text-xs text-meow-yellow font-semibold mb-1">Delivery:</p>
+              <p className="text-xs text-gray-300">Dhaka: ৳80 | Outside: ৳130</p>
+            </div>
           </div>
 
           {/* Policies */}
