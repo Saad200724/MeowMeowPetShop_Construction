@@ -92,9 +92,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  const renderStars = (rating?: number) => {
-    // Default to 5 stars for static display as requested
-    const displayRating = rating || 5;
+  const renderStars = (rating: number, reviewCount: number) => {
+    // Show 5 stars by default if no reviews, otherwise show actual rating
+    const displayRating = reviewCount > 0 ? rating : 5;
 
     return (
       <div className="flex items-center gap-1">
@@ -109,9 +109,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             }
           />
         ))}
-        {product.reviews !== undefined && (
+        {reviewCount > 0 && (
           <span className="text-gray-600 text-xs ml-1">
-            ({product.reviews})
+            ({reviewCount})
           </span>
         )}
       </div>
@@ -188,12 +188,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </h4>
 
-            {/* Rating - Only show if product has reviews */}
-            {product.rating > 0 && product.reviews > 0 && (
-              <div className="flex items-center justify-start">
-                {renderStars(product.rating)}
-              </div>
-            )}
+            {/* Rating - Always show */}
+            <div className="flex items-center justify-start">
+              {renderStars(product.rating || 0, product.reviews || 0)}
+            </div>
 
             {/* Price Section - Left Aligned and Well Structured */}
             <div className="text-left">

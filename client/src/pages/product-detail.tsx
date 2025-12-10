@@ -225,12 +225,14 @@ export default function ProductDetailPage() {
     }
   };
 
-  const renderStars = (rating: number = 5) => {
+  const renderStars = (rating: number, reviewCount: number) => {
+    // Show 5 stars by default if no reviews, otherwise show actual rating
+    const displayRating = reviewCount > 0 ? rating : 5;
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
         size={16}
-        className={index < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}
+        className={index < displayRating ? 'text-yellow-500 fill-current' : 'text-gray-300'}
       />
     ));
   };
@@ -417,7 +419,7 @@ export default function ProductDetailPage() {
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center">
-                  {renderStars(product.rating)}
+                  {renderStars(product.rating || 0, product.reviews || 0)}
                 </div>
                 <span className="text-sm text-gray-600">
                   ({product.reviews || 0} reviews)
@@ -672,7 +674,13 @@ export default function ProductDetailPage() {
                                 </div>
                                 <div className="flex items-center gap-2 mt-1">
                                   <div className="flex">
-                                    {renderStars(review.rating)}
+                                    {Array.from({ length: 5 }, (_, index) => (
+                                      <Star
+                                        key={index}
+                                        size={16}
+                                        className={index < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}
+                                      />
+                                    ))}
                                   </div>
                                   <span className="text-sm text-gray-500">
                                     {new Date(review.createdAt).toLocaleDateString()}

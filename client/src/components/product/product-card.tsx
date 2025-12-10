@@ -57,9 +57,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     }
   };
 
-  const renderStars = (rating: number) => {
-    // Use actual rating value, showing empty stars if no rating
-    const displayRating = rating || 0;
+  const renderStars = (rating: number, reviewCount: number) => {
+    // Show 5 stars by default if no reviews, otherwise show actual rating
+    const displayRating = reviewCount > 0 ? rating : 5;
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
@@ -162,15 +162,15 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             {product.name}
           </h3>
 
-          {/* Rating - Only show if exists */}
-          {product.rating > 0 && (
-            <div className="flex items-center gap-1">
-              <div className="flex items-center">
-                {renderStars(product.rating)}
-              </div>
-              <span className="text-xs text-gray-500">({product.reviews})</span>
+          {/* Rating - Always show */}
+          <div className="flex items-center gap-1">
+            <div className="flex items-center">
+              {renderStars(product.rating || 0, product.reviews || 0)}
             </div>
-          )}
+            {product.reviews > 0 && (
+              <span className="text-xs text-gray-500">({product.reviews})</span>
+            )}
+          </div>
 
           {/* Price Section */}
           <div className="text-left">
