@@ -2282,58 +2282,23 @@ export default function AdminPage() {
                 });
               }
             })} className="space-y-4">
-              <div className="flex gap-2 mb-4">
-                <Button
-                  type="button"
-                  variant={bannerImageSource === 'url' ? 'default' : 'outline'}
-                  onClick={() => setBannerImageSource('url')}
-                  className="flex-1"
-                >
-                  URL
-                </Button>
-                <Button
-                  type="button"
-                  variant={bannerImageSource === 'upload' ? 'default' : 'outline'}
-                  onClick={() => setBannerImageSource('upload')}
-                  className="flex-1"
-                >
-                  Upload
-                </Button>
-              </div>
-
-              {bannerImageSource === 'url' ? (
-                <FormField
-                  control={bannerForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URL</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com/banner.jpg" {...field} data-testid="input-banner-url" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : (
-                <FormField
-                  control={bannerForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Upload Banner Image (1200x400px)</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={bannerForm.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Upload Banner Image (1200x400px)</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={bannerForm.control}
@@ -2421,58 +2386,23 @@ export default function AdminPage() {
                 });
               }
             })} className="space-y-4">
-              <div className="flex gap-2 mb-4">
-                <Button
-                  type="button"
-                  variant={popupImageSource === 'url' ? 'default' : 'outline'}
-                  onClick={() => setPopupImageSource('url')}
-                  className="flex-1"
-                >
-                  URL
-                </Button>
-                <Button
-                  type="button"
-                  variant={popupImageSource === 'upload' ? 'default' : 'outline'}
-                  onClick={() => setPopupImageSource('upload')}
-                  className="flex-1"
-                >
-                  Upload
-                </Button>
-              </div>
-
-              {popupImageSource === 'url' ? (
-                <FormField
-                  control={popupPosterForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URL</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com/poster.jpg" {...field} data-testid="input-popup-url" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : (
-                <FormField
-                  control={popupPosterForm.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Upload Popup Image</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={popupPosterForm.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Upload Popup Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={popupPosterForm.control}
