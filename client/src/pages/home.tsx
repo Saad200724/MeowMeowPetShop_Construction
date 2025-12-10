@@ -12,7 +12,6 @@ import NewlyLaunched from "@/components/sections/newly-launched";
 import MembershipBanner from "@/components/sections/membership-banner";
 import BlogPreview from "@/components/sections/blog-preview";
 import Testimonials from "@/components/sections/testimonials";
-import PopupPoster from "@/components/popup-poster";
 import { useSidebar } from "@/contexts/sidebar-context";
 
 export default function Home() {
@@ -49,9 +48,6 @@ export default function Home() {
 
       {/* Mobile Bottom Navigation */}
       {/* This component is now globally available in the App component */}
-
-      {/* Popup Poster */}
-      <PopupPoster />
     </div>
   );
 }
