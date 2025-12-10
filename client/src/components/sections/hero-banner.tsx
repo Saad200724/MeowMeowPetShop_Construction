@@ -23,9 +23,11 @@ export default function HeroBanner() {
 
   // Debug: Log banners data
   useEffect(() => {
+    console.log('Active banners loaded:', banners.length);
     if (banners.length > 0) {
-      console.log('Active banners loaded:', banners.length);
       console.log('Banners:', banners.map(b => ({ title: b.title, order: b.order, url: b.imageUrl })));
+    } else {
+      console.log('No active banners found, will show fallback banner');
     }
   }, [banners]);
 

@@ -1,6 +1,7 @@
 import { User, Category, Brand, Product, BlogPost, Order, Banner, PopupPoster } from "@shared/models";
 import type { IUser, ICategory, IBrand, IProduct, IBlogPost, IBanner, IPopupPoster } from "@shared/models";
 import { nanoid } from "nanoid";
+import mongoose from "mongoose";
 
 // Simple storage for the pet shop
 interface SimpleProduct {
@@ -95,7 +96,7 @@ export class DatabaseStorage implements IStorage {
         products: []
       },
       {
-        id: 'dog-food', 
+        id: 'dog-food',
         name: 'Dog Food',
         products: []
       },
@@ -160,7 +161,7 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<IUser> {
     // Prevent any new admin users from being created
     const userToInsert = { ...insertUser, role: "user" };
-    
+
     const user = new User(userToInsert);
     await user.save();
     return user;
@@ -181,7 +182,7 @@ export class DatabaseStorage implements IStorage {
       if (!product) return undefined;
 
       const category = await Category.findById(product.categoryId);
-      
+
       return {
         id: product.id,
         name: product.name,
@@ -247,13 +248,13 @@ export class DatabaseStorage implements IStorage {
   async updateProduct(id: string, productData: Partial<SimpleProduct>): Promise<SimpleProduct | undefined> {
     try {
       const updateData: any = {};
-      
+
       if (productData.name) updateData.name = productData.name;
       if (productData.price !== undefined) updateData.price = productData.price;
       if (productData.image) updateData.image = productData.image;
       if (productData.rating !== undefined) updateData.rating = productData.rating;
       if (productData.stock !== undefined) updateData.stockQuantity = productData.stock;
-      
+
       updateData.updatedAt = new Date();
 
       const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
@@ -454,13 +455,15 @@ export class DatabaseStorage implements IStorage {
 
   async getActiveBanners(): Promise<IBanner[]> {
     try {
-      const banners = await Banner.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).limit(3);
+      const Banner = mongoose.model('Banner');
+      const banners = await Banner.find({ isActive: true }).sort({ order: 1 }).limit(3).lean();
+      console.log(`Storage: Found ${banners.length} active banners`);
       return banners;
     } catch (error) {
-      console.error('Error fetching active banners:', error);
+      console.error('Error getting active banners:', error);
       return [];
     }
-  }
+  },
 
   async createBanner(bannerData: { imageUrl: string; title?: string; order?: number }): Promise<IBanner> {
     try {
@@ -573,7 +576,7 @@ export class DatabaseStorage implements IStorage {
   private async seedDatabase(): Promise<void> {
     try {
       console.log('Seeding database with initial data...');
-      
+
       // Create brands first
       const brandsToCreate = [
         { name: 'NEKKO', slug: 'nekko' },
@@ -595,7 +598,7 @@ export class DatabaseStorage implements IStorage {
           await newBrand.save();
         }
       }
-      
+
       // Create categories
       for (const category of this.categories) {
         const existingCategory = await Category.findOne({ slug: category.id });
@@ -635,7 +638,7 @@ export class DatabaseStorage implements IStorage {
           }
         }
       }
-      
+
       console.log('Database seeded successfully');
     } catch (error) {
       console.error('Error seeding database:', error);
