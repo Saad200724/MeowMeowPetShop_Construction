@@ -26,7 +26,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem, state } = useCart();
   const { toast } = useToast();
-  
+
   // Use the persisted product slug from server
   const productSlug = product.slug || 'product';
 
@@ -188,10 +188,12 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </h4>
 
-            {/* Rating - Left Aligned */}
-            <div className="flex items-center justify-start">
-              {renderStars(product.rating)}
-            </div>
+            {/* Rating - Only show if product has reviews */}
+            {product.rating > 0 && product.reviews > 0 && (
+              <div className="flex items-center justify-start">
+                {renderStars(product.rating)}
+              </div>
+            )}
 
             {/* Price Section - Left Aligned and Well Structured */}
             <div className="text-left">

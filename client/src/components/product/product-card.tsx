@@ -58,12 +58,14 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   };
 
   const renderStars = (rating: number) => {
+    // Use actual rating value, showing empty stars if no rating
+    const displayRating = rating || 0;
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
         size={10}
         className={
-          index < rating ? "text-yellow-500 fill-current" : "text-gray-300"
+          index < displayRating ? "text-yellow-500 fill-current" : "text-gray-300"
         }
       />
     ));
