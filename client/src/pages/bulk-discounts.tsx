@@ -155,7 +155,7 @@ export default function BulkDiscountsPage() {
                 <span className="text-2xl font-bold">3</span>
               </div>
               <h3 className="text-lg font-semibold mb-2">Save Big</h3>
-              <p className="text-green-100">Enjoy instant savings at checkout with free delivery</p>
+              <p className="text-green-100">Enjoy instant savings at checkout</p>
             </div>
           </div>
         </div>

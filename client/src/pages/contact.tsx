@@ -1,16 +1,30 @@
-import { useState } from 'react';
-import { MapPin, Phone, Clock, Facebook, Instagram, MessageCircle, Send, Mail } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, MessageCircle, Send } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
+  useEffect(() => {
+    document.title = 'Contact Us - Meow Meow Pet Shop';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Contact Meow Meow Pet Shop in Savar, Bangladesh. Phone: 01405-045023, Email: meowmeowpetshop1@gmail.com. We are here to help with all your pet care needs.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Contact Meow Meow Pet Shop in Savar, Bangladesh. Phone: 01405-045023, Email: meowmeowpetshop1@gmail.com. We are here to help with all your pet care needs.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',

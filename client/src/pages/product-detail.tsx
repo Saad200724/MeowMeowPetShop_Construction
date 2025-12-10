@@ -89,6 +89,23 @@ export default function ProductDetailPage() {
     setSelectedImage(0);
   }, [productId]);
 
+  // SEO meta tags
+  useEffect(() => {
+    if (product) {
+      document.title = `${product.name} - Meow Meow Pet Shop`;
+      const metaDescription = document.querySelector('meta[name="description"]');
+      const description = product.description || `Buy ${product.name} at Meow Meow Pet Shop. Quality pet products with delivery in Dhaka and across Bangladesh.`;
+      if (metaDescription) {
+        metaDescription.setAttribute('content', description);
+      } else {
+        const meta = document.createElement('meta');
+        meta.name = 'description';
+        meta.content = description;
+        document.head.appendChild(meta);
+      }
+    }
+  }, [product]);
+
   const isInCart = state.items.some((item) => item.id === productId);
   const isOutOfStock = product?.stockQuantity === 0 || product?.stockStatus === "Out of Stock";
 
@@ -699,15 +716,7 @@ export default function ProductDetailPage() {
                         </p>
                       </div>
                       
-                      <div className="bg-green-100 border border-green-300 rounded-lg p-3 mt-3">
-                        <p className="text-sm font-semibold text-green-900 mb-1 flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4" />
-                          FREE Delivery!
-                        </p>
-                        <p className="text-sm text-green-800">
-                          Orders above ৳1500 within Dhaka get FREE delivery
-                        </p>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>

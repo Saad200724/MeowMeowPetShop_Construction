@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import NavigationSidebar from "@/components/layout/sidebar";
@@ -8,6 +8,19 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function AboutPage() {
   const { isVisible: sidebarVisible } = useSidebar();
+
+  useEffect(() => {
+    document.title = 'About Us - Meow Meow Pet Shop';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Learn about Meow Meow Pet Shop - Your trusted pet care partner in Savar, Bangladesh. Quality products, expert care, and affordable prices for your beloved pets.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Learn about Meow Meow Pet Shop - Your trusted pet care partner in Savar, Bangladesh. Quality products, expert care, and affordable prices for your beloved pets.';
+      document.head.appendChild(meta);
+    }
+  }, []);
 
   const values = [
     {
@@ -73,9 +86,9 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="relative">
-              <img 
-                src="/logo.png" 
-                alt="Meow Meow Pet Shop" 
+              <img
+                src="/logo.png"
+                alt="Meow Meow Pet Shop"
                 className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
               />
               <div className="absolute -bottom-6 -right-6 bg-[#ffde59] text-[#26732d] p-6 rounded-lg shadow-lg hidden md:block">

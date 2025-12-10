@@ -239,6 +239,7 @@ export default function CartPage() {
                         <span className="font-medium text-gray-600">Calculated at checkout</span>
                         <p className="text-xs text-gray-500 mt-1">Inside Dhaka: ৳80 (up to 2kg)</p>
                         <p className="text-xs text-gray-500">Outside Dhaka: ৳130 (up to 1kg)</p>
+                        <p className="text-xs text-gray-500 mt-1">Additional: ৳20/kg</p>
                       </div>
                     </div>
 

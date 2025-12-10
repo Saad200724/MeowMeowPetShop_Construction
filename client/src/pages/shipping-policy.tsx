@@ -1,9 +1,23 @@
 
+import { useEffect } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Truck, MapPin, Clock, DollarSign, Package2, CheckCircle } from 'lucide-react';
 
 export default function ShippingPolicyPage() {
+  useEffect(() => {
+    document.title = 'Shipping Policy - Meow Meow Pet Shop';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80 (up to 2kg), Outside Dhaka ৳130 (up to 1kg). Fast and reliable delivery.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80 (up to 2kg), Outside Dhaka ৳130 (up to 1kg). Fast and reliable delivery.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -116,16 +130,7 @@ export default function ShippingPolicyPage() {
                   </div>
                 </div>
                 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    Free Delivery Offer
-                  </h3>
-                  <p className="text-green-800">Enjoy FREE delivery on orders above ৳1500 within Dhaka!</p>
-                  <p className="text-sm text-green-700 mt-1 italic">
-                    (Standard weight limits apply)
-                  </p>
-                </div>
+                
 
                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
                   <h3 className="font-semibold text-gray-900 mb-3">Shipping Examples:</h3>
