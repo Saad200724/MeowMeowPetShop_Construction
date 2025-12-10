@@ -471,7 +471,7 @@ export class DatabaseStorage implements IStorage {
       const newBanner = new Banner({
         ...bannerData,
         isActive: activeBannerCount < 3,
-        order: bannerData.order ?? 0,
+        order: bannerData.order ?? 1,
       });
       await newBanner.save();
       return newBanner;

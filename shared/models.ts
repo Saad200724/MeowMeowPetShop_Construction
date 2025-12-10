@@ -388,7 +388,7 @@ export interface IBanner extends Document {
 const bannerSchema = new Schema<IBanner>({
   imageUrl: { type: String, required: true },
   title: String,
-  order: { type: Number, default: 0 },
+  order: { type: Number, default: 1, min: 1, max: 3 },
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 

@@ -820,7 +820,7 @@ export default function AdminPage() {
 
   const filteredProducts = (products as any[]).filter((product: any) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     // Check both category and categoryId fields, handle different formats
     const productCategory = product.category || product.categoryId || '';
     const matchesCategory = selectedCategory === 'all' || 
