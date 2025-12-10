@@ -29,13 +29,25 @@ export default function Testimonials() {
   ];
 
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star 
-        key={index} 
-        size={16} 
-        className={index < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'} 
-      />
-    ));
+    return Array.from({ length: 5 }, (_, index) => {
+      const starValue = index + 1;
+      const isFull = rating >= starValue;
+      const isHalf = !isFull && rating >= starValue - 0.5;
+      
+      return (
+        <div key={index} className="relative inline-block">
+          <Star 
+            size={16} 
+            className={isFull ? 'text-yellow-500 fill-current' : 'text-gray-300'} 
+          />
+          {isHalf && (
+            <div className="absolute top-0 left-0 overflow-hidden" style={{ width: '50%' }}>
+              <Star size={16} className="text-yellow-500 fill-current" />
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   return (

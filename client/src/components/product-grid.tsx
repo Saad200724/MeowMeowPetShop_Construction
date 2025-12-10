@@ -31,13 +31,20 @@ export default function ProductGrid({ title, bgColor = "bg-white", products, isL
     const stars = [];
     
     for (let i = 1; i <= 5; i++) {
-      if (i <= numRating) {
-        stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />);
-      } else if (i - 0.5 <= numRating) {
-        stars.push(<Star key={i} className="w-3 h-3 fill-yellow-400/50 text-yellow-400" />);
-      } else {
-        stars.push(<Star key={i} className="w-3 h-3 text-gray-300" />);
-      }
+      const starValue = i;
+      const isFull = numRating >= starValue;
+      const isHalf = !isFull && numRating >= starValue - 0.5;
+      
+      stars.push(
+        <div key={i} className="relative inline-block">
+          <Star className={`w-3 h-3 ${isFull ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+          {isHalf && (
+            <div className="absolute top-0 left-0 overflow-hidden" style={{ width: '50%' }}>
+              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+            </div>
+          )}
+        </div>
+      );
     }
     
     return stars;

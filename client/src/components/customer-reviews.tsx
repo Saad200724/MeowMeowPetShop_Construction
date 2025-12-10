@@ -9,14 +9,24 @@ export default function CustomerReviews() {
   });
 
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${
-          i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-        }`}
-      />
-    ));
+    return Array.from({ length: 5 }, (_, index) => {
+      const starValue = index + 1;
+      const isFull = rating >= starValue;
+      const isHalf = !isFull && rating >= starValue - 0.5;
+      
+      return (
+        <div key={index} className="relative inline-block">
+          <Star
+            className={`w-4 h-4 ${isFull ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+          />
+          {isHalf && (
+            <div className="absolute top-0 left-0 overflow-hidden" style={{ width: '50%' }}>
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   if (isLoading) {

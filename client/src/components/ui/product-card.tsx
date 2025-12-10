@@ -98,17 +98,25 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     return (
       <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }, (_, index) => (
-          <Star
-            key={index}
-            size={10}
-            className={
-              index < displayRating
-                ? "text-yellow-400 fill-current"
-                : "text-gray-300"
-            }
-          />
-        ))}
+        {Array.from({ length: 5 }, (_, index) => {
+          const starValue = index + 1;
+          const isFull = displayRating >= starValue;
+          const isHalf = !isFull && displayRating >= starValue - 0.5;
+          
+          return (
+            <div key={index} className="relative inline-block">
+              <Star
+                size={10}
+                className={isFull ? "text-yellow-400 fill-current" : "text-gray-300"}
+              />
+              {isHalf && (
+                <div className="absolute top-0 left-0 overflow-hidden" style={{ width: '50%' }}>
+                  <Star size={10} className="text-yellow-400 fill-current" />
+                </div>
+              )}
+            </div>
+          );
+        })}
         {reviewCount > 0 && (
           <span className="text-gray-600 text-xs ml-1">
             ({reviewCount})
