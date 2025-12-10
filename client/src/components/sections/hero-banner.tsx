@@ -90,15 +90,15 @@ export default function HeroBanner() {
   }
 
   return (
-    <section className="hero-banner-wrapper relative">
-      <div className="hero-banner-content relative overflow-hidden">
+    <section className="hero-banner-wrapper relative w-full">
+      <div className="hero-banner-content relative overflow-hidden w-full">
         {/* Banner Images */}
-        <div className="relative w-full">
+        <div className="relative w-full min-h-[200px] md:min-h-[400px]">
           {banners.map((banner, index) => (
             <div
               key={banner._id}
-              className={`transition-opacity duration-500 ${
-                index === currentSlide ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
+              className={`transition-opacity duration-500 w-full ${
+                index === currentSlide ? 'opacity-100 relative' : 'opacity-0 absolute top-0 left-0 right-0'
               }`}
               data-testid={`banner-slide-${index}`}
             >
@@ -106,7 +106,7 @@ export default function HeroBanner() {
                 src={banner.imageUrl}
                 alt={banner.title || `Banner ${index + 1}`}
                 loading={index === 0 ? 'eager' : 'lazy'}
-                className="w-full h-auto object-cover max-h-[600px]"
+                className="w-full h-auto object-contain"
                 data-testid={`img-banner-${banner._id}`}
                 onError={(e) => {
                   console.error('Failed to load banner:', banner.imageUrl);

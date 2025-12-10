@@ -470,6 +470,16 @@ main {
   }
 }
 
+.hero-banner-wrapper {
+  width: 100%;
+  background: transparent;
+}
+
+.hero-banner-content {
+  width: 100%;
+  max-width: 100%;
+}
+
 @media (max-width: 480px) {
   .hero-banner-wrapper {
     padding: 0.25rem;
