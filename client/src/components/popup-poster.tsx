@@ -58,22 +58,22 @@ export default function PopupPoster() {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
-        className="max-w-4xl p-0 overflow-hidden border-none bg-transparent shadow-2xl"
+        className="max-w-3xl p-0 overflow-hidden border-none bg-white dark:bg-gray-900 shadow-2xl rounded-xl"
         data-testid="popup-poster-dialog"
       >
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors"
+          className="absolute top-3 right-3 z-[10000] rounded-full bg-white/90 dark:bg-gray-800/90 p-2.5 text-gray-700 dark:text-gray-200 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-xl"
           aria-label="Close popup"
           data-testid="button-close-popup"
         >
           <X className="w-5 h-5" />
         </button>
-        <div className="relative">
+        <div className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
           <img
             src={poster.imageUrl}
             alt={poster.title || 'Special Offer'}
-            className="w-full h-auto max-h-[90vh] object-contain"
+            className="w-full h-auto max-h-[85vh] object-contain"
             data-testid="img-popup-poster"
           />
         </div>
