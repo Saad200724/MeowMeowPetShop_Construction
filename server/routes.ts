@@ -1582,6 +1582,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Order API endpoints
   app.post("/api/orders", async (req, res) => {
+    console.log('📦 ORDER CREATION STARTED - Received order request');
+    
     // Start a MongoDB session for transaction support
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -1596,6 +1598,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         shippingAddress,
         orderNotes
       } = req.body;
+      
+      console.log(`📦 Order items: ${items?.length || 0} products`);
 
       // Validate required fields
       if (!items || !Array.isArray(items) || items.length === 0) {
@@ -1758,7 +1762,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
         
-        console.log(`Stock decremented for ${item.name}: ${result.stockQuantity + item.quantity} → ${result.stockQuantity}`);
+        console.log(`✅ STOCK DECREMENTED for ${item.name} (ID: ${item.productId}): ${result.stockQuantity + item.quantity} → ${result.stockQuantity}`);
       }
 
       // 2. Increment coupon usage count (within transaction)
@@ -1803,7 +1807,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await session.commitTransaction();
       await session.endSession();
 
-      console.log(`✅ Order created successfully: Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
+      console.log(`✅ ORDER COMPLETED SUCCESSFULLY: Invoice=${invoiceNumber}, Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
       res.json({ order, invoice });
 
     } catch (error) {
