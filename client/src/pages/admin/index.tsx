@@ -2105,8 +2105,26 @@ export default function AdminPage() {
                     </Card>
                   ))}
                   {banners.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      No banners yet. Add your first banner to get started.
+                    <div className="space-y-4">
+                      <Card className="overflow-hidden border-dashed border-2 border-amber-300 bg-amber-50">
+                        <div className="flex items-center gap-4 p-4">
+                          <img 
+                            src="/Banner_Reflex.webp" 
+                            alt="Default Homepage Banner" 
+                            className="w-32 h-16 object-cover rounded"
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-amber-800">Default Homepage Banner</h4>
+                            <p className="text-sm text-amber-600">This banner is currently showing on the homepage as a fallback</p>
+                            <Badge variant="outline" className="mt-1 border-amber-400 text-amber-700">
+                              Fallback Banner
+                            </Badge>
+                          </div>
+                        </div>
+                      </Card>
+                      <p className="text-center text-sm text-gray-500">
+                        Add a new banner above to replace the default fallback banner
+                      </p>
                     </div>
                   )}
                 </div>

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
-import bannerImage from "@assets/Banner_1753440909945.jpg";
+
+const bannerImage = "/Banner_Reflex.webp";
 
 interface Banner {
   _id: string;
