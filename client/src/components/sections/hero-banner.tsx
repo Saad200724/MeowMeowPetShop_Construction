@@ -13,10 +13,13 @@ interface Banner {
 
 export default function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  
-  const { data: banners = [], isLoading } = useQuery<Banner[]>({
+
+  const { data: rawBanners = [], isLoading } = useQuery<Banner[]>({
     queryKey: ['/api/banners/active'],
   });
+
+  // Sort banners by order field to ensure correct sequence
+  const banners = [...rawBanners].sort((a, b) => a.order - b.order);
 
   // Reset slide to 0 if current slide is out of bounds
   useEffect(() => {
@@ -25,10 +28,10 @@ export default function HeroBanner() {
     }
   }, [banners.length, currentSlide]);
 
-  // Auto-advance carousel every 5 seconds
+  // Auto-advance carousel every 5 seconds (works for all banner counts)
   useEffect(() => {
-    if (banners.length <= 1) return;
-    
+    if (banners.length === 0) return;
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
     }, 5000);
@@ -102,8 +105,8 @@ export default function HeroBanner() {
           ))}
         </div>
 
-        {/* Navigation Arrows (only show if multiple banners) */}
-        {banners.length > 1 && (
+        {/* Navigation Arrows (always show if there are banners) */}
+        {banners.length > 0 && (
           <>
             <Button
               variant="ghost"
@@ -126,8 +129,8 @@ export default function HeroBanner() {
           </>
         )}
 
-        {/* Dots Indicator (only show if multiple banners) */}
-        {banners.length > 1 && (
+        {/* Dots Indicator (always show if there are banners) */}
+        {banners.length > 0 && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {banners.map((_, index) => (
               <button
