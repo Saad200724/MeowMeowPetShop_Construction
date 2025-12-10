@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import mongoose from "mongoose";
 import { storage } from "./storage";
-import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook, OTP } from "@shared/models";
+import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook, OTP, Review } from "@shared/models";
 import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
 import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
 import { z } from "zod";
@@ -3153,6 +3153,167 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const queryString = new URLSearchParams(req.query as any).toString()
     res.redirect(`/api/payment/cancel${queryString ? '?' + queryString : ''}`)
   })
+
+  // ===== REVIEW ENDPOINTS =====
+
+  // Get reviews for a specific product
+  app.get("/api/reviews/product/:productId", async (req, res) => {
+    try {
+      const { productId } = req.params;
+      const reviews = await Review.find({ 
+        productId, 
+        isApproved: true 
+      }).sort({ createdAt: -1 });
+      
+      res.json(reviews);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+
+  // Submit a new review
+  app.post("/api/reviews", async (req, res) => {
+    try {
+      const reviewSchema = z.object({
+        productId: z.string().min(1, "Product ID is required"),
+        userId: z.string().optional(),
+        userName: z.string().min(1, "Name is required"),
+        userEmail: z.string().email().optional(),
+        rating: z.number().min(1).max(5),
+        comment: z.string().min(1, "Review comment is required"),
+      });
+
+      const validatedData = reviewSchema.parse(req.body);
+
+      // Check if user has purchased this product (if userId is provided)
+      let isVerifiedPurchase = false;
+      if (validatedData.userId) {
+        const order = await Order.findOne({
+          userId: validatedData.userId,
+          'items.productId': validatedData.productId,
+          status: { $in: ['Processing', 'confirmed', 'shipped', 'delivered'] }
+        });
+        isVerifiedPurchase = !!order;
+      }
+
+      const review = new Review({
+        ...validatedData,
+        isVerifiedPurchase,
+        isApproved: true // Auto-approve for now, can be changed to false for moderation
+      });
+
+      await review.save();
+
+      // Update product rating and review count
+      const productReviews = await Review.find({ 
+        productId: validatedData.productId,
+        isApproved: true 
+      });
+      
+      const avgRating = productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length;
+      
+      await Product.findByIdAndUpdate(validatedData.productId, {
+        rating: Math.round(avgRating * 10) / 10, // Round to 1 decimal
+        reviews: productReviews.length
+      });
+
+      res.status(201).json({
+        message: "Review submitted successfully",
+        review
+      });
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: error.errors 
+        });
+      }
+      res.status(500).json({ message: "Failed to submit review" });
+    }
+  });
+
+  // Get all reviews (admin)
+  app.get("/api/admin/reviews", async (req, res) => {
+    try {
+      const reviews = await Review.find({}).sort({ createdAt: -1 });
+      res.json(reviews);
+    } catch (error) {
+      console.error('Error fetching all reviews:', error);
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+
+  // Approve/reject review (admin)
+  app.put("/api/admin/reviews/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { isApproved } = req.body;
+
+      const review = await Review.findByIdAndUpdate(
+        id,
+        { isApproved },
+        { new: true }
+      );
+
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      // Recalculate product rating
+      const productReviews = await Review.find({ 
+        productId: review.productId,
+        isApproved: true 
+      });
+      
+      const avgRating = productReviews.length > 0 
+        ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length 
+        : 0;
+      
+      await Product.findByIdAndUpdate(review.productId, {
+        rating: Math.round(avgRating * 10) / 10,
+        reviews: productReviews.length
+      });
+
+      res.json({ message: "Review updated successfully", review });
+    } catch (error) {
+      console.error('Error updating review:', error);
+      res.status(500).json({ message: "Failed to update review" });
+    }
+  });
+
+  // Delete review (admin)
+  app.delete("/api/admin/reviews/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const review = await Review.findByIdAndDelete(id);
+
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      // Recalculate product rating
+      const productReviews = await Review.find({ 
+        productId: review.productId,
+        isApproved: true 
+      });
+      
+      const avgRating = productReviews.length > 0 
+        ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length 
+        : 0;
+      
+      await Product.findByIdAndUpdate(review.productId, {
+        rating: Math.round(avgRating * 10) / 10,
+        reviews: productReviews.length
+      });
+
+      res.json({ message: "Review deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      res.status(500).json({ message: "Failed to delete review" });
+    }
+  });
 
   const server = createServer(app);
   return server;

@@ -426,6 +426,31 @@ const otpSchema = new Schema<IOTP>({
 // Create TTL index to automatically delete expired OTPs
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
+// Review Schema
+export interface IReview extends Document {
+  productId: string;
+  userId?: string;
+  userName: string;
+  userEmail?: string;
+  rating: number;
+  comment: string;
+  isVerifiedPurchase: boolean;
+  isApproved: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const reviewSchema = new Schema<IReview>({
+  productId: { type: String, required: true, index: true },
+  userId: { type: String },
+  userName: { type: String, required: true },
+  userEmail: { type: String },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, required: true },
+  isVerifiedPurchase: { type: Boolean, default: false },
+  isApproved: { type: Boolean, default: true },
+}, { timestamps: true });
+
 // Export Models
 export const User = mongoose.model<IUser>('User', userSchema);
 export const Category = mongoose.model<ICategory>('Category', categorySchema);
@@ -442,6 +467,7 @@ export const PaymentWebhook = mongoose.model<IPaymentWebhook>('PaymentWebhook', 
 export const Banner = mongoose.model<IBanner>('Banner', bannerSchema);
 export const PopupPoster = mongoose.model<IPopupPoster>('PopupPoster', popupPosterSchema);
 export const OTP = mongoose.model<IOTP>('OTP', otpSchema);
+export const Review = mongoose.model<IReview>('Review', reviewSchema);
 
 // Export types for compatibility with existing code
 export type UserType = IUser;
@@ -460,3 +486,4 @@ export type PaymentWebhookType = IPaymentWebhook;
 export type BannerType = IBanner;
 export type PopupPosterType = IPopupPoster;
 export type OTPType = IOTP;
+export type ReviewType = IReview;

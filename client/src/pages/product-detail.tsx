@@ -40,6 +40,7 @@ export default function ProductDetailPage() {
   const [userRating, setUserRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
@@ -59,6 +60,18 @@ export default function ProductDetailPage() {
   // Fetch all products for related products section
   const { data: allProducts = [] } = useQuery<DetailProduct[]>({
     queryKey: ['/api/products'],
+  });
+
+  // Fetch reviews for this product
+  const { data: reviews = [], refetch: refetchReviews } = useQuery<any[]>({
+    queryKey: ['/api/reviews/product', productId],
+    queryFn: async () => {
+      if (!productId) return [];
+      const response = await fetch(`/api/reviews/product/${productId}`);
+      if (!response.ok) return [];
+      return response.json();
+    },
+    enabled: !!productId,
   });
 
   const productId = product?.id ?? product?._id;
@@ -149,7 +162,7 @@ export default function ProductDetailPage() {
     setIsShareOpen(false);
   };
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (!userName.trim() || !reviewText.trim() || userRating === 0) {
       toast({
         title: "Please complete all fields",
@@ -159,16 +172,56 @@ export default function ProductDetailPage() {
       return;
     }
 
-    // Here you would typically send the review to your backend
-    toast({
-      title: "Review submitted!",
-      description: "Thank you for your feedback.",
-    });
-    
-    // Reset form
-    setUserName('');
-    setReviewText('');
-    setUserRating(0);
+    if (!productId) {
+      toast({
+        title: "Error",
+        description: "Product ID not found.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          userName: userName.trim(),
+          userEmail: userEmail.trim() || undefined,
+          rating: userRating,
+          comment: reviewText.trim(),
+          userId: localStorage.getItem('userId') || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to submit review');
+      }
+
+      toast({
+        title: "Review submitted!",
+        description: "Thank you for your feedback.",
+      });
+      
+      // Reset form
+      setUserName('');
+      setUserEmail('');
+      setReviewText('');
+      setUserRating(0);
+      
+      // Refetch reviews
+      refetchReviews();
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: error instanceof Error ? error.message : "Please try again later.",
+        variant: "destructive"
+      });
+    }
   };
 
   const renderStars = (rating: number = 5) => {
@@ -599,10 +652,38 @@ export default function ProductDetailPage() {
                 <div className="space-y-6">
                   {/* Existing Reviews */}
                   <div>
-                    <h3 className="font-semibold mb-4">Customer Reviews</h3>
-                    <div className="text-center py-8 border-b">
-                      <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
-                    </div>
+                    <h3 className="font-semibold mb-4">Customer Reviews ({reviews.length})</h3>
+                    {reviews.length === 0 ? (
+                      <div className="text-center py-8 border-b">
+                        <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4 border-b pb-6 mb-6">
+                        {reviews.map((review: any) => (
+                          <div key={review._id} className="border-b last:border-b-0 pb-4 last:pb-0">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h5 className="font-semibold">{review.userName}</h5>
+                                  {review.isVerifiedPurchase && (
+                                    <Badge className="bg-green-500 text-white text-xs">Verified Purchase</Badge>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <div className="flex">
+                                    {renderStars(review.rating)}
+                                  </div>
+                                  <span className="text-sm text-gray-500">
+                                    {new Date(review.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <p className="text-gray-700">{review.comment}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Add Review Form */}
@@ -612,12 +693,26 @@ export default function ProductDetailPage() {
                       {/* User Name */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Your Name
+                          Your Name *
                         </label>
                         <Input
                           value={userName}
                           onChange={(e) => setUserName(e.target.value)}
                           placeholder="Enter your name"
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* User Email */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Your Email (Optional)
+                        </label>
+                        <Input
+                          type="email"
+                          value={userEmail}
+                          onChange={(e) => setUserEmail(e.target.value)}
+                          placeholder="Enter your email"
                           className="w-full"
                         />
                       </div>
