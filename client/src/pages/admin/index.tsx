@@ -93,13 +93,13 @@ const couponFormSchema = z.object({
 });
 
 const bannerFormSchema = z.object({
-  imageUrl: z.string().url('Please enter a valid URL').min(1, 'Image URL is required'),
+  imageUrl: z.string().min(1, 'Image is required'),
   title: z.string().optional(),
   order: z.number().min(0).optional(),
 });
 
 const popupPosterFormSchema = z.object({
-  imageUrl: z.string().url('Please enter a valid URL').min(1, 'Image URL is required'),
+  imageUrl: z.string().min(1, 'Image is required'),
   title: z.string().optional(),
 });
 
@@ -2303,7 +2303,7 @@ export default function AdminPage() {
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Upload Image</FormLabel>
+                      <FormLabel>Upload Banner Image (1200x400px)</FormLabel>
                       <FormControl>
                         <ImageUpload
                           value={field.value}
@@ -2442,7 +2442,7 @@ export default function AdminPage() {
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Upload Image</FormLabel>
+                      <FormLabel>Upload Popup Image</FormLabel>
                       <FormControl>
                         <ImageUpload
                           value={field.value}

@@ -2275,7 +2275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/banners", async (req, res) => {
     try {
       const bannerSchema = z.object({
-        imageUrl: z.string().url().min(1, 'Image URL is required'),
+        imageUrl: z.string().min(1, 'Image is required'),
         title: z.string().optional(),
         order: z.number().optional()
       });
@@ -2296,7 +2296,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const updateSchema = z.object({
-        imageUrl: z.string().url().optional(),
+        imageUrl: z.string().optional(),
         title: z.string().optional(),
         order: z.number().optional(),
         isActive: z.boolean().optional()
@@ -2362,7 +2362,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/popup-posters", async (req, res) => {
     try {
       const posterSchema = z.object({
-        imageUrl: z.string().url().min(1, 'Image URL is required'),
+        imageUrl: z.string().min(1, 'Image is required'),
         title: z.string().optional()
       });
 
@@ -2382,7 +2382,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const updateSchema = z.object({
-        imageUrl: z.string().url().optional(),
+        imageUrl: z.string().optional(),
         title: z.string().optional(),
         isActive: z.boolean().optional()
       });
