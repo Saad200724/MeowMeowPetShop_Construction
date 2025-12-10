@@ -46,6 +46,7 @@ import TrackOrderPage from "@/pages/track-order";
 import ProfilePage from "@/pages/profile";
 import MessengerPage from './pages/messenger';
 import ContactPage from "@/pages/contact";
+import AboutPage from "@/pages/about";
 import FlashSaleProductsPage from "@/pages/flash-sale-products";
 import BulkProductsPage from "@/pages/bulk-products";
 import NewlyLaunchedPage from "@/pages/newly-launched";
@@ -103,6 +104,7 @@ function AppRoutes() {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/messenger" component={MessengerPage} />
         <Route path="/contact" component={ContactPage} />
+        <Route path="/about" component={AboutPage} />
         <Route path="/flash-sale-products" component={FlashSaleProductsPage} />
         <Route path="/bulk-products" component={BulkProductsPage} />
         <Route path="/newly-launched" component={NewlyLaunchedPage} />

@@ -39,12 +39,12 @@ export default function Footer() {
           <div className="min-w-0 lg:pl-4">
             <h4 className="font-bold text-meow-yellow mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Home</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Cat Food</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Dog Food</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Toys & Accessories</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Grooming</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Health Care</a></li>
+              <li><a href="/" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Home</a></li>
+              <li><a href="/about" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">About Us</a></li>
+              <li><a href="/cat-food" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Cat Food</a></li>
+              <li><a href="/dog-food" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Dog Food</a></li>
+              <li><a href="/contact" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Contact Us</a></li>
+              <li><a href="/blog" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Blog</a></li>
             </ul>
           </div>
 
