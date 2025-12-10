@@ -57,6 +57,9 @@ export default function ProductDetailPage() {
     enabled: !!slug, // Only run query if slug exists
   });
 
+  // Get productId from product data
+  const productId = product?.id ?? product?._id;
+
   // Fetch all products for related products section
   const { data: allProducts = [] } = useQuery<DetailProduct[]>({
     queryKey: ['/api/products'],
@@ -73,8 +76,6 @@ export default function ProductDetailPage() {
     },
     enabled: !!productId,
   });
-
-  const productId = product?.id ?? product?._id;
 
   // Filter related products (exclude current product)
   const relatedProducts = allProducts.filter(p => {
