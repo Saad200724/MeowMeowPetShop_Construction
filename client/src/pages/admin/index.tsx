@@ -30,7 +30,7 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
   Package, FileEdit, Plus, Trash2, ArrowLeft, Search, 
   Filter, Grid, List, Eye, Edit, Save, X, 
-  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee, Tag, ShoppingCart, Image as ImageIcon
+  Home, PawPrint, BookOpen, Speaker, Grid3X3, Coffee, Tag, ShoppingCart, Image as ImageIcon, Building2
 } from "lucide-react";
 
 // Form validation schemas
@@ -103,7 +103,15 @@ const popupPosterFormSchema = z.object({
   title: z.string().optional(),
 });
 
+const brandFormSchema = z.object({
+  name: z.string().min(1, 'Brand name is required'),
+  logo: z.string().optional(),
+  description: z.string().optional(),
+  isActive: z.boolean().optional(),
+});
+
 type ProductFormData = z.infer<typeof productFormSchema>;
+type BrandFormData = z.infer<typeof brandFormSchema>;
 type RepackFormData = z.infer<typeof repackFormSchema>;
 type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
 type BlogFormData = z.infer<typeof blogFormSchema>;
@@ -162,6 +170,16 @@ interface PopupPoster {
   updatedAt: Date;
 }
 
+interface BrandItem {
+  _id?: string;
+  id?: string;
+  name: string;
+  slug: string;
+  logo?: string;
+  description?: string;
+  isActive: boolean;
+}
+
 export default function AdminPage() {
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
@@ -193,6 +211,9 @@ export default function AdminPage() {
   const [showPopupDialog, setShowPopupDialog] = useState(false);
   const [editingPopupPoster, setEditingPopupPoster] = useState<PopupPoster | null>(null);
   const [popupImageSource, setPopupImageSource] = useState<'url' | 'upload'>('url');
+  const [showBrandDialog, setShowBrandDialog] = useState(false);
+  const [editingBrand, setEditingBrand] = useState<BrandItem | null>(null);
+  const [brandLogoSource, setBrandLogoSource] = useState<'url' | 'upload'>('url');
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
@@ -321,6 +342,16 @@ export default function AdminPage() {
     },
   });
 
+  const brandForm = useForm<BrandFormData>({
+    resolver: zodResolver(brandFormSchema),
+    defaultValues: {
+      name: '',
+      logo: '',
+      description: '',
+      isActive: true,
+    },
+  });
+
   // All mutations declared at the top level
   const createProductMutation = useMutation({
     mutationFn: async (data: ProductFormData) => {
@@ -393,6 +424,94 @@ export default function AdminPage() {
       toast({
         title: 'Error',
         description: error.message || 'Failed to delete product',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Brand mutations
+  const createBrandMutation = useMutation({
+    mutationFn: async (data: BrandFormData) => {
+      const response = await fetch('/api/brands', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to create brand');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brands'] });
+      brandForm.reset();
+      setShowBrandDialog(false);
+      toast({
+        title: 'Success',
+        description: 'Brand created successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create brand',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const updateBrandMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: BrandFormData }) => {
+      const response = await fetch(`/api/brands/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to update brand');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brands'] });
+      brandForm.reset();
+      setEditingBrand(null);
+      setShowBrandDialog(false);
+      toast({
+        title: 'Success',
+        description: 'Brand updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update brand',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const deleteBrandMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/brands/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete brand');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brands'] });
+      toast({
+        title: 'Success',
+        description: 'Brand deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete brand',
         variant: 'destructive',
       });
     },
@@ -1250,22 +1369,38 @@ export default function AdminPage() {
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Products Management</h2>
                 <p className="text-gray-600">Manage your product catalog across all categories</p>
               </div>
-              <Button 
-                onClick={() => {
-                  setEditingProduct(null);
-                  form.reset();
-                  setShowProductDialog(true);
-                }}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Product
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    setEditingProduct(null);
+                    form.reset();
+                    setShowProductDialog(true);
+                  }}
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                  data-testid="button-add-product"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Product
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setEditingBrand(null);
+                    brandForm.reset();
+                    setShowBrandDialog(true);
+                  }}
+                  variant="outline"
+                  className="border-green-300 text-green-700 hover:bg-green-50 font-medium shadow-sm hover:shadow transition-all duration-200"
+                  data-testid="button-manage-brands"
+                >
+                  <Building2 className="w-4 h-4 mr-2" />
+                  Brands
+                </Button>
+              </div>
             </div>
 
             {/* Filters */}
@@ -3457,6 +3592,347 @@ export default function AdminPage() {
               </DialogFooter>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Brand Management Dialog */}
+      <Dialog open={showBrandDialog} onOpenChange={setShowBrandDialog}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-gray-900">
+              {editingBrand ? 'Edit Brand' : 'Brand Management'}
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              {editingBrand ? 'Update brand details' : 'Manage your brands - add new brands or edit existing ones'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {!editingBrand ? (
+            <div className="space-y-4">
+              {/* Existing Brands List */}
+              <div className="border rounded-lg p-4 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Brands</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {(brands as BrandItem[]).map((brand) => (
+                    <div 
+                      key={brand._id || brand.id} 
+                      className="bg-white border rounded-lg p-3 flex flex-col items-center gap-2 group relative"
+                    >
+                      {brand.logo ? (
+                        <img 
+                          src={brand.logo} 
+                          alt={brand.name} 
+                          className="w-16 h-12 object-contain"
+                        />
+                      ) : (
+                        <div className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center">
+                          <Building2 className="w-6 h-6 text-gray-400" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium text-gray-900 text-center">{brand.name}</span>
+                      <Badge 
+                        variant={brand.isActive ? 'default' : 'secondary'}
+                        className={brand.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}
+                      >
+                        {brand.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                      <div className="flex gap-1 mt-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                          onClick={() => {
+                            setEditingBrand(brand);
+                            brandForm.reset({
+                              name: brand.name,
+                              logo: brand.logo || '',
+                              description: brand.description || '',
+                              isActive: brand.isActive,
+                            });
+                          }}
+                          data-testid={`edit-brand-${brand._id || brand.id}`}
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 border-red-200 hover:bg-red-50"
+                          onClick={() => {
+                            if (confirm(`Are you sure you want to delete "${brand.name}"?`)) {
+                              deleteBrandMutation.mutate((brand._id || brand.id) as string);
+                            }
+                          }}
+                          data-testid={`delete-brand-${brand._id || brand.id}`}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {(brands as BrandItem[]).length === 0 && (
+                  <p className="text-center text-gray-500 py-4">No brands found. Add your first brand below.</p>
+                )}
+              </div>
+
+              {/* Add New Brand Form */}
+              <div className="border rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Add New Brand</h3>
+                <Form {...brandForm}>
+                  <form onSubmit={brandForm.handleSubmit((data) => createBrandMutation.mutate(data))} className="space-y-4">
+                    <FormField
+                      control={brandForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-900 font-semibold">Brand Name *</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter brand name" 
+                              className="text-gray-900 bg-white border-gray-300" 
+                              {...field}
+                              data-testid="input-brand-name"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={brandForm.control}
+                      name="logo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-900 font-semibold">Logo URL</FormLabel>
+                          <div className="flex gap-2 mb-2">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={brandLogoSource === 'url' ? 'default' : 'outline'}
+                              onClick={() => setBrandLogoSource('url')}
+                              className={brandLogoSource === 'url' ? 'bg-green-600' : ''}
+                            >
+                              URL
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={brandLogoSource === 'upload' ? 'default' : 'outline'}
+                              onClick={() => setBrandLogoSource('upload')}
+                              className={brandLogoSource === 'upload' ? 'bg-green-600' : ''}
+                            >
+                              Upload
+                            </Button>
+                          </div>
+                          <FormControl>
+                            {brandLogoSource === 'url' ? (
+                              <Input 
+                                placeholder="Enter logo URL" 
+                                className="text-gray-900 bg-white border-gray-300" 
+                                {...field}
+                                data-testid="input-brand-logo"
+                              />
+                            ) : (
+                              <ImageUpload
+                                value={field.value || ''}
+                                onChange={field.onChange}
+                              />
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={brandForm.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-900 font-semibold">Description</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Enter brand description" 
+                              className="text-gray-900 bg-white border-gray-300" 
+                              {...field}
+                              data-testid="input-brand-description"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={brandForm.control}
+                      name="isActive"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                          <div className="space-y-0.5">
+                            <FormLabel className="text-gray-900 font-semibold">Active Status</FormLabel>
+                            <div className="text-sm text-gray-600">
+                              Show this brand on the homepage and brand pages
+                            </div>
+                          </div>
+                          <FormControl>
+                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <DialogFooter>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                        onClick={() => setShowBrandDialog(false)}
+                      >
+                        Close
+                      </Button>
+                      <Button 
+                        type="submit" 
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        disabled={createBrandMutation.isPending}
+                        data-testid="button-save-brand"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        {createBrandMutation.isPending ? 'Adding...' : 'Add Brand'}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </div>
+            </div>
+          ) : (
+            /* Edit Brand Form */
+            <Form {...brandForm}>
+              <form onSubmit={brandForm.handleSubmit((data) => updateBrandMutation.mutate({ id: (editingBrand._id || editingBrand.id) as string, data }))} className="space-y-4">
+                <FormField
+                  control={brandForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Brand Name *</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter brand name" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={brandForm.control}
+                  name="logo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Logo URL</FormLabel>
+                      <div className="flex gap-2 mb-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={brandLogoSource === 'url' ? 'default' : 'outline'}
+                          onClick={() => setBrandLogoSource('url')}
+                          className={brandLogoSource === 'url' ? 'bg-green-600' : ''}
+                        >
+                          URL
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={brandLogoSource === 'upload' ? 'default' : 'outline'}
+                          onClick={() => setBrandLogoSource('upload')}
+                          className={brandLogoSource === 'upload' ? 'bg-green-600' : ''}
+                        >
+                          Upload
+                        </Button>
+                      </div>
+                      <FormControl>
+                        {brandLogoSource === 'url' ? (
+                          <Input 
+                            placeholder="Enter logo URL" 
+                            className="text-gray-900 bg-white border-gray-300" 
+                            {...field}
+                          />
+                        ) : (
+                          <ImageUpload
+                            value={field.value || ''}
+                            onChange={field.onChange}
+                          />
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={brandForm.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-900 font-semibold">Description</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Enter brand description" 
+                          className="text-gray-900 bg-white border-gray-300" 
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={brandForm.control}
+                  name="isActive"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-gray-900 font-semibold">Active Status</FormLabel>
+                        <div className="text-sm text-gray-600">
+                          Show this brand on the homepage and brand pages
+                        </div>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <DialogFooter>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    onClick={() => {
+                      setEditingBrand(null);
+                      brandForm.reset();
+                    }}
+                  >
+                    Back to List
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    disabled={updateBrandMutation.isPending}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {updateBrandMutation.isPending ? 'Saving...' : 'Update Brand'}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          )}
         </DialogContent>
       </Dialog>
     </div>

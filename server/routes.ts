@@ -204,6 +204,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create Brand API
+  app.post("/api/brands", async (req, res) => {
+    try {
+      const { name, logo, description, isActive } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ message: "Brand name is required" });
+      }
+
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      
+      const existingBrand = await Brand.findOne({ slug });
+      if (existingBrand) {
+        return res.status(400).json({ message: "A brand with this name already exists" });
+      }
+
+      const newBrand = new Brand({
+        name,
+        slug,
+        logo: logo || '',
+        description: description || '',
+        isActive: isActive !== false
+      });
+
+      await newBrand.save();
+      console.log(`Created new brand: ${name}`);
+      
+      res.status(201).json({
+        id: newBrand._id,
+        name: newBrand.name,
+        slug: newBrand.slug,
+        logo: newBrand.logo,
+        description: newBrand.description,
+        isActive: newBrand.isActive
+      });
+    } catch (error) {
+      console.error("Error creating brand:", error);
+      res.status(500).json({ message: "Failed to create brand" });
+    }
+  });
+
+  // Update Brand API
+  app.put("/api/brands/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, logo, description, isActive } = req.body;
+
+      const brand = await Brand.findById(id);
+      if (!brand) {
+        return res.status(404).json({ message: "Brand not found" });
+      }
+
+      if (name && name !== brand.name) {
+        const newSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const existingBrand = await Brand.findOne({ slug: newSlug, _id: { $ne: id } });
+        if (existingBrand) {
+          return res.status(400).json({ message: "A brand with this name already exists" });
+        }
+        brand.name = name;
+        brand.slug = newSlug;
+      }
+
+      if (logo !== undefined) brand.logo = logo;
+      if (description !== undefined) brand.description = description;
+      if (isActive !== undefined) brand.isActive = isActive;
+
+      await brand.save();
+      console.log(`Updated brand: ${brand.name}`);
+
+      res.json({
+        id: brand._id,
+        name: brand.name,
+        slug: brand.slug,
+        logo: brand.logo,
+        description: brand.description,
+        isActive: brand.isActive
+      });
+    } catch (error) {
+      console.error("Error updating brand:", error);
+      res.status(500).json({ message: "Failed to update brand" });
+    }
+  });
+
   // Delete Brand API
   app.delete("/api/brands/:id", async (req, res) => {
     try {

@@ -31,6 +31,7 @@ import OnePage from "@/pages/brands/one";
 import ReflexPlusPage from "@/pages/brands/reflex-plus";
 import RoyalCaninPage from "@/pages/brands/royal-canin";
 import ShebaPage from "@/pages/brands/sheba";
+import BrandPage from "@/pages/brands/brand";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import ForgotPasswordPage from "@/pages/forgot-password";
@@ -91,6 +92,7 @@ function AppRoutes() {
         <Route path="/brands/reflex-plus" component={ReflexPlusPage} />
         <Route path="/brands/royal-canin" component={RoyalCaninPage} />
         <Route path="/brands/sheba" component={ShebaPage} />
+        <Route path="/brands/:slug" component={BrandPage} />
         <Route path="/blog" component={BlogPage} />
         <Route path="/blog/:slug" component={BlogDetailPage} />
         <Route path="/bulk-discounts" component={BulkDiscountsPage} />
