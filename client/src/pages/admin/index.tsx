@@ -3650,7 +3650,6 @@ export default function AdminPage() {
                             brandForm.reset({
                               name: brand.name,
                               logo: brand.logo || '',
-                              description: brand.description || '',
                               isActive: brand.isActive,
                             });
                           }}
@@ -3744,25 +3743,6 @@ export default function AdminPage() {
                                 onChange={field.onChange}
                               />
                             )}
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={brandForm.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-900 font-semibold">Description</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Enter brand description" 
-                              className="text-gray-900 bg-white border-gray-300" 
-                              {...field}
-                              data-testid="input-brand-description"
-                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -3871,24 +3851,6 @@ export default function AdminPage() {
                             onChange={field.onChange}
                           />
                         )}
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={brandForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-900 font-semibold">Description</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Enter brand description" 
-                          className="text-gray-900 bg-white border-gray-300" 
-                          {...field}
-                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
