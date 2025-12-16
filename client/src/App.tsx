@@ -32,6 +32,7 @@ import ReflexPlusPage from "@/pages/brands/reflex-plus";
 import RoyalCaninPage from "@/pages/brands/royal-canin";
 import ShebaPage from "@/pages/brands/sheba";
 import BrandPage from "@/pages/brands/brand";
+import BrandsPage from "@/pages/brands";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import ForgotPasswordPage from "@/pages/forgot-password";
@@ -85,6 +86,7 @@ function AppRoutes() {
         <Route path="/dog-accessories" component={DogAccessoriesPage} />
         <Route path="/rabbit" component={RabbitPage} />
         <Route path="/bird" component={BirdPage} />
+        <Route path="/brands" component={BrandsPage} />
         <Route path="/brands/reflex" component={ReflexPage} />
         <Route path="/brands/nekko" component={NekkoPage} />
         <Route path="/brands/purina" component={PurinaPage} />

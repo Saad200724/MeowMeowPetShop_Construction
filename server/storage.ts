@@ -23,10 +23,12 @@ interface SimpleCategory {
 
 interface SimpleBrand {
   id: string;
+  _id?: string;
   name: string;
   slug: string;
   logo: string;
   description: string;
+  isActive?: boolean;
 }
 
 interface InsertUser {
@@ -316,14 +318,15 @@ export class DatabaseStorage implements IStorage {
 
   async getBrands(): Promise<SimpleBrand[]> {
     try {
-      const allowedBrands = ['nekko', 'purina', 'one', 'reflex', 'reflex-plus', 'royal-canin', 'sheba'];
-      const dbBrands = await Brand.find({ isActive: true, slug: { $in: allowedBrands } });
+      const dbBrands = await Brand.find({});
       return dbBrands.map(brand => ({
-        id: brand.id.toString(),
+        id: brand._id.toString(),
+        _id: brand._id.toString(),
         name: brand.name,
         slug: brand.slug,
         logo: brand.logo || '',
-        description: brand.description || ''
+        description: brand.description || '',
+        isActive: brand.isActive !== false
       }));
     } catch (error) {
       console.error('Error fetching brands:', error);

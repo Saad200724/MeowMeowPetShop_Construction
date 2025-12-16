@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Award, Building2 } from "lucide-react";
+import { Award, Building2, ChevronRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 interface Brand {
@@ -55,16 +55,28 @@ export default function FeaturedBrands() {
   });
 
   const activeBrands = apiBrands.filter(brand => brand.isActive !== false);
-  const brands = activeBrands.length > 0 ? activeBrands : fallbackBrands;
+  const allBrands = activeBrands.length > 0 ? activeBrands : fallbackBrands;
+  const brands = allBrands.slice(0, 7);
 
   return (
     <section className="py-8 bg-gray-50">
       <div className="container mx-auto">
-        <div className="mb-6 text-center px-4">
+        <div className="mb-6 px-4 flex items-center justify-between">
+          <div className="flex-1" />
           <h3 className="text-lg md:text-3xl font-bold text-[#26732d] flex items-center justify-center gap-2">
             <Award size={20} className="md:w-8 md:h-8" />
             FEATURED BRANDS
           </h3>
+          <div className="flex-1 flex justify-end">
+            <Link
+              href="/brands"
+              className="text-sm md:text-base text-[#26732d] hover:underline flex items-center gap-1 font-medium"
+              data-testid="link-more-brands"
+            >
+              More Brands
+              <ChevronRight size={16} />
+            </Link>
+          </div>
         </div>
         <div className="overflow-x-auto scrollbar-hide pb-2">
           <div className="flex justify-center items-center gap-4 md:gap-6 lg:gap-8 min-w-max px-4">
