@@ -2689,13 +2689,15 @@ export default function AdminPage() {
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
                           <SelectItem value="default-brand">Default Brand</SelectItem>
-                          <SelectItem value="nekko">Nekko</SelectItem>
-                          <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="one">ONE</SelectItem>
-                          <SelectItem value="reflex">Reflex</SelectItem>
-                          <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
-                          <SelectItem value="royal-canin">Royal Canin</SelectItem>
-                          <SelectItem value="sheba">Sheba</SelectItem>
+                          {(brands as BrandItem[]).map((brand) => (
+                            <SelectItem 
+                              key={brand._id || brand.id || brand.slug} 
+                              value={brand.slug}
+                              className="text-black hover:bg-gray-100"
+                            >
+                              {brand.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -3039,13 +3041,15 @@ export default function AdminPage() {
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
                           <SelectItem value="default-brand">Default Brand</SelectItem>
-                          <SelectItem value="nekko">Nekko</SelectItem>
-                          <SelectItem value="purina">Purina</SelectItem>
-                          <SelectItem value="one">ONE</SelectItem>
-                          <SelectItem value="reflex">Reflex</SelectItem>
-                          <SelectItem value="reflex-plus">Reflex Plus</SelectItem>
-                          <SelectItem value="royal-canin">Royal Canin</SelectItem>
-                          <SelectItem value="sheba">Sheba</SelectItem>
+                          {(brands as BrandItem[]).map((brand) => (
+                            <SelectItem 
+                              key={brand._id || brand.id || brand.slug} 
+                              value={brand.slug}
+                              className="text-black hover:bg-gray-100"
+                            >
+                              {brand.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
