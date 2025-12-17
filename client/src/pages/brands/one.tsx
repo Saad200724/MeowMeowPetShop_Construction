@@ -13,7 +13,7 @@ import { useProducts, type Product } from '@/hooks/use-products';
 export default function OnePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({
-    priceRange: [1, 13000],
+    priceRange: [1, 100000],
     sortBy: 'relevance'
   });
   
@@ -116,7 +116,7 @@ export default function OnePage() {
           <aside className="lg:w-1/4 mb-8 lg:mb-0">
             <ModernFilter 
               onFilterChange={handleFilterChange}
-              maxPrice={4000}
+              maxPrice={100000}
             />
           </aside>
 

@@ -21,7 +21,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [priceRange, setPriceRange] = useState([0, 10000])
+  const [priceRange, setPriceRange] = useState([0, 100000])
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [minRating, setMinRating] = useState(0)
   const [showOnlyInStock, setShowOnlyInStock] = useState(false)
@@ -88,13 +88,13 @@ export default function ProductsPage() {
   }
 
   const clearFilters = () => {
-    setPriceRange([0, 10000])
+    setPriceRange([0, 100000])
     setSelectedBrands([])
     setMinRating(0)
     setShowOnlyInStock(false)
   }
 
-  const hasActiveFilters = priceRange[0] > 0 || priceRange[1] < 10000 || selectedBrands.length > 0 || minRating > 0 || showOnlyInStock
+  const hasActiveFilters = priceRange[0] > 0 || priceRange[1] < 100000 || selectedBrands.length > 0 || minRating > 0 || showOnlyInStock
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30">
@@ -212,7 +212,7 @@ export default function ProductsPage() {
                   </label>
                   <Slider
                     min={0}
-                    max={10000}
+                    max={100000}
                     step={100}
                     value={priceRange}
                     onValueChange={setPriceRange}
@@ -400,7 +400,7 @@ export default function ProductsPage() {
                     </label>
                     <Slider
                       min={0}
-                      max={10000}
+                      max={100000}
                       step={100}
                       value={priceRange}
                       onValueChange={setPriceRange}

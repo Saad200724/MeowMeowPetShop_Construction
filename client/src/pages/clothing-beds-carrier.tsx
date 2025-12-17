@@ -14,7 +14,7 @@ import { Card } from '@/components/ui/card';
 export default function ClothingBedsCarrierPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({
-    priceRange: [1, 20000],
+    priceRange: [1, 100000],
     sortBy: 'relevance'
   });
 
@@ -121,7 +121,7 @@ export default function ClothingBedsCarrierPage() {
           <aside className="lg:w-1/4 mb-4 md:mb-8 lg:mb-0">
             <ModernFilter
               onFilterChange={handleFilterChange}
-              maxPrice={20000}
+              maxPrice={100000}
             />
           </aside>
 
@@ -148,7 +148,7 @@ export default function ClothingBedsCarrierPage() {
                   className="mt-4 text-gray-900 border-gray-400 bg-white hover:bg-gray-100 hover:border-gray-500 hover:text-black shadow-sm"
                   onClick={() => {
                     setSearchQuery('');
-                    setFilters({ priceRange: [1, 20000], sortBy: 'relevance' });
+                    setFilters({ priceRange: [1, 100000], sortBy: 'relevance' });
                   }}
                 >
                   Clear Filters

@@ -19,7 +19,7 @@ interface ModernFilterProps {
   className?: string;
 }
 
-export default function ModernFilter({ onFilterChange, maxPrice = 20000, className = '' }: ModernFilterProps) {
+export default function ModernFilter({ onFilterChange, maxPrice = 100000, className = '' }: ModernFilterProps) {
   const [priceRange, setPriceRange] = useState<[number, number]>([1, maxPrice]);
   const [sortBy, setSortBy] = useState('relevance');
 
