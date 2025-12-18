@@ -214,6 +214,11 @@ export default function AdminPage() {
   const [showBrandDialog, setShowBrandDialog] = useState(false);
   const [editingBrand, setEditingBrand] = useState<BrandItem | null>(null);
   const [brandLogoSource, setBrandLogoSource] = useState<'url' | 'upload'>('url');
+  const [showInvoiceEditor, setShowInvoiceEditor] = useState(false);
+  const [editingInvoice, setEditingInvoice] = useState<any>(null);
+  const [invoiceItems, setInvoiceItems] = useState<any[]>([]);
+  const [invoiceDeliveryFee, setInvoiceDeliveryFee] = useState(0);
+  const [invoiceDiscount, setInvoiceDiscount] = useState(0);
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
@@ -886,6 +891,34 @@ export default function AdminPage() {
     },
   });
 
+  const updateInvoiceMutation = useMutation({
+    mutationFn: async ({ invoiceId, data }: { invoiceId: string; data: any }) => {
+      const response = await fetch(`/api/invoices/${invoiceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to update invoice');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      setShowInvoiceEditor(false);
+      setEditingInvoice(null);
+      toast({
+        title: 'Success',
+        description: 'Invoice updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update invoice',
+        variant: 'destructive',
+      });
+    },
+  });
+
   // Show loading state while checking authentication
   if (loading) {
     return (
@@ -1097,6 +1130,80 @@ export default function AdminPage() {
     if (confirm('Are you sure you want to delete this order?')) {
       deleteOrderMutation.mutate(orderId);
     }
+  };
+
+  const handleEditInvoice = async (order: any) => {
+    if (!order.invoiceId) {
+      toast({
+        title: 'Error',
+        description: 'No invoice found for this order',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/invoices/${order.invoiceId}`);
+      if (!response.ok) throw new Error('Failed to fetch invoice');
+      const invoice = await response.json();
+      
+      setEditingInvoice(invoice);
+      setInvoiceItems(invoice.items || []);
+      setInvoiceDeliveryFee(invoice.deliveryFee || 0);
+      setInvoiceDiscount(invoice.discount || 0);
+      setShowInvoiceEditor(true);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to load invoice for editing',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleSaveInvoice = () => {
+    if (!editingInvoice) return;
+    
+    updateInvoiceMutation.mutate({
+      invoiceId: editingInvoice._id,
+      data: {
+        items: invoiceItems,
+        deliveryFee: invoiceDeliveryFee,
+        discount: invoiceDiscount,
+        customerInfo: editingInvoice.customerInfo,
+      },
+    });
+  };
+
+  const handleAddInvoiceItem = () => {
+    setInvoiceItems([
+      ...invoiceItems,
+      {
+        productId: `new-${Date.now()}`,
+        name: 'New Product',
+        price: 0,
+        quantity: 1,
+        image: '/placeholder.png',
+      },
+    ]);
+  };
+
+  const handleRemoveInvoiceItem = (index: number) => {
+    setInvoiceItems(invoiceItems.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateInvoiceItem = (index: number, field: string, value: any) => {
+    const updatedItems = [...invoiceItems];
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
+    setInvoiceItems(updatedItems);
+  };
+
+  const calculateInvoiceSubtotal = () => {
+    return invoiceItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const calculateInvoiceTotal = () => {
+    return calculateInvoiceSubtotal() + invoiceDeliveryFee - invoiceDiscount;
   };
 
   const handleSaveBlog = () => {
@@ -1315,16 +1422,28 @@ export default function AdminPage() {
                       </div>
                       <div className="flex space-x-2">
                         {order.invoiceId && (
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-900"
-                            onClick={() => window.open(`/invoice/${order.invoiceId}`, '_blank')}
-                            data-testid={`view-invoice-${order._id}`}
-                          >
-                            <Eye className="w-4 h-4 mr-1" />
-                            Invoice
-                          </Button>
+                          <>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-900"
+                              onClick={() => window.open(`/invoice/${order.invoiceId}`, '_blank')}
+                              data-testid={`view-invoice-${order._id}`}
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Invoice
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="text-green-600 border-green-200 bg-green-50 hover:bg-green-100 hover:text-green-900"
+                              onClick={() => handleEditInvoice(order)}
+                              data-testid={`edit-invoice-${order._id}`}
+                            >
+                              <FileEdit className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
+                          </>
                         )}
                         <Select
                           value={order.status || 'pending'}
@@ -3899,6 +4018,185 @@ export default function AdminPage() {
               </form>
             </Form>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Invoice Editor Dialog */}
+      <Dialog open={showInvoiceEditor} onOpenChange={setShowInvoiceEditor}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-gray-900">
+              Edit Invoice {editingInvoice?.invoiceNumber}
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Modify invoice items, prices, delivery fee, and discounts
+            </DialogDescription>
+          </DialogHeader>
+
+          {editingInvoice && (
+            <div className="space-y-6">
+              {/* Customer Info */}
+              <div className="border rounded-lg p-4 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Customer Information</h3>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-gray-700">Name:</span>
+                    <p className="text-gray-900">{editingInvoice.customerInfo?.name}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Phone:</span>
+                    <p className="text-gray-900">{editingInvoice.customerInfo?.phone}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Email:</span>
+                    <p className="text-gray-900">{editingInvoice.customerInfo?.email}</p>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Payment:</span>
+                    <p className="text-gray-900">{editingInvoice.paymentMethod}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Invoice Items */}
+              <div className="border rounded-lg p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Invoice Items</h3>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleAddInvoiceItem}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    data-testid="button-add-invoice-item"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Item
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {invoiceItems.map((item, index) => (
+                    <div key={item.productId || index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-1">
+                        <Label className="text-xs text-gray-600">Product Name</Label>
+                        <Input
+                          value={item.name}
+                          onChange={(e) => handleUpdateInvoiceItem(index, 'name', e.target.value)}
+                          className="bg-white text-black"
+                          placeholder="Product name"
+                          data-testid={`input-item-name-${index}`}
+                        />
+                      </div>
+                      <div className="w-24">
+                        <Label className="text-xs text-gray-600">Price (৳)</Label>
+                        <Input
+                          type="number"
+                          value={item.price}
+                          onChange={(e) => handleUpdateInvoiceItem(index, 'price', parseFloat(e.target.value) || 0)}
+                          className="bg-white text-black"
+                          placeholder="0"
+                          data-testid={`input-item-price-${index}`}
+                        />
+                      </div>
+                      <div className="w-20">
+                        <Label className="text-xs text-gray-600">Qty</Label>
+                        <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => handleUpdateInvoiceItem(index, 'quantity', parseInt(e.target.value) || 1)}
+                          className="bg-white text-black"
+                          min="1"
+                          data-testid={`input-item-quantity-${index}`}
+                        />
+                      </div>
+                      <div className="w-24 text-right">
+                        <Label className="text-xs text-gray-600">Total</Label>
+                        <p className="font-semibold text-gray-900 mt-2">৳{(item.price * item.quantity).toLocaleString()}</p>
+                      </div>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={() => handleRemoveInvoiceItem(index)}
+                        data-testid={`button-remove-item-${index}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+
+                  {invoiceItems.length === 0 && (
+                    <p className="text-center text-gray-500 py-4">No items in invoice. Add items using the button above.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Pricing */}
+              <div className="border rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pricing</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Subtotal:</span>
+                    <span className="font-semibold text-gray-900">৳{calculateInvoiceSubtotal().toLocaleString()}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center gap-4">
+                    <Label className="text-gray-700">Delivery Fee (৳):</Label>
+                    <Input
+                      type="number"
+                      value={invoiceDeliveryFee}
+                      onChange={(e) => setInvoiceDeliveryFee(parseFloat(e.target.value) || 0)}
+                      className="w-32 bg-white text-black text-right"
+                      min="0"
+                      data-testid="input-delivery-fee"
+                    />
+                  </div>
+
+                  <div className="flex justify-between items-center gap-4">
+                    <Label className="text-gray-700">Discount (৳):</Label>
+                    <Input
+                      type="number"
+                      value={invoiceDiscount}
+                      onChange={(e) => setInvoiceDiscount(parseFloat(e.target.value) || 0)}
+                      className="w-32 bg-white text-black text-right"
+                      min="0"
+                      data-testid="input-invoice-discount"
+                    />
+                  </div>
+
+                  <div className="border-t pt-4 flex justify-between items-center">
+                    <span className="text-lg font-bold text-gray-900">Total:</span>
+                    <span className="text-xl font-bold text-green-600">৳{calculateInvoiceTotal().toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              onClick={() => {
+                setShowInvoiceEditor(false);
+                setEditingInvoice(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={handleSaveInvoice}
+              disabled={updateInvoiceMutation.isPending}
+              data-testid="button-save-invoice"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {updateInvoiceMutation.isPending ? 'Saving...' : 'Save Invoice'}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
