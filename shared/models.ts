@@ -239,6 +239,7 @@ export interface IInvoice extends Document {
   };
   items: ICartItem[];
   subtotal: number;
+  deliveryFee?: number;
   discount?: number;
   discountCode?: string;
   total: number;
@@ -267,6 +268,7 @@ const invoiceSchema = new Schema<IInvoice>({
     image: { type: String, required: true }
   }],
   subtotal: { type: Number, required: true },
+  deliveryFee: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
   discountCode: { type: String },
   total: { type: Number, required: true },
