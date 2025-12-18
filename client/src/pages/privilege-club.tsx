@@ -95,7 +95,7 @@ export default function PrivilegeClubPage() {
               return (
                 <Card 
                   key={tier.name}
-                  className={`relative transition-all duration-300 hover:scale-105 ${
+                  className={`relative transition-all duration-300 hover:scale-105 flex flex-col ${
                     tier.popular ? 'ring-2 ring-green-500 shadow-xl' : 'hover:shadow-lg'
                   } ${selectedTier === tier.name ? 'ring-2 ring-blue-500' : ''}`}
                   data-testid={`card-membership-${tier.name.toLowerCase().replace(' ', '-')}`}
@@ -117,7 +117,7 @@ export default function PrivilegeClubPage() {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 flex flex-col flex-grow">
                     <ul className="space-y-3">
                       {tier.benefits.map((benefit, index) => (
                         <li key={index} className="flex items-start gap-1">
@@ -128,7 +128,7 @@ export default function PrivilegeClubPage() {
                     </ul>
 
                     <Button 
-                      className={`w-full mt-6 text-white ${
+                      className={`w-full mt-auto text-white ${
                         tier.popular 
                           ? 'bg-green-600 hover:bg-green-700' 
                           : 'bg-gray-900 hover:bg-gray-800'
