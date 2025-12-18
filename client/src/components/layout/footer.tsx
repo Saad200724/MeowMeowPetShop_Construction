@@ -22,7 +22,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">Your trusted partner for premium pet food and accessories in Savar, Bangladesh. We care for your pets like family.</p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mb-6">
               <a href="https://facebook.com/meow.meow.pet.shop1" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <Facebook size={20} />
               </a>
@@ -32,6 +32,10 @@ export default function Footer() {
               <a href="https://wa.me/8801838511583" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">
                 <MessageCircle size={20} />
               </a>
+            </div>
+            <div className="pt-4 border-t border-gray-600">
+              <p className="text-xs text-meow-yellow font-semibold mb-1">Delivery:</p>
+              <p className="text-xs text-gray-300">Dhaka: ৳80 | Outside: ৳130</p>
             </div>
           </div>
 
@@ -46,10 +50,6 @@ export default function Footer() {
               <li><a href="/contact" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Contact Us</a></li>
               <li><a href="/blog" className="text-gray-300 hover:text-meow-yellow transition-colors text-sm">Blog</a></li>
             </ul>
-            <div className="mt-4 pt-4 border-t border-gray-600">
-              <p className="text-xs text-meow-yellow font-semibold mb-1">Delivery:</p>
-              <p className="text-xs text-gray-300">Dhaka: ৳80 | Outside: ৳130</p>
-            </div>
           </div>
 
           {/* Policies */}
@@ -98,7 +98,7 @@ export default function Footer() {
         <div className="mt-8 pt-8">
           <div className="text-center text-gray-400 text-sm pt-4">
             <p>&copy; 2025 Meow Meow Pet Shop. All rights reserved.</p>
-            <p className="mt-1 mb-8">Powered By: <a href="https://znforge.com" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge</a></p>
+            <p className="mt-1 mb-8">Powered By: <a href="https://znforge.dev" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge</a></p>
           </div>
         </div>
       </div>

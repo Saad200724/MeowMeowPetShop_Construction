@@ -96,7 +96,7 @@ export default function CartPage() {
                 Looks like you haven't added any items to your cart yet.
               </p>
               <Link href="/products">
-                <Button size="lg" className="w-full md:w-auto bg-[#26732d] hover:bg-[#1e5d26]">
+                <Button size="lg" className="w-full md:w-auto bg-[#26732d] hover:bg-[#1e5d26] text-white">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Continue Shopping
                 </Button>
@@ -328,7 +328,7 @@ export default function CartPage() {
                     <Link href="/products">
                       <Button 
                         variant="outline" 
-                        className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white py-3"
+                        className="w-full border-[#26732d] text-white hover:bg-[#26732d] hover:text-white py-3 bg-[#26732d]"
                         size="lg"
                       >
                         <ArrowLeft className="h-4 w-4 mr-2" />

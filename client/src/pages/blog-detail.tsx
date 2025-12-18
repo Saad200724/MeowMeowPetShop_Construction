@@ -238,7 +238,7 @@ export default function BlogDetailPage() {
             Contact our experts for personalized advice and support for your pet's needs.
           </p>
           <Link href="/contact">
-            <Button className="bg-indigo-600 hover:bg-indigo-700">
+            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
               Contact Us
             </Button>
           </Link>
