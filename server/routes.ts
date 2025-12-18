@@ -2086,6 +2086,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update invoice details (admin only)
+  app.put("/api/invoices/:invoiceId", async (req, res) => {
+    try {
+      const { invoiceId } = req.params;
+      const { items, deliveryFee, discount, discountCode, customerInfo } = req.body;
+
+      const invoice = await Invoice.findById(invoiceId);
+      if (!invoice) {
+        return res.status(404).json({ message: "Invoice not found" });
+      }
+
+      // Calculate new subtotal from items
+      const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+      
+      // Calculate total: subtotal + deliveryFee - discount
+      const total = subtotal + (deliveryFee || 0) - (discount || 0);
+
+      // Update invoice
+      const updatedInvoice = await Invoice.findByIdAndUpdate(
+        invoiceId,
+        {
+          items,
+          subtotal,
+          deliveryFee: deliveryFee || 0,
+          discount: discount || 0,
+          discountCode: discountCode || '',
+          total,
+          customerInfo: customerInfo || invoice.customerInfo,
+          updatedAt: new Date()
+        },
+        { new: true }
+      );
+
+      // Also update the corresponding order's total and items
+      if (invoice.orderId) {
+        await Order.findByIdAndUpdate(
+          invoice.orderId,
+          {
+            items,
+            total,
+            updatedAt: new Date()
+          }
+        );
+      }
+
+      res.json({ message: "Invoice updated successfully", invoice: updatedInvoice });
+    } catch (error) {
+      console.error('Error updating invoice:', error);
+      res.status(500).json({ message: "Failed to update invoice" });
+    }
+  });
+
   app.get("/api/invoices/download/:invoiceId", async (req, res) => {
     try {
       const { invoiceId } = req.params;
