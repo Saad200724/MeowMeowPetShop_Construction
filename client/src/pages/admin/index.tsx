@@ -4076,53 +4076,82 @@ export default function AdminPage() {
 
                 <div className="space-y-3">
                   {invoiceItems.map((item, index) => (
-                    <div key={item.productId || index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <Label className="text-xs text-gray-600">Product Name</Label>
+                    <div key={item.productId || index} className="border rounded-lg p-4 bg-gray-50">
+                      {/* Product Image and Name Row */}
+                      <div className="flex items-start gap-4 mb-4">
+                        {item.image && (
+                          <div className="flex-shrink-0">
+                            <img 
+                              src={item.image} 
+                              alt={item.name}
+                              className="w-20 h-20 rounded-lg object-cover border"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <Label className="text-xs text-gray-600">Product Name</Label>
+                          <Input
+                            value={item.name}
+                            onChange={(e) => handleUpdateInvoiceItem(index, 'name', e.target.value)}
+                            className="bg-white text-black"
+                            placeholder="Product name"
+                            data-testid={`input-item-name-${index}`}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Product Image URL Row */}
+                      <div className="mb-4">
+                        <Label className="text-xs text-gray-600">Product Image URL</Label>
                         <Input
-                          value={item.name}
-                          onChange={(e) => handleUpdateInvoiceItem(index, 'name', e.target.value)}
-                          className="bg-white text-black"
-                          placeholder="Product name"
-                          data-testid={`input-item-name-${index}`}
+                          value={item.image || ''}
+                          onChange={(e) => handleUpdateInvoiceItem(index, 'image', e.target.value)}
+                          className="bg-white text-black text-sm"
+                          placeholder="https://example.com/image.jpg"
+                          data-testid={`input-item-image-${index}`}
                         />
+                        <p className="text-xs text-gray-500 mt-1">Enter the product image URL</p>
                       </div>
-                      <div className="w-24">
-                        <Label className="text-xs text-gray-600">Price (৳)</Label>
-                        <Input
-                          type="number"
-                          value={item.price}
-                          onChange={(e) => handleUpdateInvoiceItem(index, 'price', parseFloat(e.target.value) || 0)}
-                          className="bg-white text-black"
-                          placeholder="0"
-                          data-testid={`input-item-price-${index}`}
-                        />
+
+                      {/* Price, Quantity, and Total Row */}
+                      <div className="flex items-end gap-3">
+                        <div className="flex-1">
+                          <Label className="text-xs text-gray-600">Price (৳)</Label>
+                          <Input
+                            type="number"
+                            value={item.price}
+                            onChange={(e) => handleUpdateInvoiceItem(index, 'price', parseFloat(e.target.value) || 0)}
+                            className="bg-white text-black"
+                            placeholder="0"
+                            data-testid={`input-item-price-${index}`}
+                          />
+                        </div>
+                        <div className="w-24">
+                          <Label className="text-xs text-gray-600">Qty</Label>
+                          <Input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => handleUpdateInvoiceItem(index, 'quantity', parseInt(e.target.value) || 1)}
+                            className="bg-white text-black"
+                            min="1"
+                            data-testid={`input-item-quantity-${index}`}
+                          />
+                        </div>
+                        <div className="w-28 text-right">
+                          <Label className="text-xs text-gray-600">Total</Label>
+                          <p className="font-semibold text-gray-900 mt-2">৳{(item.price * item.quantity).toLocaleString()}</p>
+                        </div>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="outline"
+                          className="text-red-600 border-red-200 hover:bg-red-50 mb-1"
+                          onClick={() => handleRemoveInvoiceItem(index)}
+                          data-testid={`button-remove-item-${index}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <div className="w-20">
-                        <Label className="text-xs text-gray-600">Qty</Label>
-                        <Input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) => handleUpdateInvoiceItem(index, 'quantity', parseInt(e.target.value) || 1)}
-                          className="bg-white text-black"
-                          min="1"
-                          data-testid={`input-item-quantity-${index}`}
-                        />
-                      </div>
-                      <div className="w-24 text-right">
-                        <Label className="text-xs text-gray-600">Total</Label>
-                        <p className="font-semibold text-gray-900 mt-2">৳{(item.price * item.quantity).toLocaleString()}</p>
-                      </div>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="outline"
-                        className="text-red-600 border-red-200 hover:bg-red-50"
-                        onClick={() => handleRemoveInvoiceItem(index)}
-                        data-testid={`button-remove-item-${index}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
                     </div>
                   ))}
 
