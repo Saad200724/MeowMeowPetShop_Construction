@@ -80,6 +80,31 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [weight, setWeight] = useState('');
+
+  const calculateDeliveryFee = (district: string, weightKg: number): number => {
+    if (!district || weightKg <= 0) return 0;
+    
+    const isDhaka = district.toLowerCase() === 'dhaka';
+    
+    if (isDhaka) {
+      // Dhaka: 80 TK up to 2kg, 20 TK per additional kg
+      if (weightKg <= 2) {
+        return 80;
+      } else {
+        return 80 + (Math.ceil(weightKg - 2) * 20);
+      }
+    } else {
+      // Other districts: 130 TK up to 1kg, 20 TK per additional kg
+      if (weightKg <= 1) {
+        return 130;
+      } else {
+        return 130 + (Math.ceil(weightKg - 1) * 20);
+      }
+    }
+  };
+
+  const deliveryFee = calculateDeliveryFee(billingDetails.district, parseFloat(weight) || 0);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -237,6 +262,16 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Weight validation
+    if (!weight.trim() || parseFloat(weight) <= 0) {
+      toast({
+        title: "Invalid Weight",
+        description: "Please enter a valid package weight.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Phone validation (Bangladesh mobile number)
     const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
     if (!phoneRegex.test(billingDetails.phone.replace(/\s/g, ''))) {
@@ -283,6 +318,8 @@ export default function CheckoutPage() {
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
       },
+      weight: parseFloat(weight),
+      deliveryFee,
       orderNotes
     };
 
@@ -699,6 +736,22 @@ export default function CheckoutPage() {
                         data-testid="input-email"
                       />
                     </div>
+
+                    <div>
+                      <Label htmlFor="weight" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Package Weight (kg) *</Label>
+                      <Input
+                        id="weight"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="e.g., 1.5"
+                        required
+                        className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
+                        data-testid="input-weight"
+                      />
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -758,16 +811,46 @@ export default function CheckoutPage() {
                   <div className="space-y-2 py-2 border-b border-gray-100">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Delivery Charge</span>
-                      <span className="font-medium text-gray-600">See details</span>
+                      <span className="font-medium text-[#26732d]">৳ {deliveryFee.toLocaleString()}</span>
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                      <p className="text-xs font-semibold text-blue-900 mb-2">Shipping Rates:</p>
+                      <p className="text-xs font-semibold text-blue-900 mb-2">Shipping Details:</p>
                       <div className="space-y-1 text-xs text-blue-800">
-                        <p>• Inside Dhaka: ৳80 (up to 2kg)</p>
-                        <p>• Outside Dhaka: ৳130 (up to 1kg)</p>
-                        <p className="text-[10px] text-blue-700 mt-2 italic">
-                          Additional ৳20/kg will be charged for extra weight
-                        </p>
+                        {billingDetails.district ? (
+                          <>
+                            <p className="font-medium">
+                              {billingDetails.district === 'dhaka' ? '✓ Inside Dhaka' : '✓ Outside Dhaka'}
+                            </p>
+                            {billingDetails.district === 'dhaka' ? (
+                              <>
+                                <p>• Base: ৳80 (up to 2kg)</p>
+                                {weight && parseFloat(weight) > 2 && (
+                                  <p>• Extra: ৳{((Math.ceil(parseFloat(weight) - 2)) * 20)} for {(parseFloat(weight) - 2).toFixed(1)}kg</p>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                <p>• Base: ৳130 (up to 1kg)</p>
+                                {weight && parseFloat(weight) > 1 && (
+                                  <p>• Extra: ৳{((Math.ceil(parseFloat(weight) - 1)) * 20)} for {(parseFloat(weight) - 1).toFixed(1)}kg</p>
+                                )}
+                              </>
+                            )}
+                            {weight && (
+                              <p className="text-[10px] text-blue-700 mt-2 italic">
+                                Package weight: {weight}kg
+                              </p>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <p>• Inside Dhaka: ৳80 (up to 2kg)</p>
+                            <p>• Outside Dhaka: ৳130 (up to 1kg)</p>
+                            <p className="text-[10px] text-blue-700 mt-2 italic">
+                              Additional ৳20/kg will be charged for extra weight
+                            </p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -781,7 +864,7 @@ export default function CheckoutPage() {
 
                   <div className="flex justify-between py-2 text-lg font-bold text-[#26732d] border-t-2 border-[#26732d]/20 pt-3">
                     <span>Grand Total</span>
-                    <span>৳ {getFinalTotal().toLocaleString()}</span>
+                    <span>৳ {(getFinalTotal() + deliveryFee).toLocaleString()}</span>
                   </div>
 
                   <Separator />
