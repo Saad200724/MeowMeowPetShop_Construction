@@ -31,6 +31,8 @@ interface Invoice {
   };
   items: InvoiceItem[];
   subtotal: number;
+  discount?: number;
+  deliveryFee?: number;
   total: number;
   paymentMethod: string;
   paymentStatus: string;
@@ -314,6 +316,18 @@ export default function InvoicePage() {
                     <span>Subtotal:</span>
                     <span>৳ {invoice.subtotal.toLocaleString()}</span>
                   </div>
+                  {invoice.deliveryFee !== undefined && invoice.deliveryFee > 0 && (
+                    <div className="flex justify-between">
+                      <span>Delivery Fee:</span>
+                      <span>৳ {invoice.deliveryFee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {invoice.discount !== undefined && invoice.discount > 0 && (
+                    <div className="flex justify-between">
+                      <span>Discount:</span>
+                      <span className="text-green-600">-৳ {invoice.discount.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">
                     <span>Total:</span>
                     <span className="text-[#26732d]">৳ {invoice.total.toLocaleString()}</span>
