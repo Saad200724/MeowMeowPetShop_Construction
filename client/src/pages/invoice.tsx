@@ -32,6 +32,7 @@ interface Invoice {
   items: InvoiceItem[];
   subtotal: number;
   discount?: number;
+  discountCode?: string;
   deliveryFee?: number;
   total: number;
   paymentMethod: string;
@@ -324,7 +325,7 @@ export default function InvoicePage() {
                   )}
                   {invoice.discount !== undefined && invoice.discount > 0 && (
                     <div className="flex justify-between">
-                      <span>Discount:</span>
+                      <span>Discount {invoice.discountCode && `(${invoice.discountCode})`}:</span>
                       <span className="text-green-600">-৳ {invoice.discount.toLocaleString()}</span>
                     </div>
                   )}
