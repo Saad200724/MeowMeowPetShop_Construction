@@ -743,7 +743,7 @@ export default function CheckoutPage() {
                         id="weight"
                         type="number"
                         step="0.1"
-                        min="0"
+                        min="0.1"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                         placeholder="e.g., 1.5"
@@ -751,6 +751,9 @@ export default function CheckoutPage() {
                         className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                         data-testid="input-weight"
                       />
+                      {!weight && billingDetails.district && (
+                        <p className="text-sm text-gray-500 mt-2">Enter weight to calculate delivery fee</p>
+                      )}
                     </div>
                   </form>
                 </CardContent>
@@ -811,11 +814,15 @@ export default function CheckoutPage() {
                   <div className="space-y-2 py-2 border-b border-gray-100">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Delivery Charge</span>
-                      <span className="font-medium text-[#26732d]">৳ {deliveryFee.toLocaleString()}</span>
+                      <span className={`font-medium ${deliveryFee > 0 ? 'text-[#26732d]' : 'text-gray-400'}`}>
+                        ৳ {deliveryFee.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                      <p className="text-xs font-semibold text-blue-900 mb-2">Shipping Details:</p>
-                      <div className="space-y-1 text-xs text-blue-800">
+                    <div className={`rounded-lg p-3 ${billingDetails.district && weight ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-200'}`}>
+                      <p className={`text-xs font-semibold mb-2 ${billingDetails.district && weight ? 'text-blue-900' : 'text-gray-700'}`}>
+                        Shipping Details:
+                      </p>
+                      <div className="space-y-1 text-xs text-gray-700">
                         {billingDetails.district ? (
                           <>
                             <p className="font-medium">
@@ -837,16 +844,22 @@ export default function CheckoutPage() {
                               </>
                             )}
                             {weight && (
-                              <p className="text-[10px] text-blue-700 mt-2 italic">
+                              <p className="text-[10px] text-gray-600 mt-2 italic">
                                 Package weight: {weight}kg
+                              </p>
+                            )}
+                            {!weight && (
+                              <p className="text-[10px] text-orange-600 mt-2 italic font-medium">
+                                ⚠ Enter package weight above to calculate delivery fee
                               </p>
                             )}
                           </>
                         ) : (
                           <>
+                            <p className="font-medium text-orange-600">⚠ Select a district above</p>
                             <p>• Inside Dhaka: ৳80 (up to 2kg)</p>
                             <p>• Outside Dhaka: ৳130 (up to 1kg)</p>
-                            <p className="text-[10px] text-blue-700 mt-2 italic">
+                            <p className="text-[10px] text-gray-600 mt-2 italic">
                               Additional ৳20/kg will be charged for extra weight
                             </p>
                           </>
