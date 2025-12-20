@@ -285,7 +285,7 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    const finalTotal = getFinalTotal();
+    const finalTotal = getFinalTotal() + deliveryFee;
 
     const orderData = {
       userId: user?.id || 'guest',
