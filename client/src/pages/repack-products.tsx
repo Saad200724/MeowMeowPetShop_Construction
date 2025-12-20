@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'wouter';
 import { Package, ShoppingCart, Search } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
@@ -157,69 +158,75 @@ export default function RepackProducts() {
                     const savings = calculateSavings(product.price, product.originalPrice);
                     const badge = getBadgeFromTags(product.tags || []);
                     const stockAvailable = product.stockQuantity || product.stock || 0;
+                    const productId = product.id || product._id;
                     
                     return (
-                      <Card key={product.id || product._id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                        {/* Product Image */}
-                        <div className="relative overflow-hidden bg-gray-50 rounded-t-lg p-4">
-                          {savings > 0 ? (
-                            <Badge className="absolute top-3 left-3 z-10 bg-red-500 text-white">
-                              -{savings}%
-                            </Badge>
-                          ) : (
-                            <Badge className="absolute top-3 left-3 z-10 bg-yellow-400 text-[#26732d] flex items-center gap-1">
-                              <Package size={12} />
-                              {badge}
-                            </Badge>
-                          )}
-                          <img 
-                            src={product.image} 
-                            alt={product.name} 
-                            className="w-full h-48 object-contain transition-transform duration-500 group-hover:scale-110" 
-                            loading="lazy"
-                          />
-                        </div>
-                        
-                        {/* Product Content */}
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
-                            {product.name}
-                          </h3>
-                          
-                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                            {product.description}
-                          </p>
-                          
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-lg font-bold text-green-600">
-                              ৳{product.price?.toLocaleString()}
-                            </span>
-                            {product.originalPrice && product.originalPrice > product.price && (
-                              <span className="text-sm text-red-500 line-through">
-                                ৳{product.originalPrice.toLocaleString()}
-                              </span>
+                      <Link key={productId} href={`/product/${productId}`} asChild>
+                        <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                          {/* Product Image */}
+                          <div className="relative overflow-hidden bg-gray-50 rounded-t-lg p-4">
+                            {savings > 0 ? (
+                              <Badge className="absolute top-3 left-3 z-10 bg-red-500 text-white">
+                                -{savings}%
+                              </Badge>
+                            ) : (
+                              <Badge className="absolute top-3 left-3 z-10 bg-yellow-400 text-[#26732d] flex items-center gap-1">
+                                <Package size={12} />
+                                {badge}
+                              </Badge>
                             )}
+                            <img 
+                              src={product.image} 
+                              alt={product.name} 
+                              className="w-full h-48 object-contain transition-transform duration-500 group-hover:scale-110" 
+                              loading="lazy"
+                            />
                           </div>
                           
-                          <div className="flex items-center justify-between">
-                            <div className={`text-sm font-medium ${
-                              stockAvailable > 0 ? 'text-green-600' : 'text-red-600'
-                            }`}>
-                              {stockAvailable > 0 ? 'In Stock' : 'Out of Stock'}
+                          {/* Product Content */}
+                          <CardContent className="p-4">
+                            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                              {product.name}
+                            </h3>
+                            
+                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              {product.description}
+                            </p>
+                            
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-lg font-bold text-green-600">
+                                ৳{product.price?.toLocaleString()}
+                              </span>
+                              {product.originalPrice && product.originalPrice > product.price && (
+                                <span className="text-sm text-red-500 line-through">
+                                  ৳{product.originalPrice.toLocaleString()}
+                                </span>
+                              )}
                             </div>
                             
-                            <Button 
-                              size="sm"
-                              onClick={() => handleAddToCart(product)}
-                              disabled={stockAvailable === 0}
-                              className="bg-[#26732d] hover:bg-[#1d5a22] text-white"
-                            >
-                              <ShoppingCart className="h-4 w-4 mr-1" />
-                              Add to Cart
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
+                            <div className="flex items-center justify-between">
+                              <div className={`text-sm font-medium ${
+                                stockAvailable > 0 ? 'text-green-600' : 'text-red-600'
+                              }`}>
+                                {stockAvailable > 0 ? 'In Stock' : 'Out of Stock'}
+                              </div>
+                              
+                              <Button 
+                                size="sm"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleAddToCart(product);
+                                }}
+                                disabled={stockAvailable === 0}
+                                className="bg-[#26732d] hover:bg-[#1d5a22] text-white"
+                              >
+                                <ShoppingCart className="h-4 w-4 mr-1" />
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Link>
                     );
                   })}
                 </div>

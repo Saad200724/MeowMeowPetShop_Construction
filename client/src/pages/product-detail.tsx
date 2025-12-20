@@ -44,15 +44,38 @@ export default function ProductDetailPage() {
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
-  // Fetch product directly by slug from the new API endpoint
+  // Fetch product directly by slug from the new API endpoint, with fallback to repack products
   const { data: product, isLoading } = useQuery<DetailProduct>({ 
     queryKey: ['/api/products/slug', slug],
     queryFn: async () => {
+      // Try to fetch from regular products first
       const response = await fetch(`/api/products/slug/${slug}`);
-      if (!response.ok) {
-        throw new Error('Product not found');
+      if (response.ok) {
+        return response.json();
       }
-      return response.json();
+      
+      // Fallback: Search in repack products
+      const repackResponse = await fetch('/api/repack-products');
+      if (repackResponse.ok) {
+        const repackProducts = await repackResponse.json();
+        // Find product by ID (treating slug as ID for repack products)
+        const foundProduct = repackProducts.find((p: any) => 
+          (p._id === slug || p.id === slug || 
+           p.name?.toLowerCase().replace(/\s+/g, '-') === slug?.toLowerCase())
+        );
+        if (foundProduct) {
+          // Enrich with full details
+          return {
+            ...foundProduct,
+            id: foundProduct._id || foundProduct.id,
+            slug: slug,
+            categoryName: 'Repack Products',
+            tags: foundProduct.tags || ['repack']
+          };
+        }
+      }
+      
+      throw new Error('Product not found');
     },
     enabled: !!slug, // Only run query if slug exists
   });
