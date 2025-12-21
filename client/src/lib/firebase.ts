@@ -11,10 +11,12 @@ import {
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+  authDomain: 'meow-meow-pet-shop.firebaseapp.com',
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebasestorage.app`,
+  storageBucket: 'meow-meow-pet-shop.firebasestorage.app',
+  messagingSenderId: '600976305792',
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: 'G-6H53CLG2KD',
 }
 
 const app = initializeApp(firebaseConfig)
