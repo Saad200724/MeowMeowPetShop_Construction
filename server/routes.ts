@@ -1251,8 +1251,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Remove password from response
-      const { password: _, ...userResponse } = user;
+      // Convert Mongoose document to plain object and remove password
+      const userObj = user.toObject ? user.toObject() : user;
+      const { password: _, ...userResponse } = userObj;
 
       res.json({
         message: "Login successful",
