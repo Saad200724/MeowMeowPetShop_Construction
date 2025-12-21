@@ -852,11 +852,6 @@ export default function CheckoutPage() {
                                 Package weight: {weight}kg
                               </p>
                             )}
-                            {!weight && (
-                              <p className="text-[10px] text-orange-600 mt-2 italic font-medium">
-                                ⚠ Enter package weight above to calculate delivery fee
-                              </p>
-                            )}
                           </>
                         ) : (
                           <>
