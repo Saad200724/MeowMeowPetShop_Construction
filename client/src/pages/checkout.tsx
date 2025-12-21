@@ -83,20 +83,24 @@ export default function CheckoutPage() {
   const [weight, setWeight] = useState('');
 
   const calculateDeliveryFee = (district: string, weightKg: number): number => {
-    if (!district || weightKg <= 0) return 0;
+    if (!district) return 0;
     
     const isDhaka = district.toLowerCase() === 'dhaka';
     
     if (isDhaka) {
       // Dhaka: 80 TK up to 2kg, 20 TK per additional kg
-      if (weightKg <= 2) {
+      if (weightKg <= 0) {
+        return 80; // Base fee if no weight entered
+      } else if (weightKg <= 2) {
         return 80;
       } else {
         return 80 + (Math.ceil(weightKg - 2) * 20);
       }
     } else {
       // Other districts: 130 TK up to 1kg, 20 TK per additional kg
-      if (weightKg <= 1) {
+      if (weightKg <= 0) {
+        return 130; // Base fee if no weight entered
+      } else if (weightKg <= 1) {
         return 130;
       } else {
         return 130 + (Math.ceil(weightKg - 1) * 20);
