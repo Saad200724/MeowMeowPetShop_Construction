@@ -239,10 +239,10 @@ export default function AdminPage() {
     enabled: !!user && user.role === 'admin', // Only run if user is admin
   });
 
-  const { data: repackProducts = [], refetch: refetchRepackProducts } = useQuery({
+  const { data: repackProducts = [], isLoading: isLoadingRepackProducts, refetch: refetchRepackProducts } = useQuery({
     queryKey: ['/api/admin/repack-products'],
     enabled: !!user && user.role === 'admin',
-  }) as { data: any[], refetch: any };
+  }) as { data: any[], isLoading: boolean, refetch: any };
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories'],
