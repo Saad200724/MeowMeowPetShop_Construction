@@ -42,27 +42,53 @@ export default function AdminLoginPage() {
     setLoading(true)
 
     try {
-      // Check admin credentials
-      if (formData.username === 'admin' && formData.password === 'admin123') {
-        // Store admin session
-        localStorage.setItem('adminSession', JSON.stringify({
-          isAdmin: true,
-          loginTime: new Date().toISOString(),
-        }))
-        
-        toast({
-          title: 'Login Successful',
-          description: 'Welcome to the admin panel!',
-        })
-        setFormData({ username: '', password: '' })
-        setLocation('/admin')
-      } else {
+      // Call server authentication endpoint
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.username, // Use username as email for authentication
+          password: formData.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
         toast({
           title: 'Login Failed',
-          description: 'Invalid username or password',
+          description: data.message || 'Invalid username or password',
           variant: 'destructive',
         })
+        return
       }
+
+      // Check if user is admin
+      if (data.user?.role !== 'admin') {
+        toast({
+          title: 'Access Denied',
+          description: 'Only administrators can access this panel',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Store admin session
+      localStorage.setItem('adminSession', JSON.stringify({
+        isAdmin: true,
+        userId: data.user._id || data.user.id,
+        username: data.user.username,
+        loginTime: new Date().toISOString(),
+      }))
+      
+      toast({
+        title: 'Login Successful',
+        description: 'Welcome to the admin panel!',
+      })
+      setFormData({ username: '', password: '' })
+      setLocation('/admin')
     } catch (error) {
       console.error('Admin login error:', error)
       toast({
