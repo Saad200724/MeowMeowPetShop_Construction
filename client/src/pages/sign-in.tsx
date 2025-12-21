@@ -97,7 +97,7 @@ export default function SignInPage() {
             </Button>
           </Link>
           <div className="flex-1 flex items-center justify-center gap-3">
-            <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10 animate-pulse" />
+            <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10" />
             <div>
               <h1 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent">
                 Meow Meow

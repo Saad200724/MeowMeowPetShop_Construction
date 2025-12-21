@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -181,8 +181,17 @@ interface BrandItem {
 }
 
 export default function AdminPage() {
+  const [, setLocation] = useLocation();
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
+
+  // Check admin session on mount
+  useEffect(() => {
+    const adminSession = localStorage.getItem('adminSession');
+    if (!adminSession) {
+      setLocation('/admin-login');
+    }
+  }, [setLocation]);
 
   // All state hooks declared at the top level (not conditionally)
   const [activeTab, setActiveTab] = useState('products');
