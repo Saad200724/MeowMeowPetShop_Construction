@@ -61,6 +61,7 @@ args = "npm run dev"
 
 [agent]
 expertMode = true
+integrations = ["firebase_barebones_javascript:1.0.0"]
 
 [userenv]
 
