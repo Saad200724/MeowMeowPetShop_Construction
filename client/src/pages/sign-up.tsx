@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 import { signUp, signInWithGoogle } from '@/lib/firebase'
 import { useToast } from '@/hooks/use-toast'
-import { Mail, ArrowLeft, User, Loader2, Lock } from 'lucide-react'
+import { Mail, ArrowLeft, User, Loader2, Lock, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { SiGoogle } from 'react-icons/si'
 
 const logoPath = '/logo.png'
@@ -26,6 +26,8 @@ export default function SignUpPage() {
     confirmPassword: '',
   })
   const { toast } = useToast()
+
+  const passwordStrength = formData.password.length >= 6 ? 'good' : formData.password.length >= 3 ? 'fair' : 'weak'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -122,157 +124,209 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-green-200 to-transparent dark:from-green-900 dark:to-transparent opacity-30 blur-3xl rounded-full -mr-48 -mt-48 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-200 to-transparent dark:from-blue-900 dark:to-transparent opacity-30 blur-3xl rounded-full -ml-48 -mb-48 pointer-events-none" />
+
+      <div className="w-full max-w-lg space-y-8 relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between">
           <Link href="/">
-            <Button variant="ghost" size="icon" data-testid="button-back">
+            <Button variant="ghost" size="icon" className="hover-elevate" data-testid="button-back">
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
           <div className="flex-1 flex items-center justify-center gap-3">
-            <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10" />
-            <h1 className="text-2xl font-bold text-[#26732d]">Meow Meow</h1>
+            <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10 animate-pulse" />
+            <div>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent">
+                Meow Meow
+              </h1>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Pet Shop</p>
+            </div>
           </div>
           <div className="w-10" />
         </div>
 
-        {/* Sign Up Card */}
-        <Card>
-          <CardHeader className="space-y-2 text-center">
-            <CardTitle className="text-2xl text-[#26732d]">Create Account</CardTitle>
-            <CardDescription>Join Meow Meow Pet Shop and start shopping</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="flex items-center gap-2">
-                    <User size={16} />
-                    First Name
-                  </Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="John"
-                    disabled={loading}
-                    data-testid="input-signup-firstname"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="flex items-center gap-2">
-                    <User size={16} />
-                    Last Name
-                  </Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Doe"
-                    disabled={loading}
-                    data-testid="input-signup-lastname"
-                  />
+        {/* Main Card */}
+        <div className="animate-fade-in">
+          <Card className="border-0 shadow-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
+            <CardHeader className="space-y-4 text-center pb-6 border-b border-gray-100 dark:border-slate-800">
+              <div className="inline-block">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                  <CheckCircle2 className="w-8 h-8 text-white" />
                 </div>
               </div>
+              <div>
+                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent">
+                  Join Us
+                </CardTitle>
+                <CardDescription className="text-base mt-2">Create your Meow Meow Pet Shop account</CardDescription>
+              </div>
+            </CardHeader>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail size={16} />
-                  Email Address
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="your@email.com"
-                  disabled={loading}
-                  data-testid="input-signup-email"
-                />
+            <CardContent className="pt-8">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                      <User size={14} className="text-green-600 dark:text-green-400" />
+                      First Name
+                    </Label>
+                    <Input
+                      id="firstName"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      placeholder="John"
+                      disabled={loading}
+                      data-testid="input-signup-firstname"
+                      className="h-10 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg text-sm transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                      <User size={14} className="text-green-600 dark:text-green-400" />
+                      Last Name
+                    </Label>
+                    <Input
+                      id="lastName"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                      placeholder="Doe"
+                      disabled={loading}
+                      data-testid="input-signup-lastname"
+                      className="h-10 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg text-sm transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
+                    />
+                  </div>
+                </div>
+
+                {/* Email Field */}
+                <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.15s' }}>
+                  <Label htmlFor="email" className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                    <Mail size={14} className="text-green-600 dark:text-green-400" />
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="your@email.com"
+                    disabled={loading}
+                    data-testid="input-signup-email"
+                    className="h-11 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
+                  />
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                  <Label htmlFor="password" className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                    <Lock size={14} className="text-green-600 dark:text-green-400" />
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="Create a password"
+                    disabled={loading}
+                    data-testid="input-signup-password"
+                    className="h-11 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
+                  />
+                  {formData.password && (
+                    <div className="flex gap-1 mt-2">
+                      <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'weak' ? 'bg-red-400' : 'bg-gray-300'}`} />
+                      <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'good' ? 'bg-green-400' : passwordStrength === 'fair' ? 'bg-yellow-400' : 'bg-gray-300'}`} />
+                      <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'good' ? 'bg-green-400' : 'bg-gray-300'}`} />
+                      <span className={`text-xs font-semibold ml-2 ${passwordStrength === 'weak' ? 'text-red-600 dark:text-red-400' : passwordStrength === 'fair' ? 'text-yellow-600 dark:text-yellow-400' : 'text-green-600 dark:text-green-400'}`}>
+                        {passwordStrength}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Confirm Password Field */}
+                <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.25s' }}>
+                  <Label htmlFor="confirmPassword" className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                    <Lock size={14} className="text-green-600 dark:text-green-400" />
+                    Confirm Password
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    placeholder="Confirm password"
+                    disabled={loading}
+                    data-testid="input-signup-confirm"
+                    className="h-11 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
+                  />
+                </div>
+
+                {/* Terms Checkbox */}
+                <div className="flex items-start space-x-3 pt-2 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                  <Checkbox
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                    data-testid="checkbox-terms"
+                    className="mt-1"
+                  />
+                  <Label htmlFor="terms" className="text-xs font-normal cursor-pointer text-gray-700 dark:text-gray-300 leading-relaxed">
+                    I agree to the{' '}
+                    <Link href="/terms">
+                      <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400">
+                        Terms of Service
+                      </Button>
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy">
+                      <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400">
+                        Privacy Policy
+                      </Button>
+                    </Link>
+                  </Label>
+                </div>
+
+                {/* Create Account Button */}
+                <Button
+                  type="submit"
+                  className="w-full h-11 mt-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover-elevate animate-slide-up"
+                  style={{ animationDelay: '0.35s' }}
+                  disabled={loading || googleLoading}
+                  data-testid="button-signup-submit"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Account...
+                    </>
+                  ) : (
+                    <>
+                      Create Account
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              {/* Divider */}
+              <div className="relative my-6">
+                <Separator className="bg-gray-200 dark:bg-slate-700" />
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-900 px-3 text-xs text-gray-500 dark:text-gray-400">
+                  or join with
+                </span>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="flex items-center gap-2">
-                  <Lock size={16} />
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Create a password"
-                  disabled={loading}
-                  data-testid="input-signup-password"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="flex items-center gap-2">
-                  <Lock size={16} />
-                  Confirm Password
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  placeholder="Confirm password"
-                  disabled={loading}
-                  data-testid="input-signup-confirm"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2 pt-2">
-                <Checkbox
-                  id="terms"
-                  checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                  data-testid="checkbox-terms"
-                />
-                <Label htmlFor="terms" className="text-sm font-normal cursor-pointer">
-                  I agree to the{' '}
-                  <Link href="/terms">
-                    <Button variant="link" className="p-0 h-auto">
-                      Terms of Service
-                    </Button>
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy">
-                    <Button variant="link" className="p-0 h-auto">
-                      Privacy Policy
-                    </Button>
-                  </Link>
-                </Label>
-              </div>
-
-              <Button
-                type="submit"
-                variant="meowGreen"
-                className="w-full"
-                disabled={loading || googleLoading}
-                data-testid="button-signup-submit"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating Account...
-                  </>
-                ) : (
-                  'Create Account'
-                )}
-              </Button>
-            </form>
-
-            <div className="mt-6 space-y-4">
-              <Separator />
+              {/* Google Sign Up */}
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="w-full h-11 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200 hover-elevate animate-slide-up"
+                style={{ animationDelay: '0.4s' }}
                 disabled={googleLoading || loading}
                 onClick={async () => {
                   setGoogleLoading(true)
@@ -315,24 +369,25 @@ export default function SignUpPage() {
                   </>
                 )}
               </Button>
-            </div>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Already have an account?{' '}
-                <Link href="/sign-in">
-                  <Button variant="link" className="p-0 text-[#26732d]" data-testid="link-signin">
-                    Sign in here
-                  </Button>
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+              {/* Sign In Link */}
+              <div className="mt-6 pt-6 border-t border-gray-100 dark:border-slate-800 text-center animate-slide-up" style={{ animationDelay: '0.45s' }}>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Already have an account?{' '}
+                  <Link href="/sign-in">
+                    <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300" data-testid="link-signin">
+                      Sign in here
+                    </Button>
+                  </Link>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Additional Info */}
-        <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-          <p>Your security is important to us. All data is encrypted.</p>
+        {/* Footer Info */}
+        <div className="text-center text-xs text-gray-500 dark:text-gray-500 px-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <p>🔒 Your security is important to us. All data is encrypted with SSL.</p>
         </div>
       </div>
     </div>
