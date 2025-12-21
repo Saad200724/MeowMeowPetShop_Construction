@@ -185,15 +185,8 @@ export default function AdminPage() {
   const { user, signOut, loading } = useAuth();
   const { toast } = useToast();
 
-  // Check admin session on mount
-  useEffect(() => {
-    const adminSession = localStorage.getItem('adminSession');
-    if (!adminSession) {
-      setLocation('/admin-login');
-    }
-  }, [setLocation]);
-
   // All state hooks declared at the top level (not conditionally)
+  const [isSessionChecked, setIsSessionChecked] = useState(false);
   const [activeTab, setActiveTab] = useState('products');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -228,6 +221,21 @@ export default function AdminPage() {
   const [invoiceItems, setInvoiceItems] = useState<any[]>([]);
   const [invoiceDeliveryFee, setInvoiceDeliveryFee] = useState(0);
   const [invoiceDiscount, setInvoiceDiscount] = useState(0);
+
+  // Check admin session on mount
+  useEffect(() => {
+    const adminSession = localStorage.getItem('adminSession');
+    if (!adminSession) {
+      setLocation('/admin-login');
+    } else {
+      setIsSessionChecked(true);
+    }
+  }, [setLocation]);
+
+  // Return early if session not checked
+  if (!isSessionChecked) {
+    return null;
+  }
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
