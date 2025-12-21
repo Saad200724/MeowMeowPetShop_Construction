@@ -80,35 +80,14 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
-  const [weight, setWeight] = useState('');
 
-  const calculateDeliveryFee = (district: string, weightKg: number): number => {
+  const calculateDeliveryFee = (district: string): number => {
     if (!district) return 0;
-    
     const isDhaka = district.toLowerCase() === 'dhaka';
-    
-    if (isDhaka) {
-      // Dhaka: 80 TK up to 2kg, 20 TK per additional kg
-      if (weightKg <= 0) {
-        return 80; // Base fee if no weight entered
-      } else if (weightKg <= 2) {
-        return 80;
-      } else {
-        return 80 + (Math.ceil(weightKg - 2) * 20);
-      }
-    } else {
-      // Other districts: 130 TK up to 1kg, 20 TK per additional kg
-      if (weightKg <= 0) {
-        return 130; // Base fee if no weight entered
-      } else if (weightKg <= 1) {
-        return 130;
-      } else {
-        return 130 + (Math.ceil(weightKg - 1) * 20);
-      }
-    }
+    return isDhaka ? 80 : 130;
   };
 
-  const calculatedDeliveryFee = calculateDeliveryFee(billingDetails.district, parseFloat(weight) || 0);
+  const calculatedDeliveryFee = calculateDeliveryFee(billingDetails.district);
   // If a free_delivery coupon is applied, waive the delivery fee
   const deliveryFee = cartState.appliedCoupon?.code?.includes('FREE') || 
     (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code) ? 0 : calculatedDeliveryFee;
@@ -278,16 +257,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Weight validation
-    if (!weight.trim() || parseFloat(weight) <= 0) {
-      toast({
-        title: "Invalid Weight",
-        description: "Please enter a valid package weight.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     // Phone validation (Bangladesh mobile number)
     const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
     if (!phoneRegex.test(billingDetails.phone.replace(/\s/g, ''))) {
@@ -334,7 +303,6 @@ export default function CheckoutPage() {
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
       },
-      weight: parseFloat(weight),
       deliveryFee,
       orderNotes
     };
@@ -751,25 +719,6 @@ export default function CheckoutPage() {
                         className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                         data-testid="input-email"
                       />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="weight" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Package Weight (kg) *</Label>
-                      <Input
-                        id="weight"
-                        type="number"
-                        step="0.1"
-                        min="0.1"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        placeholder="e.g., 1.5"
-                        required
-                        className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
-                        data-testid="input-weight"
-                      />
-                      {!weight && billingDetails.district && (
-                        <p className="text-sm text-gray-500 mt-2">Enter weight to calculate delivery fee</p>
-                      )}
                     </div>
                   </form>
                 </CardContent>
