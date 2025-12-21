@@ -232,11 +232,6 @@ export default function AdminPage() {
     }
   }, [setLocation]);
 
-  // Return early if session not checked
-  if (!isSessionChecked) {
-    return null;
-  }
-
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({
     queryKey: ['/api/admin/products'],
@@ -1255,6 +1250,11 @@ export default function AdminPage() {
     'Behavior',
     'Product Reviews'
   ];
+
+  // Show loading state while session is being checked
+  if (!isSessionChecked) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-500">Loading...</div></div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
