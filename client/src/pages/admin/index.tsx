@@ -959,7 +959,7 @@ export default function AdminPage() {
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
             <p className="text-gray-600 mb-4">Please sign in with admin credentials</p>
-            <Link href="/sign-in">
+            <Link href="/admin-login">
               <Button className="bg-red-600 hover:bg-red-700">
                 Go to Sign In
               </Button>

@@ -82,6 +82,17 @@ export default function AdminLoginPage() {
         username: data.user.username,
         loginTime: new Date().toISOString(),
       }))
+
+      // Also store in the format that useAuth() expects
+      const userData = {
+        id: data.user._id || data.user.id,
+        username: data.user.username,
+        email: data.user.email,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        role: data.user.role,
+      }
+      localStorage.setItem('meow_meow_auth_user', JSON.stringify(userData))
       
       toast({
         title: 'Login Successful',
