@@ -94,12 +94,19 @@ export default function AdminLoginPage() {
       }
       localStorage.setItem('meow_meow_auth_user', JSON.stringify(userData))
       
+      // Dispatch custom event to notify AuthProvider of login
+      window.dispatchEvent(new CustomEvent('authStateChanged', { detail: userData }))
+      
       toast({
         title: 'Login Successful',
         description: 'Welcome to the admin panel!',
       })
       setFormData({ username: '', password: '' })
-      setLocation('/admin')
+      
+      // Small delay to ensure state updates before navigation
+      setTimeout(() => {
+        setLocation('/admin')
+      }, 100)
     } catch (error) {
       console.error('Admin login error:', error)
       toast({

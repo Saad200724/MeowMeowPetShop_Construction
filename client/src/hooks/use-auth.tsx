@@ -34,25 +34,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const parsedUser = JSON.parse(storedUser)
         setUser(parsedUser)
         setLoading(false)
-        return
       } catch (error) {
         console.error('Failed to parse stored user:', error)
         localStorage.removeItem(AUTH_STORAGE_KEY)
+        setLoading(false)
       }
+    } else {
+      // Only check Firebase if no stored user
+      setLoading(false)
     }
 
-    // Then check Firebase for authentication changes
+    // Set up Firebase listener for real-time updates
     const unsubscribe = onAuthChange((firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(firebaseUser))
       } else {
-        setUser(null)
+        const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
+        if (!storedUser) {
+          setUser(null)
+        }
       }
-      setLoading(false)
     })
 
-    return () => unsubscribe()
+    // Listen for custom auth state changes (used for admin login)
+    const handleAuthStateChanged = (event: Event) => {
+      const customEvent = event as CustomEvent
+      if (customEvent.detail) {
+        setUser(customEvent.detail)
+      }
+    }
+
+    window.addEventListener('authStateChanged', handleAuthStateChanged)
+
+    return () => {
+      unsubscribe()
+      window.removeEventListener('authStateChanged', handleAuthStateChanged)
+    }
   }, [])
 
   const signOut = async () => {
