@@ -281,7 +281,7 @@ const invoiceSchema = new Schema<IInvoice>({
 export interface ICoupon extends Document {
   code: string;
   description?: string;
-  discountType: 'percentage' | 'fixed';
+  discountType: 'percentage' | 'fixed' | 'free_delivery';
   discountValue: number;
   minOrderAmount?: number;
   maxDiscountAmount?: number;
@@ -297,7 +297,7 @@ export interface ICoupon extends Document {
 const couponSchema = new Schema<ICoupon>({
   code: { type: String, required: true, unique: true, uppercase: true },
   description: String,
-  discountType: { type: String, enum: ['percentage', 'fixed'], required: true },
+  discountType: { type: String, enum: ['percentage', 'fixed', 'free_delivery'], required: true },
   discountValue: { type: Number, required: true, min: 0 },
   minOrderAmount: { type: Number, min: 0 },
   maxDiscountAmount: { type: Number, min: 0 },

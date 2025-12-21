@@ -108,7 +108,10 @@ export default function CheckoutPage() {
     }
   };
 
-  const deliveryFee = calculateDeliveryFee(billingDetails.district, parseFloat(weight) || 0);
+  const calculatedDeliveryFee = calculateDeliveryFee(billingDetails.district, parseFloat(weight) || 0);
+  // If a free_delivery coupon is applied, waive the delivery fee
+  const deliveryFee = cartState.appliedCoupon?.code?.includes('FREE') || 
+    (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code) ? 0 : calculatedDeliveryFee;
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -169,16 +172,25 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (response.ok && data.valid) {
+        const discountAmount = data.coupon.discountType === 'free_delivery' ? 0 : data.coupon.discountAmount;
         applyCoupon({
           code: data.coupon.code,
-          discount: data.coupon.discountAmount
+          discount: discountAmount
         });
         setCouponCode('');
         setCouponError('');
-        toast({
-          title: "Coupon applied successfully!",
-          description: `You saved ৳${data.coupon.discountAmount}`,
-        });
+        
+        if (data.coupon.discountType === 'free_delivery') {
+          toast({
+            title: "Coupon applied successfully!",
+            description: "Your delivery fee has been waived!",
+          });
+        } else {
+          toast({
+            title: "Coupon applied successfully!",
+            description: `You saved ৳${data.coupon.discountAmount}`,
+          });
+        }
       } else {
         setCouponError(data.message || 'Invalid coupon code');
       }
@@ -869,8 +881,15 @@ export default function CheckoutPage() {
 
                   {cartState.appliedCoupon && (
                     <div className="flex justify-between py-2">
-                      <span className="text-green-600">Discount ({cartState.appliedCoupon.code})</span>
-                      <span className="font-medium text-green-600">-৳ {cartState.appliedCoupon.discount.toLocaleString()}</span>
+                      <span className="text-green-600">
+                        {cartState.appliedCoupon.discount === 0 ? `Free Delivery (${cartState.appliedCoupon.code})` : `Discount (${cartState.appliedCoupon.code})`}
+                      </span>
+                      {cartState.appliedCoupon.discount > 0 && (
+                        <span className="font-medium text-green-600">-৳ {cartState.appliedCoupon.discount.toLocaleString()}</span>
+                      )}
+                      {cartState.appliedCoupon.discount === 0 && (
+                        <span className="font-medium text-green-600">-৳ {calculatedDeliveryFee.toLocaleString()}</span>
+                      )}
                     </div>
                   )}
 

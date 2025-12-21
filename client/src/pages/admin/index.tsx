@@ -3538,6 +3538,7 @@ export default function AdminPage() {
                         <SelectContent className="bg-white border border-gray-300">
                           <SelectItem value="percentage">Percentage (%)</SelectItem>
                           <SelectItem value="fixed">Fixed Amount (৳)</SelectItem>
+                          <SelectItem value="free_delivery">Free Delivery</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -3566,29 +3567,39 @@ export default function AdminPage() {
               />
 
               <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={couponForm.control}
-                  name="discountValue"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-900 font-semibold">
-                        Discount Value {couponForm.watch('discountType') === 'percentage' ? '(%)' : '(৳)'}
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          step="0.01"
-                          min="0"
-                          placeholder={couponForm.watch('discountType') === 'percentage' ? '10' : '100'} 
-                          className="text-gray-900 bg-white border-gray-300" 
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {couponForm.watch('discountType') !== 'free_delivery' && (
+                  <FormField
+                    control={couponForm.control}
+                    name="discountValue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-900 font-semibold">
+                          Discount Value {couponForm.watch('discountType') === 'percentage' ? '(%)' : '(৳)'}
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.01"
+                            min="0"
+                            placeholder={couponForm.watch('discountType') === 'percentage' ? '10' : '100'} 
+                            className="text-gray-900 bg-white border-gray-300" 
+                            {...field}
+                            onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {couponForm.watch('discountType') === 'free_delivery' && (
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Coupon Type</FormLabel>
+                    <div className="h-10 bg-green-50 border border-green-200 rounded-md flex items-center px-3 text-green-700 font-medium">
+                      Free Delivery (No discount value needed)
+                    </div>
+                  </FormItem>
+                )}
                 <FormField
                   control={couponForm.control}
                   name="minOrderAmount"
