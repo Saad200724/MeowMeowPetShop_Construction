@@ -3,6 +3,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   setPersistence,
@@ -111,4 +113,26 @@ export function onAuthChange(callback: (user: any) => void) {
     }
   })
   return unsubscribe
+}
+
+export async function signInWithGoogle() {
+  try {
+    const provider = new GoogleAuthProvider()
+    const userCredential = await signInWithPopup(auth, provider)
+    return {
+      user: {
+        id: userCredential.user.uid,
+        email: userCredential.user.email || '',
+        username: userCredential.user.displayName || userCredential.user.email?.split('@')[0] || '',
+        role: 'user',
+      },
+      error: null,
+    }
+  } catch (error: any) {
+    const message = error.message || 'Failed to sign in with Google'
+    return {
+      user: null,
+      error: { message },
+    }
+  }
 }

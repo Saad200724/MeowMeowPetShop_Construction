@@ -5,15 +5,18 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { signUp } from '@/lib/firebase'
+import { Separator } from '@/components/ui/separator'
+import { signUp, signInWithGoogle } from '@/lib/firebase'
 import { useToast } from '@/hooks/use-toast'
-import { Mail, ArrowLeft, PawPrint, User, Loader2, Lock } from 'lucide-react'
+import { Mail, ArrowLeft, User, Loader2, Lock } from 'lucide-react'
+import { SiGoogle } from 'react-icons/si'
 
 const logoPath = '/logo.png'
 
 export default function SignUpPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
@@ -250,7 +253,7 @@ export default function SignUpPage() {
                 type="submit"
                 variant="meowGreen"
                 className="w-full"
-                disabled={loading}
+                disabled={loading || googleLoading}
                 data-testid="button-signup-submit"
               >
                 {loading ? (
@@ -263,6 +266,56 @@ export default function SignUpPage() {
                 )}
               </Button>
             </form>
+
+            <div className="mt-6 space-y-4">
+              <Separator />
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={googleLoading || loading}
+                onClick={async () => {
+                  setGoogleLoading(true)
+                  try {
+                    const { error } = await signInWithGoogle()
+                    if (error) {
+                      toast({
+                        title: 'Google Sign Up Failed',
+                        description: error.message,
+                        variant: 'destructive',
+                      })
+                    } else {
+                      toast({
+                        title: 'Account Created!',
+                        description: 'Signed up with Google successfully.',
+                      })
+                      setLocation('/')
+                    }
+                  } catch (err) {
+                    toast({
+                      title: 'Error',
+                      description: 'An unexpected error occurred',
+                      variant: 'destructive',
+                    })
+                  } finally {
+                    setGoogleLoading(false)
+                  }
+                }}
+                data-testid="button-google-signup"
+              >
+                {googleLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  <>
+                    <SiGoogle className="w-4 h-4 mr-2" />
+                    Sign up with Google
+                  </>
+                )}
+              </Button>
+            </div>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400">

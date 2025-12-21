@@ -4,16 +4,19 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signIn } from '@/lib/firebase'
+import { Separator } from '@/components/ui/separator'
+import { signIn, signInWithGoogle } from '@/lib/firebase'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
-import { Mail, ArrowLeft, PawPrint, Loader2, Lock } from 'lucide-react'
+import { Mail, ArrowLeft, Loader2, Lock } from 'lucide-react'
+import { SiGoogle } from 'react-icons/si'
 
 const logoPath = '/logo.png'
 
 export default function SignInPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -141,7 +144,7 @@ export default function SignInPage() {
                 type="submit"
                 variant="meowGreen"
                 className="w-full"
-                disabled={loading}
+                disabled={loading || googleLoading}
                 data-testid="button-signin-submit"
               >
                 {loading ? (
@@ -154,6 +157,56 @@ export default function SignInPage() {
                 )}
               </Button>
             </form>
+
+            <div className="mt-6 space-y-4">
+              <Separator />
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={googleLoading || loading}
+                onClick={async () => {
+                  setGoogleLoading(true)
+                  try {
+                    const { error } = await signInWithGoogle()
+                    if (error) {
+                      toast({
+                        title: 'Google Sign In Failed',
+                        description: error.message,
+                        variant: 'destructive',
+                      })
+                    } else {
+                      toast({
+                        title: 'Welcome!',
+                        description: 'Signed in with Google successfully.',
+                      })
+                      setLocation('/')
+                    }
+                  } catch (err) {
+                    toast({
+                      title: 'Error',
+                      description: 'An unexpected error occurred',
+                      variant: 'destructive',
+                    })
+                  } finally {
+                    setGoogleLoading(false)
+                  }
+                }}
+                data-testid="button-google-signin"
+              >
+                {googleLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  <>
+                    <SiGoogle className="w-4 h-4 mr-2" />
+                    Sign in with Google
+                  </>
+                )}
+              </Button>
+            </div>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400">
