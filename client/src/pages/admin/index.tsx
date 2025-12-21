@@ -222,15 +222,16 @@ export default function AdminPage() {
   const [invoiceDeliveryFee, setInvoiceDeliveryFee] = useState(0);
   const [invoiceDiscount, setInvoiceDiscount] = useState(0);
 
-  // Check admin session on mount
+  // Check admin session when user or loading state changes
   useEffect(() => {
-    const adminSession = localStorage.getItem('adminSession');
-    if (!adminSession) {
+    // If loading is done and user is not admin, redirect to login
+    if (!loading && (!user || user.role !== 'admin')) {
       setLocation('/admin-login');
-    } else {
+    } else if (!loading && user && user.role === 'admin') {
+      // User is authenticated and is admin
       setIsSessionChecked(true);
     }
-  }, [setLocation]);
+  }, [user, loading, setLocation]);
 
   // All queries declared at the top level (not conditionally)
   const { data: products = [], isLoading: isLoadingProducts, refetch: refetchProducts } = useQuery({

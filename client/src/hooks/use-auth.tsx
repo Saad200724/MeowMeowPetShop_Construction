@@ -27,24 +27,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // First, check localStorage immediately for stored user (admin or regular user)
+    const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        setLoading(false)
+        return
+      } catch (error) {
+        console.error('Failed to parse stored user:', error)
+        localStorage.removeItem(AUTH_STORAGE_KEY)
+      }
+    }
+
+    // Then check Firebase for authentication changes
     const unsubscribe = onAuthChange((firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(firebaseUser))
       } else {
-        // Check localStorage for persisted user (fallback)
-        const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
-        if (storedUser) {
-          try {
-            setUser(JSON.parse(storedUser))
-          } catch (error) {
-            console.error('Failed to parse stored user:', error)
-            localStorage.removeItem(AUTH_STORAGE_KEY)
-            setUser(null)
-          }
-        } else {
-          setUser(null)
-        }
+        setUser(null)
       }
       setLoading(false)
     })
