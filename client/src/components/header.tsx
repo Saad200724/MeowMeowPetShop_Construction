@@ -6,27 +6,26 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
-import { signOut } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartCount } = useCart();
-  const { user, loading } = useAuth();
+  const { user, loading, signOut: authSignOut } = useAuth();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
-    const { error } = await signOut();
-    if (error) {
-      toast({
-        title: 'Sign Out Failed',
-        description: error.message,
-        variant: 'destructive',
-      });
-    } else {
+    try {
+      await authSignOut();
       toast({
         title: 'Signed Out',
         description: 'You have been successfully signed out.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Sign Out Failed',
+        description: 'Could not sign out.',
+        variant: 'destructive',
       });
     }
   };

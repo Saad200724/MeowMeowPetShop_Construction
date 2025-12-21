@@ -5,29 +5,28 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { sendOtp } from '@/lib/supabase'
-import { OtpVerification } from '@/components/ui/otp-verification'
+import { signUp } from '@/lib/firebase'
 import { useToast } from '@/hooks/use-toast'
 import { Mail, ArrowLeft, PawPrint, User, Loader2, Lock } from 'lucide-react'
+
 const logoPath = '/logo.png'
 
 export default function SignUpPage() {
   const [, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
-  const [showOtpVerification, setShowOtpVerification] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   })
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!agreedToTerms) {
       toast({
         title: 'Terms Required',
@@ -85,26 +84,30 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // Send OTP using Supabase (which has custom SMTP configured)
-      const { data, error } = await sendOtp(formData.email, true)
-      
+      const { error } = await signUp(formData.email, formData.password)
+
       if (error) {
         toast({
-          title: 'Signup Failed',
-          description: error.message || 'Failed to send verification code',
+          title: 'Sign Up Failed',
+          description: error.message,
           variant: 'destructive',
         })
-        return
+      } else {
+        toast({
+          title: 'Account Created!',
+          description: 'Your account has been successfully created. You can now sign in.',
+        })
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        })
+        setLocation('/sign-in')
       }
-
-      toast({
-        title: 'Verification Code Sent! 📧',
-        description: 'Please check your email for the verification code.',
-      })
-      
-      setShowOtpVerification(true)
     } catch (error) {
-      console.error('Unexpected error during signup:', error)
+      console.error('Sign up error:', error)
       toast({
         title: 'Network Error',
         description: 'Unable to create account. Please try again.',
@@ -115,259 +118,168 @@ export default function SignUpPage() {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
-
-  const handleOtpSuccess = (user: any) => {
-    console.log('OTP verification successful:', user)
-    
-    // Store user in the custom auth system's localStorage
-    const authUser = {
-      id: user.id,
-      username: user.email?.split('@')[0] || 'user',
-      email: user.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      name: `${formData.firstName} ${formData.lastName}` || user.email?.split('@')[0] || 'User',
-      role: user.user_metadata?.role || 'user'
-    }
-    
-    localStorage.setItem('meow_meow_auth_user', JSON.stringify(authUser))
-    console.log('User stored in localStorage for header display:', authUser)
-    
-    toast({
-      title: 'Welcome to Meow Meow Pet Shop! 🐾',
-      description: 'Your account has been created successfully.',
-    })
-    
-    // Trigger a page refresh to ensure the header updates with the new auth state
-    window.location.href = '/'
-  }
-
-  const handleBackToSignUp = () => {
-    setShowOtpVerification(false)
-  }
-
-  // Show OTP verification component if needed
-  if (showOtpVerification) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-        <OtpVerification
-          email={formData.email}
-          isSignUp={true}
-          onSuccess={handleOtpSuccess}
-          onBack={handleBackToSignUp}
-        />
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(38,115,45,0.1),transparent_50%)]" />
-      
-      <div className="w-full max-w-md relative z-10">
-        {/* Back to Home Button */}
-        <div className="mb-6">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <Link href="/">
-            <Button variant="ghost" className="text-meow-green hover:text-meow-green-dark hover:bg-green-50 p-2">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+            <Button variant="ghost" size="icon" data-testid="button-back">
+              <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
+          <div className="flex-1 flex items-center justify-center gap-3">
+            <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10" />
+            <h1 className="text-2xl font-bold text-[#26732d]">Meow Meow</h1>
+          </div>
+          <div className="w-10" />
         </div>
 
-        {/* Main Card */}
-        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
-            {/* Logo */}
-            <div className="flex justify-center mb-4">
-              <Link href="/" className="hover:opacity-80 transition-opacity">
-                <img 
-                  src={logoPath} 
-                  alt="Meow Meow Pet Shop Logo" 
-                  className="h-16 w-16 rounded-full object-cover border-3 border-meow-green shadow-lg"
-                />
-              </Link>
-            </div>
-            
-            <CardTitle className="text-3xl font-bold text-meow-green">
-              Join Our Pack
-            </CardTitle>
-            <CardDescription className="text-gray-600 text-lg">
-              Create your Meow Meow Pet Shop account
-            </CardDescription>
+        {/* Sign Up Card */}
+        <Card>
+          <CardHeader className="space-y-2 text-center">
+            <CardTitle className="text-2xl text-[#26732d]">Create Account</CardTitle>
+            <CardDescription>Join Meow Meow Pet Shop and start shopping</CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-5">
+          <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-meow-green font-medium text-sm">
+                  <Label htmlFor="firstName" className="flex items-center gap-2">
+                    <User size={16} />
                     First Name
                   </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="First name"
-                      value={formData.firstName}
-                      onChange={(e) => handleInputChange('firstName', e.target.value)}
-                      className="pl-9 h-11 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm"
-                      required
-                    />
-                  </div>
+                  <Input
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    placeholder="John"
+                    disabled={loading}
+                    data-testid="input-signup-firstname"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-meow-green font-medium text-sm">
+                  <Label htmlFor="lastName" className="flex items-center gap-2">
+                    <User size={16} />
                     Last Name
                   </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Last name"
-                      value={formData.lastName}
-                      onChange={(e) => handleInputChange('lastName', e.target.value)}
-                      className="pl-9 h-11 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20 text-sm"
-                      required
-                    />
-                  </div>
+                  <Input
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    placeholder="Doe"
+                    disabled={loading}
+                    data-testid="input-signup-lastname"
+                  />
                 </div>
               </div>
 
-              {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-meow-green font-medium">
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail size={16} />
                   Email Address
                 </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
-                    required
-                  />
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="your@email.com"
+                  disabled={loading}
+                  data-testid="input-signup-email"
+                />
               </div>
 
-              {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-meow-green font-medium">
+                <Label htmlFor="password" className="flex items-center gap-2">
+                  <Lock size={16} />
                   Password
                 </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
-                    required
-                    data-testid="input-password"
-                  />
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Create a password"
+                  disabled={loading}
+                  data-testid="input-signup-password"
+                />
               </div>
 
-              {/* Confirm Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-meow-green font-medium">
+                <Label htmlFor="confirmPassword" className="flex items-center gap-2">
+                  <Lock size={16} />
                   Confirm Password
                 </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-meow-yellow focus:ring-meow-yellow/20"
-                    required
-                    data-testid="input-confirm-password"
-                  />
-                </div>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  placeholder="Confirm password"
+                  disabled={loading}
+                  data-testid="input-signup-confirm"
+                />
               </div>
 
-
-              {/* Terms Agreement */}
-              <div className="flex items-start space-x-3 pt-2">
+              <div className="flex items-center space-x-2 pt-2">
                 <Checkbox
                   id="terms"
                   checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
-                  className="mt-0.5 border-gray-300 data-[state=checked]:bg-meow-green data-[state=checked]:border-meow-green"
+                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                  data-testid="checkbox-terms"
                 />
-                <div className="text-sm text-gray-600 leading-relaxed">
-                  <Label htmlFor="terms" className="cursor-pointer">
-                    I agree to the{' '}
-                    <Link href="/terms">
-                      <Button variant="link" className="text-meow-green hover:text-meow-green-dark p-0 h-auto text-sm underline">
-                        Terms of Service
-                      </Button>
-                    </Link>{' '}
-                    and{' '}
-                    <Link href="/privacy">
-                      <Button variant="link" className="text-meow-green hover:text-meow-green-dark p-0 h-auto text-sm underline">
-                        Privacy Policy
-                      </Button>
-                    </Link>
-                  </Label>
-                </div>
+                <Label htmlFor="terms" className="text-sm font-normal cursor-pointer">
+                  I agree to the{' '}
+                  <Link href="/terms">
+                    <Button variant="link" className="p-0 h-auto">
+                      Terms of Service
+                    </Button>
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy">
+                    <Button variant="link" className="p-0 h-auto">
+                      Privacy Policy
+                    </Button>
+                  </Link>
+                </Label>
               </div>
 
-              {/* Sign Up Button */}
               <Button
                 type="submit"
-                disabled={loading || !agreedToTerms}
-                className="w-full h-12 bg-gradient-to-r from-meow-yellow to-yellow-400 hover:from-yellow-400 hover:to-meow-yellow text-meow-green-dark font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="meowGreen"
+                className="w-full"
+                disabled={loading}
+                data-testid="button-signup-submit"
               >
                 {loading ? (
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 border-2 border-meow-green-dark border-t-transparent rounded-full animate-spin mr-2" />
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Creating Account...
-                  </div>
+                  </>
                 ) : (
                   'Create Account'
                 )}
               </Button>
             </form>
 
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Already have an account?</span>
-              </div>
-            </div>
-
-            {/* Sign In Link */}
-            <div className="text-center">
-              <Link href="/sign-in">
-                <Button variant="outline" className="w-full h-12 border-meow-green text-meow-green hover:bg-green-50 hover:border-meow-green-dark hover:text-meow-green-dark font-semibold">
-                  Sign In Instead
-                </Button>
-              </Link>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Already have an account?{' '}
+                <Link href="/sign-in">
+                  <Button variant="link" className="p-0 text-[#26732d]" data-testid="link-signin">
+                    Sign in here
+                  </Button>
+                </Link>
+              </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center mt-6 text-gray-500 text-sm">
-          <p>© 2025 Meow Meow Pet Shop. All rights reserved.</p>
+        {/* Additional Info */}
+        <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+          <p>Your security is important to us. All data is encrypted.</p>
         </div>
       </div>
     </div>

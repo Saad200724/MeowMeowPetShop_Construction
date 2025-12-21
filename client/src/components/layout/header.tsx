@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/use-auth';
-import { signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/cart-context';
 import { useSidebar } from '@/contexts/sidebar-context';
@@ -53,22 +52,13 @@ export default function Header() {
   };
 
   const handleSignOut = async () => {
-    // Use the auth context's signOut function for consistency
-    authSignOut();
-    
-    // Regular Supabase sign out for users with Supabase accounts
     try {
-      const { error } = await signOut();
-      if (error && error.message !== 'Invalid session') {
-        // Only show error if it's not an invalid session error
-        toast({ title: 'Error', description: error.message, variant: 'destructive' });
-      }
+      await authSignOut();
+      toast({ title: 'Signed out successfully', description: 'Come back soon!' });
     } catch (error) {
-      // Ignore Supabase errors for users who don't have Supabase accounts
-      console.log('Supabase signout failed (this is normal for non-Supabase users):', error);
+      console.error('Sign out error:', error);
+      toast({ title: 'Error', description: 'Failed to sign out', variant: 'destructive' });
     }
-    
-    toast({ title: 'Signed out successfully', description: 'Come back soon!' });
   };
 
   // Fetch products for search

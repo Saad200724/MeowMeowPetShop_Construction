@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { signIn, signUp } from '@/lib/supabase'
+import { signIn, signUp } from '@/lib/firebase'
 import { useToast } from '@/hooks/use-toast'
 import { Mail, Lock, User } from 'lucide-react'
 
@@ -25,7 +25,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     try {
       const { error } = await signIn(signInData.email, signInData.password)
-      
+
       if (error) {
         toast({
           title: 'Sign In Failed',
@@ -37,6 +37,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           title: 'Welcome back!',
           description: 'You have successfully signed in.',
         })
+        setSignInData({ email: '', password: '' })
         onClose()
       }
     } catch (error) {
@@ -52,7 +53,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (signUpData.password !== signUpData.confirmPassword) {
       toast({
         title: 'Password Mismatch',
@@ -66,7 +67,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     try {
       const { error } = await signUp(signUpData.email, signUpData.password)
-      
+
       if (error) {
         toast({
           title: 'Sign Up Failed',
@@ -76,8 +77,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       } else {
         toast({
           title: 'Account Created!',
-          description: 'Please check your email to verify your account.',
+          description: 'Your account has been successfully created.',
         })
+        setSignUpData({ email: '', password: '', confirmPassword: '' })
         onClose()
       }
     } catch (error) {
@@ -118,6 +120,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
                   placeholder="your@email.com"
                   required
+                  data-testid="input-signin-email"
                 />
               </div>
               <div className="space-y-2">
@@ -132,6 +135,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
                   placeholder="Your password"
                   required
+                  data-testid="input-signin-password"
                 />
               </div>
               <Button
@@ -139,6 +143,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 variant="meowGreen"
                 className="w-full"
                 disabled={loading}
+                data-testid="button-signin-submit"
               >
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
@@ -159,6 +164,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
                   placeholder="your@email.com"
                   required
+                  data-testid="input-signup-email"
                 />
               </div>
               <div className="space-y-2">
@@ -173,6 +179,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
                   placeholder="Create password"
                   required
+                  data-testid="input-signup-password"
                 />
               </div>
               <div className="space-y-2">
@@ -187,6 +194,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
                   placeholder="Confirm password"
                   required
+                  data-testid="input-signup-confirm"
                 />
               </div>
               <Button
@@ -194,6 +202,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 variant="meow"
                 className="w-full"
                 disabled={loading}
+                data-testid="button-signup-submit"
               >
                 {loading ? 'Creating Account...' : 'Create Account'}
               </Button>
