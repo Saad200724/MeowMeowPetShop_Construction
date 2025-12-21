@@ -1109,12 +1109,22 @@ export default function AdminPage() {
 
   // Coupon handlers
   const handleCreateCoupon = (data: CouponFormData) => {
-    createCouponMutation.mutate(data);
+    // Ensure discountValue is 0 for free_delivery coupons
+    const couponData = {
+      ...data,
+      discountValue: data.discountType === 'free_delivery' ? 0 : data.discountValue
+    };
+    createCouponMutation.mutate(couponData);
   };
 
   const handleUpdateCoupon = (data: CouponFormData) => {
     if (editingCoupon) {
-      updateCouponMutation.mutate({ id: editingCoupon._id, data });
+      // Ensure discountValue is 0 for free_delivery coupons
+      const couponData = {
+        ...data,
+        discountValue: data.discountType === 'free_delivery' ? 0 : data.discountValue
+      };
+      updateCouponMutation.mutate({ id: editingCoupon._id, data: couponData });
     }
   };
 

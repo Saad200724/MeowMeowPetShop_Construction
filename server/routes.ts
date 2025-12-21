@@ -2593,14 +2593,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const couponSchema = z.object({
         code: z.string().min(1).toUpperCase(),
         description: z.string().optional(),
-        discountType: z.enum(['percentage', 'fixed']),
-        discountValue: z.number().min(0.01),
+        discountType: z.enum(['percentage', 'fixed', 'free_delivery']),
+        discountValue: z.number().min(0).optional(),
         minOrderAmount: z.number().min(0).optional(),
         maxDiscountAmount: z.number().min(0).optional(),
         usageLimit: z.number().min(1).optional(),
         validFrom: z.string().datetime(),
         validUntil: z.string().datetime(),
         isActive: z.boolean().optional()
+      }).refine((data) => {
+        if (data.discountType !== 'free_delivery' && (!data.discountValue || data.discountValue < 0.01)) {
+          return false;
+        }
+        return true;
+      }, {
+        message: "Discount value must be greater than 0 for percentage and fixed discounts",
+        path: ["discountValue"]
       });
 
       const validatedData = couponSchema.parse(req.body);
@@ -2645,14 +2653,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updateSchema = z.object({
         code: z.string().min(1).toUpperCase().optional(),
         description: z.string().optional(),
-        discountType: z.enum(['percentage', 'fixed']).optional(),
-        discountValue: z.number().min(0.01).optional(),
+        discountType: z.enum(['percentage', 'fixed', 'free_delivery']).optional(),
+        discountValue: z.number().min(0).optional(),
         minOrderAmount: z.number().min(0).optional(),
         maxDiscountAmount: z.number().min(0).optional(),
         usageLimit: z.number().min(1).optional(),
         validFrom: z.string().datetime().optional(),
         validUntil: z.string().datetime().optional(),
         isActive: z.boolean().optional()
+      }).refine((data) => {
+        if (data.discountType && data.discountType !== 'free_delivery' && (!data.discountValue || data.discountValue < 0.01)) {
+          return false;
+        }
+        return true;
+      }, {
+        message: "Discount value must be greater than 0 for percentage and fixed discounts",
+        path: ["discountValue"]
       });
 
       const validatedData = updateSchema.parse(req.body);
