@@ -243,10 +243,10 @@ export default function AdminPage() {
     enabled: !!user && user.role === 'admin', // Only run if user is admin
   });
 
-  const { data: repackProducts = [], isLoading: isLoadingRepackProducts, refetch: refetchRepackProducts } = useQuery({
+  const { data: repackProducts = [], refetch: refetchRepackProducts } = useQuery({
     queryKey: ['/api/admin/repack-products'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: any[], refetch: any };
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories'],
@@ -256,37 +256,37 @@ export default function AdminPage() {
   const { data: brands = [] } = useQuery({
     queryKey: ['/api/brands'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: BrandItem[] };
 
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery({
     queryKey: ['/api/admin/announcements'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: any[], refetch: any };
 
   const { data: blogPosts = [], refetch: refetchBlogs } = useQuery({
     queryKey: ['/api/blog'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: BlogPost[], refetch: any };
 
   const { data: coupons = [], refetch: refetchCoupons } = useQuery({
     queryKey: ['/api/coupons'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: Coupon[], refetch: any };
 
   const { data: orders = [], refetch: refetchOrders } = useQuery({
     queryKey: ['/api/orders'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: any[], refetch: any };
 
   const { data: banners = [], refetch: refetchBanners } = useQuery({
     queryKey: ['/api/banners'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: Banner[], refetch: any };
 
   const { data: popupPosters = [], refetch: refetchPopupPosters } = useQuery({
     queryKey: ['/api/popup-posters'],
     enabled: !!user && user.role === 'admin',
-  });
+  }) as { data: PopupPoster[], refetch: any };
 
   // All forms declared at the top level
   const form = useForm<ProductFormData>({
@@ -2222,7 +2222,7 @@ export default function AdminPage() {
             </div>
 
             <div className="grid gap-1">
-              {blogPosts.map((blog) => (
+              {blogPosts.map((blog: BlogPost) => (
                 <Card key={blog._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex justify-between items-start gap-4">
