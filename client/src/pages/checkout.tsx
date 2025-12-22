@@ -80,6 +80,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [weight, setWeight] = useState('1');
 
   const calculateDeliveryFee = (district: string): number => {
     if (!district) return 0;
