@@ -369,7 +369,7 @@ export default function DashboardPage() {
             <Card key={order.id} className="p-3 sm:p-4">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm sm:text-base truncate">Order #{order.id}</h3>
+                  <h3 className="font-semibold text-sm sm:text-base truncate">Order #{order.orderNumber || order.id}</h3>
                   <p className="text-xs sm:text-sm text-gray-600">{new Date(order.date).toLocaleDateString()}</p>
                 </div>
                 <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
@@ -397,10 +397,10 @@ export default function DashboardPage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                <Link href={`/invoice/${order.invoiceNumber}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.invoiceNumber}`}>
+                <Link href={`/invoice/${order.orderNumber || order.invoiceNumber || order.id}`} className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.orderNumber}`}>
                     <File className="w-3 h-3 mr-2" />
-                    {order.invoiceNumber ? `View Invoice ${order.invoiceNumber}` : 'View Invoice'}
+                    {order.orderNumber ? `View Invoice ${order.orderNumber}` : 'View Invoice'}
                   </Button>
                 </Link>
               </div>

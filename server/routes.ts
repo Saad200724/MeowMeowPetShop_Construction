@@ -1935,9 +1935,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders/user/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
-      const orders = await Order.find({ userId }).lean().sort({ createdAt: -1 });
+      const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+
+      // Enhance orders with invoice numbers
+      const enhancedOrders = await Promise.all(orders.map(async (order) => {
+        const orderObj = order.toObject();
+        const orderId = (order as any)._id.toString();
+
+        // If invoiceNumber is missing, fetch from invoice
+        if (!orderObj.invoiceNumber) {
+          try {
+            const invoice = await Invoice.findOne({ orderId: orderId });
+            if (invoice && invoice.invoiceNumber) {
+              orderObj.invoiceNumber = invoice.invoiceNumber;
+            }
+          } catch (invoiceError) {
+            // Continue without invoice number if lookup fails
+          }
+        }
+
+        return orderObj;
+      }));
       
-      res.json(orders);
+      res.json(enhancedOrders);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch orders" });
     }

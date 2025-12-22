@@ -2441,8 +2441,22 @@ async function registerRoutes(app2) {
   app2.get("/api/orders/user/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
-      const orders = await Order.find({ userId }).lean().sort({ createdAt: -1 });
-      res.json(orders);
+      const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+      const enhancedOrders = await Promise.all(orders.map(async (order) => {
+        const orderObj = order.toObject();
+        const orderId = order._id.toString();
+        if (!orderObj.invoiceNumber) {
+          try {
+            const invoice = await Invoice.findOne({ orderId });
+            if (invoice && invoice.invoiceNumber) {
+              orderObj.invoiceNumber = invoice.invoiceNumber;
+            }
+          } catch (invoiceError) {
+          }
+        }
+        return orderObj;
+      }));
+      res.json(enhancedOrders);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch orders" });
     }
