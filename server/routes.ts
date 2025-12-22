@@ -1804,9 +1804,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // SERVER-SIDE SECURITY: Calculate final total server-side
       const serverTotal = Math.max(0, serverSubtotal - serverDiscount);
 
-      // Generate unique invoice number
-      const invoiceNumber = `INV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
       // Create order with server-computed values (within transaction)
       const order = new Order({
         userId,
@@ -1821,6 +1818,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       await order.save({ session });
+
+      // Generate invoice number based on order ID (SAME AS ORDER ID)
+      const invoiceNumber = `INV-${order._id.toString()}`;
 
       // ATOMIC OPERATIONS WITHIN TRANSACTION
       // 1. Decrement stock quantities - if any fail, entire transaction rolls back
