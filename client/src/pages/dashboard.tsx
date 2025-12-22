@@ -397,19 +397,12 @@ export default function DashboardPage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                {order.invoiceId ? (
-                  <Link href={`/invoice/${order.invoiceId}`} className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.id}`}>
-                      <File className="w-3 h-3 mr-2" />
-                      {order.invoiceNumber ? `View Invoice ${order.invoiceNumber}` : 'View Invoice'}
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button variant="outline" size="sm" className="w-full opacity-50 cursor-not-allowed" disabled>
+                <Link href={`/invoice/${order.id}`} className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.id}`}>
                     <File className="w-3 h-3 mr-2" />
-                    Invoice Processing
+                    {order.invoiceNumber ? `View Invoice ${order.invoiceNumber}` : 'View Invoice'}
                   </Button>
-                )}
+                </Link>
               </div>
             </Card>
           ))}
