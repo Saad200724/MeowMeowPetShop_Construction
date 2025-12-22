@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApp } from 'firebase/app'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -13,15 +13,25 @@ import {
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: 'meow-meow-pet-shop.firebaseapp.com',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: 'meow-meow-pet-shop.firebasestorage.app',
-  messagingSenderId: '600976305792',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: 'G-6H53CLG2KD',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
-const app = initializeApp(firebaseConfig)
+let app
+try {
+  app = initializeApp(firebaseConfig)
+} catch (error: any) {
+  // Handle duplicate app initialization during HMR in development
+  if (error.code !== 'app/duplicate-app') {
+    throw error
+  }
+  // Use existing app instance
+  app = getApp()
+}
 const auth = getAuth(app)
 
 setPersistence(auth, browserLocalPersistence).catch((error) => {
