@@ -38,6 +38,8 @@ import {
 
 interface Order {
   id: string
+  invoiceId?: string
+  invoiceNumber?: string
   date: string
   status: 'delivered' | 'pending' | 'processing' | 'shipped' | 'cancelled' | 'canceled'
   total: number
@@ -113,6 +115,8 @@ export default function DashboardPage() {
         .then(orders => {
           const formattedOrders = orders.map((order: any) => ({
             id: order._id,
+            invoiceId: order.invoiceId,
+            invoiceNumber: order.invoiceNumber,
             date: new Date(order.createdAt).toISOString().split('T')[0],
             status: order.status.toLowerCase(),
             total: order.total,
@@ -393,12 +397,19 @@ export default function DashboardPage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                <Link href={`/invoice/${order.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.id}`}>
+                {order.invoiceId ? (
+                  <Link href={`/invoice/${order.invoiceId}`} className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.id}`}>
+                      <File className="w-3 h-3 mr-2" />
+                      {order.invoiceNumber ? `View Invoice ${order.invoiceNumber}` : 'View Invoice'}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button variant="outline" size="sm" className="w-full opacity-50 cursor-not-allowed" disabled>
                     <File className="w-3 h-3 mr-2" />
-                    View Invoice
+                    Invoice Processing
                   </Button>
-                </Link>
+                )}
               </div>
             </Card>
           ))}
