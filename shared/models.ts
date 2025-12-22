@@ -155,13 +155,14 @@ const blogPostSchema = new Schema<IBlogPost>({
 // Order Schema
 export interface IOrder extends Document {
   userId: string;
+  orderNumber: string; // Unique order number used as invoice number
   status: string;
   total: number;
   items: any[];
   shippingAddress?: any;
   customerInfo?: any;
   invoiceId?: string;
-  invoiceNumber?: string; // Added invoiceNumber field
+  invoiceNumber?: string; // Same as orderNumber
   paymentMethod?: string;
   paymentStatus: string;
   createdAt: Date;
@@ -170,13 +171,14 @@ export interface IOrder extends Document {
 
 const orderSchema = new Schema<IOrder>({
   userId: { type: String, required: true },
+  orderNumber: { type: String, required: true, unique: true }, // Unique order number
   status: { type: String, default: 'Processing' },
   total: { type: Number, required: true },
   items: [{ type: Schema.Types.Mixed }],
   shippingAddress: Schema.Types.Mixed,
   customerInfo: Schema.Types.Mixed,
   invoiceId: String,
-  invoiceNumber: { type: String }, // Add invoice number field
+  invoiceNumber: { type: String }, // Will be same as orderNumber
   paymentMethod: String,
   paymentStatus: { type: String, default: 'Pending' },
 }, { timestamps: true });

@@ -13,6 +13,13 @@ import { promises as fs } from "fs";
 import sharp from "sharp";
 import { generateOTP, sendOTPEmail } from "./email-service";
 
+// Generate unique order number to ensure no duplicates
+function generateUniqueOrderNumber(): string {
+  const timestamp = Date.now().toString(36); // Convert timestamp to base36
+  const randomPart = Math.random().toString(36).substring(2, 8); // Random 6 chars
+  return `ORD-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
   const uploadDir = path.join(process.cwd(), 'uploads');
@@ -1804,9 +1811,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // SERVER-SIDE SECURITY: Calculate final total server-side
       const serverTotal = Math.max(0, serverSubtotal - serverDiscount);
 
+      // Generate unique order number (same as invoice number)
+      const orderNumber = generateUniqueOrderNumber();
+      const invoiceNumber = orderNumber; // Same as order number
+
       // Create order with server-computed values (within transaction)
       const order = new Order({
         userId,
+        orderNumber, // Unique order number
         status: 'Processing',
         total: serverTotal, // Use server-computed total
         items: validatedItems,
@@ -1814,14 +1826,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         customerInfo, // Add customer info to order
         paymentMethod,
         paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
-        orderNotes
+        orderNotes,
+        invoiceNumber // Set invoice number to same as order number
       });
 
       await order.save({ session });
 
-      // Generate invoice number based on order ID (SAME AS ORDER ID)
+      // Get order ID for other operations
       const orderId = order._id.toString();
-      const invoiceNumber = `INV-${orderId}`;
       
       console.log(`🔍 ORDER CREATED - ID: ${orderId}, invoiceNumber: ${invoiceNumber}`);
 
