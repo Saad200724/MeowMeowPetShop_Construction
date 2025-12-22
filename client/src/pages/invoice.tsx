@@ -87,11 +87,20 @@ export default function InvoicePage() {
   };
 
   const handlePrint = () => {
-    const printContent = document.querySelector('.print-invoice');
-    if (!printContent) return;
+    const printContents = document.querySelectorAll('.print-invoice');
+    if (printContents.length === 0) return;
     
     const originalContent = document.body.innerHTML;
-    document.body.innerHTML = printContent.outerHTML;
+    let combinedHTML = '';
+    
+    printContents.forEach((element, index) => {
+      combinedHTML += element.outerHTML;
+      if (index < printContents.length - 1) {
+        combinedHTML += '<div style="page-break-after: always;"></div>';
+      }
+    });
+    
+    document.body.innerHTML = combinedHTML;
     window.print();
     document.body.innerHTML = originalContent;
     window.location.reload();
