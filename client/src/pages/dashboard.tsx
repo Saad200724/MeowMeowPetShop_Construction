@@ -130,6 +130,7 @@ export default function DashboardPage() {
             if (order.status === 'delivered') acc.deliveredOrders++
             else if (order.status === 'pending') acc.pendingOrders++
             else if (order.status === 'processing') acc.processingOrders++
+            else if (order.status === 'shipped') acc.processingOrders++ // Group shipped with processing for stats or handle separately
             return acc
           }, {
             totalSpent: 0,
@@ -189,19 +190,27 @@ export default function DashboardPage() {
   if (!user) return null
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    const s = status.toLowerCase();
+    switch (s) {
       case 'delivered': return 'bg-green-100 text-green-800'
       case 'processing': return 'bg-blue-100 text-blue-800'
       case 'pending': return 'bg-yellow-100 text-yellow-800'
+      case 'shipped': return 'bg-purple-100 text-purple-800'
+      case 'cancelled':
+      case 'canceled': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    const s = status.toLowerCase();
+    switch (s) {
       case 'delivered': return <CheckCircle className="h-4 w-4" />
       case 'processing': return <Clock className="h-4 w-4" />
       case 'pending': return <Truck className="h-4 w-4" />
+      case 'shipped': return <Truck className="h-4 w-4" />
+      case 'cancelled':
+      case 'canceled': return <X className="h-4 w-4" />
       default: return <Package className="h-4 w-4" />
     }
   }
@@ -252,12 +261,12 @@ export default function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+          <Card className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">TOTAL SPENT</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">${userStats.totalSpent.toFixed(2)}</div>
+            <div className="text-3xl font-bold">৳{userStats.totalSpent.toLocaleString()}</div>
           </CardContent>
         </Card>
 
@@ -266,7 +275,7 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium">TOTAL WALLET</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">${userStats.walletBalance.toFixed(2)}</div>
+            <div className="text-3xl font-bold">৳{userStats.walletBalance.toLocaleString()}</div>
           </CardContent>
         </Card>
 
@@ -365,23 +374,33 @@ export default function DashboardPage() {
                       <span className="capitalize text-xs">{order.status}</span>
                     </div>
                   </Badge>
-                  <p className="font-bold sm:mt-2">${order.total.toFixed(2)}</p>
+                  <p className="font-bold sm:mt-2">৳{order.total.toLocaleString()}</p>
                 </div>
               </div>
-              <div className="space-y-1.5 mb-3">
+              <div className="space-y-1.5 mb-3 border-t pt-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Ordered Items</p>
                 {order.items.map((item, index) => (
-                  <div key={index} className="flex justify-between text-xs sm:text-sm">
-                    <span className="truncate mr-2">{item.name} x{item.quantity}</span>
-                    <span className="flex-shrink-0">${item.price.toFixed(2)}</span>
+                  <div key={index} className="flex justify-between items-center text-xs sm:text-sm bg-gray-50 p-2 rounded">
+                    <div className="flex items-center gap-2">
+                      {item.image && <img src={item.image} alt={item.name} className="w-8 h-8 rounded object-cover border" />}
+                      <span className="truncate max-w-[150px] sm:max-w-xs">{item.name} <span className="text-gray-500">x{item.quantity}</span></span>
+                    </div>
+                    <span className="flex-shrink-0 font-medium">৳{(item.price * item.quantity).toLocaleString()}</span>
                   </div>
                 ))}
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Link href={`/invoice/${order.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">View Details</Button>
+                  <Button variant="outline" size="sm" className="w-full">
+                    <Clock className="w-3 h-3 mr-2" />
+                    View Invoice
+                  </Button>
                 </Link>
                 <Link href={`/track-order/${order.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">Track Order</Button>
+                  <Button variant="outline" size="sm" className="w-full">
+                    <Truck className="w-3 h-3 mr-2" />
+                    Track Order
+                  </Button>
                 </Link>
               </div>
             </Card>
