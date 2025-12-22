@@ -565,16 +565,23 @@ export default function DashboardPage() {
           <div className="w-full lg:w-80">
             <Card className="p-3 sm:p-4">
               {/* User Info */}
-              <div className="flex items-center space-x-3 mb-6">
-                <Avatar className="flex-shrink-0">
-                  <AvatarFallback className="bg-green-100 text-green-800">
-                    {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{user.firstName || user.name || 'User'}</h3>
-                  <p className="text-sm text-gray-600 truncate">{user.email || ''}</p>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <Avatar className="flex-shrink-0">
+                    <AvatarFallback className="bg-green-100 text-green-800">
+                      {user.firstName?.[0] || user.name?.[0] || user.email?.[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{user.firstName || user.name || 'User'}</h3>
+                    <p className="text-sm text-gray-600 truncate">{user.email || ''}</p>
+                  </div>
                 </div>
+                <Link href="/">
+                  <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-900" title="Back to Store">
+                    <X className="h-5 w-5" />
+                  </Button>
+                </Link>
               </div>
 
 

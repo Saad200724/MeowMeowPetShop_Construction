@@ -665,11 +665,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         description: productData.description,
         price: parseFloat(productData.price),
         originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
-        category: categoryRecord._id,
-        categoryName: categoryRecord.name,
-        brand: brandRecord._id,
-        brandId: brandRecord._id.toString(),
-        brandName: brandRecord.name,
+        category: (categoryRecord as any)._id,
+        categoryName: (categoryRecord as any).name,
+        brand: (brandRecord as any)._id,
+        brandId: (brandRecord as any)._id.toString(),
+        brandName: (brandRecord as any).name,
         image: productData.image,
         images: productData.images || [],
         stockQuantity: productData.stockQuantity || 0,
@@ -824,12 +824,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           description: productData.description,
           price: parseFloat(productData.price),
           originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
-          category: categoryRecord._id,
-          categoryId: categoryRecord._id.toString(),
-          categoryName: categoryRecord.name,
-          brand: brandRecord._id,
-          brandId: brandRecord._id.toString(),
-          brandName: brandRecord.name,
+          category: (categoryRecord as any)._id,
+          categoryId: (categoryRecord as any)._id.toString(),
+          categoryName: (categoryRecord as any).name,
+          brand: (brandRecord as any)._id,
+          brandId: (brandRecord as any)._id.toString(),
+          brandName: (brandRecord as any).name,
           image: productData.image,
           images: productData.images || [],
           stockQuantity: productData.stockQuantity || 0,
@@ -1119,7 +1119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             specifications: product.specifications || {},
             isActive: product.isActive
           });
-        } catch (err) {
+        } catch (err: any) {
           console.warn('Error processing repack product:', product.name || 'Unknown', err.message);
         }
       }
@@ -1389,7 +1389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const userResponse = {
-        id: user._id.toString(),
+        id: (user as any)._id.toString(),
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -1937,7 +1937,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const enhancedOrders = await Promise.all(orders.map(async (order) => {
         const orderObj = order.toObject();
 
-        const orderId = order._id.toString();
+        const orderId = (order as any)._id.toString();
         console.log(`Processing order ${orderId}, customerInfo exists:`, !!orderObj.customerInfo);
 
         // Try to get invoice info for this order

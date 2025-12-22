@@ -120,7 +120,7 @@ const productSchema = new Schema<IProduct>({
   isOnSale: { type: Boolean, default: false },
   discount: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
-}, { 
+} as any, { 
   timestamps: true,
   suppressReservedKeysWarning: true 
 });
