@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -114,10 +114,10 @@ export default function ContactPage() {
 
           <div className="grid grid-cols-2 gap-3">
             {/* Store Address */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2 overflow-visible">
                     <MapPin className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1 text-xs">Store Address</h3>
@@ -130,10 +130,10 @@ export default function ContactPage() {
             </Card>
 
             {/* Phone */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2 overflow-visible">
                     <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1 text-xs">Phone</h3>
@@ -146,16 +146,16 @@ export default function ContactPage() {
             </Card>
 
             {/* Facebook Messenger */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2 overflow-visible">
                     <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1 text-xs">Facebook Messenger</h3>
                   <p className="text-gray-600 text-[10px] mb-2">Meow.meow.pet.shop</p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md text-[10px] py-2 h-auto min-h-[36px]"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md text-[10px] py-2 h-auto min-h-[36px]"
                     onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
                   >
                     <MessageCircle className="w-3 h-3 mr-1" />
@@ -166,10 +166,10 @@ export default function ContactPage() {
             </Card>
 
             {/* Opening Hours */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg mb-2 overflow-visible">
                     <Clock className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1 text-xs">Opening Hours</h3>
@@ -219,10 +219,10 @@ export default function ContactPage() {
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6 px-1">Get In Touch</h2>
 
             {/* Store Address */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3.5 sm:p-4 lg:p-6">
                 <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
                     <MapPin className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -237,10 +237,10 @@ export default function ContactPage() {
             </Card>
 
             {/* Phone */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3.5 sm:p-4 lg:p-6">
                 <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
                     <Phone className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -255,17 +255,17 @@ export default function ContactPage() {
             </Card>
 
             {/* Facebook Messenger */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3.5 sm:p-4 lg:p-6">
                 <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
                     <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Facebook Messenger</h3>
                     <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-2.5 lg:mb-3 break-words">Meow.meow.pet.shop</p>
                     <Button
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md text-xs sm:text-sm py-2 sm:py-2.5 h-auto min-h-[44px] sm:min-h-0"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md text-xs sm:text-sm py-2 sm:py-2.5 h-auto min-h-[44px] sm:min-h-0"
                       onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
                     >
                       <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
@@ -277,10 +277,10 @@ export default function ContactPage() {
             </Card>
 
             {/* Opening Hours */}
-            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+            <Card className="border-0 shadow-md hover-elevate transition-shadow">
               <CardContent className="p-3.5 sm:p-4 lg:p-6">
                 <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
                     <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -413,7 +413,7 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 sm:py-2.5 lg:py-3 text-sm sm:text-base lg:text-lg font-medium min-h-[48px] sm:min-h-0 touch-manipulation active:scale-[0.98] transition-transform"
+                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 sm:py-2.5 lg:py-3 text-sm sm:text-base lg:text-lg font-medium min-h-[48px] sm:min-h-0 touch-manipulation active:scale-[0.98] transition-all duration-200"
                     data-testid="button-send-message"
                   >
                     {isSubmitting ? (
