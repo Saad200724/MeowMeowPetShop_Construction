@@ -127,6 +127,13 @@ export function onAuthChange(callback: (user: any) => void) {
 
 export async function signInWithGoogle() {
   try {
+    // Debug: Log Firebase config
+    console.log('Firebase config:', {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? '✓ set' : '✗ missing',
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    })
+    
     const provider = new GoogleAuthProvider()
     const userCredential = await signInWithPopup(auth, provider)
     return {
@@ -139,6 +146,11 @@ export async function signInWithGoogle() {
       error: null,
     }
   } catch (error: any) {
+    console.error('Google Sign-in Error:', {
+      code: error.code,
+      message: error.message,
+      customData: error.customData,
+    })
     const message = error.message || 'Failed to sign in with Google'
     return {
       user: null,
