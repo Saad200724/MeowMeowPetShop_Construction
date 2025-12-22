@@ -38,9 +38,9 @@ import {
 interface Order {
   id: string
   date: string
-  status: 'delivered' | 'pending' | 'processing'
+  status: 'delivered' | 'pending' | 'processing' | 'shipped' | 'cancelled' | 'canceled'
   total: number
-  items: { name: string; quantity: number; price: number }[]
+  items: { name: string; quantity: number; price: number; image?: string }[]
 }
 
 interface UserStats {
