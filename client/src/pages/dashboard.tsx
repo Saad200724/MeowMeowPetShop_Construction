@@ -32,7 +32,8 @@ import {
   CreditCard,
   Edit,
   Save,
-  X
+  X,
+  File
 } from 'lucide-react'
 
 interface Order {
@@ -364,17 +365,19 @@ export default function DashboardPage() {
             <Card key={order.id} className="p-3 sm:p-4">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm sm:text-base truncate">{order.id}</h3>
+                  <h3 className="font-semibold text-sm sm:text-base truncate">Order #{order.id}</h3>
                   <p className="text-xs sm:text-sm text-gray-600">{new Date(order.date).toLocaleDateString()}</p>
                 </div>
-                <div className="flex justify-between sm:block sm:text-right">
-                  <Badge className={`${getStatusColor(order.status)}`}>
-                    <div className="flex items-center space-x-1">
-                      {getStatusIcon(order.status)}
-                      <span className="capitalize text-xs">{order.status}</span>
+                <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
+                  <Link href={`/track-order/${order.id}`} className="inline-block">
+                    <div className={`${getStatusColor(order.status)} cursor-pointer hover-elevate px-3 py-1 rounded-full transition-all`}>
+                      <div className="flex items-center space-x-1">
+                        {getStatusIcon(order.status)}
+                        <span className="capitalize text-xs font-medium">{order.status}</span>
+                      </div>
                     </div>
-                  </Badge>
-                  <p className="font-bold sm:mt-2">৳{order.total.toLocaleString()}</p>
+                  </Link>
+                  <p className="font-bold">৳{order.total.toLocaleString()}</p>
                 </div>
               </div>
               <div className="space-y-1.5 mb-3 border-t pt-3">
@@ -389,17 +392,11 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex gap-2">
                 <Link href={`/invoice/${order.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Clock className="w-3 h-3 mr-2" />
+                  <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.id}`}>
+                    <File className="w-3 h-3 mr-2" />
                     View Invoice
-                  </Button>
-                </Link>
-                <Link href={`/track-order/${order.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Truck className="w-3 h-3 mr-2" />
-                    Track Order
                   </Button>
                 </Link>
               </div>
