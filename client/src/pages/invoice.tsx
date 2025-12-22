@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRoute } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Printer, ArrowLeft, CheckCircle, Edit, Save, X } from 'lucide-react';
+import { Download, Printer, ArrowLeft, CheckCircle } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 interface InvoiceItem {
   productId: string;
@@ -47,43 +45,12 @@ interface Invoice {
 export default function InvoicePage() {
   const [match, params] = useRoute('/invoice/:invoiceId');
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [editData, setEditData] = useState({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    customerAddress: '',
-    customerThana: '',
-    customerDistrict: '',
-    customerDivision: '',
-    customerPostCode: '',
-    paymentMethod: '',
-  });
 
   const { data: invoice, isLoading, error } = useQuery({
     queryKey: [`/api/invoices/${params?.invoiceId}`],
     enabled: !!params?.invoiceId,
   });
-
-  // Initialize edit data when invoice loads
-  useEffect(() => {
-    if (invoice) {
-      setEditData({
-        customerName: invoice.customerInfo?.name || '',
-        customerEmail: invoice.customerInfo?.email || '',
-        customerPhone: invoice.customerInfo?.phone || '',
-        customerAddress: invoice.customerInfo?.address?.address || invoice.customerInfo?.address || '',
-        customerThana: invoice.customerInfo?.address?.thanaUpazilla || '',
-        customerDistrict: invoice.customerInfo?.address?.district || '',
-        customerDivision: invoice.customerInfo?.address?.division || '',
-        customerPostCode: invoice.customerInfo?.address?.postCode || '',
-        paymentMethod: invoice.paymentMethod || '',
-      });
-    }
-  }, [invoice]);
 
   const handleDownload = async () => {
     if (!invoice) return;
@@ -139,67 +106,6 @@ export default function InvoicePage() {
     window.location.reload();
   };
 
-  const handleUpdate = async () => {
-    if (!invoice) return;
-    
-    setIsSaving(true);
-    try {
-      const response = await fetch(`/api/invoices/${invoice._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customerInfo: {
-            name: editData.customerName,
-            email: editData.customerEmail,
-            phone: editData.customerPhone,
-            address: {
-              address: editData.customerAddress,
-              thanaUpazilla: editData.customerThana,
-              district: editData.customerDistrict,
-              division: editData.customerDivision,
-              postCode: editData.customerPostCode,
-            },
-          },
-          paymentMethod: editData.paymentMethod,
-          items: invoice.items,
-          subtotal: invoice.subtotal,
-          discount: invoice.discount || 0,
-          deliveryFee: invoice.deliveryFee || 0,
-          discountCode: invoice.discountCode || '',
-          total: invoice.total,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update invoice');
-      }
-
-      toast({
-        title: "Invoice Updated",
-        description: "Your invoice information has been updated successfully.",
-      });
-
-      setIsEditing(false);
-      queryClient.invalidateQueries({ queryKey: [`/api/invoices/${params?.invoiceId}`] });
-    } catch (error) {
-      toast({
-        title: "Update Failed",
-        description: "Failed to update invoice. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleEditChange = (field: string, value: string) => {
-    setEditData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
 
   if (isLoading) {
     return (
@@ -292,41 +198,6 @@ export default function InvoicePage() {
               <Printer className="h-4 w-4" />
               <span>Print Invoice</span>
             </Button>
-
-            {!isEditing && (
-              <Button 
-                onClick={() => setIsEditing(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white hover:text-white flex items-center space-x-2"
-                data-testid="button-edit-invoice"
-              >
-                <Edit className="h-4 w-4" />
-                <span>Edit Invoice</span>
-              </Button>
-            )}
-
-            {isEditing && (
-              <>
-                <Button 
-                  onClick={handleUpdate}
-                  disabled={isSaving}
-                  className="bg-green-600 hover:bg-green-700 text-white hover:text-white flex items-center space-x-2"
-                  data-testid="button-save-invoice"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
-                </Button>
-
-                <Button 
-                  onClick={() => setIsEditing(false)}
-                  variant="outline"
-                  className="flex items-center space-x-2"
-                  data-testid="button-cancel-edit"
-                >
-                  <X className="h-4 w-4" />
-                  <span>Cancel</span>
-                </Button>
-              </>
-            )}
           </div>
 
           {/* Invoice */}
@@ -360,141 +231,51 @@ export default function InvoicePage() {
 
             <CardContent className="p-6">
               {/* Customer Information */}
-              {!isEditing ? (
-                <div className="grid md:grid-cols-2 gap-1 mb-8">
-                  <div>
-                    <h3 className="font-bold text-lg mb-3">Bill To:</h3>
-                    <div className="space-y-1">
-                      <p className="font-semibold">{invoice.customerInfo.name}</p>
-                      <p>{invoice.customerInfo.email}</p>
-                      <p>{invoice.customerInfo.phone}</p>
-                      {invoice.customerInfo.address && (
-                        <div className="text-gray-600 space-y-1">
-                          {typeof invoice.customerInfo.address === 'string' ? (
-                            <p>{invoice.customerInfo.address}</p>
-                          ) : (
-                            <>
-                              <p>{invoice.customerInfo.address.address}</p>
-                              {invoice.customerInfo.address.thanaUpazilla && (
-                                <p>{invoice.customerInfo.address.thanaUpazilla}</p>
-                              )}
-                              <p>
-                                {invoice.customerInfo.address.district}, {invoice.customerInfo.address.division}
-                                {invoice.customerInfo.address.postCode && ` - ${invoice.customerInfo.address.postCode}`}
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-bold text-lg mb-3">Order Details:</h3>
-                    <div className="space-y-1">
-                      <p><span className="font-medium">Order ID:</span> {invoice.orderId}</p>
-                      <p><span className="font-medium">Payment Method:</span> {invoice.paymentMethod}</p>
-                      <p>
-                        <span className="font-medium">Payment Status:</span>
-                        <Badge 
-                          variant={invoice.paymentStatus === 'Paid' ? 'default' : 'secondary'}
-                          className="ml-2"
-                        >
-                          {invoice.paymentStatus}
-                        </Badge>
-                      </p>
-                    </div>
+              <div className="grid md:grid-cols-2 gap-1 mb-8">
+                <div>
+                  <h3 className="font-bold text-lg mb-3">Bill To:</h3>
+                  <div className="space-y-1">
+                    <p className="font-semibold">{invoice.customerInfo.name}</p>
+                    <p>{invoice.customerInfo.email}</p>
+                    <p>{invoice.customerInfo.phone}</p>
+                    {invoice.customerInfo.address && (
+                      <div className="text-gray-600 space-y-1">
+                        {typeof invoice.customerInfo.address === 'string' ? (
+                          <p>{invoice.customerInfo.address}</p>
+                        ) : (
+                          <>
+                            <p>{invoice.customerInfo.address.address}</p>
+                            {invoice.customerInfo.address.thanaUpazilla && (
+                              <p>{invoice.customerInfo.address.thanaUpazilla}</p>
+                            )}
+                            <p>
+                              {invoice.customerInfo.address.district}, {invoice.customerInfo.address.division}
+                              {invoice.customerInfo.address.postCode && ` - ${invoice.customerInfo.address.postCode}`}
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="mb-8 border rounded-lg p-6 bg-blue-50">
-                  <h3 className="font-bold text-lg mb-4">Edit Invoice Information</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="customerName">Customer Name</Label>
-                      <Input
-                        id="customerName"
-                        value={editData.customerName}
-                        onChange={(e) => handleEditChange('customerName', e.target.value)}
-                        data-testid="input-customer-name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerEmail">Email</Label>
-                      <Input
-                        id="customerEmail"
-                        type="email"
-                        value={editData.customerEmail}
-                        onChange={(e) => handleEditChange('customerEmail', e.target.value)}
-                        data-testid="input-customer-email"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerPhone">Phone</Label>
-                      <Input
-                        id="customerPhone"
-                        value={editData.customerPhone}
-                        onChange={(e) => handleEditChange('customerPhone', e.target.value)}
-                        data-testid="input-customer-phone"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="paymentMethod">Payment Method</Label>
-                      <Input
-                        id="paymentMethod"
-                        value={editData.paymentMethod}
-                        onChange={(e) => handleEditChange('paymentMethod', e.target.value)}
-                        data-testid="input-payment-method"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerAddress">Address</Label>
-                      <Input
-                        id="customerAddress"
-                        value={editData.customerAddress}
-                        onChange={(e) => handleEditChange('customerAddress', e.target.value)}
-                        data-testid="input-customer-address"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerThana">Thana/Upazilla</Label>
-                      <Input
-                        id="customerThana"
-                        value={editData.customerThana}
-                        onChange={(e) => handleEditChange('customerThana', e.target.value)}
-                        data-testid="input-customer-thana"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerDistrict">District</Label>
-                      <Input
-                        id="customerDistrict"
-                        value={editData.customerDistrict}
-                        onChange={(e) => handleEditChange('customerDistrict', e.target.value)}
-                        data-testid="input-customer-district"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerDivision">Division</Label>
-                      <Input
-                        id="customerDivision"
-                        value={editData.customerDivision}
-                        onChange={(e) => handleEditChange('customerDivision', e.target.value)}
-                        data-testid="input-customer-division"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customerPostCode">Post Code</Label>
-                      <Input
-                        id="customerPostCode"
-                        value={editData.customerPostCode}
-                        onChange={(e) => handleEditChange('customerPostCode', e.target.value)}
-                        data-testid="input-customer-postcode"
-                      />
-                    </div>
+                
+                <div>
+                  <h3 className="font-bold text-lg mb-3">Order Details:</h3>
+                  <div className="space-y-1">
+                    <p><span className="font-medium">Order ID:</span> {invoice.orderId}</p>
+                    <p><span className="font-medium">Payment Method:</span> {invoice.paymentMethod}</p>
+                    <p>
+                      <span className="font-medium">Payment Status:</span>
+                      <Badge 
+                        variant={invoice.paymentStatus === 'Paid' ? 'default' : 'secondary'}
+                        className="ml-2"
+                      >
+                        {invoice.paymentStatus}
+                      </Badge>
+                    </p>
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Items Table */}
               <div className="mb-8">
