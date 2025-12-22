@@ -114,9 +114,9 @@ export default function DashboardPage() {
         .then(res => res.json())
         .then(orders => {
           const formattedOrders = orders.map((order: any) => ({
-            id: order._id,
+            id: order.orderNumber || order._id, // Use orderNumber, fallback to _id for legacy orders
             invoiceId: order.invoiceId,
-            invoiceNumber: order.invoiceNumber,
+            invoiceNumber: order.invoiceNumber || order.orderNumber,
             date: new Date(order.createdAt).toISOString().split('T')[0],
             status: order.status.toLowerCase(),
             total: order.total,

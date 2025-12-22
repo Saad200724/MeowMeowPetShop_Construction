@@ -2106,8 +2106,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { invoiceId } = req.params;
       
-      // Try to find invoice by invoice ID first
-      let invoice = await Invoice.findById(invoiceId);
+      // Try to find invoice by invoice number first (orderNumber)
+      let invoice = await Invoice.findOne({ invoiceNumber: invoiceId });
+      
+      // If not found by invoice number, try by invoice ID (MongoDB _id)
+      if (!invoice) {
+        invoice = await Invoice.findById(invoiceId);
+      }
       
       // If not found by invoice ID, try to find by order ID
       if (!invoice) {
