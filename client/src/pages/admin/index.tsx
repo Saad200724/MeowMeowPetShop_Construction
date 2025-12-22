@@ -233,6 +233,7 @@ export default function AdminPage() {
   const [invoiceCustomerName, setInvoiceCustomerName] = useState('');
   const [invoiceCustomerPhone, setInvoiceCustomerPhone] = useState('');
   const [invoiceCustomerEmail, setInvoiceCustomerEmail] = useState('');
+  const [invoiceCustomerAddress, setInvoiceCustomerAddress] = useState<any>({});
   const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
 
   // Check admin session when user or loading state changes
@@ -1190,6 +1191,7 @@ export default function AdminPage() {
       setInvoiceCustomerName(invoice.customerInfo?.name || '');
       setInvoiceCustomerPhone(invoice.customerInfo?.phone || '');
       setInvoiceCustomerEmail(invoice.customerInfo?.email || '');
+      setInvoiceCustomerAddress(invoice.customerInfo?.address || {});
       setInvoicePaymentMethod(invoice.paymentMethod || '');
       setShowInvoiceEditor(true);
     } catch (error) {
@@ -1214,7 +1216,7 @@ export default function AdminPage() {
           name: invoiceCustomerName,
           phone: invoiceCustomerPhone,
           email: invoiceCustomerEmail,
-          address: editingInvoice.customerInfo?.address || {},
+          address: invoiceCustomerAddress,
         },
         paymentMethod: invoicePaymentMethod,
       },
@@ -4140,6 +4142,22 @@ export default function AdminPage() {
                       className="bg-white text-black"
                       placeholder="Payment method"
                       data-testid="input-invoice-payment-method"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <Label className="text-gray-700 font-medium mb-2">Shipping Address</Label>
+                    <Textarea
+                      value={typeof invoiceCustomerAddress === 'string' ? invoiceCustomerAddress : invoiceCustomerAddress?.address || ''}
+                      onChange={(e) => {
+                        if (typeof invoiceCustomerAddress === 'string') {
+                          setInvoiceCustomerAddress(e.target.value);
+                        } else {
+                          setInvoiceCustomerAddress({ ...invoiceCustomerAddress, address: e.target.value });
+                        }
+                      }}
+                      className="bg-white text-black min-h-[80px]"
+                      placeholder="Shipping address"
+                      data-testid="textarea-invoice-customer-address"
                     />
                   </div>
                 </div>
