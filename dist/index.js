@@ -922,7 +922,7 @@ function generateOTP() {
 function generateUniqueOrderNumber() {
   const timestamp = Date.now().toString(36);
   const randomPart = Math.random().toString(36).substring(2, 8);
-  return `ORD-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
+  return `INV-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
 }
 async function registerRoutes(app2) {
   const uploadDir = path.join(process.cwd(), "uploads");
@@ -3861,7 +3861,9 @@ function serveStatic(app2) {
 import bcrypt2 from "bcrypt";
 async function createAdminAccount() {
   try {
-    const existingAdmin = await User.findOne({ email: "admin@gmail.com" });
+    const existingAdmin = await User.findOne({
+      $or: [{ email: "admin@gmail.com" }, { username: "admin" }]
+    });
     if (existingAdmin) {
       const hashedPassword2 = await bcrypt2.hash("meow123", 10);
       existingAdmin.password = hashedPassword2;
