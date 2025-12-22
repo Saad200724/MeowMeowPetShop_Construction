@@ -615,7 +615,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
-        console.log(`Created new category: ${categoryRecord.name} with slug: ${categoryRecord.slug}`);
+        console.log(`Created new category: ${(categoryRecord as any).name} with slug: ${(categoryRecord as any).slug}`);
       }
 
       let brandRecord = null;
@@ -646,7 +646,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: brandMapping ? brandMapping.slug : productData.brandId.toLowerCase().replace(/\s+/g, '-'),
         });
         await brandRecord.save();
-        console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
+        console.log(`Created new brand: ${(brandRecord as any).name} with slug: ${(brandRecord as any).slug}`);
       }
 
       // Generate unique slug for the product
@@ -764,7 +764,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: categoryMapping ? categoryMapping.slug : productData.categoryId.toLowerCase().replace(/\s+/g, '-'),
         });
         await categoryRecord.save();
-        console.log(`Created new category: ${categoryRecord.name} with slug: ${categoryRecord.slug}`);
+        console.log(`Created new category: ${(categoryRecord as any).name} with slug: ${(categoryRecord as any).slug}`);
       }
 
       let brandRecord = null;
@@ -795,7 +795,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           slug: brandMapping ? brandMapping.slug : productData.brandId.toLowerCase().replace(/\s+/g, '-'),
         });
         await brandRecord.save();
-        console.log(`Created new brand: ${brandRecord.name} with slug: ${brandRecord.slug}`);
+        console.log(`Created new brand: ${(brandRecord as any).name} with slug: ${(brandRecord as any).slug}`);
       }
 
       // Generate unique slug if name changed
