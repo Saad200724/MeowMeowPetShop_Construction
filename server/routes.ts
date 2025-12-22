@@ -2075,7 +2075,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/invoices/:invoiceId", async (req, res) => {
     try {
       const { invoiceId } = req.params;
-      const invoice = await Invoice.findById(invoiceId);
+      
+      // Try to find invoice by invoice ID first
+      let invoice = await Invoice.findById(invoiceId);
+      
+      // If not found by invoice ID, try to find by order ID
+      if (!invoice) {
+        invoice = await Invoice.findOne({ orderId: invoiceId });
+      }
 
       if (!invoice) {
         return res.status(404).json({ message: "Invoice not found" });
