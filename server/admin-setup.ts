@@ -3,8 +3,10 @@ import { User, Brand } from "@shared/models";
 
 export async function createAdminAccount() {
   try {
-    // Check if admin account already exists by email
-    const existingAdmin = await User.findOne({ email: "admin@gmail.com" });
+    // Check if admin account already exists by email or username
+    const existingAdmin = await User.findOne({ 
+      $or: [{ email: "admin@gmail.com" }, { username: "admin" }] 
+    });
 
     if (existingAdmin) {
       // Update existing admin password to ensure it matches current code
