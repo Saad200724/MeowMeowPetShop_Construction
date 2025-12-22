@@ -1820,7 +1820,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await order.save({ session });
 
       // Generate invoice number based on order ID (SAME AS ORDER ID)
-      const invoiceNumber = `INV-${order._id.toString()}`;
+      const orderId = order._id.toString();
+      const invoiceNumber = `INV-${orderId}`;
+      
+      console.log(`🔍 ORDER CREATED - ID: ${orderId}, invoiceNumber: ${invoiceNumber}`);
 
       // ATOMIC OPERATIONS WITHIN TRANSACTION
       // 1. Decrement stock quantities - if any fail, entire transaction rolls back
@@ -1860,7 +1863,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 3. Create invoice (within transaction)
       const invoice = new Invoice({
         invoiceNumber,
-        orderId: order._id?.toString() || order.id,
+        orderId: orderId,
         userId,
         customerInfo,
         items: validatedItems,
@@ -1873,10 +1876,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       await invoice.save({ session });
+      
+      console.log(`📄 INVOICE CREATED - ID: ${invoice._id.toString()}, orderId: ${invoice.orderId}`);
 
       // 4. Update order with invoice ID (within transaction)
       order.invoiceId = invoice._id?.toString() || invoice.id;
+      order.invoiceNumber = invoiceNumber;
       await order.save({ session });
+      
+      console.log(`✅ ORDER UPDATED - ID: ${order._id.toString()}, invoiceId: ${order.invoiceId}, invoiceNumber: ${order.invoiceNumber}`);
 
       // 5. Clear user's cart (within transaction)
       await Cart.findOneAndUpdate(
@@ -1890,7 +1898,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await session.endSession();
 
       console.log(`✅ ORDER COMPLETED SUCCESSFULLY: Invoice=${invoiceNumber}, Subtotal=৳${serverSubtotal}, Discount=৳${serverDiscount}, Total=৳${serverTotal}`);
-      res.json({ order, invoice });
+      
+      // Return plain object with correct IDs
+      const finalOrderId = order._id.toString();
+      const finalInvoiceOrderId = invoice.orderId;
+      console.log(`✅ ORDER CREATED - Order._id: ${finalOrderId}, Invoice.orderId: ${finalInvoiceOrderId}`);
+      
+      const orderResponse = order.lean ? order.lean() : (order.toObject ? order.toObject() : order);
+      orderResponse._id = finalOrderId;
+      
+      res.json({ order: orderResponse, invoice });
 
     } catch (error) {
       console.error('Order creation error:', error);
@@ -1906,7 +1923,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders/user/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
-      const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+      const orders = await Order.find({ userId }).lean().sort({ createdAt: -1 });
+      
       res.json(orders);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch orders" });
