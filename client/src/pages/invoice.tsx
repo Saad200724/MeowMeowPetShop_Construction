@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Printer, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { useQuery } from '@tanstack/react-query';
@@ -45,46 +45,11 @@ interface Invoice {
 export default function InvoicePage() {
   const [match, params] = useRoute('/invoice/:invoiceId');
   const { toast } = useToast();
-  const [isDownloading, setIsDownloading] = useState(false);
 
   const { data: invoice, isLoading, error } = useQuery({
     queryKey: [`/api/invoices/${params?.invoiceId}`],
     enabled: !!params?.invoiceId,
   });
-
-  const handleDownload = async () => {
-    if (!invoice) return;
-    
-    setIsDownloading(true);
-    try {
-      const response = await fetch(`/api/invoices/download/${invoice._id}`);
-      if (!response.ok) throw new Error('Download failed');
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `invoice-${invoice.invoiceNumber}.html`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast({
-        title: "Download started",
-        description: "Your invoice is being downloaded.",
-      });
-    } catch (error) {
-      toast({
-        title: "Download failed",
-        description: "Unable to download invoice. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   const handlePrint = () => {
     const printContents = document.querySelectorAll('.print-invoice');
@@ -178,16 +143,6 @@ export default function InvoicePage() {
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Shopping</span>
-            </Button>
-            
-            <Button 
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
-              data-testid="button-download-invoice"
-            >
-              <Download className="h-4 w-4" />
-              <span>{isDownloading ? 'Downloading...' : 'Download Invoice'}</span>
             </Button>
             
             <Button 

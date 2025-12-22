@@ -230,6 +230,10 @@ export default function AdminPage() {
   const [invoiceItems, setInvoiceItems] = useState<any[]>([]);
   const [invoiceDeliveryFee, setInvoiceDeliveryFee] = useState(0);
   const [invoiceDiscount, setInvoiceDiscount] = useState(0);
+  const [invoiceCustomerName, setInvoiceCustomerName] = useState('');
+  const [invoiceCustomerPhone, setInvoiceCustomerPhone] = useState('');
+  const [invoiceCustomerEmail, setInvoiceCustomerEmail] = useState('');
+  const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
 
   // Check admin session when user or loading state changes
   useEffect(() => {
@@ -1183,6 +1187,10 @@ export default function AdminPage() {
       setInvoiceItems(invoice.items || []);
       setInvoiceDeliveryFee(invoice.deliveryFee || 0);
       setInvoiceDiscount(invoice.discount || 0);
+      setInvoiceCustomerName(invoice.customerInfo?.name || '');
+      setInvoiceCustomerPhone(invoice.customerInfo?.phone || '');
+      setInvoiceCustomerEmail(invoice.customerInfo?.email || '');
+      setInvoicePaymentMethod(invoice.paymentMethod || '');
       setShowInvoiceEditor(true);
     } catch (error) {
       toast({
@@ -1202,7 +1210,13 @@ export default function AdminPage() {
         items: invoiceItems,
         deliveryFee: invoiceDeliveryFee,
         discount: invoiceDiscount,
-        customerInfo: editingInvoice.customerInfo,
+        customerInfo: {
+          name: invoiceCustomerName,
+          phone: invoiceCustomerPhone,
+          email: invoiceCustomerEmail,
+          address: editingInvoice.customerInfo?.address || {},
+        },
+        paymentMethod: invoicePaymentMethod,
       },
     });
   };
@@ -4085,23 +4099,48 @@ export default function AdminPage() {
             <div className="space-y-6">
               {/* Customer Info */}
               <div className="border rounded-lg p-4 bg-gray-50">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Customer Information</h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Information</h3>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="font-medium text-gray-700">Name:</span>
-                    <p className="text-gray-900">{editingInvoice.customerInfo?.name}</p>
+                    <Label className="text-gray-700 font-medium mb-2">Name</Label>
+                    <Input
+                      value={invoiceCustomerName}
+                      onChange={(e) => setInvoiceCustomerName(e.target.value)}
+                      className="bg-white text-black"
+                      placeholder="Customer name"
+                      data-testid="input-invoice-customer-name"
+                    />
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Phone:</span>
-                    <p className="text-gray-900">{editingInvoice.customerInfo?.phone}</p>
+                    <Label className="text-gray-700 font-medium mb-2">Phone</Label>
+                    <Input
+                      value={invoiceCustomerPhone}
+                      onChange={(e) => setInvoiceCustomerPhone(e.target.value)}
+                      className="bg-white text-black"
+                      placeholder="Phone number"
+                      data-testid="input-invoice-customer-phone"
+                    />
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Email:</span>
-                    <p className="text-gray-900">{editingInvoice.customerInfo?.email}</p>
+                    <Label className="text-gray-700 font-medium mb-2">Email</Label>
+                    <Input
+                      type="email"
+                      value={invoiceCustomerEmail}
+                      onChange={(e) => setInvoiceCustomerEmail(e.target.value)}
+                      className="bg-white text-black"
+                      placeholder="Email address"
+                      data-testid="input-invoice-customer-email"
+                    />
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Payment:</span>
-                    <p className="text-gray-900">{editingInvoice.paymentMethod}</p>
+                    <Label className="text-gray-700 font-medium mb-2">Payment Method</Label>
+                    <Input
+                      value={invoicePaymentMethod}
+                      onChange={(e) => setInvoicePaymentMethod(e.target.value)}
+                      className="bg-white text-black"
+                      placeholder="Payment method"
+                      data-testid="input-invoice-payment-method"
+                    />
                   </div>
                 </div>
               </div>
