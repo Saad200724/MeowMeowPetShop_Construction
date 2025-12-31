@@ -17,7 +17,7 @@ export default function CatFoodPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.catFood,
-      canonical: 'https://meowmeowpetshop.com/cat-food',
+      canonical: 'https://meowshopbd.me/cat-food',
     });
   }, []);
   const [searchQuery, setSearchQuery] = useState("");

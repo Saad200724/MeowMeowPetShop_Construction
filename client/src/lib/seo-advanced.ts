@@ -4,7 +4,9 @@
  */
 
 export const advancedSEOConfig = {
-  domain: 'meowmeowpetshop.com',
+  domain: 'meowshopbd.me',
+  primaryDomain: 'meowshopbd.me',
+  secondaryDomain: 'meowshopbd.com',
   locale: 'en_BD',
   language: 'en',
   country: 'Bangladesh',
@@ -22,7 +24,7 @@ export const advancedSEOConfig = {
     },
     "offers": {
       "@type": "Offer",
-      "url": `https://meowmeowpetshop.com/product/${product.id}`,
+      "url": `https://meowshopbd.me/product/${product.id}`,
       "priceCurrency": "BDT",
       "price": product.price,
       "priceValidUntil": "2025-12-31",
@@ -69,11 +71,11 @@ export const advancedSEOConfig = {
   organizationSchema: {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://meowmeowpetshop.com#organization",
+    "@id": "https://meowshopbd.me#organization",
     "name": "Meow Meow Pet Shop",
-    "url": "https://meowmeowpetshop.com",
-    "logo": "https://meowmeowpetshop.com/logo.png",
-    "image": "https://meowmeowpetshop.com/banner.jpg",
+    "url": "https://meowshopbd.me",
+    "logo": "https://meowshopbd.me/logo.png",
+    "image": "https://meowshopbd.me/banner.jpg",
     "description": "Bangladesh's leading online pet food and accessories store providing premium cat food, dog food, and pet supplies with fast delivery and quality guarantee.",
     "email": "meowmeowpetshop1@gmail.com",
     "telephone": "+880-1405-045023",
@@ -113,17 +115,17 @@ export const advancedSEOConfig = {
         {
           "@type": "OfferCatalog",
           "name": "Cat Food",
-          "url": "https://meowmeowpetshop.com/cat-food"
+          "url": "https://meowshopbd.me/cat-food"
         },
         {
           "@type": "OfferCatalog",
           "name": "Dog Food",
-          "url": "https://meowmeowpetshop.com/dog-food"
+          "url": "https://meowshopbd.me/dog-food"
         },
         {
           "@type": "OfferCatalog",
           "name": "Pet Accessories",
-          "url": "https://meowmeowpetshop.com/cat-accessories"
+          "url": "https://meowshopbd.me/cat-accessories"
         }
       ]
     }
@@ -140,7 +142,7 @@ export const advancedSEOConfig = {
     "seller": {
       "@type": "Organization",
       "name": "Meow Meow Pet Shop",
-      "url": "https://meowmeowpetshop.com"
+      "url": "https://meowshopbd.me"
     }
   },
 
@@ -168,11 +170,11 @@ export const advancedSEOConfig = {
     "organizer": {
       "@type": "Organization",
       "name": "Meow Meow Pet Shop",
-      "url": "https://meowmeowpetshop.com"
+      "url": "https://meowshopbd.me"
     },
     "offers": {
       "@type": "Offer",
-      "url": "https://meowmeowpetshop.com"
+      "url": "https://meowshopbd.me"
     }
   })
 };
@@ -188,7 +190,7 @@ export const advancedMetaTags = {
   
   // Mobile & Viewport
   viewport: "width=device-width, initial-scale=1.0, viewport-fit=cover",
-  mobileAlternate: "https://meowmeowpetshop.com",
+  mobileAlternate: "https://meowshopbd.me",
   
   // Apple
   appleMobileWebAppCapable: "yes",

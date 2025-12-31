@@ -15,7 +15,7 @@ export default function DogFoodPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.dogFood,
-      canonical: 'https://meowmeowpetshop.com/dog-food',
+      canonical: 'https://meowshopbd.me/dog-food',
     });
   }, []);
 

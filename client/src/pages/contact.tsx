@@ -16,7 +16,7 @@ export default function ContactPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.contact,
-      canonical: 'https://meowmeowpetshop.com/contact',
+      canonical: 'https://meowshopbd.me/contact',
     });
   }, []);
 

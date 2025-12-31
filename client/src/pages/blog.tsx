@@ -47,7 +47,7 @@ export default function BlogPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.blog,
-      canonical: 'https://meowmeowpetshop.com/blog',
+      canonical: 'https://meowshopbd.me/blog',
     });
   }, []);
 

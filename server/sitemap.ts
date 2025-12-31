@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 const sitemapRouter = Router();
 
-const baseUrl = 'https://meowmeowpetshop.com';
+const baseUrl = 'https://meowshopbd.me';
 
 const mainRoutes = [
   { path: '/', priority: '1.0', changefreq: 'daily' },

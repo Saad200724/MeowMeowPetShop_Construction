@@ -161,7 +161,7 @@ export function generateProductSEO(product: {
   const schema = {
     "@context": "https://schema.org/",
     "@type": "Product",
-    "@id": `https://meowmeowpetshop.com/product/${product.id}`,
+    "@id": `https://meowshopbd.me/product/${product.id}`,
     "name": product.name,
     "image": product.image,
     "description": product.description,
@@ -175,7 +175,7 @@ export function generateProductSEO(product: {
     },
     "offers": {
       "@type": "Offer",
-      "url": `https://meowmeowpetshop.com/product/${product.id}`,
+      "url": `https://meowshopbd.me/product/${product.id}`,
       "priceCurrency": "BDT",
       "price": product.price.toString(),
       "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -183,7 +183,7 @@ export function generateProductSEO(product: {
       "seller": {
         "@type": "Organization",
         "name": "Meow Meow Pet Shop",
-        "url": "https://meowmeowpetshop.com"
+        "url": "https://meowshopbd.me"
       }
     },
     "aggregateRating": product.reviews > 0 ? {
@@ -207,9 +207,9 @@ export function generateProductSEO(product: {
     keywords,
     schema: [schema],
     breadcrumbs: [
-      { name: "Home", url: "https://meowmeowpetshop.com" },
-      { name: product.category, url: `https://meowmeowpetshop.com/${product.category.toLowerCase()}` },
-      { name: product.name, url: `https://meowmeowpetshop.com/product/${product.id}` }
+      { name: "Home", url: "https://meowshopbd.me" },
+      { name: product.category, url: `https://meowshopbd.me/${product.category.toLowerCase()}` },
+      { name: product.name, url: `https://meowshopbd.me/product/${product.id}` }
     ]
   };
 }
@@ -229,7 +229,7 @@ export function generateCategorySEO(category: {
     "@type": "CollectionPage",
     "name": category.name,
     "description": category.description,
-    "url": `https://meowmeowpetshop.com${category.url}`,
+    "url": `https://meowshopbd.me${category.url}`,
     "image": category.image,
     "numberOfItems": category.productCount,
     "mainEntity": {
@@ -280,7 +280,7 @@ export function generateArticleSEO(article: {
     "dateModified": article.modifiedDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://meowmeowpetshop.com${article.url}`
+      "@id": `https://meowshopbd.me${article.url}`
     },
     "wordCount": wordCount,
     "articleBody": article.content

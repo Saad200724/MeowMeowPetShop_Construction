@@ -25,9 +25,9 @@ export default function Home() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.home,
-      ogUrl: 'https://meowmeowpetshop.com',
-      ogImage: 'https://meowmeowpetshop.com/logo.png',
-      canonical: 'https://meowmeowpetshop.com',
+      ogUrl: 'https://meowshopbd.me',
+      ogImage: 'https://meowshopbd.me/logo.png',
+      canonical: 'https://meowshopbd.me',
     });
   }, []);
 

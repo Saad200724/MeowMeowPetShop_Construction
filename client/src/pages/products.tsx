@@ -20,7 +20,7 @@ export default function ProductsPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.products,
-      canonical: 'https://meowmeowpetshop.com/products',
+      canonical: 'https://meowshopbd.me/products',
     });
   }, []);
   const [location] = useLocation()

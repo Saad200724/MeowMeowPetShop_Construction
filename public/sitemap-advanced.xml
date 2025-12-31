@@ -5,7 +5,7 @@
   
   <!-- Homepage - Highest Priority -->
   <url>
-    <loc>https://meowmeowpetshop.com</loc>
+    <loc>https://meowshopbd.me</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Main Categories -->
   <url>
-    <loc>https://meowmeowpetshop.com/cat-food</loc>
+    <loc>https://meowshopbd.me/cat-food</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -22,7 +22,7 @@
   </url>
 
   <url>
-    <loc>https://meowmeowpetshop.com/dog-food</loc>
+    <loc>https://meowshopbd.me/dog-food</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -31,7 +31,7 @@
 
   <!-- Secondary Categories -->
   <url>
-    <loc>https://meowmeowpetshop.com/cat-toys</loc>
+    <loc>https://meowshopbd.me/cat-toys</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -39,7 +39,7 @@
   </url>
 
   <url>
-    <loc>https://meowmeowpetshop.com/cat-litter</loc>
+    <loc>https://meowshopbd.me/cat-litter</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -47,7 +47,7 @@
   </url>
 
   <url>
-    <loc>https://meowmeowpetshop.com/cat-care</loc>
+    <loc>https://meowshopbd.me/cat-care</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -56,7 +56,7 @@
 
   <!-- Trust & Authority Pages -->
   <url>
-    <loc>https://meowmeowpetshop.com/about</loc>
+    <loc>https://meowshopbd.me/about</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -64,7 +64,7 @@
   </url>
 
   <url>
-    <loc>https://meowmeowpetshop.com/quality-guarantee</loc>
+    <loc>https://meowshopbd.me/quality-guarantee</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -73,7 +73,7 @@
 
   <!-- Content Pages -->
   <url>
-    <loc>https://meowmeowpetshop.com/blog</loc>
+    <loc>https://meowshopbd.me/blog</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -82,7 +82,7 @@
 
   <!-- Contact & Support -->
   <url>
-    <loc>https://meowmeowpetshop.com/contact</loc>
+    <loc>https://meowshopbd.me/contact</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

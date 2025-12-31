@@ -89,7 +89,7 @@ Best Premium Cat Food Online in Bangladesh | Quality Brands & Fast Delivery | Me
   "@context": "https://schema.org/",
   "@type": "Product",
   "name": "Royal Canin Adult Cat Food",
-  "image": "https://meowmeowpetshop.com/images/royal-canin.jpg",
+  "image": "https://meowshopbd.me/images/royal-canin.jpg",
   "description": "Premium adult cat food with balanced nutrition",
   "brand": {"@type": "Brand", "name": "Meow Meow Pet Shop"},
   "offers": {
@@ -135,9 +135,9 @@ Best Premium Cat Food Online in Bangladesh | Quality Brands & Fast Delivery | Me
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"position": 1, "name": "Home", "item": "https://meowmeowpetshop.com"},
-    {"position": 2, "name": "Cat Food", "item": "https://meowmeowpetshop.com/cat-food"},
-    {"position": 3, "name": "Royal Canin", "item": "https://meowmeowpetshop.com/product/123"}
+    {"position": 1, "name": "Home", "item": "https://meowshopbd.me"},
+    {"position": 2, "name": "Cat Food", "item": "https://meowshopbd.me/cat-food"},
+    {"position": 3, "name": "Royal Canin", "item": "https://meowshopbd.me/product/123"}
   ]
 }
 ```

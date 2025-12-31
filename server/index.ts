@@ -18,10 +18,43 @@ import { setupVite, serveStatic, log } from "./vite";
 import { createAdminAccount } from "./admin-setup";
 import { initializeEmailService } from "./email-service";
 import sitemapRouter from "./sitemap";
+import { setSecurityHeaders, corsConfig, securityHeaders } from "./security-config";
 
 const app = express();
+
+// Security: Set secure headers
+app.use((req, res, next) => {
+  setSecurityHeaders(res);
+  next();
+});
+
+// Security: CORS Configuration
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string;
+  if (corsConfig.origin.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', corsConfig.methods.join(', '));
+  res.header('Access-Control-Allow-Headers', corsConfig.allowedHeaders.join(', '));
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// Security: Parse JSON with size limits
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Security: Prevent parameter pollution
+app.use((req, res, next) => {
+  if (Array.isArray(req.query)) {
+    return res.status(400).json({ error: 'Invalid query parameters' });
+  }
+  next();
+});
 
 // SEO Sitemap routes
 app.use(sitemapRouter);

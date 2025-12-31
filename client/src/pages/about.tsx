@@ -13,7 +13,7 @@ export default function AboutPage() {
   useEffect(() => {
     setSEO({
       ...seoMetadata.about,
-      canonical: 'https://meowmeowpetshop.com/about',
+      canonical: 'https://meowshopbd.me/about',
     });
   }, []);
 
