@@ -1656,6 +1656,24 @@ export default function AdminPage() {
                         </div>
                       </div>
 
+                      <div className="space-y-4">
+                        <h3 className="font-semibold text-sm uppercase text-gray-500">How integration works</h3>
+                        <div className="space-y-3 text-sm text-gray-600">
+                          <div className="flex gap-3">
+                            <div className="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+                            <p><strong>Fetch Data:</strong> Your POS system makes a "GET" request to our API using the API Key provided above.</p>
+                          </div>
+                          <div className="flex gap-3">
+                            <div className="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+                            <p><strong>Real-time Info:</strong> The website sends back current stock levels, prices, and product names in a standard format (JSON).</p>
+                          </div>
+                          <div className="flex gap-3">
+                            <div className="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+                            <p><strong>POS Update:</strong> Your POS system receives this data and updates its internal inventory automatically.</p>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
                         <h3 className="font-semibold text-sm uppercase text-gray-500">Endpoints</h3>
                         <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto font-mono text-xs">
