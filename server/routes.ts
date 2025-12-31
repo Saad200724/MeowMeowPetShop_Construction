@@ -677,12 +677,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         description: productData.description,
         price: priceVal,
         originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
-        category: (categoryRecord as any)._id,
-        categoryId: (categoryRecord as any)._id.toString(),
-        categoryName: (categoryRecord as any).name,
-        brand: (brandRecord as any)._id,
-        brandId: (brandRecord as any)._id.toString(),
-        brandName: (brandRecord as any).name,
+        category: categoryRecord._id,
+        categoryId: categoryRecord.slug || categoryRecord.name.toLowerCase().replace(/\s+/g, '-'),
+        categoryName: categoryRecord.name,
+        brand: brandRecord._id,
+        brandId: brandRecord._id.toString(),
+        brandName: brandRecord.name,
         image: productData.image,
         images: productData.images || [],
         stockQuantity: productData.stockQuantity || 0,
@@ -830,19 +830,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const productTags = subcategory ? [subcategory] : [];
 
       // Update product directly in database with all fields
+      const priceVal = parseFloat(productData.price);
+      if (isNaN(priceVal)) {
+        return res.status(400).json({ message: "Invalid price format" });
+      }
+
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
         {
           name: productData.name,
           description: productData.description,
-          price: parseFloat(productData.price),
+          price: priceVal,
           originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
-          category: (categoryRecord as any)._id,
-          categoryId: (categoryRecord as any)._id.toString(),
-          categoryName: (categoryRecord as any).name,
-          brand: (brandRecord as any)._id,
-          brandId: (brandRecord as any)._id.toString(),
-          brandName: (brandRecord as any).name,
+          category: categoryRecord._id,
+          categoryId: categoryRecord.slug || categoryRecord.name.toLowerCase().replace(/\s+/g, '-'),
+          categoryName: categoryRecord.name,
+          brand: brandRecord._id,
+          brandId: brandRecord._id.toString(),
+          brandName: brandRecord.name,
           image: productData.image,
           images: productData.images || [],
           stockQuantity: productData.stockQuantity || 0,
