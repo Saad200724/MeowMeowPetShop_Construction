@@ -178,7 +178,7 @@ export default function RepackFood() {
               const isLiked = likedItems[productId];
 
               return (
-                <Link href={`/product/${product.slug || 'product'}`} key={productId}>
+                <Link href={`/product/${productId}`} key={productId}>
                   <Card 
                     className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl flex-shrink-0 w-52 cursor-pointer"
                   >
