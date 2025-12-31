@@ -667,12 +667,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Create product directly in database with all fields
+      const priceVal = parseFloat(productData.price);
+      if (isNaN(priceVal)) {
+        return res.status(400).json({ message: "Invalid price format" });
+      }
+
       const product = new Product({
         name: productData.name,
         description: productData.description,
-        price: parseFloat(productData.price),
+        price: priceVal,
         originalPrice: productData.originalPrice ? parseFloat(productData.originalPrice) : undefined,
         category: (categoryRecord as any)._id,
+        categoryId: (categoryRecord as any)._id.toString(),
         categoryName: (categoryRecord as any).name,
         brand: (brandRecord as any)._id,
         brandId: (brandRecord as any)._id.toString(),
