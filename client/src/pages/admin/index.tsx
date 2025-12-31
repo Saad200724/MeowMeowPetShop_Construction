@@ -1297,19 +1297,19 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Dialog open={showPOSDialog} onOpenChange={setShowPOSDialog}>
-        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden">
-          <DialogHeader className="p-4 border-b">
-            <DialogTitle className="flex items-center">
-              <Grid3X3 className="w-5 h-5 mr-2 text-blue-600" />
+        <DialogContent className="max-w-[100vw] w-screen h-screen p-0 m-0 rounded-none border-none overflow-hidden flex flex-col">
+          <DialogHeader className="p-4 border-b shrink-0 flex flex-row items-center justify-between space-y-0">
+            <DialogTitle className="flex items-center text-xl">
+              <Grid3X3 className="w-6 h-6 mr-2 text-blue-600" />
               POS System
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 w-full h-full bg-white">
+          <div className="flex-1 w-full relative bg-white">
             <iframe 
               src="https://www.softhut.app/pos-mmp/" 
-              className="w-full h-full border-0"
+              className="absolute inset-0 w-full h-full border-0"
               title="POS System"
-              allow="payment"
+              allow="payment; fullscreen"
             />
           </div>
         </DialogContent>
