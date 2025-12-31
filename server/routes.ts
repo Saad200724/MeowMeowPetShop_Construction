@@ -3541,8 +3541,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // --- PUBLIC API SYSTEM (V1) ---
   // This section provides public access to product data for external integrations
 
+  // Middleware for API Key authentication
+  const apiAuth = (req: any, res: any, next: any) => {
+    const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+    const validApiKey = process.env.PUBLIC_API_KEY || 'mmp_pos_integration_2026';
+    
+    if (!apiKey || apiKey !== validApiKey) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid or missing API Key' });
+    }
+    next();
+  };
+
   // GET all products with filtering and pagination
-  app.get("/api/v1/products", async (req, res) => {
+  app.get("/api/v1/products", apiAuth, async (req, res) => {
     try {
       const { 
         category, 

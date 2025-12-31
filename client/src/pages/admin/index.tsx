@@ -1635,9 +1635,33 @@ export default function AdminPage() {
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
+                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-md mb-4">
+                        <h3 className="font-bold text-blue-800 text-sm mb-1">Authentication Required</h3>
+                        <p className="text-blue-700 text-xs mb-2">Include your API Key in the request header or query string.</p>
+                        <div className="flex items-center gap-2">
+                          <code className="bg-white px-2 py-1 rounded border text-blue-900 font-mono text-xs flex-1">
+                            X-API-KEY: mmp_pos_integration_2026
+                          </code>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-7 text-blue-600"
+                            onClick={() => {
+                              navigator.clipboard.writeText('mmp_pos_integration_2026');
+                              toast({ title: "Copied!", description: "API Key copied to clipboard" });
+                            }}
+                          >
+                            Copy
+                          </Button>
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
                         <h3 className="font-semibold text-sm uppercase text-gray-500">Endpoints</h3>
                         <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto font-mono text-xs">
+                          <p className="mb-1 text-green-400"># Example: Get POS Ready Data</p>
+                          <p className="mb-3">GET /api/v1/products?limit=100&apiKey=mmp_pos_integration_2026</p>
+                          
                           <p className="mb-1 text-green-400"># Get all products</p>
                           <p className="mb-3">GET /api/v1/products?limit=50&page=1</p>
                           
