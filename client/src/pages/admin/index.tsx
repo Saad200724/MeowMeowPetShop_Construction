@@ -1388,7 +1388,51 @@ export default function AdminPage() {
               <ImageIcon className="w-4 h-4 mr-2" />
               Graphics
             </TabsTrigger>
+            <TabsTrigger value="api" className="data-[state=active]:bg-gray-800 data-[state=active]:text-white">
+              <Package className="w-4 h-4 mr-2" />
+              API Docs
+            </TabsTrigger>
           </TabsList>
+
+          {/* API Docs Tab */}
+          <TabsContent value="api" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Public API Reference (v1)</CardTitle>
+                <CardDescription>
+                  Use these endpoints to integrate product data into other systems (MongoDB, SQL, etc.).
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg">Endpoints</h3>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto font-mono text-sm">
+                    <p className="mb-2 text-green-400"># Get all products</p>
+                    <p className="mb-4">GET /api/v1/products?limit=50&page=1</p>
+                    
+                    <p className="mb-2 text-green-400"># Get single product</p>
+                    <p className="mb-4">GET /api/v1/products/:id-or-slug</p>
+                    
+                    <p className="mb-2 text-green-400"># Get categories</p>
+                    <p className="mb-4">GET /api/v1/categories</p>
+                    
+                    <p className="mb-2 text-green-400"># Get brands</p>
+                    <p>GET /api/v1/brands</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="font-semibold">Query Parameters</h3>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
+                    <li><code className="bg-gray-100 px-1 rounded">category</code>: Filter by category slug</li>
+                    <li><code className="bg-gray-100 px-1 rounded">brand</code>: Filter by brand slug</li>
+                    <li><code className="bg-gray-100 px-1 rounded">onSale</code>: Set to 'true' for sale items</li>
+                    <li><code className="bg-gray-100 px-1 rounded">minPrice</code> / <code className="bg-gray-100 px-1 rounded">maxPrice</code>: Price range filtering</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Orders Tab */}
           <TabsContent value="orders" className="space-y-6">

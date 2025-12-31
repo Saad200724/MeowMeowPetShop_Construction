@@ -3538,6 +3538,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // --- PUBLIC API SYSTEM (V1) ---
+  // This section provides public access to product data for external integrations
+
+  // GET all products with filtering and pagination
+  app.get("/api/v1/products", async (req, res) => {
+    try {
+      const { 
+        category, 
+        brand, 
+        subcategory,
+        onSale, 
+        isNew, 
+        minPrice, 
+        maxPrice, 
+        sort = 'createdAt', 
+        order = 'desc',
+        limit = 50, 
+        page = 1 
+      } = req.query;
+
+      const query: any = { isActive: true };
+
+      if (category) query.categoryId = category;
+      if (brand) query.brandId = brand;
+      if (subcategory) query.subcategory = subcategory;
+      if (onSale === 'true') query.isOnSale = true;
+      if (isNew === 'true') query.isNew = true;
+      
+      if (minPrice || maxPrice) {
+        query.price = {};
+        if (minPrice) query.price.$gte = parseFloat(minPrice as string);
+        if (maxPrice) query.price.$lte = parseFloat(maxPrice as string);
+      }
+
+      const sortOptions: any = {};
+      sortOptions[sort as string] = order === 'asc' ? 1 : -1;
+
+      const skip = (Number(page) - 1) * Number(limit);
+
+      const [products, total] = await Promise.all([
+        Product.find(query)
+          .sort(sortOptions)
+          .limit(Number(limit))
+          .skip(skip),
+        Product.countDocuments(query)
+      ]);
+
+      res.json({
+        status: 'success',
+        results: products.length,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / Number(limit)),
+        data: products
+      });
+    } catch (error) {
+      console.error('Public API Error:', error);
+      res.status(500).json({ status: 'error', message: "Failed to fetch products" });
+    }
+  });
+
+  // GET single product by ID or Slug
+  app.get("/api/v1/products/:idOrSlug", async (req, res) => {
+    try {
+      const { idOrSlug } = req.params;
+      
+      let product;
+      if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
+        product = await Product.findById(idOrSlug);
+      } else {
+        product = await Product.findOne({ slug: idOrSlug });
+      }
+
+      if (!product) {
+        return res.status(404).json({ status: 'error', message: "Product not found" });
+      }
+
+      res.json({
+        status: 'success',
+        data: product
+      });
+    } catch (error) {
+      res.status(500).json({ status: 'error', message: "Internal server error" });
+    }
+  });
+
+  // GET all categories
+  app.get("/api/v1/categories", async (_req, res) => {
+    try {
+      const categories = await Category.find({ isActive: true });
+      res.json({ status: 'success', data: categories });
+    } catch (error) {
+      res.status(500).json({ status: 'error', message: "Failed to fetch categories" });
+    }
+  });
+
+  // GET all brands
+  app.get("/api/v1/brands", async (_req, res) => {
+    try {
+      const brands = await Brand.find({ isActive: true });
+      res.json({ status: 'success', data: brands });
+    } catch (error) {
+      res.status(500).json({ status: 'error', message: "Failed to fetch brands" });
+    }
+  });
+
   const server = createServer(app);
   return server;
 }
