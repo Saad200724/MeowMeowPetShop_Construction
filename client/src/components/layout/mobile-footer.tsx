@@ -57,7 +57,7 @@ export default function MobileFooter() {
         {/* Copyright */}
         <div className="text-center border-t border-gray-600 pt-2">
           <p className="text-xs text-gray-400">
-            © 2025 Meow Meow Pet Shop. All rights reserved.
+            © 2026 Meow Meow Pet Shop. All rights reserved.
           </p>
           <p className="text-xs text-gray-400 mt-1 mb-8">
             Powered By: <a href="https://znforge.com" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge</a>

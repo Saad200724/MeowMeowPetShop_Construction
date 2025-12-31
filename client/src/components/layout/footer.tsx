@@ -97,7 +97,7 @@ export default function Footer() {
         {/* Footer Bottom */}
         <div className="mt-8 pt-8">
           <div className="text-center text-gray-400 text-sm pt-4">
-            <p>&copy; 2025 Meow Meow Pet Shop. All rights reserved.</p>
+            <p>&copy; 2026 Meow Meow Pet Shop. All rights reserved.</p>
             <p className="mt-1 mb-8">Powered By: <a href="https://znforge.dev" target="_blank" rel="noopener noreferrer" className="text-meow-yellow hover:text-yellow-300 transition-colors">ZnForge</a></p>
           </div>
         </div>

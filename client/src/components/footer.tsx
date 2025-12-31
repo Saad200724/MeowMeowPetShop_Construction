@@ -110,7 +110,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © 2025 Meow Meow Pet Shop. All rights reserved. | Made with ❤️ for pet lovers
+            © 2026 Meow Meow Pet Shop. All rights reserved. | Made with ❤️ for pet lovers
           </p>
         </div>
       </div>
