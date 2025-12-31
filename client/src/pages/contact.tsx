@@ -10,19 +10,14 @@ import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, MessageCircle, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
+import { setSEO, seoMetadata } from '@/lib/seo';
 
 export default function ContactPage() {
   useEffect(() => {
-    document.title = 'Contact Us - Meow Meow Pet Shop';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Contact Meow Meow Pet Shop in Savar, Bangladesh. Phone: 01405-045023, Email: meowmeowpetshop1@gmail.com. We are here to help with all your pet care needs.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Contact Meow Meow Pet Shop in Savar, Bangladesh. Phone: 01405-045023, Email: meowmeowpetshop1@gmail.com. We are here to help with all your pet care needs.';
-      document.head.appendChild(meta);
-    }
+    setSEO({
+      ...seoMetadata.contact,
+      canonical: 'https://meowmeowpetshop.com/contact',
+    });
   }, []);
 
   const [formData, setFormData] = useState({

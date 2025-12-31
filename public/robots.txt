@@ -1,0 +1,30 @@
+# Meow Meow Pet Shop - SEO Robots Configuration
+# Allow all search engine crawlers
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /checkout
+Disallow: /cart
+Disallow: /payment-success
+Disallow: /api/
+Disallow: /messenger
+Crawl-delay: 0
+Request-rate: 30/60
+
+# Google Search Console
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://meowmeowpetshop.com/sitemap.xml
+Sitemap: https://meowmeowpetshop.com/products-sitemap.xml

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
@@ -9,8 +9,16 @@ import ProductCard from '@/components/product/product-card';
 import AnalyticsBar from '@/components/product/analytics-bar';
 import ModernFilter, { type FilterOptions } from '@/components/product/modern-filter';
 import { useProducts, type Product } from '@/hooks/use-products';
+import { setSEO, seoMetadata } from '@/lib/seo';
 
 export default function DogFoodPage() {
+  useEffect(() => {
+    setSEO({
+      ...seoMetadata.dogFood,
+      canonical: 'https://meowmeowpetshop.com/dog-food',
+    });
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({
     priceRange: [1, 100000],

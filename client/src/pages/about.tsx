@@ -5,21 +5,16 @@ import NavigationSidebar from "@/components/layout/sidebar";
 import { useSidebar } from "@/contexts/sidebar-context";
 import { Heart, Award, Truck, Shield, Users, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { setSEO, seoMetadata } from "@/lib/seo";
 
 export default function AboutPage() {
   const { isVisible: sidebarVisible } = useSidebar();
 
   useEffect(() => {
-    document.title = 'About Us - Meow Meow Pet Shop';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Learn about Meow Meow Pet Shop - Your trusted pet care partner in Savar, Bangladesh. Quality products, expert care, and affordable prices for your beloved pets.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Learn about Meow Meow Pet Shop - Your trusted pet care partner in Savar, Bangladesh. Quality products, expert care, and affordable prices for your beloved pets.';
-      document.head.appendChild(meta);
-    }
+    setSEO({
+      ...seoMetadata.about,
+      canonical: 'https://meowmeowpetshop.com/about',
+    });
   }, []);
 
   const values = [

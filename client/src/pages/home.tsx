@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { setSEO, seoMetadata } from '@/lib/seo';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from "@/components/layout/sidebar";
@@ -22,26 +23,12 @@ export default function Home() {
   const { isVisible: sidebarVisible } = useSidebar();
 
   useEffect(() => {
-    document.title = 'Meow Meow Pet Shop - Premium Pet Food & Accessories in Savar, Bangladesh';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Shop premium cat food, dog food, and pet accessories at Meow Meow Pet Shop in Savar, Bangladesh. Quality products for your beloved pets with delivery across Dhaka.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Shop premium cat food, dog food, and pet accessories at Meow Meow Pet Shop in Savar, Bangladesh. Quality products for your beloved pets with delivery across Dhaka.';
-      document.head.appendChild(meta);
-    }
-
-    const metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', 'pet shop, cat food, dog food, pet accessories, Savar, Dhaka, Bangladesh, pet store, pet supplies');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'keywords';
-      meta.content = 'pet shop, cat food, dog food, pet accessories, Savar, Dhaka, Bangladesh, pet store, pet supplies';
-      document.head.appendChild(meta);
-    }
+    setSEO({
+      ...seoMetadata.home,
+      ogUrl: 'https://meowmeowpetshop.com',
+      ogImage: 'https://meowmeowpetshop.com/logo.png',
+      canonical: 'https://meowmeowpetshop.com',
+    });
   }, []);
 
 

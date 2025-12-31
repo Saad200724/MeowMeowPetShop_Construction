@@ -11,11 +11,18 @@ import Footer from '@/components/layout/footer'
 import ProductCard from '@/components/product/product-card'
 import { useProducts } from '@/hooks/use-products'
 import { categories } from '@/lib/product-data'
+import { setSEO, seoMetadata } from '@/lib/seo'
 import { Search, Filter, Grid, List, X, SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLocation, Link } from 'wouter'
 
 export default function ProductsPage() {
+  useEffect(() => {
+    setSEO({
+      ...seoMetadata.products,
+      canonical: 'https://meowmeowpetshop.com/products',
+    });
+  }, []);
   const [location] = useLocation()
   const [selectedCategory, setSelectedCategory] = useState<string>('cat-food')
   const [searchQuery, setSearchQuery] = useState('')

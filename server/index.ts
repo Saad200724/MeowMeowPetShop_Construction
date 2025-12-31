@@ -17,10 +17,14 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { createAdminAccount } from "./admin-setup";
 import { initializeEmailService } from "./email-service";
+import sitemapRouter from "./sitemap";
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// SEO Sitemap routes
+app.use(sitemapRouter);
 
 app.use((req, res, next) => {
   const start = Date.now();

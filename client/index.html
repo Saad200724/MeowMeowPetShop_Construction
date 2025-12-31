@@ -11,14 +11,20 @@
     </title>
     <meta
       name="description"
-      content="Meow Meow Pet Shop offers premium pet food, toys, and accessories for cats and dogs in Savar, Bangladesh. Fast delivery, quality guarantee, and best prices."
+      content="Shop premium cat food, dog food, and pet accessories at Meow Meow Pet Shop in Savar, Bangladesh. Quality products, fast delivery across Dhaka, and guaranteed customer satisfaction. Best prices for pet lovers."
     />
     <meta
       name="keywords"
-      content="pet shop, cat food, dog food, pet toys, pet accessories, Savar, Bangladesh, pet care"
+      content="pet shop, cat food, dog food, pet toys, pet accessories, Savar, Dhaka, Bangladesh, pet care, pet supplies, quality pet products"
     />
+    <meta name="author" content="Meow Meow Pet Shop" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta http-equiv="Content-Language" content="en-BD" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="theme-color" content="#1a5f3f" />
 
-    <!-- Open Graph Tags -->
+    <!-- Open Graph Tags for Social Sharing -->
     <meta
       property="og:title"
       content="Meow Meow Pet Shop - Premium Pet Food & Accessories"
@@ -29,11 +35,26 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://meowmeowpetshop.com" />
-    <meta property="og:image" content="/logo.png" />
+    <meta property="og:image" content="https://meowmeowpetshop.com/logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Meow Meow Pet Shop" />
+    <meta property="og:locale" content="en_BD" />
 
-    <!-- Favicon -->
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Meow Meow Pet Shop - Premium Pet Food & Accessories" />
+    <meta name="twitter:description" content="Shop premium pet products with quality guarantee and fast delivery across Dhaka." />
+    <meta name="twitter:image" content="https://meowmeowpetshop.com/logo.png" />
+    <meta name="twitter:site" content="@meowmeowpetshop" />
+
+    <!-- Favicon and Apple Touch Icon -->
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="shortcut icon" href="/logo.png" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://meowmeowpetshop.com" />
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,31 +64,84 @@
       rel="stylesheet"
     />
 
-    <!-- Schema Markup -->
+    <!-- Schema Markup - Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://meowmeowpetshop.com",
+        "name": "Meow Meow Pet Shop",
+        "image": "https://meowmeowpetshop.com/logo.png",
+        "description": "Premium pet food and accessories store in Savar, Bangladesh providing quality products for cats, dogs, and other pets.",
+        "url": "https://meowmeowpetshop.com",
+        "telephone": "+880-1405-045023",
+        "email": "meowmeowpetshop1@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Savar",
+          "addressLocality": "Dhaka",
+          "addressRegion": "Dhaka",
+          "postalCode": "1340",
+          "addressCountry": "BD"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "23.7339",
+          "longitude": "90.2639"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "09:00",
+            "closes": "21:00"
+          }
+        ],
+        "priceRange": "$$",
+        "paymentAccepted": ["Cash", "Credit Card", "Mobile Payment"],
+        "areaServed": "BD",
+        "sameAs": [
+          "https://www.facebook.com/meow.meow.pet.shop1",
+          "https://www.instagram.com/meow_meow_pet_shop",
+          "https://wa.me/8801838511583"
+        ]
+      }
+    </script>
+
+    <!-- Schema Markup - Pet Store -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "PetStore",
         "name": "Meow Meow Pet Shop",
-        "description": "Premium pet food and accessories store in Savar, Bangladesh",
+        "description": "Premium pet food and accessories store specializing in cat food, dog food, and pet supplies.",
+        "url": "https://meowmeowpetshop.com",
+        "telephone": "+880-1405-045023",
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Savar",
           "addressRegion": "Dhaka",
           "addressCountry": "BD"
         },
-        "telephone": "+880-1234-567890",
-        "url": "https://meowmeowpetshop.com",
         "openingHours": "Mo-Su 09:00-21:00",
         "priceRange": "$$",
         "paymentAccepted": ["Cash", "Credit Card", "Mobile Payment"]
       }
     </script>
+
+    <!-- Meta Tags for SEO Performance -->
+    <meta name="geo.placename" content="Savar, Dhaka, Bangladesh" />
+    <meta name="geo.region" content="BD-DA" />
+    <meta name="ICBM" content="23.7339, 90.2639" />
+    <meta property="business:contact_data:street_address" content="Savar, Dhaka" />
+    <meta property="business:contact_data:locality" content="Dhaka" />
+    <meta property="business:contact_data:postal_code" content="1340" />
+    <meta property="business:contact_data:country_name" content="Bangladesh" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <!-- Replit Development Banner -->
     <script
       type="text/javascript"
       src="https://replit.com/public/js/replit-dev-banner.js"

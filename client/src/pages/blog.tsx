@@ -8,6 +8,7 @@ import { Link } from 'wouter';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import NavigationSidebar from '@/components/layout/sidebar';
+import { setSEO, seoMetadata } from '@/lib/seo';
 
 const blogCategories = [
   'Pet Care Tips',
@@ -41,6 +42,14 @@ export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Set SEO metadata
+  useEffect(() => {
+    setSEO({
+      ...seoMetadata.blog,
+      canonical: 'https://meowmeowpetshop.com/blog',
+    });
+  }, []);
 
   // Fetch blogs from API
   useEffect(() => {
