@@ -1388,51 +1388,29 @@ export default function AdminPage() {
               <ImageIcon className="w-4 h-4 mr-2" />
               Graphics
             </TabsTrigger>
-            <TabsTrigger value="api" className="data-[state=active]:bg-gray-800 data-[state=active]:text-white">
-              <Package className="w-4 h-4 mr-2" />
-              API Docs
-            </TabsTrigger>
           </TabsList>
 
-          {/* API Docs Tab */}
-          <TabsContent value="api" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Public API Reference (v1)</CardTitle>
-                <CardDescription>
-                  Use these endpoints to integrate product data into other systems (MongoDB, SQL, etc.).
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg">Endpoints</h3>
-                  <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto font-mono text-sm">
-                    <p className="mb-2 text-green-400"># Get all products</p>
-                    <p className="mb-4">GET /api/v1/products?limit=50&page=1</p>
-                    
-                    <p className="mb-2 text-green-400"># Get single product</p>
-                    <p className="mb-4">GET /api/v1/products/:id-or-slug</p>
-                    
-                    <p className="mb-2 text-green-400"># Get categories</p>
-                    <p className="mb-4">GET /api/v1/categories</p>
-                    
-                    <p className="mb-2 text-green-400"># Get brands</p>
-                    <p>GET /api/v1/brands</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="font-semibold">Query Parameters</h3>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
-                    <li><code className="bg-gray-100 px-1 rounded">category</code>: Filter by category slug</li>
-                    <li><code className="bg-gray-100 px-1 rounded">brand</code>: Filter by brand slug</li>
-                    <li><code className="bg-gray-100 px-1 rounded">onSale</code>: Set to 'true' for sale items</li>
-                    <li><code className="bg-gray-100 px-1 rounded">minPrice</code> / <code className="bg-gray-100 px-1 rounded">maxPrice</code>: Price range filtering</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="graphics" className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Graphics Management</h2>
+                <p className="text-gray-600">Manage banners and popup posters for the store</p>
+              </div>
+            </div>
+
+            <Tabs defaultValue="banners" className="space-y-6">
+              <TabsList className="bg-white border">
+                <TabsTrigger value="banners">Home Banners</TabsTrigger>
+                <TabsTrigger value="popups">Popup Posters</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="banners" className="space-y-4">
+                {/* Banner list content would follow here, search for existing content */}
+              </TabsContent>
+            </Tabs>
           </TabsContent>
+
+          {/* API Docs Tab Content moved into Products Tab */}
 
           {/* Orders Tab */}
           <TabsContent value="orders" className="space-y-6">
@@ -1638,6 +1616,66 @@ export default function AdminPage() {
                   <Building2 className="w-4 h-4 mr-2" />
                   Brands
                 </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      className="border-gray-300 text-gray-700 hover:bg-gray-50 font-medium shadow-sm hover:shadow transition-all duration-200"
+                      data-testid="button-api-docs"
+                    >
+                      <Package className="w-4 h-4 mr-2" />
+                      API Docs
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Public API Reference (v1)</DialogTitle>
+                      <DialogDescription>
+                        Use these endpoints to integrate product data into other systems.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-sm uppercase text-gray-500">Endpoints</h3>
+                        <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto font-mono text-xs">
+                          <p className="mb-1 text-green-400"># Get all products</p>
+                          <p className="mb-3">GET /api/v1/products?limit=50&page=1</p>
+                          
+                          <p className="mb-1 text-green-400"># Get single product</p>
+                          <p className="mb-3">GET /api/v1/products/:id-or-slug</p>
+                          
+                          <p className="mb-1 text-green-400"># Get categories</p>
+                          <p className="mb-3">GET /api/v1/categories</p>
+                          
+                          <p className="mb-1 text-green-400"># Get brands</p>
+                          <p>GET /api/v1/brands</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <h3 className="font-semibold text-sm uppercase text-gray-500">Query Parameters</h3>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-bold">category</span>
+                            <p className="text-gray-600">Filter by category slug</p>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-bold">brand</span>
+                            <p className="text-gray-600">Filter by brand slug</p>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-bold">onSale</span>
+                            <p className="text-gray-600">Set to 'true' for sale items</p>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-bold">Price</span>
+                            <p className="text-gray-600">minPrice / maxPrice</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
