@@ -236,6 +236,8 @@ export default function AdminPage() {
   const [invoiceCustomerAddress, setInvoiceCustomerAddress] = useState<any>({});
   const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
 
+  const [showPOSDialog, setShowPOSDialog] = useState(false);
+
   // Check admin session when user or loading state changes
   useEffect(() => {
     // If loading is done and user is not admin, redirect to login
@@ -1294,6 +1296,25 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Dialog open={showPOSDialog} onOpenChange={setShowPOSDialog}>
+        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle className="flex items-center">
+              <Grid3X3 className="w-5 h-5 mr-2 text-blue-600" />
+              POS System
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 w-full h-full bg-white">
+            <iframe 
+              src="https://www.softhut.app/pos-mmp/" 
+              className="w-full h-full border-0"
+              title="POS System"
+              allow="payment"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1307,6 +1328,7 @@ export default function AdminPage() {
               <span className="text-sm font-medium text-gray-700">Welcome, <span className="text-gray-900 font-semibold">{user.firstName}</span></span>
               <Button 
                 size="sm" 
+                onClick={() => setShowPOSDialog(true)}
                 className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <Grid3X3 className="w-4 h-4 mr-2" />
