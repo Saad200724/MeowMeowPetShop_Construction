@@ -2697,112 +2697,116 @@ export default function AdminPage() {
 
       {/* Banner Dialog */}
       <Dialog open={showBannerDialog} onOpenChange={setShowBannerDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {editingBanner ? 'Edit Banner' : 'Add New Banner'}
             </DialogTitle>
             <DialogDescription>Banner resolution should be 1200x400 pixels for best results</DialogDescription>
           </DialogHeader>
-          <Form {...bannerForm}>
-            <form onSubmit={bannerForm.handleSubmit(async (data) => {
-              try {
-                if (editingBanner) {
-                  await apiRequest(`/api/banners/${editingBanner._id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(data),
-                  });
+          <div className="flex-1 overflow-y-auto px-1 py-2">
+            <Form {...bannerForm}>
+              <form onSubmit={bannerForm.handleSubmit(async (data) => {
+                try {
+                  if (editingBanner) {
+                    await apiRequest(`/api/banners/${editingBanner._id}`, {
+                      method: 'PUT',
+                      body: JSON.stringify(data),
+                    });
+                    toast({
+                      title: 'Success',
+                      description: 'Banner updated successfully',
+                    });
+                  } else {
+                    await apiRequest('/api/banners', {
+                      method: 'POST',
+                      body: JSON.stringify(data),
+                    });
+                    toast({
+                      title: 'Success',
+                      description: 'Banner created successfully',
+                    });
+                  }
+                  refetchBanners();
+                  setShowBannerDialog(false);
+                  bannerForm.reset();
+                } catch (error: any) {
                   toast({
-                    title: 'Success',
-                    description: 'Banner updated successfully',
-                  });
-                } else {
-                  await apiRequest('/api/banners', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                  });
-                  toast({
-                    title: 'Success',
-                    description: 'Banner created successfully',
+                    title: 'Error',
+                    description: error.message || 'Failed to save banner',
+                    variant: 'destructive',
                   });
                 }
-                refetchBanners();
-                setShowBannerDialog(false);
-                bannerForm.reset();
-              } catch (error: any) {
-                toast({
-                  title: 'Error',
-                  description: error.message || 'Failed to save banner',
-                  variant: 'destructive',
-                });
-              }
-            })} className="space-y-4">
-              <FormField
-                control={bannerForm.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Upload Banner Image (1200x400px)</FormLabel>
-                    <FormControl>
-                      <ImageUpload
-                        value={field.value}
-                        onChange={field.onChange}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              })} className="space-y-4">
+                <FormField
+                  control={bannerForm.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Banner Image (1200x400px)</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={bannerForm.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Banner title" {...field} data-testid="input-banner-title" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={bannerForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Banner title" {...field} data-testid="input-banner-title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={bannerForm.control}
-                name="order"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Display Order</FormLabel>
-                    <Select 
-                      value={field.value?.toString() || "1"} 
-                      onValueChange={(value) => field.onChange(parseInt(value) || 1)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Banner Order" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">Order 1</SelectItem>
-                        <SelectItem value="2">Order 2</SelectItem>
-                        <SelectItem value="3">Order 3</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={bannerForm.control}
+                  name="order"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Order</FormLabel>
+                      <Select 
+                        value={field.value?.toString() || "1"} 
+                        onValueChange={(value) => field.onChange(parseInt(value) || 1)}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Banner Order" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="1">Order 1</SelectItem>
+                          <SelectItem value="2">Order 2</SelectItem>
+                          <SelectItem value="3">Order 3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowBannerDialog(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" data-testid="button-submit-banner">
-                  {editingBanner ? 'Update' : 'Create'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                <DialogFooter className="sticky bottom-0 bg-white pt-2 border-t mt-4">
+                  <Button type="button" variant="outline" onClick={() => setShowBannerDialog(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" data-testid="button-submit-banner">
+                    {editingBanner ? 'Update' : 'Create'}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </div>
         </DialogContent>
       </Dialog>
 
