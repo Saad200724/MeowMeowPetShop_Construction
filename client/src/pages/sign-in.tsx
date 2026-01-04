@@ -152,11 +152,6 @@ export default function SignInPage() {
                       <Lock size={16} className="text-green-600 dark:text-green-400" />
                       Password
                     </Label>
-                    <Link href="/forgot-password">
-                      <Button variant="link" className="p-0 h-auto text-xs text-green-600 dark:text-green-400 hover:text-green-700" data-testid="link-forgot-password">
-                        Forgot?
-                      </Button>
-                    </Link>
                   </div>
                   <Input
                     id="password"
@@ -168,6 +163,13 @@ export default function SignInPage() {
                     data-testid="input-signin-password"
                     className="h-11 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 rounded-lg transition-all focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-slate-700"
                   />
+                  <div className="flex justify-end">
+                    <Link href="/forgot-password">
+                      <Button variant="link" className="p-0 h-auto text-xs text-green-600 dark:text-green-400 hover:text-green-700" data-testid="link-forgot-password">
+                        Forgot Password?
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Sign In Button */}
