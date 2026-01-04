@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { onAuthChange, logOut as firebaseLogOut } from '@/lib/firebase'
+import { onAuthChange, logOut as firebaseLogOut, handleRedirectResult } from '@/lib/firebase'
 
 interface User {
   id: string
@@ -27,22 +27,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // First, check localStorage immediately for stored user (admin or regular user)
-    const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
-    if (storedUser) {
+    const initAuth = async () => {
+      // 1. Check for redirect result first
       try {
-        const parsedUser = JSON.parse(storedUser)
-        setUser(parsedUser)
-        setLoading(false)
+        const redirectResult = await handleRedirectResult();
+        if (redirectResult && redirectResult.user) {
+          setUser(redirectResult.user);
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(redirectResult.user));
+          setLoading(false);
+          return;
+        }
       } catch (error) {
-        console.error('Failed to parse stored user:', error)
-        localStorage.removeItem(AUTH_STORAGE_KEY)
+        console.error('Error handling redirect result:', error);
+      }
+
+      // 2. Fallback to localStorage
+      const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser)
+          setUser(parsedUser)
+          setLoading(false)
+        } catch (error) {
+          console.error('Failed to parse stored user:', error)
+          localStorage.removeItem(AUTH_STORAGE_KEY)
+          setLoading(false)
+        }
+      } else {
         setLoading(false)
       }
-    } else {
-      // Only check Firebase if no stored user
-      setLoading(false)
-    }
+    };
+
+    initAuth();
 
     // Set up Firebase listener for real-time updates
     const unsubscribe = onAuthChange((firebaseUser) => {

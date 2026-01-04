@@ -1,4 +1,3 @@
-import { initializeApp, getApp } from 'firebase/app'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -142,28 +141,44 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
-    // Attempt popup first, but the internal error usually persists on Replit with popups
-    const userCredential = await signInWithPopup(auth, provider);
-    return {
-      user: {
-        id: userCredential.user.uid,
-        email: userCredential.user.email || '',
-        username: userCredential.user.displayName || userCredential.user.email?.split('@')[0] || '',
-        role: 'user',
-      },
-      error: null,
-    }
+    // Switch to signInWithRedirect to avoid popup blocking and cross-origin issues
+    // This is often more reliable on Replit and mobile browsers
+    await signInWithRedirect(auth, provider);
+    // Note: The result will be handled by handleRedirectResult in the hook
+    return { user: null, error: null };
   } catch (error: any) {
     console.error('Google Sign-in Error:', {
       code: error.code,
       message: error.message,
     })
-    
-    // If popup fails or we want to try a more reliable method, we can't easily handle redirect here without changing the whole auth flow
     const message = error.message || 'Failed to sign in with Google'
     return {
       user: null,
       error: { message },
     }
+  }
+}
+
+export async function handleRedirectResult() {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result) {
+      return {
+        user: {
+          id: result.user.uid,
+          email: result.user.email || '',
+          username: result.user.displayName || result.user.email?.split('@')[0] || '',
+          role: 'user',
+        },
+        error: null,
+      };
+    }
+    return null;
+  } catch (error: any) {
+    console.error('Redirect Result Error:', error);
+    return {
+      user: null,
+      error: { message: error.message || 'Failed to complete sign in' },
+    };
   }
 }
