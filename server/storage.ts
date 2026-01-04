@@ -461,7 +461,7 @@ export class DatabaseStorage implements IStorage {
       const Banner = mongoose.model('Banner');
       const banners = await Banner.find({ isActive: true }).sort({ order: 1 }).limit(3).lean();
       console.log(`Storage: Found ${banners.length} active banners`);
-      return banners;
+      return banners as unknown as IBanner[];
     } catch (error) {
       console.error('Error getting active banners:', error);
       return [];

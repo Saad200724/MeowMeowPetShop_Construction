@@ -1927,7 +1927,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const finalInvoiceOrderId = invoice.orderId;
       console.log(`✅ ORDER CREATED - Order._id: ${finalOrderId}, Invoice.orderId: ${finalInvoiceOrderId}`);
       
-      const orderResponse = order.lean ? order.lean() : (order.toObject ? order.toObject() : order);
+      const orderResponse = order.toObject ? order.toObject() : order;
       orderResponse._id = finalOrderId;
       
       res.json({ order: orderResponse, invoice });
