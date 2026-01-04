@@ -584,6 +584,7 @@ export class DatabaseStorage implements IStorage {
   // Order implementations
   async createOrder(orderData: any): Promise<any> {
     try {
+      const { Order, Invoice } = await import("@shared/models");
       const order = new Order(orderData);
       await order.save();
       
@@ -610,12 +611,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getOrder(id: string): Promise<any> {
-    return Order.findById(id);
+    try {
+      const { Order } = await import("@shared/models");
+      return Order.findById(id);
+    } catch (error) {
+      console.error('Error fetching order in storage:', error);
+      return undefined;
+    }
   }
 
   async getOrders(userId?: string): Promise<any[]> {
-    const query = userId ? { userId } : {};
-    return Order.find(query).sort({ createdAt: -1 });
+    try {
+      const { Order } = await import("@shared/models");
+      const query = userId ? { userId } : {};
+      return Order.find(query).sort({ createdAt: -1 });
+    } catch (error) {
+      console.error('Error fetching orders in storage:', error);
+      return [];
+    }
   }
 
   private async seedDatabase(): Promise<void> {
