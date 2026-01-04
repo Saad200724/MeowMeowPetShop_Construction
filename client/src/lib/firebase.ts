@@ -160,13 +160,29 @@ export async function signInWithGoogle() {
     
     const result = await signInWithPopup(auth, provider);
     if (result && result.user) {
+      const user = {
+        id: result.user.uid,
+        email: result.user.email || '',
+        username: result.user.displayName || result.user.email?.split('@')[0] || '',
+        role: 'user',
+      };
+      
+      try {
+        await fetch('/api/auth/firebase-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: user.id,
+            email: user.email,
+            username: user.username
+          })
+        });
+      } catch (syncError) {
+        console.error('Initial sync failed:', syncError);
+      }
+
       return {
-        user: {
-          id: result.user.uid,
-          email: result.user.email || '',
-          username: result.user.displayName || result.user.email?.split('@')[0] || '',
-          role: 'user',
-        },
+        user,
         error: null
       };
     }
