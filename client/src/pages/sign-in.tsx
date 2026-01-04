@@ -210,43 +210,23 @@ export default function SignInPage() {
                 onClick={async () => {
                   setGoogleLoading(true)
                   try {
-                    const { user: firebaseUser, error } = await signInWithGoogle()
+                    const { error } = await signInWithGoogle()
                     if (error) {
                       toast({
                         title: 'Google Sign In Failed',
                         description: error.message,
                         variant: 'destructive',
                       })
-                    } else if (firebaseUser) {
-                      // Handle popup result directly
-                      const syncResponse = await fetch('/api/auth/firebase-sync', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          uid: firebaseUser.id,
-                          email: firebaseUser.email,
-                          username: firebaseUser.username
-                        })
-                      });
-                      
-                      if (syncResponse.ok) {
-                        const syncData = await syncResponse.json();
-                        toast({
-                          title: 'Welcome!',
-                          description: 'Signed in with Google successfully.',
-                        })
-                        // The auth listener in useAuth will handle the state update
-                        // but we can redirect immediately for better UX
-                        setLocation('/')
-                      }
+                      setGoogleLoading(false)
                     }
+                    // For redirect mode, we don't need to do anything else here
+                    // The redirect will happen and result will be handled on return
                   } catch (err) {
                     toast({
                       title: 'Error',
                       description: 'An unexpected error occurred',
                       variant: 'destructive',
                     })
-                  } finally {
                     setGoogleLoading(false)
                   }
                 }}

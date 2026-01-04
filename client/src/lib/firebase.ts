@@ -154,27 +154,9 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
-    // Check if we are in an iframe or on a domain that might have issues with popups
-    const isReplit = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('repl.co');
-    
-    if (isReplit) {
-      console.log('Detected Replit environment, using signInWithRedirect');
-      await signInWithRedirect(auth, provider);
-      return { user: null, error: null };
-    } else {
-      console.log('Using signInWithPopup');
-      const result = await signInWithPopup(auth, provider);
-      if (result.user) {
-        const user = {
-          id: result.user.uid,
-          email: result.user.email || '',
-          username: result.user.displayName || result.user.email?.split('@')[0] || '',
-          role: 'user',
-        };
-        return { user, error: null };
-      }
-      return { user: null, error: null };
-    }
+    console.log('Using signInWithRedirect for Google auth');
+    await signInWithRedirect(auth, provider);
+    return { user: null, error: null };
   } catch (error: any) {
     console.error('Google Sign-in Error:', error);
     return { user: null, error: { message: error.message || 'Failed to sign in with Google' } };
