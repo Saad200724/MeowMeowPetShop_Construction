@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
@@ -135,24 +137,13 @@ export function onAuthChange(callback: (user: any) => void) {
 
 export async function signInWithGoogle() {
   try {
-    // Debug: Log Firebase config
-    console.log('Firebase config:', {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? '✓ set' : '✗ missing',
-      authDomain: firebaseConfig.authDomain,
-      projectId: firebaseConfig.projectId,
-    })
-    
-    const provider = new GoogleAuthProvider()
-    // Add prompt: 'select_account' to force account selection and potentially clear stale sessions
+    const provider = new GoogleAuthProvider();
     provider.setCustomParameters({
       prompt: 'select_account'
     });
     
-    // Explicitly set the custom parameter for the redirect/popup
-    provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-    provider.addScope('https://www.googleapis.com/auth/userinfo.email');
-
-    const userCredential = await signInWithPopup(auth, provider)
+    // Attempt popup first, but the internal error usually persists on Replit with popups
+    const userCredential = await signInWithPopup(auth, provider);
     return {
       user: {
         id: userCredential.user.uid,
@@ -166,8 +157,9 @@ export async function signInWithGoogle() {
     console.error('Google Sign-in Error:', {
       code: error.code,
       message: error.message,
-      customData: error.customData,
     })
+    
+    // If popup fails or we want to try a more reliable method, we can't easily handle redirect here without changing the whole auth flow
     const message = error.message || 'Failed to sign in with Google'
     return {
       user: null,
