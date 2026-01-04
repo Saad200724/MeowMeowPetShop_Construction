@@ -148,6 +148,10 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
+    // Explicitly set the custom parameter for the redirect/popup
+    provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+    provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+
     const userCredential = await signInWithPopup(auth, provider)
     return {
       user: {
