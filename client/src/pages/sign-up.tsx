@@ -133,7 +133,7 @@ export default function SignUpPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Link href="/">
-            <Button variant="outline" size="sm" className="flex items-center gap-2 hover-elevate bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-gray-200 dark:border-slate-700 shadow-sm" data-testid="button-back">
+            <Button variant="default" size="sm" className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border-none shadow-md no-default-hover-elevate" data-testid="button-back">
               <ArrowLeft className="w-4 h-4" />
               <span className="font-medium">Back to Shop</span>
             </Button>

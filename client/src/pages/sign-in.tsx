@@ -92,7 +92,7 @@ export default function SignInPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Link href="/">
-            <Button variant="outline" size="sm" className="flex items-center gap-2 hover-elevate bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-gray-200 dark:border-slate-700 shadow-sm" data-testid="button-back">
+            <Button variant="default" size="sm" className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border-none shadow-md no-default-hover-elevate" data-testid="button-back">
               <ArrowLeft className="w-4 h-4" />
               <span className="font-medium">Back to Shop</span>
             </Button>
@@ -177,7 +177,7 @@ export default function SignInPage() {
                   type="submit"
                   className="w-full h-11 mt-8 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover-elevate animate-slide-up"
                   style={{ animationDelay: '0.2s' }}
-                  disabled={loading || googleLoading}
+                  disabled={loading}
                   data-testid="button-signin-submit"
                 >
                   {loading ? (
@@ -194,16 +194,13 @@ export default function SignInPage() {
                 </Button>
               </form>
 
-              {/* Sign Up Link */}
-              <div className="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Don't have an account?{' '}
-                  <Link href="/sign-up">
-                    <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300" data-testid="link-signup">
-                      Create one here
-                    </Button>
-                  </Link>
-                </p>
+              {/* Forgot Password moved outside form to prevent Enter key issues */}
+              <div className="flex justify-end mt-2 animate-slide-up" style={{ animationDelay: '0.25s' }}>
+                <Link href="/forgot-password">
+                  <Button variant="link" className="p-0 h-auto text-xs text-green-600 dark:text-green-400 hover:text-green-700" data-testid="link-forgot-password">
+                    Forgot Password?
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
