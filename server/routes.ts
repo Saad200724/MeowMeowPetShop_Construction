@@ -1173,6 +1173,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
   };
 
   // Authentication Routes
+  app.post("/api/auth/firebase-sync", async (req, res) => {
+    try {
+      const { uid, email, username } = req.body;
+      if (!uid) {
+        return res.status(400).json({ message: "Firebase UID is required" });
+      }
+
+      let user = await User.findOne({ 
+        $or: [
+          { firebaseUid: uid },
+          { email: email }
+        ]
+      });
+
+      if (!user) {
+        // Create new user if not exists
+        user = new User({
+          firebaseUid: uid,
+          email: email,
+          username: username || email?.split('@')[0] || `user_${uid.substring(0, 5)}`,
+          role: 'user',
+          password: await bcrypt.hash(Math.random().toString(36), 12) // Random password for social login
+        });
+        await user.save();
+        console.log('Created new user from Firebase sync:', user.email);
+      } else if (!user.firebaseUid) {
+        // Link existing account with Firebase
+        user.firebaseUid = uid;
+        await user.save();
+        console.log('Linked existing user with Firebase UID:', user.email);
+      }
+
+      const userObj = user.toObject();
+      const { password: _, ...userResponse } = userObj;
+
+      res.json({
+        message: "Sync successful",
+        user: userResponse
+      });
+    } catch (error) {
+      console.error("Firebase sync error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   const registerSchema = z.object({
     username: z.string().min(1, "Username is required"),
     email: z.string().email("Valid email is required").optional(),

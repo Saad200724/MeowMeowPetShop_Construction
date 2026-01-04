@@ -33,13 +33,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('Checking for Firebase redirect result...');
         const redirectResult = await handleRedirectResult();
         if (redirectResult && redirectResult.user) {
-          console.log('Successfully signed in via redirect:', redirectResult.user);
-          setUser(redirectResult.user);
-          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(redirectResult.user));
-          setLoading(false);
+          console.log('Successfully signed in via redirect, syncing with backend...', redirectResult.user);
           
-          // Optionally notify other parts of the app
-          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: redirectResult.user }));
+          try {
+            const syncResponse = await fetch('/api/auth/firebase-sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                uid: redirectResult.user.id,
+                email: redirectResult.user.email,
+                username: redirectResult.user.username
+              })
+            });
+            
+            if (syncResponse.ok) {
+              const syncData = await syncResponse.json();
+              const syncedUser = syncData.user;
+              setUser(syncedUser);
+              localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(syncedUser));
+              setLoading(false);
+              window.dispatchEvent(new CustomEvent('authStateChanged', { detail: syncedUser }));
+              return;
+            }
+          } catch (syncError) {
+            console.error('Backend sync failed:', syncError);
+            // Fallback to local state if backend sync fails but firebase succeeded
+            setUser(redirectResult.user);
+            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(redirectResult.user));
+          }
+          
+          setLoading(false);
           return;
         }
       } catch (error) {
@@ -66,17 +89,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
 
     // Set up Firebase listener for real-time updates
-    const unsubscribe = onAuthChange((firebaseUser) => {
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
       if (firebaseUser) {
         console.log('Firebase auth state changed: user detected', firebaseUser);
-        setUser((currentUser) => {
-          // Update if no user or different user
-          if (!currentUser || currentUser.id !== firebaseUser.id) {
-            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(firebaseUser));
-            return firebaseUser;
+        
+        try {
+          // Verify/Sync with backend
+          const syncResponse = await fetch('/api/auth/firebase-sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              uid: firebaseUser.id,
+              email: firebaseUser.email,
+              username: firebaseUser.username
+            })
+          });
+          
+          if (syncResponse.ok) {
+            const syncData = await syncResponse.json();
+            const syncedUser = syncData.user;
+            
+            setUser((currentUser) => {
+              if (!currentUser || currentUser.id !== syncedUser._id) {
+                localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(syncedUser));
+                return syncedUser;
+              }
+              return currentUser;
+            });
           }
-          return currentUser;
-        });
+        } catch (error) {
+          console.error('Auth change sync error:', error);
+        }
       } else {
         // If Firebase says no user, but we have a stored user, check if it was a local login
         const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);

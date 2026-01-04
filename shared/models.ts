@@ -5,6 +5,7 @@ export interface IUser extends Document {
   username: string;
   password: string;
   email?: string;
+  firebaseUid?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
@@ -20,6 +21,7 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, unique: true, sparse: true },
+  firebaseUid: { type: String, unique: true, sparse: true },
   firstName: String,
   lastName: String,
   phone: String,
