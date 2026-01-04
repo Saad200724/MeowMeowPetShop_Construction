@@ -48,18 +48,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             
             if (syncResponse.ok) {
               const syncData = await syncResponse.json();
-              const syncedUser = syncData.user;
+              const syncedUser = { ...syncData.user, id: syncData.user._id };
+              console.log('Sync successful, setting user:', syncedUser);
               setUser(syncedUser);
               localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(syncedUser));
               setLoading(false);
               window.dispatchEvent(new CustomEvent('authStateChanged', { detail: syncedUser }));
               return;
+            } else {
+              console.error('Sync failed with status:', syncResponse.status);
             }
           } catch (syncError) {
             console.error('Backend sync failed:', syncError);
-            // Fallback to local state if backend sync fails but firebase succeeded
-            setUser(redirectResult.user);
-            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(redirectResult.user));
           }
           
           setLoading(false);

@@ -154,7 +154,10 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
-    console.log('Using signInWithRedirect for Google auth');
+    console.log('Attempting Google Sign-in with redirect...');
+    // Clear any potential leftover redirect state
+    localStorage.removeItem('firebase:previous_websocket_id');
+    
     await signInWithRedirect(auth, provider);
     return { user: null, error: null };
   } catch (error: any) {
