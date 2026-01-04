@@ -21,6 +21,14 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
+// Clean up any potential extra characters (quotes, commas) from env vars
+Object.keys(firebaseConfig).forEach((key) => {
+  const k = key as keyof typeof firebaseConfig;
+  if (typeof firebaseConfig[k] === 'string') {
+    firebaseConfig[k] = (firebaseConfig[k] as string).replace(/['",]/g, '').trim();
+  }
+});
+
 let app
 try {
   app = initializeApp(firebaseConfig)
