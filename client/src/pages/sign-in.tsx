@@ -90,13 +90,14 @@ export default function SignInPage() {
 
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-4">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="hover-elevate" data-testid="button-back">
-              <ArrowLeft className="w-5 h-5" />
+            <Button variant="outline" size="sm" className="flex items-center gap-2 hover-elevate bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-gray-200 dark:border-slate-700 shadow-sm" data-testid="button-back">
+              <ArrowLeft className="w-4 h-4" />
+              <span className="font-medium">Back to Shop</span>
             </Button>
           </Link>
-          <div className="flex-1 flex items-center justify-center gap-3">
+          <div className="flex-1 flex items-center justify-center gap-3 pr-8">
             <img src={logoPath} alt="Meow Meow Pet Shop" className="w-10 h-10" />
             <div>
               <h1 className="text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent">
@@ -105,7 +106,6 @@ export default function SignInPage() {
               <p className="text-xs text-gray-600 dark:text-gray-400">Pet Shop</p>
             </div>
           </div>
-          <div className="w-10" />
         </div>
 
         {/* Main Card */}
@@ -191,65 +191,6 @@ export default function SignInPage() {
                   )}
                 </Button>
               </form>
-
-              {/* Divider */}
-              <div className="relative my-7">
-                <Separator className="bg-gray-200 dark:bg-slate-700" />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-900 px-3 text-xs text-gray-500 dark:text-gray-400">
-                  or continue with
-                </span>
-              </div>
-
-              {/* Google Sign In */}
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-11 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200 hover-elevate animate-slide-up"
-                style={{ animationDelay: '0.25s' }}
-                disabled={googleLoading || loading}
-                onClick={async () => {
-                  setGoogleLoading(true)
-                  try {
-                    const { user: googleUser, error } = await signInWithGoogle()
-                    if (error) {
-                      toast({
-                        title: 'Google Sign In Failed',
-                        description: error.message,
-                        variant: 'destructive',
-                      })
-                      setGoogleLoading(false)
-                    } else if (googleUser) {
-                      toast({
-                        title: 'Welcome back!',
-                        description: 'You have successfully signed in.',
-                      })
-                      setLocation('/')
-                    } else {
-                      setGoogleLoading(false)
-                    }
-                  } catch (err) {
-                    toast({
-                      title: 'Error',
-                      description: 'An unexpected error occurred',
-                      variant: 'destructive',
-                    })
-                    setGoogleLoading(false)
-                  }
-                }}
-                data-testid="button-google-signin"
-              >
-                {googleLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Signing In...
-                  </>
-                ) : (
-                  <>
-                    <SiGoogle className="w-4 h-4 mr-2" />
-                    Sign in with Google
-                  </>
-                )}
-              </Button>
 
               {/* Sign Up Link */}
               <div className="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
