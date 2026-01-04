@@ -138,11 +138,16 @@ export async function signInWithGoogle() {
     // Debug: Log Firebase config
     console.log('Firebase config:', {
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? '✓ set' : '✗ missing',
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      authDomain: firebaseConfig.authDomain,
+      projectId: firebaseConfig.projectId,
     })
     
     const provider = new GoogleAuthProvider()
+    // Add prompt: 'select_account' to force account selection and potentially clear stale sessions
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
     const userCredential = await signInWithPopup(auth, provider)
     return {
       user: {
