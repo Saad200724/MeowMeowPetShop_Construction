@@ -85,6 +85,11 @@ export interface IStorage {
   createPopupPoster(posterData: { imageUrl: string; title?: string }): Promise<IPopupPoster>;
   updatePopupPoster(id: string, posterData: Partial<{ imageUrl: string; title?: string; isActive: boolean }>): Promise<IPopupPoster | undefined>;
   deletePopupPoster(id: string): Promise<boolean>;
+  
+  // Order operations
+  createOrder(orderData: any): Promise<any>;
+  getOrder(id: string): Promise<any>;
+  getOrders(userId?: string): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -574,6 +579,43 @@ export class DatabaseStorage implements IStorage {
       console.error('Error deleting popup poster:', error);
       return false;
     }
+  }
+
+  // Order implementations
+  async createOrder(orderData: any): Promise<any> {
+    try {
+      const order = new Order(orderData);
+      await order.save();
+      
+      // Also create an invoice
+      const invoiceData = {
+        orderId: order._id,
+        invoiceNumber: `INV-${Date.now()}`,
+        customerInfo: orderData.customerInfo,
+        items: orderData.items,
+        subtotal: orderData.total, // Simplified
+        total: orderData.total,
+        paymentMethod: orderData.paymentMethod,
+        status: orderData.paymentMethod === 'COD' ? 'pending' : 'paid',
+      };
+      
+      const invoice = new Invoice(invoiceData);
+      await invoice.save();
+      
+      return { order, invoice };
+    } catch (error) {
+      console.error('Error creating order in storage:', error);
+      throw error;
+    }
+  }
+
+  async getOrder(id: string): Promise<any> {
+    return Order.findById(id);
+  }
+
+  async getOrders(userId?: string): Promise<any[]> {
+    const query = userId ? { userId } : {};
+    return Order.find(query).sort({ createdAt: -1 });
   }
 
   private async seedDatabase(): Promise<void> {
