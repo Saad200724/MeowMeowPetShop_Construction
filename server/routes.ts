@@ -1214,7 +1214,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Firebase sync error:", error);
-      res.status(500).json({ message: "Internal server error" });
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Internal server error" });
+      }
     }
   });
 

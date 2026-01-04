@@ -179,13 +179,21 @@ export async function signInWithGoogle() {
           })
         });
         
-        if (!syncResponse.ok) {
-          const errorData = await syncResponse.json();
-          console.error('Backend sync failed:', errorData);
-          return { user: null, error: { message: errorData.message || 'Server synchronization failed' } };
+        let syncData;
+        const contentType = syncResponse.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          syncData = await syncResponse.json();
+        } else {
+          const text = await syncResponse.text();
+          console.error('Backend sync returned non-JSON:', text);
+          return { user: null, error: { message: 'Server returned an invalid response' } };
         }
         
-        const syncData = await syncResponse.json();
+        if (!syncResponse.ok) {
+          console.error('Backend sync failed:', syncData);
+          return { user: null, error: { message: syncData.message || 'Server synchronization failed' } };
+        }
+        
         const syncedUser = { ...syncData.user, id: syncData.user._id || syncData.user.id };
         
         return {
