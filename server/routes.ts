@@ -1928,7 +1928,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`✅ ORDER CREATED - Order._id: ${finalOrderId}, Invoice.orderId: ${finalInvoiceOrderId}`);
       
       const orderResponse = order.toObject ? order.toObject() : order;
-      orderResponse._id = finalOrderId;
+      // Use any to bypass the TypeScript error since we are returning a plain object
+      (orderResponse as any)._id = finalOrderId;
       
       res.json({ order: orderResponse, invoice });
 
