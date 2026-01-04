@@ -210,7 +210,7 @@ export default function SignInPage() {
                 onClick={async () => {
                   setGoogleLoading(true)
                   try {
-                    const { error } = await signInWithGoogle()
+                    const { user: googleUser, error } = await signInWithGoogle()
                     if (error) {
                       toast({
                         title: 'Google Sign In Failed',
@@ -218,9 +218,15 @@ export default function SignInPage() {
                         variant: 'destructive',
                       })
                       setGoogleLoading(false)
+                    } else if (googleUser) {
+                      toast({
+                        title: 'Welcome back!',
+                        description: 'You have successfully signed in.',
+                      })
+                      setLocation('/')
+                    } else {
+                      setGoogleLoading(false)
                     }
-                    // For redirect mode, we don't need to do anything else here
-                    // The redirect will happen and result will be handled on return
                   } catch (err) {
                     toast({
                       title: 'Error',

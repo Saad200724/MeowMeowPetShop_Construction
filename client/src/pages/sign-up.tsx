@@ -331,17 +331,17 @@ export default function SignUpPage() {
                 onClick={async () => {
                   setGoogleLoading(true)
                   try {
-                    const { error } = await signInWithGoogle()
+                    const { user: googleUser, error } = await signInWithGoogle()
                     if (error) {
                       toast({
                         title: 'Google Sign Up Failed',
                         description: error.message,
                         variant: 'destructive',
                       })
-                    } else {
+                    } else if (googleUser) {
                       toast({
-                        title: 'Account Created!',
-                        description: 'Signed up with Google successfully.',
+                        title: 'Welcome back!',
+                        description: 'You have successfully signed in.',
                       })
                       setLocation('/')
                     }

@@ -154,11 +154,22 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
-    console.log('Attempting Google Sign-in with redirect...');
+    console.log('Attempting Google Sign-in with popup...');
     // Clear any potential leftover redirect state
     localStorage.removeItem('firebase:previous_websocket_id');
     
-    await signInWithRedirect(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+    if (result && result.user) {
+      return {
+        user: {
+          id: result.user.uid,
+          email: result.user.email || '',
+          username: result.user.displayName || result.user.email?.split('@')[0] || '',
+          role: 'user',
+        },
+        error: null
+      };
+    }
     return { user: null, error: null };
   } catch (error: any) {
     console.error('Google Sign-in Error:', error);
