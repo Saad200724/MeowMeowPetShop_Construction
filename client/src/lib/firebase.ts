@@ -11,7 +11,19 @@ import {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
+  sendPasswordResetEmail,
 } from 'firebase/auth'
+
+// ... existing code ...
+
+export async function resetPassword(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { error: null };
+  } catch (error: any) {
+    return { error: error.message || 'Failed to send reset email' };
+  }
+}
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

@@ -5,15 +5,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
-import { Lock, Eye, EyeOff, ArrowLeft, Check } from 'lucide-react'
+import { Lock, Eye, EyeOff, ArrowLeft, Check, Loader2 } from 'lucide-react'
+import { auth } from '@/lib/firebase'
+import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
 
 const logoPath = '/logo.png'
 
 export default function ResetPasswordPage() {
-  const [, setLocation] = useLocation()
+  const [location, setLocation] = useLocation()
   const [loading, setLoading] = useState(false)
+  const [verifying, setVerifying] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [oobCode, setOobCode] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
@@ -21,13 +25,41 @@ export default function ResetPasswordPage() {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Firebase password reset would require special handling with email link
-    // For now, redirect to forgot-password page
-    setLocation('/forgot-password')
-  }, [setLocation])
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('oobCode')
+    
+    if (!code) {
+      toast({
+        title: 'Invalid Link',
+        description: 'The password reset link is invalid or has expired.',
+        variant: 'destructive',
+      })
+      setLocation('/forgot-password')
+      return
+    }
+
+    setOobCode(code)
+    
+    // Verify the code is valid
+    verifyPasswordResetCode(auth, code)
+      .then(() => {
+        setVerifying(false)
+      })
+      .catch((error) => {
+        console.error('Verification error:', error)
+        toast({
+          title: 'Invalid Link',
+          description: 'The password reset link is invalid or has expired.',
+          variant: 'destructive',
+        })
+        setLocation('/forgot-password')
+      })
+  }, [setLocation, toast])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!oobCode) return
 
     if (formData.password !== formData.confirmPassword) {
       toast({
@@ -50,23 +82,31 @@ export default function ResetPasswordPage() {
     setLoading(true)
 
     try {
-      // Firebase password update would go here
+      await confirmPasswordReset(auth, oobCode, formData.password)
       toast({
         title: 'Password Updated',
         description: 'Your password has been successfully updated.',
       })
       setFormData({ password: '', confirmPassword: '' })
       setLocation('/sign-in')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Password reset error:', error)
       toast({
         title: 'Reset Failed',
-        description: 'Could not update password. Please try again.',
+        description: error.message || 'Could not update password. Please try again.',
         variant: 'destructive',
       })
     } finally {
       setLoading(false)
     }
+  }
+
+  if (verifying) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+      </div>
+    )
   }
 
   return (

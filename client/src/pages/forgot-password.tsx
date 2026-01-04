@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
+import { resetPassword } from '@/lib/firebase'
 
 const logoPath = '/logo.png'
 
@@ -31,15 +32,21 @@ export default function ForgotPasswordPage() {
     setLoading(true)
 
     try {
-      // Firebase password reset via email
-      // For now, show a message to use sign-in page
-      toast({
-        title: 'Password Reset',
-        description: 'Please contact support or try signing in again.',
-        variant: 'default',
-      })
-      setIsSubmitted(true)
-      setTimeout(() => setLocation('/sign-in'), 2000)
+      const { error } = await resetPassword(email)
+
+      if (error) {
+        toast({
+          title: 'Error',
+          description: error,
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Success!',
+          description: 'Password reset email sent. Please check your inbox.',
+        })
+        setIsSubmitted(true)
+      }
     } catch (error) {
       console.error('Password reset error:', error)
       toast({
