@@ -30,11 +30,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = async () => {
       // 1. Check for redirect result first
       try {
+        console.log('Checking for Firebase redirect result...');
         const redirectResult = await handleRedirectResult();
         if (redirectResult && redirectResult.user) {
+          console.log('Successfully signed in via redirect:', redirectResult.user);
           setUser(redirectResult.user);
           localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(redirectResult.user));
           setLoading(false);
+          
+          // Optionally notify other parts of the app
+          window.dispatchEvent(new CustomEvent('authStateChanged', { detail: redirectResult.user }));
           return;
         }
       } catch (error) {
@@ -63,12 +68,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set up Firebase listener for real-time updates
     const unsubscribe = onAuthChange((firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser)
-        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(firebaseUser))
+        console.log('Firebase auth state changed: user detected', firebaseUser);
+        setUser((currentUser) => {
+          // Update if no user or different user
+          if (!currentUser || currentUser.id !== firebaseUser.id) {
+            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(firebaseUser));
+            return firebaseUser;
+          }
+          return currentUser;
+        });
       } else {
-        const storedUser = localStorage.getItem(AUTH_STORAGE_KEY)
+        // If Firebase says no user, but we have a stored user, check if it was a local login
+        const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
         if (!storedUser) {
-          setUser(null)
+          setUser(null);
         }
       }
     })

@@ -163,14 +163,18 @@ export async function signInWithGoogle() {
 export async function handleRedirectResult() {
   try {
     const result = await getRedirectResult(auth);
-    if (result) {
+    if (result && result.user) {
+      const user = {
+        id: result.user.uid,
+        email: result.user.email || '',
+        username: result.user.displayName || result.user.email?.split('@')[0] || '',
+        role: 'user',
+      };
+      
+      // Sync with backend if needed, or just return the user object
+      // For now, return the mapped user object
       return {
-        user: {
-          id: result.user.uid,
-          email: result.user.email || '',
-          username: result.user.displayName || result.user.email?.split('@')[0] || '',
-          role: 'user',
-        },
+        user,
         error: null,
       };
     }
