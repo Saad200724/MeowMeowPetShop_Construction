@@ -29,6 +29,12 @@ export default function SignUpPage() {
 
   const passwordStrength = formData.password.length >= 6 ? 'good' : formData.password.length >= 3 ? 'fair' : 'weak'
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -167,7 +173,7 @@ export default function SignUpPage() {
             </CardHeader>
 
             <CardContent className="pt-8">
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="space-y-5">
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                   <div className="space-y-2">
