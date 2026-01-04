@@ -110,9 +110,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const syncedUser = syncData.user;
             
             setUser((currentUser) => {
-              if (!currentUser || currentUser.id !== syncedUser._id) {
-                localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(syncedUser));
-                return syncedUser;
+              // Map syncedUser._id to id for frontend compatibility
+              const mappedUser = { ...syncedUser, id: syncedUser._id };
+              if (!currentUser || currentUser.id !== mappedUser.id) {
+                localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(mappedUser));
+                return mappedUser;
               }
               return currentUser;
             });

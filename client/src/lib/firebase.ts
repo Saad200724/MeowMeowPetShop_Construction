@@ -154,21 +154,30 @@ export async function signInWithGoogle() {
       prompt: 'select_account'
     });
     
-    // Switch to signInWithRedirect to avoid popup blocking and cross-origin issues
-    // This is often more reliable on Replit and mobile browsers
-    await signInWithRedirect(auth, provider);
-    // Note: The result will be handled by handleRedirectResult in the hook
-    return { user: null, error: null };
-  } catch (error: any) {
-    console.error('Google Sign-in Error:', {
-      code: error.code,
-      message: error.message,
-    })
-    const message = error.message || 'Failed to sign in with Google'
-    return {
-      user: null,
-      error: { message },
+    // Check if we are in an iframe or on a domain that might have issues with popups
+    const isReplit = window.location.hostname.includes('replit.dev') || window.location.hostname.includes('repl.co');
+    
+    if (isReplit) {
+      console.log('Detected Replit environment, using signInWithRedirect');
+      await signInWithRedirect(auth, provider);
+      return { user: null, error: null };
+    } else {
+      console.log('Using signInWithPopup');
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        const user = {
+          id: result.user.uid,
+          email: result.user.email || '',
+          username: result.user.displayName || result.user.email?.split('@')[0] || '',
+          role: 'user',
+        };
+        return { user, error: null };
+      }
+      return { user: null, error: null };
     }
+  } catch (error: any) {
+    console.error('Google Sign-in Error:', error);
+    return { user: null, error: { message: error.message || 'Failed to sign in with Google' } };
   }
 }
 
