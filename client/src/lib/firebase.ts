@@ -1,3 +1,4 @@
+import { initializeApp, getApp } from 'firebase/app'
 import {
   getAuth,
   createUserWithEmailAndPassword,
