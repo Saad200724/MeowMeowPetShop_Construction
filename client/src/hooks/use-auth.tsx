@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               body: JSON.stringify({
                 uid: redirectResult.user.id,
                 email: redirectResult.user.email,
-                username: redirectResult.user.username
+                username: redirectResult.user.username || redirectResult.user.email?.split('@')[0]
               })
             });
             
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             body: JSON.stringify({
               uid: firebaseUser.id,
               email: firebaseUser.email,
-              username: firebaseUser.username
+              username: firebaseUser.username || firebaseUser.email?.split('@')[0]
             })
           });
           

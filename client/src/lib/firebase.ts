@@ -160,31 +160,42 @@ export async function signInWithGoogle() {
     
     const result = await signInWithPopup(auth, provider);
     if (result && result.user) {
-      const user = {
+      const userData = {
         id: result.user.uid,
         email: result.user.email || '',
-        username: result.user.displayName || result.user.email?.split('@')[0] || '',
+        username: result.user.displayName || result.user.email?.split('@')[0] || `user_${result.user.uid.substring(0, 5)}`,
         role: 'user',
       };
       
       try {
-        await fetch('/api/auth/firebase-sync', {
+        console.log('Syncing Google user with backend...');
+        const syncResponse = await fetch('/api/auth/firebase-sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            uid: user.id,
-            email: user.email,
-            username: user.username
+            uid: userData.id,
+            email: userData.email,
+            username: userData.username
           })
         });
-      } catch (syncError) {
-        console.error('Initial sync failed:', syncError);
+        
+        if (!syncResponse.ok) {
+          const errorData = await syncResponse.json();
+          console.error('Backend sync failed:', errorData);
+          return { user: null, error: { message: errorData.message || 'Server synchronization failed' } };
+        }
+        
+        const syncData = await syncResponse.json();
+        const syncedUser = { ...syncData.user, id: syncData.user._id || syncData.user.id };
+        
+        return {
+          user: syncedUser,
+          error: null
+        };
+      } catch (syncError: any) {
+        console.error('Initial sync network error:', syncError);
+        return { user: null, error: { message: 'Network error during synchronization' } };
       }
-
-      return {
-        user,
-        error: null
-      };
     }
     return { user: null, error: null };
   } catch (error: any) {
