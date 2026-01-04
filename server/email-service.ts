@@ -10,7 +10,7 @@ export function initializeEmailService() {
     const emailPassword = process.env.EMAIL_PASSWORD;
 
     if (!emailHost || !emailPort || !emailUser || !emailPassword) {
-      console.warn('⚠️ Email credentials not configured. OTP emails will not be sent.');
+      // console.warn('⚠️ Email credentials not configured. OTP emails will not be sent.');
       return false;
     }
 
