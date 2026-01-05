@@ -200,6 +200,18 @@ export default function SignInPage() {
                   )}
                 </Button>
               </form>
+
+              {/* Sign Up Link */}
+              <div className="mt-6 text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Don't have an account?{' '}
+                  <Link href="/sign-up">
+                    <Button variant="link" className="p-0 h-auto text-sm text-green-600 dark:text-green-400 hover:text-green-700 font-semibold" data-testid="link-signup">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
