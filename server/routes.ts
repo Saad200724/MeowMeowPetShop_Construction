@@ -141,6 +141,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Authentication endpoints
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        // For security, don't reveal if user exists
+        return res.json({ message: "If an account exists with that email, a reset link has been sent." });
+      }
+
+      const host = req.get('host') || 'localhost:5000';
+      const protocol = req.get('x-forwarded-proto') || (host.includes('replit.dev') ? 'https' : 'http');
+      const resetLink = `${protocol}://${host}/reset-password?email=${encodeURIComponent(email)}&token=${user._id}`;
+
+      const { sendPasswordResetEmail } = await import('./email-service');
+      const success = await sendPasswordResetEmail(email, resetLink);
+
+      if (success) {
+        res.json({ message: "If an account exists with that email, a reset link has been sent." });
+      } else {
+        res.status(500).json({ message: "Failed to send reset email" });
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      res.status(500).json({ message: "An error occurred" });
+    }
+  });
+
   // Serve uploaded images with proper WebP headers
   app.get('/api/uploads/:filename', (req, res) => {
     const filename = req.params.filename;
