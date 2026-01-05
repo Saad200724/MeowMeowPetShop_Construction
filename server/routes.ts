@@ -190,11 +190,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/orders", async (req, res) => {
     try {
       const orderData = req.body;
+      
+      // Ensure orderNumber is set if not provided by frontend
+      if (!orderData.orderNumber) {
+        orderData.orderNumber = generateUniqueOrderNumber();
+      }
+
+      // Ensure userId is set (even if it's "guest")
+      if (!orderData.userId) {
+        orderData.userId = "guest_" + Date.now();
+      }
+
+      console.log("Creating order with data:", JSON.stringify(orderData, null, 2));
       const result = await storage.createOrder(orderData);
-      res.status(201).json(result);
+      
+      // Return the order directly for the frontend to use
+      res.status(201).json(result.order || result);
     } catch (error) {
       console.error("Error creating order:", error);
-      res.status(500).json({ message: "Failed to create order" });
+      res.status(500).json({ 
+        message: "Failed to create order", 
+        error: error instanceof Error ? error.message : String(error) 
+      });
     }
   });
 

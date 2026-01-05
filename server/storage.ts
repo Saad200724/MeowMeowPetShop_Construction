@@ -585,19 +585,32 @@ export class DatabaseStorage implements IStorage {
   async createOrder(orderData: any): Promise<any> {
     try {
       const { Order, Invoice } = await import("@shared/models");
+      
+      // Double check required fields for MongoDB
+      if (!orderData.userId) orderData.userId = "guest";
+      if (!orderData.orderNumber) orderData.orderNumber = `ORD-${Date.now()}`;
+      if (!orderData.status) orderData.status = 'Processing';
+      if (!orderData.paymentStatus) orderData.paymentStatus = 'Pending';
+
       const order = new Order(orderData);
       await order.save();
       
       // Also create an invoice
       const invoiceData = {
-        orderId: order._id,
-        invoiceNumber: `INV-${Date.now()}`,
-        customerInfo: orderData.customerInfo,
-        items: orderData.items,
-        subtotal: orderData.total, // Simplified
-        total: orderData.total,
-        paymentMethod: orderData.paymentMethod,
-        status: orderData.paymentMethod === 'COD' ? 'pending' : 'paid',
+        invoiceNumber: order.orderNumber, // Use same number
+        orderId: order._id.toString(),
+        userId: order.userId,
+        customerInfo: orderData.customerInfo || {
+          name: "Guest Customer",
+          email: "guest@example.com",
+          phone: "0000000000"
+        },
+        items: orderData.items || [],
+        subtotal: orderData.total || 0,
+        total: orderData.total || 0,
+        paymentMethod: orderData.paymentMethod || 'COD',
+        paymentStatus: orderData.paymentMethod === 'COD' ? 'Pending' : 'Paid',
+        orderDate: new Date()
       };
       
       const invoice = new Invoice(invoiceData);
