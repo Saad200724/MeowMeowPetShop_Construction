@@ -273,28 +273,30 @@ export default function SignUpPage() {
                 </div>
 
                 {/* Terms Checkbox */}
-                <div className="flex items-start space-x-3 pt-2 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                  <Checkbox
-                    id="terms"
-                    checked={agreedToTerms}
-                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                    data-testid="checkbox-terms"
-                    className="mt-1"
-                  />
-                  <Label htmlFor="terms" className="text-xs font-normal cursor-pointer text-gray-700 dark:text-gray-300 leading-relaxed">
-                    I agree to the{' '}
-                    <Link href="/terms">
-                      <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400">
-                        Terms of Service
-                      </Button>
-                    </Link>{' '}
-                    and{' '}
-                    <Link href="/privacy">
-                      <Button variant="link" className="p-0 h-auto font-semibold text-green-600 dark:text-green-400">
-                        Privacy Policy
-                      </Button>
-                    </Link>
-                  </Label>
+                <div className="bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-100 dark:border-slate-800 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="terms"
+                      checked={agreedToTerms}
+                      onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                      data-testid="checkbox-terms"
+                      className="mt-1 border-gray-300 dark:border-slate-600 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                    />
+                    <Label htmlFor="terms" className="text-xs font-medium cursor-pointer text-gray-700 dark:text-gray-300 leading-relaxed">
+                      I have read and agree to the{' '}
+                      <Link href="/terms-of-service">
+                        <Button variant="link" className="p-0 h-auto font-bold text-green-600 dark:text-green-400 hover:text-green-700 underline underline-offset-4">
+                          Terms of Service
+                        </Button>
+                      </Link>{' '}
+                      and{' '}
+                      <Link href="/privacy-policy">
+                        <Button variant="link" className="p-0 h-auto font-bold text-green-600 dark:text-green-400 hover:text-green-700 underline underline-offset-4">
+                          Privacy Policy
+                        </Button>
+                      </Link>
+                    </Label>
+                  </div>
                 </div>
 
                 {/* Create Account Button */}
