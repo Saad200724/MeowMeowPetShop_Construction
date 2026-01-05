@@ -275,6 +275,7 @@ export default function CheckoutPage() {
 
     const orderData = {
       userId: user?.id || 'guest',
+      total: finalTotal,
       customerInfo: {
         name: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
         email: billingDetails.email,

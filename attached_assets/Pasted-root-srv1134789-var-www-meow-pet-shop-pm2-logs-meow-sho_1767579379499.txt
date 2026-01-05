@@ -1,0 +1,106 @@
+root@srv1134789:/var/www/meow-pet-shop# pm2 logs meow-shop --lines 50
+[TAILING] Tailing last 50 lines for [meow-shop] process (change the value with --lines option)
+/root/.pm2/logs/meow-shop-error.log last 50 lines:
+0|meow-sho |     at inspect (node:internal/util/inspect:371:10)
+0|meow-sho |     at formatWithOptionsInternal (node:internal/util/inspect:2367:40)
+0|meow-sho |     at formatWithOptions (node:internal/util/inspect:2229:10)
+0|meow-sho |     at console.value (node:internal/console/constructor:350:14)
+0|meow-sho |     at console.warn (node:internal/console/constructor:383:61)
+0|meow-sho |     at DatabaseStorage.createOrder (file:///var/www/meow-pet-shop/dist/index.js:936:15)
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|meow-sho |     at async file:///var/www/meow-pet-shop/dist/index.js:1233:22 {
+0|meow-sho |   errors: {
+0|meow-sho |     total: ValidatorError: Path `total` is required.
+0|meow-sho |         at validate (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1443:13)
+0|meow-sho |         at SchemaType.doValidate (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1427:7)
+0|meow-sho |         at /var/www/meow-pet-shop/node_modules/mongoose/lib/document.js:3126:18
+0|meow-sho |         at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
+0|meow-sho |       properties: [Object],
+0|meow-sho |       kind: 'required',
+0|meow-sho |       path: 'total',
+0|meow-sho |       value: undefined,
+0|meow-sho |       reason: undefined,
+0|meow-sho |       [Symbol(mongoose#validatorError)]: true
+0|meow-sho |     }
+0|meow-sho |   },
+0|meow-sho |   _message: 'Order validation failed'
+0|meow-sho | }
+0|meow-sho | Error creating order: Error: Order validation failed: total: Path `total` is required.
+0|meow-sho |     at ValidationError.inspect (/var/www/meow-pet-shop/node_modules/mongoose/lib/error/validation.js:52:26)
+0|meow-sho |     at formatValue (node:internal/util/inspect:828:19)
+0|meow-sho |     at inspect (node:internal/util/inspect:371:10)
+0|meow-sho |     at formatWithOptionsInternal (node:internal/util/inspect:2367:40)
+0|meow-sho |     at formatWithOptions (node:internal/util/inspect:2229:10)
+0|meow-sho |     at console.value (node:internal/console/constructor:350:14)
+0|meow-sho |     at console.warn (node:internal/console/constructor:383:61)
+0|meow-sho |     at file:///var/www/meow-pet-shop/dist/index.js:1236:15
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+0|meow-sho |   errors: {
+0|meow-sho |     total: ValidatorError: Path `total` is required.
+0|meow-sho |         at validate (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1443:13)
+0|meow-sho |         at SchemaType.doValidate (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1427:7)
+0|meow-sho |         at /var/www/meow-pet-shop/node_modules/mongoose/lib/document.js:3126:18
+0|meow-sho |         at process.processTicksAndRejections (node:internal/process/task_queues:77:11) {
+0|meow-sho |       properties: [Object],
+0|meow-sho |       kind: 'required',
+0|meow-sho |       path: 'total',
+0|meow-sho |       value: undefined,
+0|meow-sho |       reason: undefined,
+0|meow-sho |       [Symbol(mongoose#validatorError)]: true
+0|meow-sho |     }
+0|meow-sho |   },
+0|meow-sho |   _message: 'Order validation failed'
+0|meow-sho | }
+
+/root/.pm2/logs/meow-shop-out.log last 50 lines:
+0|meow-sho |     "address": "Block-A 28/5 Bank Colony, Savar, Dhaka",
+0|meow-sho |     "division": "khulna",
+0|meow-sho |     "district": "dhaka",
+0|meow-sho |     "thanaUpazilla": "Savar",
+0|meow-sho |     "postCode": "1340"
+0|meow-sho |   },
+0|meow-sho |   "deliveryFee": 80,
+0|meow-sho |   "orderNotes": "",
+0|meow-sho |   "orderNumber": "INV-MK0J2JO7-PCHDJW"
+0|meow-sho | }
+0|meow-sho | 2:14:48 AM [express] POST /api/orders 500 in 3ms :: {"message":"Failed to create order","error":"Ord…
+0|meow-sho | Creating order with data: {
+0|meow-sho |   "userId": "695879c578df3cf732f1503d",
+0|meow-sho |   "customerInfo": {
+0|meow-sho |     "name": "Saad Administrator",
+0|meow-sho |     "email": "saadbintofayeltahsin@gmail.com",
+0|meow-sho |     "phone": "01815410558",
+0|meow-sho |     "alternativePhone": "",
+0|meow-sho |     "address": {
+0|meow-sho |       "address": "Block-A 28/5 Bank Colony, Savar, Dhaka",
+0|meow-sho |       "division": "khulna",
+0|meow-sho |       "district": "dhaka",
+0|meow-sho |       "thanaUpazilla": "Savar",
+0|meow-sho |       "postCode": "1340"
+0|meow-sho |     }
+0|meow-sho |   },
+0|meow-sho |   "items": [
+0|meow-sho |     {
+0|meow-sho |       "productId": "695b1c38136f8c2205ab1423",
+0|meow-sho |       "name": "SafeGuard",
+0|meow-sho |       "price": 22,
+0|meow-sho |       "quantity": 2,
+0|meow-sho |       "image": "/api/uploads/image-1767578670647-370576585.webp"
+0|meow-sho |     }
+0|meow-sho |   ],
+0|meow-sho |   "discountCode": null,
+0|meow-sho |   "paymentMethod": "COD",
+0|meow-sho |   "shippingAddress": {
+0|meow-sho |     "address": "Block-A 28/5 Bank Colony, Savar, Dhaka",
+0|meow-sho |     "division": "khulna",
+0|meow-sho |     "district": "dhaka",
+0|meow-sho |     "thanaUpazilla": "Savar",
+0|meow-sho |     "postCode": "1340"
+0|meow-sho |   },
+0|meow-sho |   "deliveryFee": 80,
+0|meow-sho |   "orderNotes": "",
+0|meow-sho |   "orderNumber": "INV-MK0J2JX1-UBVK5A"
+0|meow-sho | }
+0|meow-sho | 2:14:48 AM [express] POST /api/orders 500 in 4ms :: {"message":"Failed to create order","error":"Ord…
+0|meow-sho | 2:14:49 AM [express] GET /api/announcements 304 in 2ms :: []
+
