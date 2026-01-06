@@ -599,9 +599,14 @@ export class DatabaseStorage implements IStorage {
       if (orderData.items && Array.isArray(orderData.items)) {
         for (const item of orderData.items) {
           if (item.productId) {
-            await Product.findByIdAndUpdate(item.productId, {
-              $inc: { stockQuantity: -item.quantity }
-            });
+            try {
+              await Product.findByIdAndUpdate(item.productId, {
+                $inc: { stockQuantity: -item.quantity }
+              });
+              console.log(`Stock reduced for product ${item.productId} by ${item.quantity}`);
+            } catch (stockError) {
+              console.error(`Failed to reduce stock for product ${item.productId}:`, stockError);
+            }
           }
         }
       }
