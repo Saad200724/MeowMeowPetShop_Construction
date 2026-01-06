@@ -584,7 +584,7 @@ export class DatabaseStorage implements IStorage {
   // Order implementations
   async createOrder(orderData: any): Promise<any> {
     try {
-      const { Order, Invoice } = await import("@shared/models");
+      const { Order, Invoice, Product } = await import("@shared/models");
       
       // Double check required fields for MongoDB
       if (!orderData.userId) orderData.userId = "guest";
@@ -594,6 +594,17 @@ export class DatabaseStorage implements IStorage {
 
       const order = new Order(orderData);
       await order.save();
+      
+      // Reduce stock for each item
+      if (orderData.items && Array.isArray(orderData.items)) {
+        for (const item of orderData.items) {
+          if (item.productId) {
+            await Product.findByIdAndUpdate(item.productId, {
+              $inc: { stockQuantity: -item.quantity }
+            });
+          }
+        }
+      }
       
       // Also create an invoice
       const invoiceData = {
