@@ -56,7 +56,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-[#26732d] to-[#38603d] text-white py-12 md:py-20">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">About Saad</h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">About Meow Meow Pet Shop</h1>
             <p className="text-lg md:text-xl text-gray-100 leading-relaxed">
               Your Trusted Partner for Premium Pet Care in Savar, Bangladesh
             </p>
