@@ -225,6 +225,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/orders/user/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const orders = await storage.getOrders(userId);
+      res.json(orders);
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
   app.get("/api/orders/:id", async (req, res) => {
     try {
       const order = await storage.getOrder(req.params.id);
@@ -2774,9 +2785,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/coupons/active", async (req, res) => {
+    try {
+      const now = new Date();
+      const coupons = await Coupon.find({
+        isActive: true,
+        validFrom: { $lte: now },
+        validUntil: { $gte: now }
+      }).sort({ createdAt: -1 });
+      res.json(coupons);
+    } catch (error) {
+      console.error('Error fetching active coupons:', error);
+      res.status(500).json({ message: "Failed to fetch active coupons" });
+    }
+  });
+
   app.get("/api/coupons/:id", async (req, res) => {
     try {
       const { id } = req.params;
+      
+      // Check if ID is a valid MongoDB ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: "Coupon not found" });
+      }
+
       const coupon = await Coupon.findById(id);
 
       if (!coupon) {
