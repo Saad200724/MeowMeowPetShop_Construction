@@ -2807,6 +2807,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       
+      // First, handle special reserved words that are NOT IDs
+      if (id === 'active') {
+        const now = new Date();
+        const coupons = await Coupon.find({
+          isActive: true,
+          validFrom: { $lte: now },
+          validUntil: { $gte: now }
+        }).sort({ createdAt: -1 });
+        return res.json(coupons);
+      }
+
       // Check if ID is a valid MongoDB ObjectId
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ message: "Coupon not found" });
