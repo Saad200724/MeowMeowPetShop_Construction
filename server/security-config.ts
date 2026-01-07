@@ -35,9 +35,6 @@ export const securityHeaders = {
   // Feature Policy / Permissions Policy
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=()',
   
-  // Prevent MIME type sniffing
-  'X-Content-Type-Options': 'nosniff',
-  
   // HTTP Strict Transport Security
   'X-Permitted-Cross-Domain-Policies': 'none',
 };

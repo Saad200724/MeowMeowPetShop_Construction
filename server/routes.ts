@@ -2788,26 +2788,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/coupons/active", async (req, res) => {
-    try {
-      const now = new Date();
-      const coupons = await Coupon.find({
-        isActive: true,
-        validFrom: { $lte: now },
-        validUntil: { $gte: now }
-      }).sort({ createdAt: -1 });
-      res.json(coupons);
-    } catch (error) {
-      console.error('Error fetching active coupons:', error);
-      res.status(500).json({ message: "Failed to fetch active coupons" });
-    }
-  });
-
   app.get("/api/coupons/:id", async (req, res) => {
     try {
       const { id } = req.params;
       
-      // First, handle special reserved words that are NOT IDs
+      // Handle special reserved word "active"
       if (id === 'active') {
         const now = new Date();
         const coupons = await Coupon.find({

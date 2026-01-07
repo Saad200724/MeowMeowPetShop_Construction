@@ -1,0 +1,106 @@
+root@srv1134789:/var/www/meow-pet-shop# pm2 logs meow-shop --lines 50
+[TAILING] Tailing last 50 lines for [meow-shop] process (change the value with --lines option)
+/root/.pm2/logs/meow-shop-error.log last 50 lines:
+0|meow-sho |     at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80)
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|meow-sho |     at async file:///var/www/meow-pet-shop/dist/index.js:3295:22 {
+0|meow-sho |   stringValue: '"active"',
+0|meow-sho |   messageFormat: undefined,
+0|meow-sho |   kind: 'ObjectId',
+0|meow-sho |   value: 'active',
+0|meow-sho |   path: '_id',
+0|meow-sho |   reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+0|meow-sho |       at new ObjectId (/var/www/meow-pet-shop/node_modules/bson/lib/bson.cjs:2538:23)
+0|meow-sho |       at castObjectId (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast/objectid.js:25:12)
+0|meow-sho |       at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:251:12)
+0|meow-sho |       at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |       at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |       at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |       at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |       at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |       at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |       at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80),
+0|meow-sho |   valueType: 'string'
+0|meow-sho | }
+0|meow-sho | Error fetching coupon: CastError: Cast to ObjectId failed for value "active" (type string) at path "_id" for model "Coupon"
+0|meow-sho |     at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:253:11)
+0|meow-sho |     at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |     at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |     at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |     at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |     at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |     at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |     at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80)
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|meow-sho |     at async file:///var/www/meow-pet-shop/dist/index.js:3309:22 {
+0|meow-sho |   stringValue: '"active"',
+0|meow-sho |   messageFormat: undefined,
+0|meow-sho |   kind: 'ObjectId',
+0|meow-sho |   value: 'active',
+0|meow-sho |   path: '_id',
+0|meow-sho |   reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+0|meow-sho |       at new ObjectId (/var/www/meow-pet-shop/node_modules/bson/lib/bson.cjs:2538:23)
+0|meow-sho |       at castObjectId (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast/objectid.js:25:12)
+0|meow-sho |       at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:251:12)
+0|meow-sho |       at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |       at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |       at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |       at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |       at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |       at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |       at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80),
+0|meow-sho |   valueType: 'string'
+0|meow-sho | }
+
+/root/.pm2/logs/meow-shop-out.log last 50 lines:
+0|meow-sho | 1:48:18 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:48:48 AM [express] GET /api/announcements 304 in 3ms :: []
+0|meow-sho | 1:49:18 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:49:48 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | Created new user from Firebase sync: feudal7763@screwingpuzzle.com
+0|meow-sho | 1:50:42 AM [express] POST /api/auth/firebase-sync 200 in 216ms :: {"message":"Sync successful","user
+0|meow-sho | 1:50:43 AM [express] GET /api/blog/published 304 in 2ms :: []
+0|meow-sho | 1:50:43 AM [express] GET /api/uploads/image-1767578670647-370576585.webp 304 in 1ms
+0|meow-sho | 1:50:50 AM [express] GET /api/orders/user/695dbbf2f94dee46db36feac 200 in 3ms :: []
+0|meow-sho | 1:50:50 AM [express] GET /api/coupons/active 200 in 3ms :: [{"_id":"695db4c083cde76eaae53698","code"
+0|meow-sho | 1:50:50 AM [express] GET /api/placeholder/64/64 302 in 2ms
+0|meow-sho | 1:51:03 AM [express] GET /api/blog/published 304 in 2ms :: []
+0|meow-sho | 1:51:07 AM [express] GET /api/products/slug/safeguard 200 in 10ms :: {"_id":"695b1c38136f8c2205ab142…
+0|meow-sho | 1:51:07 AM [express] GET /api/reviews/product/695b1c38136f8c2205ab1423 304 in 3ms :: []
+0|meow-sho | 1:51:10 AM [express] GET /api/blog/published 304 in 2ms :: []
+0|meow-sho | 2:15:23 AM [express] GET /api/announcements 304 in 11ms :: []
+0|meow-sho | Successfully fetched 1 products (including repack products)
+0|meow-sho | 2:15:23 AM [express] GET /api/products 200 in 17ms :: [{"id":"695b1c38136f8c2205ab1423","name":"Safe…
+0|meow-sho | Storage: Found 0 active banners
+0|meow-sho | Returning 0 active banners, sorted by order: []
+0|meow-sho | 2:15:23 AM [express] GET /api/banners/active 304 in 7ms :: []
+0|meow-sho | Successfully fetched 0 repack products
+0|meow-sho | 2:15:23 AM [express] GET /api/repack-products 304 in 12ms :: []
+0|meow-sho | 2:15:23 AM [express] GET /api/brands 304 in 4ms :: [{"id":"695879c578df3cf732f15040","_id":"695879c5…
+0|meow-sho | 2:15:23 AM [express] GET /api/popup-posters/active 304 in 4ms
+0|meow-sho | 2:15:23 AM [express] GET /api/blog/published 304 in 5ms :: []
+0|meow-sho | 2:15:24 AM [express] GET /api/uploads/image-1767578670647-370576585.webp 304 in 1ms
+0|meow-sho | 2:15:25 AM [express] POST /api/auth/firebase-sync 200 in 9ms :: {"message":"Sync successful","user":…
+0|meow-sho | Mongoose disconnected
+0|meow-sho | MongoDB connection closed
+0|meow-sho | [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+0|meow-sho | ✅ Environment configuration validated
+0|meow-sho | Mongoose connected to MongoDB
+0|meow-sho | MongoDB connected successfully
+0|meow-sho | Admin account password updated
+0|meow-sho | 2:24:08 AM [express] serving on port 3001
+0|meow-sho | 2:24:13 AM [express] GET /api/announcements 304 in 8ms :: []
+0|meow-sho | 2:24:15 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | Storage: Found 0 active banners
+0|meow-sho | Returning 0 active banners, sorted by order: []
+0|meow-sho | 2:24:15 AM [express] GET /api/banners/active 304 in 3ms :: []
+0|meow-sho | Successfully fetched 1 products (including repack products)
+0|meow-sho | 2:24:15 AM [express] GET /api/products 304 in 9ms :: [{"id":"695b1c38136f8c2205ab1423","name":"SafeG
+0|meow-sho | Successfully fetched 0 repack products
+0|meow-sho | 2:24:15 AM [express] GET /api/repack-products 304 in 3ms :: []
+0|meow-sho | 2:24:15 AM [express] GET /api/brands 304 in 4ms :: [{"id":"695879c578df3cf732f15040","_id":"695879c5…
+0|meow-sho | 2:24:15 AM [express] GET /api/popup-posters/active 304 in 2ms
+0|meow-sho | 2:24:15 AM [express] GET /api/blog/published 304 in 2ms :: []
+0|meow-sho | 2:24:16 AM [express] GET /api/uploads/image-1767578670647-370576585.webp 304 in 1ms
+0|meow-sho | 2:24:17 AM [express] POST /api/auth/firebase-sync 200 in 4ms :: {"message":"Sync successful","user":
+
