@@ -1172,7 +1172,10 @@ export default function AdminPage() {
   };
 
   const handleEditInvoice = async (order: any) => {
-    if (!order.invoiceId) {
+    // Try using invoiceId first, then fallback to order._id
+    const invoiceId = order.invoiceId || order._id;
+    
+    if (!invoiceId) {
       toast({
         title: 'Error',
         description: 'No invoice found for this order',
@@ -1182,7 +1185,7 @@ export default function AdminPage() {
     }
     
     try {
-      const response = await fetch(`/api/invoices/${order.invoiceId}`);
+      const response = await fetch(`/api/invoices/${invoiceId}`);
       if (!response.ok) throw new Error('Failed to fetch invoice');
       const invoice = await response.json();
       
@@ -1518,13 +1521,17 @@ export default function AdminPage() {
                         )}
                       </div>
                       <div className="flex space-x-2">
-                        {order.invoiceId && (
+                        {order && (
                           <>
                             <Button 
                               size="sm" 
                               variant="outline"
                               className="text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-900"
-                              onClick={() => window.open(`/invoice/${order.invoiceId}`, '_blank')}
+                              onClick={() => {
+                                // Fallback to order ID if invoiceId is missing, as they often match or can be resolved
+                                const invoiceId = order.invoiceId || order._id;
+                                window.open(`/invoice/${invoiceId}`, '_blank');
+                              }}
                               data-testid={`view-invoice-${order._id}`}
                             >
                               <Eye className="w-4 h-4 mr-1" />
