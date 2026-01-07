@@ -199,7 +199,16 @@ export function setSecurityHeaders(res: Response) {
  * Validate input against injection patterns
  */
 export function validateInput(input: string, type: 'sql' | 'xss' | 'command' = 'xss'): boolean {
-  const patterns = inputValidation[`${type}InjectionPatterns`] as RegExp[];
+  let patterns: RegExp[] | undefined;
+  
+  if (type === 'sql') {
+    patterns = inputValidation.sqlInjectionPatterns;
+  } else if (type === 'xss') {
+    patterns = inputValidation.xssPatterns;
+  } else if (type === 'command') {
+    patterns = inputValidation.commandInjectionPatterns;
+  }
+  
   if (!patterns) return true;
   
   return !patterns.some(pattern => pattern.test(input));
