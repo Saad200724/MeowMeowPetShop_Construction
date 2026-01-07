@@ -29,9 +29,22 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@radix-ui')) {
+              return 'vendor-ui';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-animations';
+            }
+            if (id.includes('firebase')) {
+              return 'vendor-firebase';
+            }
+            return 'vendor';
+          }
         }
       }
     }
