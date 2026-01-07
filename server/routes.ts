@@ -207,9 +207,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Creating order with data:", JSON.stringify(orderData, null, 2));
       const result = await storage.createOrder(orderData);
       
-      // Return the order directly for the frontend to use
-      const responseOrder = result.order || result;
-      res.status(201).json(responseOrder);
+      // Return the result containing both order and invoice for the frontend
+      res.status(201).json(result);
     } catch (error) {
       console.error("Error creating order:", error);
       res.status(500).json({ 
@@ -2808,6 +2807,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       
+      // If it's the string "active", redirect to the active coupons endpoint or handle it
+      if (id === 'active') {
+        const now = new Date();
+        const coupons = await Coupon.find({
+          isActive: true,
+          validFrom: { $lte: now },
+          validUntil: { $gte: now }
+        }).sort({ createdAt: -1 });
+        return res.json(coupons);
+      }
+
       // Check if ID is a valid MongoDB ObjectId
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ message: "Coupon not found" });

@@ -1,0 +1,165 @@
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@srv1134789:/var/www/meow-pet-shop# pm2 logs meow-shop --lines 50
+[TAILING] Tailing last 50 lines for [meow-shop] process (change the value with --lines option)
+/root/.pm2/logs/meow-shop-error.log last 50 lines:
+0|meow-sho |     at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80)
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|meow-sho |     at async file:///var/www/meow-pet-shop/dist/index.js:3295:22 {
+0|meow-sho |   stringValue: '"active"',
+0|meow-sho |   messageFormat: undefined,
+0|meow-sho |   kind: 'ObjectId',
+0|meow-sho |   value: 'active',
+0|meow-sho |   path: '_id',
+0|meow-sho |   reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+0|meow-sho |       at new ObjectId (/var/www/meow-pet-shop/node_modules/bson/lib/bson.cjs:2538:23)
+0|meow-sho |       at castObjectId (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast/objectid.js:25:12)
+0|meow-sho |       at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:251:12)
+0|meow-sho |       at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |       at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |       at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |       at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |       at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |       at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |       at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80),
+0|meow-sho |   valueType: 'string'
+0|meow-sho | }
+0|meow-sho | Error fetching coupon: CastError: Cast to ObjectId failed for value "active" (type string) at path "_id" for model "Coupon"
+0|meow-sho |     at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:253:11)
+0|meow-sho |     at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |     at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |     at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |     at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |     at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |     at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |     at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80)
+0|meow-sho |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|meow-sho |     at async file:///var/www/meow-pet-shop/dist/index.js:3309:22 {
+0|meow-sho |   stringValue: '"active"',
+0|meow-sho |   messageFormat: undefined,
+0|meow-sho |   kind: 'ObjectId',
+0|meow-sho |   value: 'active',
+0|meow-sho |   path: '_id',
+0|meow-sho |   reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+0|meow-sho |       at new ObjectId (/var/www/meow-pet-shop/node_modules/bson/lib/bson.cjs:2538:23)
+0|meow-sho |       at castObjectId (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast/objectid.js:25:12)
+0|meow-sho |       at SchemaObjectId.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/schema/objectId.js:251:12)
+0|meow-sho |       at SchemaType.applySetters (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1288:12)
+0|meow-sho |       at SchemaType.castForQuery (/var/www/meow-pet-shop/node_modules/mongoose/lib/schemaType.js:1724:17)
+0|meow-sho |       at cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/cast.js:390:32)
+0|meow-sho |       at Query.cast (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:5060:12)
+0|meow-sho |       at Query._castConditions (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2374:10)
+0|meow-sho |       at model.Query._findOne (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:2697:8)
+0|meow-sho |       at model.Query.exec (/var/www/meow-pet-shop/node_modules/mongoose/lib/query.js:4627:80),
+0|meow-sho |   valueType: 'string'
+0|meow-sho | }
+
+/root/.pm2/logs/meow-shop-out.log last 50 lines:
+0|meow-sho |       "thanaUpazilla": "",
+0|meow-sho |       "postCode": ""
+0|meow-sho |     }
+0|meow-sho |   },
+0|meow-sho |   "items": [
+0|meow-sho |     {
+0|meow-sho |       "productId": "695b1c38136f8c2205ab1423",
+0|meow-sho |       "name": "SafeGuard",
+0|meow-sho |       "price": 22,
+0|meow-sho |       "quantity": 2,
+0|meow-sho |       "image": "/api/uploads/image-1767578670647-370576585.webp"
+0|meow-sho |     }
+0|meow-sho |   ],
+0|meow-sho |   "discountCode": "SAVE20",
+0|meow-sho |   "paymentMethod": "COD",
+0|meow-sho |   "shippingAddress": {
+0|meow-sho |     "address": "SGSAYTF",
+0|meow-sho |     "division": "dhaka",
+0|meow-sho |     "district": "dhaka",
+0|meow-sho |     "thanaUpazilla": "",
+0|meow-sho |     "postCode": ""
+0|meow-sho |   },
+0|meow-sho |   "deliveryFee": 80,
+0|meow-sho |   "orderNotes": "",
+0|meow-sho |   "orderNumber": "INV-MK3C1JEA-MZLSW5"
+0|meow-sho | }
+0|meow-sho | Stock reduced for product 695b1c38136f8c2205ab1423 by 2
+0|meow-sho | 1:21:22 AM [express] POST /api/orders 201 in 26ms :: {"userId":"695879c578df3cf732f1503d","orderNumb…
+0|meow-sho | 1:21:22 AM [express] GET /api/blog/published 304 in 3ms :: []
+0|meow-sho | 1:26:47 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:27:17 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:27:47 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:28:17 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:28:47 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:29:17 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:29:48 AM [express] GET /api/announcements 304 in 3ms :: []
+0|meow-sho | 1:30:18 AM [express] GET /api/announcements 304 in 3ms :: []
+0|meow-sho | 1:30:48 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:31:18 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:31:48 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:32:18 AM [express] GET /api/announcements 304 in 2ms :: []
+0|meow-sho | 1:32:49 AM [express] GET /api/announcements 304 in 3ms :: []
+0|meow-sho | Mongoose disconnected
+0|meow-sho | MongoDB connection closed
+0|meow-sho | [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+0|meow-sho | ✅ Environment configuration validated
+0|meow-sho | Mongoose connected to MongoDB
+0|meow-sho | MongoDB connected successfully
+0|meow-sho | Admin account password updated
+0|meow-sho | 1:35:11 AM [express] serving on port 3001
+
+0|meow-shop  | 1:35:25 AM [express] GET /api/announcements 304 in 6ms :: []
+0|meow-shop  | Successfully fetched 1 products (including repack products)
+0|meow-shop  | 1:35:25 AM [express] GET /api/products 200 in 13ms :: [{"id":"695b1c38136f8c2205ab1423","name":"Safe…
+0|meow-shop  | Storage: Found 0 active banners
+0|meow-shop  | Returning 0 active banners, sorted by order: []
+0|meow-shop  | 1:35:25 AM [express] GET /api/banners/active 304 in 6ms :: []
+0|meow-shop  | Successfully fetched 0 repack products
+0|meow-shop  | 1:35:25 AM [express] GET /api/repack-products 304 in 5ms :: []
+0|meow-shop  | 1:35:25 AM [express] GET /api/brands 304 in 3ms :: [{"id":"695879c578df3cf732f15040","_id":"695879c5…
+0|meow-shop  | 1:35:25 AM [express] GET /api/blog/published 304 in 3ms :: []
+0|meow-shop  | 1:35:25 AM [express] GET /api/popup-posters/active 304 in 3ms
+0|meow-shop  | 1:35:27 AM [express] GET /api/uploads/image-1767578670647-370576585.webp 304 in 1ms
+0|meow-shop  | 1:35:32 AM [express] GET /api/products/slug/safeguard 200 in 8ms :: {"_id":"695b1c38136f8c2205ab1423…
+0|meow-shop  | 1:35:32 AM [express] GET /api/reviews/product/695b1c38136f8c2205ab1423 304 in 3ms :: []
+0|meow-shop  | 1:35:43 AM [express] POST /api/coupons/validate 200 in 4ms :: {"valid":true,"coupon":{"code":"SAVE20…
+0|meow-shop  | Creating order with data: {
+0|meow-shop  |   "userId": "695879c578df3cf732f1503d",
+0|meow-shop  |   "total": 148,
+0|meow-shop  |   "customerInfo": {
+0|meow-shop  |     "name": "System Administrator",
+0|meow-shop  |     "email": "admin@gmail.com",
+0|meow-shop  |     "phone": "01815410558",
+0|meow-shop  |     "alternativePhone": "",
+0|meow-shop  |     "address": {
+0|meow-shop  |       "address": "SSSSSSSSSSSSSSSSSSSSS",
+0|meow-shop  |       "division": "sylhet",
+0|meow-shop  |       "district": "habiganj",
+0|meow-shop  |       "thanaUpazilla": "",
+0|meow-shop  |       "postCode": ""
+0|meow-shop  |     }
+0|meow-shop  |   },
+0|meow-shop  |   "items": [
+0|meow-shop  |     {
+0|meow-shop  |       "productId": "695b1c38136f8c2205ab1423",
+0|meow-shop  |       "name": "SafeGuard",
+0|meow-shop  |       "price": 22,
+0|meow-shop  |       "quantity": 1,
+0|meow-shop  |       "image": "/api/uploads/image-1767578670647-370576585.webp"
+0|meow-shop  |     }
+0|meow-shop  |   ],
+0|meow-shop  |   "discountCode": "SAVE20",
+0|meow-shop  |   "paymentMethod": "COD",
+0|meow-shop  |   "shippingAddress": {
+0|meow-shop  |     "address": "SSSSSSSSSSSSSSSSSSSSS",
+0|meow-shop  |     "division": "sylhet",
+0|meow-shop  |     "district": "habiganj",
+0|meow-shop  |     "thanaUpazilla": "",
+0|meow-shop  |     "postCode": ""
+0|meow-shop  |   },
+0|meow-shop  |   "deliveryFee": 130,
+0|meow-shop  |   "orderNotes": "",
+0|meow-shop  |   "orderNumber": "INV-MK3CKOAN-745A7Z",
+0|meow-shop  |   "invoiceNumber": "INV-MK3CKOAN-745A7Z"
+0|meow-shop  | }
+0|meow-shop  | Stock reduced for product 695b1c38136f8c2205ab1423 by 1
+0|meow-shop  | 1:36:15 AM [express] POST /api/orders 201 in 37ms :: {"userId":"695879c578df3cf732f1503d","orderNumb…
+0|meow-shop  | 1:36:15 AM [express] GET /api/blog/published 304 in 3ms :: []
+0|meow-shop  | 1:36:16 AM [express] GET /api/uploads/image-1767578670647-370576585.webp 304 in 1ms
