@@ -589,7 +589,7 @@ export class DatabaseStorage implements IStorage {
       // Double check required fields for MongoDB
       if (!orderData.userId) orderData.userId = "guest";
       if (!orderData.orderNumber) orderData.orderNumber = `ORD-${Date.now()}`;
-      if (!orderData.status) orderData.status = 'Processing';
+      if (!orderData.status) orderData.status = 'Pending';
       if (!orderData.paymentStatus) orderData.paymentStatus = 'Pending';
 
       const order = new Order(orderData);
