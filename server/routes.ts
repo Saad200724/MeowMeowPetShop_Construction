@@ -2807,7 +2807,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       
-      // If it's the string "active", redirect to the active coupons endpoint or handle it
+      // If it's the string "active", return active coupons
       if (id === 'active') {
         const now = new Date();
         const coupons = await Coupon.find({
