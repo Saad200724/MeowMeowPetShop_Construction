@@ -196,6 +196,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         orderData.orderNumber = generateUniqueOrderNumber();
       }
 
+      // Ensure invoiceNumber matches orderNumber
+      orderData.invoiceNumber = orderData.orderNumber;
+
       // Ensure userId is set (even if it's "guest")
       if (!orderData.userId) {
         orderData.userId = "guest_" + Date.now();
@@ -205,7 +208,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.createOrder(orderData);
       
       // Return the order directly for the frontend to use
-      res.status(201).json(result.order || result);
+      const responseOrder = result.order || result;
+      res.status(201).json(responseOrder);
     } catch (error) {
       console.error("Error creating order:", error);
       res.status(500).json({ 

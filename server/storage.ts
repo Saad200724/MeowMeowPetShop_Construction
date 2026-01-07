@@ -652,7 +652,7 @@ export class DatabaseStorage implements IStorage {
   async getOrders(userId?: string): Promise<any[]> {
     try {
       const { Order } = await import("@shared/models");
-      const query = userId ? { userId } : {};
+      const query = userId && userId !== 'all' ? { userId } : {};
       return Order.find(query).sort({ createdAt: -1 });
     } catch (error) {
       console.error('Error fetching orders in storage:', error);

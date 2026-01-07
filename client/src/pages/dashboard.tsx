@@ -38,6 +38,7 @@ import {
 
 interface Order {
   id: string
+  orderNumber: string
   invoiceId?: string
   invoiceNumber?: string
   date: string
