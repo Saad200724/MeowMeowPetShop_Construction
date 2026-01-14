@@ -52,7 +52,7 @@ export async function setupVite(app: Express, server: Server) {
     return vite.middlewares(req, res, next);
   });
   
-  app.get("*", async (req, res, next) => {
+  app.use(async (req, res, next) => {
     const url = req.originalUrl;
 
     // Skip API routes - let them be handled by route handlers
@@ -100,7 +100,7 @@ export function serveStatic(app: Express) {
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  app.use((_req, res) => {
     // Add Content Security Policy to allow softhut.app in iframes
     res.setHeader("Content-Security-Policy", "frame-ancestors 'self' https://www.softhut.app https://softhut.app;");
     res.setHeader("X-Frame-Options", "ALLOW-FROM https://www.softhut.app/");
