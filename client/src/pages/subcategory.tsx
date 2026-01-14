@@ -308,8 +308,12 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-1">No products found</h3>
                 <p className="text-gray-500 mb-6">Try adjusting your filters or search terms to find what you're looking for.</p>
-                <Button variant="default" className="bg-[#26732d] hover:bg-[#1e5d26] rounded-full px-8" onClick={clearFilters}>
-                  Clear All Filters
+                <Button 
+                  variant="default" 
+                  className="bg-[#26732d] hover:bg-[#1e5d26] !text-white rounded-full px-8 shadow-sm font-bold" 
+                  onClick={clearFilters}
+                >
+                  <span className="text-white">Clear All Filters</span>
                 </Button>
               </div>
             )}
