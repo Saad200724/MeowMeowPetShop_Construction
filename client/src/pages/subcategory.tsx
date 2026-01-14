@@ -10,6 +10,7 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import ProductCard from '@/components/product/product-card'
 import { useProducts } from '@/hooks/use-products'
+import { useQuery } from '@tanstack/react-query'
 import { setSEO } from '@/lib/seo'
 import { SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles, Search } from 'lucide-react'
 import { Link } from 'wouter'
@@ -18,6 +19,12 @@ interface SubcategoryPageProps {
   subcategoryId: string;
   subcategoryName: string;
   icon?: string;
+}
+
+interface Brand {
+  _id: string;
+  id: string;
+  name: string;
 }
 
 export default function SubcategoryPage({ subcategoryId, subcategoryName, icon = '📦' }: SubcategoryPageProps) {
@@ -38,10 +45,13 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
   const [showFilters, setShowFilters] = useState(false)
   
   const { loading, getProductsByCategory } = useProducts()
+  
+  // Fetch brands from API to ensure we have all brands, not just those with products in this category
+  const { data: brands = [] } = useQuery<Brand[]>({
+    queryKey: ['/api/brands'],
+  })
 
   const products = getProductsByCategory(subcategoryId)
-
-  const allBrands = Array.from(new Set(products.map(p => p.brandName || 'Unknown').filter(Boolean)))
 
   const filteredProducts = products
     .filter(product => {
@@ -99,7 +109,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30">
       <Header />
 
-      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-8">
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-8 pb-12">
         {/* Breadcrumb Navigation */}
         <div className="py-3 sm:py-4 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">
           <Link href="/" className="hover:text-[#26732d] transition-colors flex items-center gap-1 whitespace-nowrap">
@@ -199,15 +209,15 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                   </div>
                 </div>
                 <Separator />
-                {allBrands.length > 0 && (
+                {brands.length > 0 && (
                   <>
                     <div>
                       <label className="text-sm font-semibold text-gray-700 mb-3 block">Brands</label>
-                      <div className="space-y-2 max-h-48 overflow-y-auto">
-                        {allBrands.map(brand => (
-                          <label key={brand} className="flex items-center gap-2 cursor-pointer group">
-                            <Checkbox checked={selectedBrands.includes(brand)} onCheckedChange={() => toggleBrand(brand)} />
-                            <span className="text-sm text-black group-hover:text-[#26732d] flex-1 truncate">{brand}</span>
+                      <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                        {brands.map(brand => (
+                          <label key={brand._id} className="flex items-center gap-2 cursor-pointer group">
+                            <Checkbox checked={selectedBrands.includes(brand.name)} onCheckedChange={() => toggleBrand(brand.name)} />
+                            <span className="text-sm text-gray-800 group-hover:text-[#26732d] flex-1 truncate">{brand.name}</span>
                           </label>
                         ))}
                       </div>
@@ -223,7 +233,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                         <Checkbox checked={minRating === rating} onCheckedChange={(checked) => setMinRating(checked ? rating : 0)} />
                         <div className="flex items-center gap-1 flex-1">
                           {Array.from({ length: rating }).map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}
-                          <span className="text-sm text-black group-hover:text-[#26732d]">& up</span>
+                          <span className="text-sm text-gray-800 group-hover:text-[#26732d]">& up</span>
                         </div>
                       </label>
                     ))}
@@ -232,7 +242,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                 <Separator />
                 <label className="flex items-center gap-2 cursor-pointer group">
                   <Checkbox checked={showOnlyInStock} onCheckedChange={(checked) => setShowOnlyInStock(checked === true)} />
-                  <span className="text-sm font-semibold text-black group-hover:text-[#26732d] flex-1">In Stock Only</span>
+                  <span className="text-sm font-semibold text-gray-800 group-hover:text-[#26732d] flex-1">In Stock Only</span>
                 </label>
               </div>
             </div>
@@ -240,44 +250,54 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
 
           {/* Main Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex flex-col gap-3 mb-6">
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex gap-3">
+                <div className="relative flex-1 group">
+                  <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-[#26732d] transition-colors" />
                   <Input
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-10 border-gray-200"
+                    className="pl-10 h-11 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20 text-gray-900 placeholder:text-gray-400 font-medium"
                   />
                 </div>
-                <Button variant="outline" className="lg:hidden h-10" onClick={() => setShowFilters(!showFilters)}>
-                  <SlidersHorizontal size={16} />
+                <Button variant="outline" className="lg:hidden h-11 px-4 border-gray-200" onClick={() => setShowFilters(!showFilters)}>
+                  <SlidersHorizontal size={18} className="mr-2" />
+                  Filters
                 </Button>
               </div>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full sm:w-56 h-10 border-gray-200">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="name">Name (A-Z)</SelectItem>
-                  <SelectItem value="price-low">Price (Low to High)</SelectItem>
-                  <SelectItem value="price-high">Price (High to Low)</SelectItem>
-                  <SelectItem value="rating">Highest Rated</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-500 whitespace-nowrap">Sort by:</span>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-64 h-11 border-gray-200 bg-white hover:border-[#26732d] transition-colors font-medium text-gray-900">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-100 shadow-xl rounded-xl p-1">
+                    <SelectItem value="name" className="rounded-lg focus:bg-green-50 focus:text-[#26732d] font-medium py-2.5">Name (A-Z)</SelectItem>
+                    <SelectItem value="price-low" className="rounded-lg focus:bg-green-50 focus:text-[#26732d] font-medium py-2.5">Price (Low to High)</SelectItem>
+                    <SelectItem value="price-high" className="rounded-lg focus:bg-green-50 focus:text-[#26732d] font-medium py-2.5">Price (High to Low)</SelectItem>
+                    <SelectItem value="rating" className="rounded-lg focus:bg-green-50 focus:text-[#26732d] font-medium py-2.5">Highest Rated</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
             {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No products found matching your criteria.</p>
-                <Button variant="outline" className="mt-4" onClick={clearFilters}>Clear Filters</Button>
+              <div className="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-gray-100 mt-4">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search size={32} className="text-gray-300" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">No products found</h3>
+                <p className="text-gray-500 mb-6">Try adjusting your filters or search terms to find what you're looking for.</p>
+                <Button variant="default" className="bg-[#26732d] hover:bg-[#1e5d26] rounded-full px-8" onClick={clearFilters}>
+                  Clear All Filters
+                </Button>
               </div>
             )}
           </div>
