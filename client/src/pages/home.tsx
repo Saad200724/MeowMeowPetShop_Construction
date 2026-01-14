@@ -43,8 +43,8 @@ export default function Home() {
       <main className={`transition-all duration-300 ${sidebarVisible ? 'md:ml-80' : 'md:ml-0'} overflow-x-hidden pb-20 md:pb-0`}>
         <HeroBanner />
         <div className="px-4 lg:px-6 space-y-8 md:space-y-12">
-          <CategoriesGrid />
           <FlashSale />
+          <CategoriesGrid />
           <BestsellersCats />
           <BestsellersDogs />
           <RepackFood />
