@@ -12,16 +12,15 @@ interface CollapsibleSidebarProps {
 }
 
 const categoryIcons = {
-  'adult-food': Cat,
-  'kitten-food': Cat,
-  'collar': ShoppingBag,
-  'clumping-cat-litter': Package,
-  'cat-litter-accessories': Heart,
-  'harness': Shield,
-  'cat-tick-flea-control': Pill,
-  'deworming-tablet': Pill,
-  'cat-pouches': Gift,
-  'sunglass': Glasses,
+  'Kitten Dry Food': Cat,
+  'Adult Dry Food': Cat,
+  'Kitten Wet Food': Cat,
+  'Adult Wet Food': Cat,
+  'Litter Box': Package,
+  'Accessories': Gem,
+  'Medicine': Pill,
+  'Toys': Gamepad2,
+  'Shampoo': ShoppingBag,
 }
 
 export default function CollapsibleSidebar({ selectedCategory, onCategorySelect }: CollapsibleSidebarProps) {

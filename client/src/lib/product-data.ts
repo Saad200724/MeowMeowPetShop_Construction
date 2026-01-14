@@ -16,17 +16,28 @@ export interface Product {
 }
 
 export const categories = [
-  { id: 'adult-food', name: 'Adult Food', icon: '🐱' },
-  { id: 'kitten-food', name: 'Kitten Food', icon: '🐱' },
-  { id: 'collar', name: 'Collar', icon: '🦮' },
-  { id: 'clumping-cat-litter', name: 'Clumping Cat Litter', icon: '🧽' },
-  { id: 'cat-litter-accessories', name: 'Cat Litter Accessories', icon: '🧽' },
-  { id: 'harness', name: 'Harness', icon: '🦮' },
-  { id: 'cat-tick-flea-control', name: 'Cat Tick & Flea Control', icon: '💊' },
-  { id: 'deworming-tablet', name: 'Deworming Tablet', icon: '💊' },
-  { id: 'cat-pouches', name: 'Cat Pouches', icon: '🥘' },
-  { id: 'sunglass', name: 'Sunglass', icon: '🕶️' },
+  { id: 'Kitten Dry Food', name: 'Kitten Dry Food', icon: '🐱' },
+  { id: 'Adult Dry Food', name: 'Adult Dry Food', icon: '🐱' },
+  { id: 'Kitten Wet Food', name: 'Kitten Wet Food', icon: '🥘' },
+  { id: 'Adult Wet Food', name: 'Adult Wet Food', icon: '🥘' },
+  { id: 'Litter Box', name: 'Litter Box', icon: '🧽' },
+  { id: 'Accessories', name: 'Accessories', icon: '🦮' },
+  { id: 'Medicine', name: 'Medicine', icon: '💊' },
+  { id: 'Toys', name: 'Toys', icon: '🎾' },
+  { id: 'Shampoo', name: 'Shampoo', icon: '🧴' },
 ]
+
+export const subcategories = [
+  "Kitten Dry Food",
+  "Adult Dry Food",
+  "Kitten Wet Food",
+  "Adult Wet Food",
+  "Litter Box",
+  "Accessories",
+  "Medicine",
+  "Toys",
+  "Shampoo"
+];
 
 // Mock data - MongoDB-ready structure
 export const productsData: Record<string, Product[]> = {

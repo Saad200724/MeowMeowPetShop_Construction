@@ -3091,16 +3091,15 @@ export default function AdminPage() {
                         </FormControl>
                         <SelectContent className="bg-white border-gray-300">
                           <SelectItem value="none" className="text-black hover:bg-gray-100">No Category</SelectItem>
-                          <SelectItem value="adult-food" className="text-black hover:bg-gray-100">Adult Food</SelectItem>
-                          <SelectItem value="kitten-food" className="text-black hover:bg-gray-100">Kitten Food</SelectItem>
-                          <SelectItem value="collar" className="text-black hover:bg-gray-100">Collar</SelectItem>
-                          <SelectItem value="clumping-cat-litter" className="text-black hover:bg-gray-100">Clumping Cat Litter</SelectItem>
-                          <SelectItem value="cat-litter-accessories" className="text-black hover:bg-gray-100">Cat Litter Accessories</SelectItem>
-                          <SelectItem value="harness" className="text-black hover:bg-gray-100">Harness</SelectItem>
-                          <SelectItem value="cat-tick-flea-control" className="text-black hover:bg-gray-100">Cat Tick & Flea Control</SelectItem>
-                          <SelectItem value="deworming-tablet" className="text-black hover:bg-gray-100">Deworming Tablet</SelectItem>
-                          <SelectItem value="cat-pouches" className="text-black hover:bg-gray-100">Cat Pouches</SelectItem>
-                          <SelectItem value="sunglass" className="text-black hover:bg-gray-100">Sunglass</SelectItem>
+                          <SelectItem value="Kitten Dry Food" className="text-black hover:bg-gray-100">Kitten Dry Food</SelectItem>
+                          <SelectItem value="Adult Dry Food" className="text-black hover:bg-gray-100">Adult Dry Food</SelectItem>
+                          <SelectItem value="Kitten Wet Food" className="text-black hover:bg-gray-100">Kitten Wet Food</SelectItem>
+                          <SelectItem value="Adult Wet Food" className="text-black hover:bg-gray-100">Adult Wet Food</SelectItem>
+                          <SelectItem value="Litter Box" className="text-black hover:bg-gray-100">Litter Box</SelectItem>
+                          <SelectItem value="Accessories" className="text-black hover:bg-gray-100">Accessories</SelectItem>
+                          <SelectItem value="Medicine" className="text-black hover:bg-gray-100">Medicine</SelectItem>
+                          <SelectItem value="Toys" className="text-black hover:bg-gray-100">Toys</SelectItem>
+                          <SelectItem value="Shampoo" className="text-black hover:bg-gray-100">Shampoo</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -3339,16 +3338,15 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
-                          <SelectItem value="cat-food" className="text-black hover:bg-gray-100">Cat Food</SelectItem>
-                          <SelectItem value="dog-food" className="text-black hover:bg-gray-100">Dog Food</SelectItem>
-                          <SelectItem value="cat-toys" className="text-black hover:bg-gray-100">Cat Toys</SelectItem>
-                          <SelectItem value="cat-litter" className="text-black hover:bg-gray-100">Cat Litter</SelectItem>
-                          <SelectItem value="cat-care-health" className="text-black hover:bg-gray-100">Cat Care & Health</SelectItem>
-                          <SelectItem value="clothing-beds-carrier" className="text-black hover:bg-gray-100">Clothing, Beds & Carrier</SelectItem>
-                          <SelectItem value="cat-accessories" className="text-black hover:bg-gray-100">Cat Accessories</SelectItem>
-                          <SelectItem value="dog-health-accessories" className="text-black hover:bg-gray-100">Dog Health & Accessories</SelectItem>
-                          <SelectItem value="rabbit-food-accessories" className="text-black hover:bg-gray-100">Rabbit Food & Accessories</SelectItem>
-                          <SelectItem value="bird-food-accessories" className="text-black hover:bg-gray-100">Bird Food & Accessories</SelectItem>
+                          <SelectItem value="Kitten Dry Food" className="text-black hover:bg-gray-100">Kitten Dry Food</SelectItem>
+                          <SelectItem value="Adult Dry Food" className="text-black hover:bg-gray-100">Adult Dry Food</SelectItem>
+                          <SelectItem value="Kitten Wet Food" className="text-black hover:bg-gray-100">Kitten Wet Food</SelectItem>
+                          <SelectItem value="Adult Wet Food" className="text-black hover:bg-gray-100">Adult Wet Food</SelectItem>
+                          <SelectItem value="Litter Box" className="text-black hover:bg-gray-100">Litter Box</SelectItem>
+                          <SelectItem value="Accessories" className="text-black hover:bg-gray-100">Accessories</SelectItem>
+                          <SelectItem value="Medicine" className="text-black hover:bg-gray-100">Medicine</SelectItem>
+                          <SelectItem value="Toys" className="text-black hover:bg-gray-100">Toys</SelectItem>
+                          <SelectItem value="Shampoo" className="text-black hover:bg-gray-100">Shampoo</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
