@@ -10,9 +10,8 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import ProductCard from '@/components/product/product-card'
 import { useProducts } from '@/hooks/use-products'
-import { categories } from '@/lib/product-data'
-import { setSEO, seoMetadata } from '@/lib/seo'
-import { SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles, Search, X } from 'lucide-react'
+import { setSEO } from '@/lib/seo'
+import { SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles, Search } from 'lucide-react'
 import { Link } from 'wouter'
 
 interface SubcategoryPageProps {
@@ -38,7 +37,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
   const [showOnlyInStock, setShowOnlyInStock] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   
-  const { products: allProducts, loading, getProductsByCategory } = useProducts()
+  const { loading, getProductsByCategory } = useProducts()
 
   const products = getProductsByCategory(subcategoryId)
 
@@ -112,7 +111,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
         </div>
 
         {/* Premium Category Header */}
-        <div className="mb-6 sm:mb-8 bg-gradient-to-br from-[#26732d] via-[#2a7f32] to-[#1f5d26] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
+        <div className="mb-6 sm:mb-8 bg-[#26732d] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl sm:text-4xl shadow-lg">
@@ -149,7 +148,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                   <span>Avg Rating</span>
                 </div>
                 <div className="text-xl sm:text-2xl font-bold">
-                  {products.length > 0 ? (products.reduce((sum, p) => sum + p.rating, 0) / products.length).toFixed(1) : '0'}
+                  {products.length > 0 ? (products.reduce((sum, p) => sum + p.rating, 0) / products.length).toFixed(1) : '0.0'}
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
@@ -174,7 +173,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
           </div>
         </div>
 
-        <div className="flex gap-4 lg:gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
           {/* Filters Sidebar - Desktop */}
           <div className="hidden lg:block w-64 xl:w-72 flex-shrink-0">
             <div className="sticky top-4 bg-white rounded-xl shadow-lg p-5 border border-gray-100">
@@ -232,7 +231,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                 </div>
                 <Separator />
                 <label className="flex items-center gap-2 cursor-pointer group">
-                  <Checkbox checked={showOnlyInStock} onCheckedChange={setShowOnlyInStock} />
+                  <Checkbox checked={showOnlyInStock} onCheckedChange={(checked) => setShowOnlyInStock(checked === true)} />
                   <span className="text-sm font-semibold text-black group-hover:text-[#26732d] flex-1">In Stock Only</span>
                 </label>
               </div>
