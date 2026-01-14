@@ -49,6 +49,8 @@ const productFormSchema = z.object({
   isBestseller: z.boolean().optional(),
   isOnSale: z.boolean().optional(),
   isActive: z.boolean().optional(),
+  availableWeights: z.array(z.string()).optional(),
+  availableColors: z.array(z.string()).optional(),
 });
 
 // Simplified schema for repack food products
@@ -236,9 +238,10 @@ export default function AdminPage() {
   const [invoiceCustomerAddress, setInvoiceCustomerAddress] = useState<any>({});
   const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
 
-  const [showPOSDialog, setShowPOSDialog] = useState(false);
+  const [newWeight, setNewWeight] = useState('');
+  const [newColor, setNewColor] = useState('');
 
-  // Check admin session when user or loading state changes
+  // All queries declared at the top level (not conditionally)
   useEffect(() => {
     // If loading is done and user is not admin, redirect to login
     if (!loading && (!user || user.role !== 'admin')) {
@@ -1062,6 +1065,8 @@ export default function AdminPage() {
       isBestseller: product.isBestseller || false,
       isOnSale: product.isOnSale || false,
       isActive: product.isActive !== false,
+      availableWeights: product.availableWeights || [],
+      availableColors: product.availableColors || [],
     });
     setShowProductDialog(true);
   };

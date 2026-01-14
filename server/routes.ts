@@ -487,7 +487,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             isOnSale: product.isOnSale || false,
             discount: product.discount || 0,
             description: product.description || '',
-            specifications: product.specifications || {}
+            specifications: product.specifications || {},
+            availableWeights: product.availableWeights || [],
+            availableColors: product.availableColors || [],
           });
         } catch (err: any) {
           // Skip products with invalid data or bulk products that might have slipped through
@@ -589,6 +591,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             discount: product.discount || 0,
             description: product.description || '',
             specifications: product.specifications || {},
+            availableWeights: product.availableWeights || [],
+            availableColors: product.availableColors || [],
             isActive: product.isActive !== false,
             subcategory: product.subcategory || ''
           });

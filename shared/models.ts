@@ -94,6 +94,8 @@ export interface IProduct extends Document {
   isBestseller: boolean;
   isOnSale: boolean;
   discount: number;
+  availableWeights?: string[];
+  availableColors?: string[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -121,6 +123,8 @@ const productSchema = new Schema<IProduct>({
   isBestseller: { type: Boolean, default: false },
   isOnSale: { type: Boolean, default: false },
   discount: { type: Number, default: 0 },
+  availableWeights: [String],
+  availableColors: [String],
   isActive: { type: Boolean, default: true },
 } as any, { 
   timestamps: true,
