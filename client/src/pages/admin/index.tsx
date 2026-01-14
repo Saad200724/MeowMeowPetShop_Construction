@@ -321,8 +321,6 @@ export default function AdminPage() {
       isBestseller: false,
       isOnSale: false,
       isActive: true,
-      availableWeights: [],
-      availableColors: [],
     },
   });
 
@@ -2986,7 +2984,7 @@ export default function AdminPage() {
                           placeholder="e.g. 1kg"
                           value={newWeight}
                           onChange={(e) => setNewWeight(e.target.value)}
-                          className="h-8 w-24 text-sm bg-white text-black"
+                          className="h-8 w-24 text-sm"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               e.preventDefault();
@@ -3018,7 +3016,7 @@ export default function AdminPage() {
                     <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
                       {(form.watch('availableWeights') || []).length > 0 ? (
                         form.watch('availableWeights')?.map((weight, idx) => (
-                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border text-black">
+                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
                             {weight}
                             <button
                               type="button"
@@ -3049,7 +3047,7 @@ export default function AdminPage() {
                           placeholder="e.g. Red"
                           value={newColor}
                           onChange={(e) => setNewColor(e.target.value)}
-                          className="h-8 w-24 text-sm bg-white text-black"
+                          className="h-8 w-24 text-sm"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               e.preventDefault();
@@ -3081,7 +3079,7 @@ export default function AdminPage() {
                     <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
                       {(form.watch('availableColors') || []).length > 0 ? (
                         form.watch('availableColors')?.map((color, idx) => (
-                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border text-black">
+                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
                             {color}
                             <button
                               type="button"
