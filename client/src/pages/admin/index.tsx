@@ -84,13 +84,13 @@ const blogFormSchema = z.object({
 const couponFormSchema = z.object({
   code: z.string().min(1, 'Coupon code is required').toUpperCase(),
   description: z.string().optional(),
-  discountType: z.enum(['percentage', 'fixed', 'free_delivery'], { required_error: 'Discount type is required' }),
+  discountType: z.enum(['percentage', 'fixed', 'free_delivery'], { message: 'Discount type is required' }),
   discountValue: z.number().min(0, 'Discount value must be non-negative').optional(),
   minOrderAmount: z.number().min(0).optional(),
   maxDiscountAmount: z.number().min(0).optional(),
   usageLimit: z.number().min(1).optional(),
-  validFrom: z.date({ required_error: 'Valid from date is required' }),
-  validUntil: z.date({ required_error: 'Valid until date is required' }),
+  validFrom: z.date({ message: 'Valid from date is required' }),
+  validUntil: z.date({ message: 'Valid until date is required' }),
   isActive: z.boolean().optional(),
 }).refine((data) => {
   // For percentage and fixed discount types, require a discount value
@@ -198,6 +198,7 @@ export default function AdminPage() {
 
   // All state hooks declared at the top level (not conditionally)
   const [isSessionChecked, setIsSessionChecked] = useState(false);
+  const [showPOSDialog, setShowPOSDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('products');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
