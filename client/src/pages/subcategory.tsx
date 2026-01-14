@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { setSEO } from '@/lib/seo'
 import { SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles, Search } from 'lucide-react'
 import { Link } from 'wouter'
+import { cn } from "@/lib/utils"
 
 interface SubcategoryPageProps {
   subcategoryId: string;
@@ -261,11 +262,84 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                     className="pl-10 h-11 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20 text-gray-900 placeholder:text-gray-400 font-medium"
                   />
                 </div>
-                <Button variant="outline" className="lg:hidden h-11 px-4 border-gray-200" onClick={() => setShowFilters(!showFilters)}>
+                <Button 
+                  variant="default" 
+                  className="lg:hidden h-11 px-4 bg-[#26732d] hover:bg-[#26732d] !text-white border-none rounded-lg active:scale-95 transition-all shadow-sm" 
+                  onClick={() => setShowFilters(!showFilters)}
+                >
                   <SlidersHorizontal size={18} className="mr-2" />
-                  Filters
+                  <span className="font-bold">Filters</span>
                 </Button>
               </div>
+
+              {/* Mobile Filters Dropdown */}
+              <div className={cn(
+                "lg:hidden overflow-hidden transition-all duration-300 ease-in-out",
+                showFilters ? "max-h-[1000px] mb-6 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+              )}>
+                <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 mt-2">
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                      <SlidersHorizontal size={18} className="text-[#26732d]" />
+                      Filters
+                    </h3>
+                    {hasActiveFilters && (
+                      <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-white hover:text-white/80 h-7 bg-red-500 hover:bg-red-600 rounded-full px-3">
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700 mb-4 block">Price Range</label>
+                      <Slider min={0} max={100000} step={100} value={priceRange} onValueChange={setPriceRange} className="mb-4" />
+                      <div className="flex justify-between text-sm text-gray-600 font-medium">
+                        <span className="bg-gray-50 px-2 py-1 rounded">৳{priceRange[0]}</span>
+                        <span className="bg-gray-50 px-2 py-1 rounded">৳{priceRange[1]}</span>
+                      </div>
+                    </div>
+                    <Separator />
+                    {brands.length > 0 && (
+                      <>
+                        <div>
+                          <label className="text-sm font-semibold text-gray-700 mb-4 block">Brands</label>
+                          <div className="grid grid-cols-2 gap-3">
+                            {brands.map(brand => (
+                              <label key={brand._id} className="flex items-center gap-2 cursor-pointer p-3 rounded-xl border border-gray-100 bg-gray-50/50 active:bg-green-50 active:border-green-200 transition-colors">
+                                <Checkbox checked={selectedBrands.includes(brand.name)} onCheckedChange={() => toggleBrand(brand.name)} />
+                                <span className="text-xs text-gray-800 font-medium truncate">{brand.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <Separator />
+                      </>
+                    )}
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700 mb-4 block">Minimum Rating</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {[4, 3, 2, 1].map(rating => (
+                          <label key={rating} className="flex items-center gap-2 cursor-pointer p-3 rounded-xl border border-gray-100 bg-gray-50/50 active:bg-green-50 active:border-green-200 transition-colors">
+                            <Checkbox checked={minRating === rating} onCheckedChange={(checked) => setMinRating(checked ? rating : 0)} />
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs font-bold text-gray-800">{rating}</span>
+                              <Star size={12} className="fill-yellow-400 text-yellow-400" />
+                              <span className="text-[10px] text-gray-500 font-medium">& up</span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <Separator />
+                    <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-gray-100 bg-gray-50/50 active:bg-green-50 active:border-green-200 transition-colors">
+                      <Checkbox checked={showOnlyInStock} onCheckedChange={(checked) => setShowOnlyInStock(checked === true)} />
+                      <span className="text-sm font-bold text-gray-800">In Stock Only</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium text-gray-500 whitespace-nowrap">Sort by:</span>
                 <Select value={sortBy} onValueChange={setSortBy}>
