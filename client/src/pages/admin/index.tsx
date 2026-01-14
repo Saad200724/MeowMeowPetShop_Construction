@@ -321,6 +321,8 @@ export default function AdminPage() {
       isBestseller: false,
       isOnSale: false,
       isActive: true,
+      availableWeights: [],
+      availableColors: [],
     },
   });
 
