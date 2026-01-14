@@ -2975,6 +2975,133 @@ export default function AdminPage() {
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-gray-900 font-semibold text-sm">Available Weights</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="e.g. 1kg"
+                          value={newWeight}
+                          onChange={(e) => setNewWeight(e.target.value)}
+                          className="h-8 w-24 text-sm"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const current = form.getValues('availableWeights') || [];
+                              if (newWeight && !current.includes(newWeight)) {
+                                form.setValue('availableWeights', [...current, newWeight]);
+                                setNewWeight('');
+                              }
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                          onClick={() => {
+                            const current = form.getValues('availableWeights') || [];
+                            if (newWeight && !current.includes(newWeight)) {
+                              form.setValue('availableWeights', [...current, newWeight]);
+                              setNewWeight('');
+                            }
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                      {(form.watch('availableWeights') || []).length > 0 ? (
+                        form.watch('availableWeights')?.map((weight, idx) => (
+                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                            {weight}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const current = form.getValues('availableWeights') || [];
+                                form.setValue('availableWeights', current.filter((_, i) => i !== idx));
+                              }}
+                              className="text-gray-500 hover:text-red-500"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))
+                      ) : (
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                          <X className="w-4 h-4 text-red-400" />
+                          <span>Not applicable / None added</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-gray-900 font-semibold text-sm">Available Colors</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="e.g. Red"
+                          value={newColor}
+                          onChange={(e) => setNewColor(e.target.value)}
+                          className="h-8 w-24 text-sm"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const current = form.getValues('availableColors') || [];
+                              if (newColor && !current.includes(newColor)) {
+                                form.setValue('availableColors', [...current, newColor]);
+                                setNewColor('');
+                              }
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                          onClick={() => {
+                            const current = form.getValues('availableColors') || [];
+                            if (newColor && !current.includes(newColor)) {
+                              form.setValue('availableColors', [...current, newColor]);
+                              setNewColor('');
+                            }
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                      {(form.watch('availableColors') || []).length > 0 ? (
+                        form.watch('availableColors')?.map((color, idx) => (
+                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                            {color}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const current = form.getValues('availableColors') || [];
+                                form.setValue('availableColors', current.filter((_, i) => i !== idx));
+                              }}
+                              className="text-gray-500 hover:text-red-500"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))
+                      ) : (
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                          <X className="w-4 h-4 text-red-400" />
+                          <span>Not applicable / None added</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <FormField
                   control={form.control}
                   name="categoryId"
