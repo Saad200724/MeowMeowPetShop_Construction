@@ -10,28 +10,30 @@ export default function NavigationSidebar() {
 
   // Mobile categories (simple list)
   const mobileCategories = [
-    { label: 'Kitten Dry Food', href: '/products?subcategory=Kitten Dry Food' },
-    { label: 'Adult Dry Food', href: '/products?subcategory=Adult Dry Food' },
-    { label: 'Kitten Wet Food', href: '/products?subcategory=Kitten Wet Food' },
-    { label: 'Adult Wet Food', href: '/products?subcategory=Adult Wet Food' },
-    { label: 'Litter Box', href: '/products?subcategory=Litter Box' },
-    { label: 'Accessories', href: '/products?subcategory=Accessories' },
-    { label: 'Medicine', href: '/products?subcategory=Medicine' },
-    { label: 'Toys', href: '/products?subcategory=Toys' },
-    { label: 'Shampoo', href: '/products?subcategory=Shampoo' },
+    { label: 'Cat Food', href: '/cat-food' },
+    { label: 'Dog Food', href: '/dog-food' },
+    { label: 'Cat Toys', href: '/cat-toys' },
+    { label: 'Cat Litter', href: '/cat-litter' },
+    { label: 'Cat Care & Health', href: '/cat-care' },
+    { label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier' },
+    { label: 'Cat Accessories', href: '/cat-accessories' },
+    { label: 'Dog Health & Accessories', href: '/dog-accessories' },
+    { label: 'Rabbit Food & Accessories', href: '/rabbit' },
+    { label: 'Bird Food & Accessories', href: '/bird' },
   ];
 
   // Desktop categories (with icons and subcategories)
   const desktopCategories = [
-    { icon: Cat, label: 'Kitten Dry Food', href: '/products?subcategory=Kitten Dry Food', hasSubCategories: false },
-    { icon: Cat, label: 'Adult Dry Food', href: '/products?subcategory=Adult Dry Food', hasSubCategories: false },
-    { icon: Cat, label: 'Kitten Wet Food', href: '/products?subcategory=Kitten Wet Food', hasSubCategories: false },
-    { icon: Cat, label: 'Adult Wet Food', href: '/products?subcategory=Adult Wet Food', hasSubCategories: false },
-    { icon: Package, label: 'Litter Box', href: '/products?subcategory=Litter Box', hasSubCategories: false },
-    { icon: Gem, label: 'Accessories', href: '/products?subcategory=Accessories', hasSubCategories: false },
-    { icon: Pill, label: 'Medicine', href: '/products?subcategory=Medicine', hasSubCategories: false },
-    { icon: Gamepad2, label: 'Toys', href: '/products?subcategory=Toys', hasSubCategories: false },
-    { icon: ShoppingBag, label: 'Shampoo', href: '/products?subcategory=Shampoo', hasSubCategories: false },
+    { icon: Cat, label: 'Cat Food', href: '/cat-food', hasSubCategories: true },
+    { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
+    { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
+    { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: true },
+    { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
+    { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier', hasSubCategories: true },
+    { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: true },
+    { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: true },
+    { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: true },
+    { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: true },
   ];
 
   const handleCloseSidebar = () => {
