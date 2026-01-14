@@ -3100,6 +3100,7 @@ export default function AdminPage() {
                           <SelectItem value="cat-tick-flea-control" className="text-black hover:bg-gray-100">Cat Tick & Flea Control</SelectItem>
                           <SelectItem value="deworming-tablet" className="text-black hover:bg-gray-100">Deworming Tablet</SelectItem>
                           <SelectItem value="cat-pouches" className="text-black hover:bg-gray-100">Cat Pouches</SelectItem>
+                          <SelectItem value="shampoo" className="text-black hover:bg-gray-100">Shampoo</SelectItem>
                           <SelectItem value="sunglass" className="text-black hover:bg-gray-100">Sunglass</SelectItem>
                         </SelectContent>
                       </Select>
