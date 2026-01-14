@@ -12,15 +12,15 @@ interface CollapsibleSidebarProps {
 }
 
 const categoryIcons = {
-  'adult-food': Cat,
-  'kitten-food': Cat,
-  'collar': ShoppingBag,
-  'clumping-cat-litter': Package,
-  'cat-litter-accessories': Heart,
-  'harness': Shield,
-  'cat-tick-flea-control': Pill,
-  'deworming-tablet': Pill,
-  'cat-pouches': Gift,
+  'kitten-dry-food': Cat,
+  'adult-dry-food': Cat,
+  'kitten-wet-food': Cat,
+  'adult-wet-food': Cat,
+  'litter-box': Package,
+  'accessories': Gem,
+  'medicine': Pill,
+  'toys': Gamepad2,
+  'shampoo': ShoppingBag,
   'sunglass': Glasses,
 }
 

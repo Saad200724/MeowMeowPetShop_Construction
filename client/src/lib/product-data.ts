@@ -16,28 +16,28 @@ export interface Product {
 }
 
 export const categories = [
-  { id: 'adult-food', name: 'Adult Food', icon: '🐱' },
-  { id: 'kitten-food', name: 'Kitten Food', icon: '🐱' },
-  { id: 'collar', name: 'Collar', icon: '🦮' },
-  { id: 'clumping-cat-litter', name: 'Clumping Cat Litter', icon: '🧽' },
-  { id: 'cat-litter-accessories', name: 'Cat Litter Accessories', icon: '🧽' },
-  { id: 'harness', name: 'Harness', icon: '🦮' },
-  { id: 'cat-tick-flea-control', name: 'Cat Tick & Flea Control', icon: '💊' },
-  { id: 'deworming-tablet', name: 'Deworming Tablet', icon: '💊' },
-  { id: 'cat-pouches', name: 'Cat Pouches', icon: '🥘' },
+  { id: 'kitten-dry-food', name: 'Kitten Dry Food', icon: '🐱' },
+  { id: 'adult-dry-food', name: 'Adult Dry Food', icon: '🐱' },
+  { id: 'kitten-wet-food', name: 'Kitten Wet Food', icon: '🥘' },
+  { id: 'adult-wet-food', name: 'Adult Wet Food', icon: '🥘' },
+  { id: 'litter-box', name: 'Litter Box', icon: '🧽' },
+  { id: 'accessories', name: 'Accessories', icon: '🦮' },
+  { id: 'medicine', name: 'Medicine', icon: '💊' },
+  { id: 'toys', name: 'Toys', icon: '🎾' },
+  { id: 'shampoo', name: 'Shampoo', icon: '🧴' },
   { id: 'sunglass', name: 'Sunglass', icon: '🕶️' },
 ]
 
 export const subcategories = [
-  "Adult Food",
-  "Kitten Food",
-  "Collar",
-  "Clumping Cat Litter",
-  "Cat Litter Accessories",
-  "Harness",
-  "Cat Tick & Flea Control",
-  "Deworming Tablet",
-  "Cat Pouches",
+  "Kitten Dry Food",
+  "Adult Dry Food",
+  "Kitten Wet Food",
+  "Adult Wet Food",
+  "Litter Box",
+  "Accessories",
+  "Medicine",
+  "Toys",
+  "Shampoo",
   "Sunglass"
 ];
 
