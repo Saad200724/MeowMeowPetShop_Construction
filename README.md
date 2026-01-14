@@ -31,39 +31,6 @@ Meow Meow Pet Shop is a modern, full-stack e-commerce platform dedicated to prov
 - **Authentication**: Supabase Auth (Primary) & Session-based Fallback
 - **Image Processing**: Multer & Sharp (WebP conversion)
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- MongoDB (Local or Atlas)
-- Supabase Project (Optional)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/meow-meow-pet-shop.git
-   cd meow-meow-pet-shop
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables:
-   Create a `.env` file in the root directory:
-   ```env
-   MONGODB_URI=your_mongodb_connection_string
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
 ## 🏗️ Project Structure
 
 ```text
@@ -79,14 +46,6 @@ Meow Meow Pet Shop is a modern, full-stack e-commerce platform dedicated to prov
 ├── shared/              # Shared TS models & schemas
 └── attached_assets/     # Static assets and images
 ```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
