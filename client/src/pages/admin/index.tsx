@@ -3825,7 +3825,13 @@ export default function AdminPage() {
 
           <Form {...couponForm}>
             <form 
-              onSubmit={couponForm.handleSubmit(editingCoupon ? handleUpdateCoupon : createCouponMutation.mutate)} 
+              onSubmit={couponForm.handleSubmit((data) => {
+                if (editingCoupon) {
+                  handleUpdateCoupon(data);
+                } else {
+                  handleCreateCoupon(data);
+                }
+              })} 
               className="space-y-6"
             >
               <div className="grid grid-cols-2 gap-4">
