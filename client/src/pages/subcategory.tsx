@@ -193,7 +193,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                   Filters
                 </h3>
                 {hasActiveFilters && (
-                  <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-red-600 h-7">
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-white hover:text-white/80 h-7 bg-red-500 hover:bg-red-600 rounded-full px-3">
                     Clear All
                   </Button>
                 )}
@@ -287,6 +287,19 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+
+            {filteredProducts.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <div className="bg-white px-6 py-3 rounded-full shadow-md border border-gray-100 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="w-8 h-8 bg-green-50 rounded-full flex items-center justify-center">
+                    <Package size={18} className="text-[#26732d]" />
+                  </div>
+                  <span className="text-gray-700 font-medium">
+                    Showing <span className="text-[#26732d] font-bold">{filteredProducts.length}</span> of <span className="font-bold">{products.length}</span> products
+                  </span>
+                </div>
+              </div>
+            )}
 
             {filteredProducts.length === 0 && (
               <div className="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-gray-100 mt-4">
