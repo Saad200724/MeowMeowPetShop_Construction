@@ -1,0 +1,290 @@
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import Header from '@/components/layout/header'
+import Footer from '@/components/layout/footer'
+import ProductCard from '@/components/product/product-card'
+import { useProducts } from '@/hooks/use-products'
+import { categories } from '@/lib/product-data'
+import { setSEO, seoMetadata } from '@/lib/seo'
+import { SlidersHorizontal, ChevronRight, Home, Package, Star, TrendingUp, Tag, Sparkles, Search, X } from 'lucide-react'
+import { Link } from 'wouter'
+
+interface SubcategoryPageProps {
+  subcategoryId: string;
+  subcategoryName: string;
+  icon?: string;
+}
+
+export default function SubcategoryPage({ subcategoryId, subcategoryName, icon = '📦' }: SubcategoryPageProps) {
+  useEffect(() => {
+    setSEO({
+      title: `${subcategoryName} - Pet Shop | Meow Meow`,
+      description: `Discover our premium selection of ${subcategoryName.toLowerCase()} products for your beloved pets.`,
+      canonical: `https://meowshopbd.me/subcategory/${subcategoryId}`,
+    });
+  }, [subcategoryId, subcategoryName]);
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState('name')
+  const [priceRange, setPriceRange] = useState([0, 100000])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [minRating, setMinRating] = useState(0)
+  const [showOnlyInStock, setShowOnlyInStock] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
+  
+  const { products: allProducts, loading, getProductsByCategory } = useProducts()
+
+  const products = getProductsByCategory(subcategoryId)
+
+  const allBrands = Array.from(new Set(products.map(p => p.brandName || 'Unknown').filter(Boolean)))
+
+  const filteredProducts = products
+    .filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      
+      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
+      
+      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brandName || 'Unknown')
+      
+      const matchesRating = product.rating >= minRating
+      
+      const matchesStock = !showOnlyInStock || (product.stock && product.stock > 0)
+      
+      return matchesSearch && matchesPrice && matchesBrand && matchesRating && matchesStock
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low': return a.price - b.price
+        case 'price-high': return b.price - a.price
+        case 'rating': return b.rating - a.rating
+        case 'name': return a.name.localeCompare(b.name)
+        default: return 0
+      }
+    })
+
+  const toggleBrand = (brand: string) => {
+    setSelectedBrands(prev =>
+      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
+    )
+  }
+
+  const clearFilters = () => {
+    setPriceRange([0, 100000])
+    setSelectedBrands([])
+    setMinRating(0)
+    setShowOnlyInStock(false)
+  }
+
+  const hasActiveFilters = priceRange[0] > 0 || priceRange[1] < 100000 || selectedBrands.length > 0 || minRating > 0 || showOnlyInStock
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header />
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#26732d]"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30">
+      <Header />
+
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-8">
+        {/* Breadcrumb Navigation */}
+        <div className="py-3 sm:py-4 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">
+          <Link href="/" className="hover:text-[#26732d] transition-colors flex items-center gap-1 whitespace-nowrap">
+            <Home size={14} className="sm:w-4 sm:h-4" />
+            <span>Home</span>
+          </Link>
+          <ChevronRight size={14} className="text-gray-400 flex-shrink-0 sm:w-4 sm:h-4" />
+          <span className="text-[#26732d] font-medium truncate">{subcategoryName}</span>
+        </div>
+
+        {/* Premium Category Header */}
+        <div className="mb-6 sm:mb-8 bg-gradient-to-br from-[#26732d] via-[#2a7f32] to-[#1f5d26] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
+          <div className="relative z-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl sm:text-4xl shadow-lg">
+                {icon}
+              </div>
+              <div className="flex-1 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                    {subcategoryName}
+                  </h1>
+                  <Badge className="bg-[#ffde59] text-[#26732d] hover:bg-[#ffd73e] text-xs sm:text-sm font-semibold px-3 py-1 w-fit">
+                    <Sparkles size={14} className="mr-1" />
+                    {filteredProducts.length} Products
+                  </Badge>
+                </div>
+                <p className="text-white/90 text-sm sm:text-base lg:text-lg leading-relaxed">
+                  Discover our premium selection of {subcategoryName.toLowerCase()} products for your beloved pets
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+              <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs mb-1">
+                  <Package size={14} />
+                  <span>Total Items</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold">{products.length}</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs mb-1">
+                  <Star size={14} />
+                  <span>Avg Rating</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold">
+                  {products.length > 0 ? (products.reduce((sum, p) => sum + p.rating, 0) / products.length).toFixed(1) : '0'}
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs mb-1">
+                  <TrendingUp size={14} />
+                  <span>Bestsellers</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold">
+                  {products.filter(p => p.isBestSeller).length}
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs mb-1">
+                  <Tag size={14} />
+                  <span>New Arrivals</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold">
+                  {products.filter(p => p.isNew).length}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-4 lg:gap-6">
+          {/* Filters Sidebar - Desktop */}
+          <div className="hidden lg:block w-64 xl:w-72 flex-shrink-0">
+            <div className="sticky top-4 bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <SlidersHorizontal size={18} />
+                  Filters
+                </h3>
+                {hasActiveFilters && (
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-red-600 h-7">
+                    Clear All
+                  </Button>
+                )}
+              </div>
+
+              <div className="space-y-5">
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-3 block">Price Range</label>
+                  <Slider min={0} max={100000} step={100} value={priceRange} onValueChange={setPriceRange} className="mb-3" />
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>৳{priceRange[0]}</span>
+                    <span>৳{priceRange[1]}</span>
+                  </div>
+                </div>
+                <Separator />
+                {allBrands.length > 0 && (
+                  <>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700 mb-3 block">Brands</label>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {allBrands.map(brand => (
+                          <label key={brand} className="flex items-center gap-2 cursor-pointer group">
+                            <Checkbox checked={selectedBrands.includes(brand)} onCheckedChange={() => toggleBrand(brand)} />
+                            <span className="text-sm text-black group-hover:text-[#26732d] flex-1 truncate">{brand}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <Separator />
+                  </>
+                )}
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-3 block">Minimum Rating</label>
+                  <div className="space-y-2">
+                    {[4, 3, 2, 1].map(rating => (
+                      <label key={rating} className="flex items-center gap-2 cursor-pointer group">
+                        <Checkbox checked={minRating === rating} onCheckedChange={(checked) => setMinRating(checked ? rating : 0)} />
+                        <div className="flex items-center gap-1 flex-1">
+                          {Array.from({ length: rating }).map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}
+                          <span className="text-sm text-black group-hover:text-[#26732d]">& up</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <Separator />
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <Checkbox checked={showOnlyInStock} onCheckedChange={setShowOnlyInStock} />
+                  <span className="text-sm font-semibold text-black group-hover:text-[#26732d] flex-1">In Stock Only</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col gap-3 mb-6">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 h-10 border-gray-200"
+                  />
+                </div>
+                <Button variant="outline" className="lg:hidden h-10" onClick={() => setShowFilters(!showFilters)}>
+                  <SlidersHorizontal size={16} />
+                </Button>
+              </div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-full sm:w-56 h-10 border-gray-200">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="name">Name (A-Z)</SelectItem>
+                  <SelectItem value="price-low">Price (Low to High)</SelectItem>
+                  <SelectItem value="price-high">Price (High to Low)</SelectItem>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+              {filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No products found matching your criteria.</p>
+                <Button variant="outline" className="mt-4" onClick={clearFilters}>Clear Filters</Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  )
+}

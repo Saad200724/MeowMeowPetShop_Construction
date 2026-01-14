@@ -60,6 +60,7 @@ import NewlyLaunchedPage from "@/pages/newly-launched";
 import RepackProductsPage from "@/pages/repack-products";
 import CatBestSellerPage from "@/pages/cat-best-seller";
 import DogBestSellerPage from "@/pages/dog-best-seller";
+import SubcategoryPage from "@/pages/subcategory";
 import ProductDetailPage from "@/pages/product-detail";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { ChatProvider } from "@/contexts/chat-context";
@@ -75,6 +76,36 @@ function AppRoutes() {
         <Route path="/" component={Home} />
         <Route path="/products" component={ProductsPage} />
         <Route path="/product/:id" component={ProductDetailPage} />
+        <Route path="/subcategory/kitten-dry-food">
+          <SubcategoryPage subcategoryId="kitten-dry-food" subcategoryName="Kitten Dry Food" icon="🐱" />
+        </Route>
+        <Route path="/subcategory/adult-dry-food">
+          <SubcategoryPage subcategoryId="adult-dry-food" subcategoryName="Adult Dry Food" icon="🐱" />
+        </Route>
+        <Route path="/subcategory/kitten-wet-food">
+          <SubcategoryPage subcategoryId="kitten-wet-food" subcategoryName="Kitten Wet Food" icon="🥘" />
+        </Route>
+        <Route path="/subcategory/adult-wet-food">
+          <SubcategoryPage subcategoryId="adult-wet-food" subcategoryName="Adult Wet Food" icon="🥘" />
+        </Route>
+        <Route path="/subcategory/litter-box">
+          <SubcategoryPage subcategoryId="litter-box" subcategoryName="Litter Box" icon="🧽" />
+        </Route>
+        <Route path="/subcategory/accessories">
+          <SubcategoryPage subcategoryId="accessories" subcategoryName="Accessories" icon="🦮" />
+        </Route>
+        <Route path="/subcategory/medicine">
+          <SubcategoryPage subcategoryId="medicine" subcategoryName="Medicine" icon="💊" />
+        </Route>
+        <Route path="/subcategory/toys">
+          <SubcategoryPage subcategoryId="toys" subcategoryName="Toys" icon="🎾" />
+        </Route>
+        <Route path="/subcategory/shampoo">
+          <SubcategoryPage subcategoryId="shampoo" subcategoryName="Shampoo" icon="🧴" />
+        </Route>
+        <Route path="/subcategory/sunglass">
+          <SubcategoryPage subcategoryId="sunglass" subcategoryName="Sunglass" icon="🕶️" />
+        </Route>
         <Route path="/privilege-club" component={PrivilegeClubPage} />
         <Route path="/cat-food" component={CatFoodPage} />
         <Route path="/dog-food" component={DogFoodPage} />
