@@ -106,6 +106,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full mx-auto h-[320px] lg:w-[245px] lg:h-[400px] flex flex-col cursor-pointer",
           className,
         )}
+        style={{ width: '100%', maxWidth: '100%' }}
       >
       {/* Discount Badge */}
       {hasDiscount && (

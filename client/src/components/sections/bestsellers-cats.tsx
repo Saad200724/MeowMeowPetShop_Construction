@@ -61,7 +61,7 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
+    <div className="w-full">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-1">
         {products.slice(0, 15).map((product: any) => (
           <div 
