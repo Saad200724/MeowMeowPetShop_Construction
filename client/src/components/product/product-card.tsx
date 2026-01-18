@@ -103,7 +103,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full mx-auto h-[320px] lg:w-[245px] lg:h-[400px] flex flex-col cursor-pointer",
+          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full mx-auto h-[280px] lg:w-[170px] lg:h-[245px] flex flex-col cursor-pointer p-0",
           className,
         )}
         style={{ width: '100%', maxWidth: '100%' }}
@@ -148,28 +148,28 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 lg:h-48 flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 lg:h-32 flex-shrink-0 p-2">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <CardContent className="px-3 pt-2 pb-3 flex flex-col flex-1">
-        <div className="space-y-1">
+      <CardContent className="px-3 pt-1 pb-2 flex flex-col flex-1 gap-1">
+        <div className="space-y-0.5">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
-            <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+            <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wide">
               {product.tags[0]}
             </div>
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-lg text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left">
+          <h3 className="font-semibold text-sm text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left min-h-[2.5rem]">
             {product.name}
           </h3>
 
@@ -179,18 +179,18 @@ export default function ProductCard({ product, className }: ProductCardProps) {
               {renderStars(product.rating || 0, product.reviews || 0)}
             </div>
             {product.reviews > 0 && (
-              <span className="text-xs text-gray-500">({product.reviews})</span>
+              <span className="text-[10px] text-gray-500">({product.reviews})</span>
             )}
           </div>
 
           {/* Price Section */}
           <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-base font-bold text-[#26732d]">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-[#26732d]">
                 ৳{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-[10px] text-gray-400 line-through">
                   ৳{product.originalPrice.toLocaleString()}
                 </span>
               )}
@@ -199,12 +199,12 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-auto mb-2">
+        <div className="mt-auto">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
             className={cn(
-              "w-full rounded-full py-1.5 text-sm transition-all duration-200 border-2",
+              "w-full rounded-full h-7 py-0 text-xs transition-all duration-200 border-2",
               isInCart
                 ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",

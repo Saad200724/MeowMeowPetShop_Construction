@@ -61,7 +61,7 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full px-4 lg:px-0">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-1">
         {products.slice(0, 15).map((product: any) => (
           <div 
