@@ -72,7 +72,7 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
 
           <ScrollArea className="h-[calc(100vh-120px)]">
             <div className="p-4 space-y-2">
-              {categories.filter(c => c.id !== 'sunglass').map((category) => {
+              {categories.map((category) => {
                 const Icon = categoryIcons[category.id as keyof typeof categoryIcons] || Package
                 const productCount = getProductsByCategory(category.id).length
                 const isSelected = selectedCategory === category.id
@@ -83,7 +83,8 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
                     variant={isSelected ? "meow" : "ghost"}
                     className={cn(
                       'w-full justify-start text-left h-auto p-3 hover:bg-[#f0f8ff] transition-colors',
-                      isSelected && 'bg-[#ffde59] text-[#26732d] hover:bg-[#ffd73e]'
+                      isSelected && 'bg-[#ffde59] text-[#26732d] hover:bg-[#ffd73e]',
+                      category.id === 'sunglass' && 'hidden lg:flex'
                     )}
                     onClick={() => onCategorySelect(category.id)}
                   >
@@ -115,7 +116,7 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
         {isCollapsed && (
           <div className="hidden lg:block absolute left-0 top-20 w-16 bg-white border-r border-gray-200">
             <div className="py-4 space-y-2">
-              {categories.filter(c => c.id !== 'sunglass').map((category) => {
+              {categories.map((category) => {
                 const Icon = categoryIcons[category.id as keyof typeof categoryIcons] || Package
                 const isSelected = selectedCategory === category.id
 
@@ -126,7 +127,8 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
                     size="sm"
                     className={cn(
                       'w-12 h-12 mx-2 p-0 hover:bg-[#f0f8ff]',
-                      isSelected && 'bg-[#ffde59] text-[#26732d] hover:bg-[#ffd73e]'
+                      isSelected && 'bg-[#ffde59] text-[#26732d] hover:bg-[#ffd73e]',
+                      category.id === 'sunglass' && 'hidden lg:flex'
                     )}
                     onClick={() => onCategorySelect(category.id)}
                     title={category.name}

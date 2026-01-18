@@ -77,7 +77,7 @@ export default function Header() {
     { id: 'cat-tick-flea-control', name: 'Cat Tick & Flea Control', category: 'Cat Tick & Flea Control', brand: 'Various', price: '৳400+', page: 'Shop by Category', route: '/products?category=cat-tick-flea-control', keywords: ['cat', 'tick', 'flea', 'control', 'health', 'protection'] },
     { id: 'deworming-tablet', name: 'Deworming Tablet', category: 'Deworming Tablet', brand: 'Various', price: '৳250+', page: 'Shop by Category', route: '/products?category=deworming-tablet', keywords: ['deworming', 'tablet', 'wellness', 'care'] },
     { id: 'cat-pouches', name: 'Cat Pouches', category: 'Cat Pouches', brand: 'Various', price: '৳150+', page: 'Shop by Category', route: '/products?category=cat-pouches', keywords: ['cat', 'pouches', 'wet', 'food'] },
-    // { id: 'sunglass', name: 'Sunglass', category: 'Sunglass', brand: 'Various', price: '৳800+', page: 'Shop by Category', route: '/products?category=sunglass', keywords: ['sunglass', 'pet', 'fashion'] }
+    { id: 'sunglass', name: 'Sunglass', category: 'Sunglass', brand: 'Various', price: '৳800+', page: 'Shop by Category', route: '/products?category=sunglass', keywords: ['sunglass', 'pet', 'fashion'] }
   ];
 
   const searchAllProducts = (query: string): SearchableProduct[] => {

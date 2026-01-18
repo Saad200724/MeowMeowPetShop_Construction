@@ -13,6 +13,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 import { Link } from "wouter";
+import { cn } from "@/lib/utils";
 
 export default function CategoriesGrid() {
   const categories = [
@@ -88,14 +89,14 @@ export default function CategoriesGrid() {
       count: "Wellness Care",
       color: "bg-emerald-100 text-emerald-600",
     },
-    // {
-    //   id: "sunglass",
-    //   name: "Sunglass",
-    //   icon: Glasses,
-    //   image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/sunglass-1747508365.png",
-    //   count: "Pet Fashion",
-    //   color: "bg-yellow-100 text-yellow-600",
-    // },
+    {
+      id: "sunglass",
+      name: "Sunglass",
+      icon: Glasses,
+      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/sunglass-1747508365.png",
+      count: "Pet Fashion",
+      color: "bg-yellow-100 text-yellow-600",
+    },
   ];
 
   return (
@@ -120,12 +121,15 @@ export default function CategoriesGrid() {
 
         {/* Categories Grid - Mobile/Tablet view */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 md:hidden px-2">
-          {categories.filter(c => c.id !== 'sunglass').map((category, index) => {
+          {categories.map((category, index) => {
             return (
               <Link
                 key={category.id}
                 href={`/subcategory/${category.id}`}
-                className="group cursor-pointer block animate-fade-in"
+                className={cn(
+                  "group cursor-pointer block animate-fade-in",
+                  category.id === 'sunglass' && "hidden"
+                )}
                 style={
                   { animationDelay: `${index * 0.05}s` } as React.CSSProperties
                 }
