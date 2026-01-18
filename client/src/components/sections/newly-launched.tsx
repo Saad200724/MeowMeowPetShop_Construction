@@ -61,12 +61,13 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div className="w-full px-4 lg:px-0">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-1">
+    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
+      <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
         {products.slice(0, 15).map((product: any) => (
           <div 
             key={product.id || product._id} 
-            className="w-full relative"
+            className="flex-shrink-0 relative"
+            style={{ width: '170px' }}
           >
             <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
               <Sparkles size={12} />

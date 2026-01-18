@@ -166,8 +166,8 @@ export default function RepackFood() {
             </a>
           </div>
         </div>
-        <div className="pb-2">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4">
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide pb-2">
+          <div className="flex gap-4 min-w-max px-4">
             {(products as any[]).slice(0, 8).map((product: any) => {
               const productId = product.id || product._id;
               const savings = calculateSavings(product.price, product.originalPrice);
