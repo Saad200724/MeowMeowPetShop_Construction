@@ -171,7 +171,7 @@ export default function Header() {
 
   const navigationItems = [
     { name: 'Home', path: '/' },
-    { name: 'Privilege Club', path: '/privilege-club' },
+    // { name: 'Privilege Club', path: '/privilege-club' },
     { name: 'Cat Food', path: '/cat-food' },
     { name: 'Dog Food', path: '/dog-food' },
     { name: 'Cat Toys', path: '/cat-toys' },

@@ -50,7 +50,7 @@ export default function Home() {
           <RepackFood />
           <FeaturedBrands />
           <NewlyLaunched />
-          <MembershipBanner />
+          {/* <MembershipBanner /> */}
           <BlogPreview />
           <Testimonials />
         </div>

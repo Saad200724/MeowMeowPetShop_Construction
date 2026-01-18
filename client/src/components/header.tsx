@@ -164,11 +164,11 @@ export default function Header() {
                     Home
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link href="/privilege-club" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Privilege Club
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link href="/cat-food" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
                     Cat Food
