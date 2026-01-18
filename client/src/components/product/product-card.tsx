@@ -103,7 +103,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full max-w-[200px] mx-auto h-[280px] sm:h-[280px] md:h-[280px] lg:h-[280px] flex flex-col cursor-pointer",
+          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-full mx-auto h-[320px] lg:w-[245px] lg:h-[400px] flex flex-col cursor-pointer",
           className,
         )}
       >
@@ -147,11 +147,11 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-28 sm:h-28 md:h-28 lg:h-28 flex-shrink-0">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 lg:h-48 flex-shrink-0">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
