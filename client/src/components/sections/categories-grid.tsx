@@ -120,7 +120,7 @@ export default function CategoriesGrid() {
 
         {/* Categories Grid - Mobile/Tablet view */}
         <div className="grid grid-cols-3 gap-3 sm:gap-4 md:hidden px-2">
-          {categories.map((category, index) => {
+          {categories.filter(c => c.id !== 'sunglass').map((category, index) => {
             return (
               <Link
                 key={category.id}

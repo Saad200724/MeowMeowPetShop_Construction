@@ -72,7 +72,7 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
 
           <ScrollArea className="h-[calc(100vh-120px)]">
             <div className="p-4 space-y-2">
-              {categories.map((category) => {
+              {categories.filter(c => c.id !== 'sunglass').map((category) => {
                 const Icon = categoryIcons[category.id as keyof typeof categoryIcons] || Package
                 const productCount = getProductsByCategory(category.id).length
                 const isSelected = selectedCategory === category.id
