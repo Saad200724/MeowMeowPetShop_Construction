@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { categories, getProductsByCategory } from '@/lib/product-data'
-import { Menu, X, Cat, Dog, Heart, Gift, ShoppingBag, Stethoscope, Gamepad2, Package, Star, Shield, Pill, Glasses } from 'lucide-react'
+import { Menu, X, Cat, Dog, Heart, Gift, ShoppingBag, Stethoscope, Gamepad2, Package, Star, Shield, Pill, Glasses, Gem } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface CollapsibleSidebarProps {
@@ -115,7 +115,7 @@ export default function CollapsibleSidebar({ selectedCategory, onCategorySelect 
         {isCollapsed && (
           <div className="hidden lg:block absolute left-0 top-20 w-16 bg-white border-r border-gray-200">
             <div className="py-4 space-y-2">
-              {categories.map((category) => {
+              {categories.filter(c => c.id !== 'sunglass').map((category) => {
                 const Icon = categoryIcons[category.id as keyof typeof categoryIcons] || Package
                 const isSelected = selectedCategory === category.id
 

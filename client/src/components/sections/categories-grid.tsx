@@ -88,14 +88,14 @@ export default function CategoriesGrid() {
       count: "Wellness Care",
       color: "bg-emerald-100 text-emerald-600",
     },
-    {
-      id: "sunglass",
-      name: "Sunglass",
-      icon: Glasses,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/sunglass-1747508365.png",
-      count: "Pet Fashion",
-      color: "bg-yellow-100 text-yellow-600",
-    },
+    // {
+    //   id: "sunglass",
+    //   name: "Sunglass",
+    //   icon: Glasses,
+    //   image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/sunglass-1747508365.png",
+    //   count: "Pet Fashion",
+    //   color: "bg-yellow-100 text-yellow-600",
+    // },
   ];
 
   return (
