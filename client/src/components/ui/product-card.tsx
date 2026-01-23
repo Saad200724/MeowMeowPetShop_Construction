@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   // Use the persisted product slug from server
-  const productSlug = product.slug || 'product';
+  const productSlug = (product as any).slug || 'product';
 
   const productId = product.id?.toString() ?? product._id;
   const isInCart = state.items.some((item) => item.id === productId);
