@@ -103,7 +103,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-[170px] min-h-[380px] flex flex-col cursor-pointer p-0",
+          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-[170px] min-h-[420px] flex flex-col cursor-pointer p-0",
           className,
         )}
       >
@@ -147,7 +147,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-24 lg:h-32 flex-shrink-0 p-2">
+      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 lg:h-40 flex-shrink-0 p-2">
         <img
           src={product.image}
           alt={product.name}
