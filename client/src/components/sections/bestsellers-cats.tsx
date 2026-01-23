@@ -112,7 +112,7 @@ export default function BestsellersCats() {
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md h-80 animate-pulse">
+                <div key={i} className="flex-shrink-0 w-[170px] bg-white rounded-lg shadow-md min-h-[340px] animate-pulse">
                   <div className="bg-gray-200 h-48 rounded-t-lg"></div>
                   <div className="p-4 space-y-2">
                     <div className="bg-gray-200 h-4 rounded"></div>
