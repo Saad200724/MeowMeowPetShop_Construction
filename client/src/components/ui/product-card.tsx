@@ -143,7 +143,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-[5cm] h-[10cm] cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-full h-[10cm] cursor-pointer">
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">

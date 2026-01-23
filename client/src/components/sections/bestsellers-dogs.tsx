@@ -63,11 +63,11 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   return (
     <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
       <div className="flex gap-[0.5cm] pb-1 md:grid md:grid-cols-4 md:w-full md:gap-[0.5cm]" style={{ width: 'max-content' }}>
-        {products.slice(0, 15).map((product: any) => (
+        {products.slice(0, 4).map((product: any) => (
           <div 
             key={product.id || product._id} 
             className="flex-shrink-0 w-full"
-            style={{ minWidth: '5cm' }}
+            style={{ minWidth: 'auto' }}
           >
             <ProductCard product={product} />
           </div>
