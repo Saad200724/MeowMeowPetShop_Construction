@@ -792,6 +792,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isBestseller: productData.isBestseller || false,
         isOnSale: productData.isOnSale || false,
         isActive: productData.isActive !== false,
+        availableWeights: productData.availableWeights || [],
+        availableColors: productData.availableColors || [],
         slug: productSlug,
       });
 
@@ -957,6 +959,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           isBestseller: productData.isBestseller || false,
           isOnSale: productData.isOnSale || false,
           isActive: productData.isActive !== false,
+          availableWeights: productData.availableWeights || [],
+          availableColors: productData.availableColors || [],
           slug: productSlug,
         },
         { new: true }
