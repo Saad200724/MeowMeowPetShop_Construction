@@ -239,6 +239,29 @@ export default function AdminPage() {
   const [invoiceCustomerAddress, setInvoiceCustomerAddress] = useState<any>({});
   const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
 
+  // All forms declared at the top level
+  const form = useForm<ProductFormData>({
+    resolver: zodResolver(productFormSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      originalPrice: '',
+      categoryId: '',
+      brandId: '',
+      image: '',
+      images: [],
+      stockQuantity: 0,
+      subcategory: 'none',
+      isNew: false,
+      isBestseller: false,
+      isOnSale: false,
+      isActive: true,
+      availableWeights: [],
+      availableColors: [],
+    },
+  });
+
   const [newWeight, setNewWeight] = useState('');
   const [newColor, setNewColor] = useState('');
 
@@ -328,29 +351,6 @@ export default function AdminPage() {
     queryKey: ['/api/popup-posters'],
     enabled: !!user && user.role === 'admin',
   }) as { data: PopupPoster[], refetch: any };
-
-  // All forms declared at the top level
-  const form = useForm<ProductFormData>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      price: '',
-      originalPrice: '',
-      categoryId: '',
-      brandId: '',
-      image: '',
-      images: [],
-      stockQuantity: 0,
-      subcategory: 'none',
-      isNew: false,
-      isBestseller: false,
-      isOnSale: false,
-      isActive: true,
-      availableWeights: [],
-      availableColors: [],
-    },
-  });
 
   const repackForm = useForm<RepackFormData>({
     resolver: zodResolver(repackFormSchema),
