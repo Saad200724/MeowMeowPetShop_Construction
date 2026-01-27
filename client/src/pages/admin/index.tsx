@@ -242,6 +242,31 @@ export default function AdminPage() {
   const [newWeight, setNewWeight] = useState('');
   const [newColor, setNewColor] = useState('');
 
+  const availableWeights = form.watch('availableWeights') || [];
+  const availableColors = form.watch('availableColors') || [];
+
+  const addWeight = () => {
+    if (newWeight && !availableWeights.includes(newWeight)) {
+      form.setValue('availableWeights', [...availableWeights, newWeight]);
+      setNewWeight('');
+    }
+  };
+
+  const removeWeight = (weight: string) => {
+    form.setValue('availableWeights', availableWeights.filter(w => w !== weight));
+  };
+
+  const addColor = () => {
+    if (newColor && !availableColors.includes(newColor)) {
+      form.setValue('availableColors', [...availableColors, newColor]);
+      setNewColor('');
+    }
+  };
+
+  const removeColor = (color: string) => {
+    form.setValue('availableColors', availableColors.filter(c => c !== color));
+  };
+
   // All queries declared at the top level (not conditionally)
   useEffect(() => {
     // If loading is done and user is not admin, redirect to login
@@ -322,6 +347,8 @@ export default function AdminPage() {
       isBestseller: false,
       isOnSale: false,
       isActive: true,
+      availableWeights: [],
+      availableColors: [],
     },
   });
 

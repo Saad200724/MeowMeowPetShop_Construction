@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart, Star, Check } from "lucide-react";
+import { Heart, ShoppingCart, Star, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +17,8 @@ type UIProduct = (Product | HookProduct) & {
   stockStatus?: string;
   isNew?: boolean;
   originalPrice?: number;
+  availableColors?: string[];
+  availableWeights?: string[];
 };
 
 interface ProductCardProps {
@@ -34,9 +36,19 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isInCart = state.items.some((item) => item.id === productId);
   const isAddingToCart = false; // Placeholder for actual adding state
 
+  const hasColors = product.availableColors && product.availableColors.length > 1;
+  const hasWeights = product.availableWeights && product.availableWeights.length > 1;
+  const showInfoOnly = hasColors || hasWeights;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (showInfoOnly) {
+      window.location.href = `/product/${productSlug}`;
+      return;
+    }
+
     const productId = product.id?.toString() ?? product._id;
     if (productId) {
       addItem({
@@ -222,27 +234,36 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          {/* Add to Cart Button */}
+          {/* Add to Cart or Info Button */}
           <div className="mt-1">
             <Button
-              variant={isInCart ? "default" : "outline"}
+              variant={showInfoOnly ? "outline" : (isInCart ? "default" : "outline")}
               size="sm"
               className={cn(
                 "w-full rounded-full py-1.5 text-xs transition-all duration-200 border-2",
-                isInCart
-                  ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
-                  : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
+                showInfoOnly
+                  ? "border-[#26732d] text-[#26732d] hover:bg-[#26732d]/10"
+                  : (isInCart
+                    ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+                    : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"),
               )}
               disabled={
-                product.stock === 0 ||
-                product.stockStatus === "Out of Stock" ||
-                isAddingToCart
+                !showInfoOnly && (
+                  product.stock === 0 ||
+                  product.stockStatus === "Out of Stock" ||
+                  isAddingToCart
+                )
               }
               onClick={handleAddToCart}
-              data-testid={`add-to-cart-${productSlug}`}
+              data-testid={showInfoOnly ? `product-info-${productSlug}` : `add-to-cart-${productSlug}`}
             >
               {isAddingToCart ? (
                 <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : showInfoOnly ? (
+                <>
+                  <Info size={14} className="mr-1" />
+                  Product Info
+                </>
               ) : isInCart ? (
                 <>
                   <Check size={14} className="mr-1" />
