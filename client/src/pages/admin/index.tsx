@@ -3015,34 +3015,32 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between">
                       <Label className="text-gray-900 font-semibold text-sm">Available Weights</Label>
                       <div className="flex gap-2">
-                        <Input
-                          placeholder="e.g. 1kg"
-                          value={newWeight}
-                          onChange={(e) => setNewWeight(e.target.value)}
-                          className="h-8 w-24 text-sm"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              const current = form.getValues('availableWeights') || [];
-                              if (newWeight && !current.includes(newWeight)) {
-                                form.setValue('availableWeights', [...current, newWeight]);
-                                setNewWeight('');
+                        <div className="relative">
+                          <Input
+                            placeholder="e.g. 1.5"
+                            value={newWeight}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/[^0-9.]/g, '');
+                              setNewWeight(val);
+                            }}
+                            className="h-8 w-24 pr-6 text-sm"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                addWeight();
                               }
-                            }
-                          }}
-                        />
+                            }}
+                          />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none font-bold">
+                            kg
+                          </span>
+                        </div>
                         <Button
                           type="button"
                           size="sm"
                           variant="outline"
                           className="h-8"
-                          onClick={() => {
-                            const current = form.getValues('availableWeights') || [];
-                            if (newWeight && !current.includes(newWeight)) {
-                              form.setValue('availableWeights', [...current, newWeight]);
-                              setNewWeight('');
-                            }
-                          }}
+                          onClick={addWeight}
                         >
                           Add
                         </Button>
