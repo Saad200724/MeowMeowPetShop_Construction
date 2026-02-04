@@ -27,7 +27,8 @@ type DetailProduct = BaseProduct & {
   weight?: string;
   ingredients?: string[];
   features?: string[];
-  images?: string[];
+  availableWeights?: string[];
+  availableColors?: string[];
 };
 
 export default function ProductDetailPage() {
@@ -509,6 +510,45 @@ export default function ProductDetailPage() {
                   </div>
                 )}
               </div>
+
+              {/* Color Variations */}
+              {product.availableColors && product.availableColors.length > 0 && (
+                <div className="mb-6">
+                  <span className="text-sm font-medium text-gray-900 block mb-3">Available Colors:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {product.availableColors.map((color, index) => (
+                      <div 
+                        key={index}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md"
+                      >
+                        <div 
+                          className="w-4 h-4 rounded-full border border-gray-300" 
+                          style={{ backgroundColor: color.toLowerCase() }}
+                        />
+                        <span className="text-sm text-gray-700 capitalize">{color}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Weight Variations */}
+              {product.availableWeights && product.availableWeights.length > 0 && (
+                <div className="mb-6">
+                  <span className="text-sm font-medium text-gray-900 block mb-3">Available Weights:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {product.availableWeights.map((weight, index) => (
+                      <Badge 
+                        key={index} 
+                        variant="outline" 
+                        className="px-3 py-1 text-sm font-normal text-gray-700 border-gray-300 bg-white"
+                      >
+                        {weight}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Quantity Selector */}
