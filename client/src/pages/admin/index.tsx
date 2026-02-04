@@ -3076,22 +3076,36 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between">
                       <Label className="text-gray-900 font-semibold text-sm">Available Colors</Label>
                       <div className="flex gap-2">
-                        <Input
-                          placeholder="e.g. Red"
-                          value={newColor}
-                          onChange={(e) => setNewColor(e.target.value)}
-                          className="h-8 w-24 text-sm"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              const current = form.getValues('availableColors') || [];
-                              if (newColor && !current.includes(newColor)) {
-                                form.setValue('availableColors', [...current, newColor]);
-                                setNewColor('');
+                        <div className="relative flex gap-2">
+                          <div className="relative h-8 w-8 flex-shrink-0">
+                            <input
+                              type="color"
+                              value={newColor.startsWith('#') && newColor.length === 7 ? newColor : '#000000'}
+                              onChange={(e) => setNewColor(e.target.value)}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                            <div 
+                              className="w-full h-full rounded border border-gray-300"
+                              style={{ backgroundColor: newColor || '#000000' }}
+                            />
+                          </div>
+                          <Input
+                            placeholder="e.g. Red or #FF0000"
+                            value={newColor}
+                            onChange={(e) => setNewColor(e.target.value)}
+                            className="h-8 w-32 text-sm"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                const current = form.getValues('availableColors') || [];
+                                if (newColor && !current.includes(newColor)) {
+                                  form.setValue('availableColors', [...current, newColor]);
+                                  setNewColor('');
+                                }
                               }
-                            }
-                          }}
-                        />
+                            }}
+                          />
+                        </div>
                         <Button
                           type="button"
                           size="sm"
@@ -3113,6 +3127,10 @@ export default function AdminPage() {
                       {(form.watch('availableColors') || []).length > 0 ? (
                         form.watch('availableColors')?.map((color, idx) => (
                           <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                            <div 
+                              className="w-3 h-3 rounded-full border border-gray-200" 
+                              style={{ backgroundColor: color }}
+                            />
                             {color}
                             <button
                               type="button"
