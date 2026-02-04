@@ -269,9 +269,16 @@ export default function AdminPage() {
   const availableColors = form.watch('availableColors') || [];
 
   const addWeight = () => {
-    if (newWeight && !availableWeights.includes(newWeight)) {
-      form.setValue('availableWeights', [...availableWeights, newWeight]);
-      setNewWeight('');
+    if (newWeight) {
+      // Remove any non-numeric characters and handle decimal
+      const numericWeight = newWeight.replace(/[^0-9.]/g, '');
+      if (numericWeight) {
+        const weightWithUnit = `${numericWeight}kg`;
+        if (!availableWeights.includes(weightWithUnit)) {
+          form.setValue('availableWeights', [...availableWeights, weightWithUnit]);
+          setNewWeight('');
+        }
+      }
     }
   };
 
