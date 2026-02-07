@@ -37,6 +37,13 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedWeight, setSelectedWeight] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [userRating, setUserRating] = useState(0);
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
