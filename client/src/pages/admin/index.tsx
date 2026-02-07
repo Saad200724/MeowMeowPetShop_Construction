@@ -264,6 +264,25 @@ export default function AdminPage() {
 
   const [newWeight, setNewWeight] = useState('');
   const [newColor, setNewColor] = useState('');
+  const [newColorName, setNewColorName] = useState('');
+
+  const addColor = () => {
+    const current = form.getValues('availableColors') || [];
+    if (newColor && newColorName) {
+      const colorValue = `${newColorName}:${newColor}`;
+      if (!current.includes(colorValue)) {
+        form.setValue('availableColors', [...current, colorValue]);
+        setNewColor('');
+        setNewColorName('');
+      }
+    } else if (newColor && !newColorName) {
+      // Fallback if name is empty
+      if (!current.includes(newColor)) {
+        form.setValue('availableColors', [...current, newColor]);
+        setNewColor('');
+      }
+    }
+  };
 
   const availableWeights = form.watch('availableWeights') || [];
   const availableColors = form.watch('availableColors') || [];
@@ -3090,18 +3109,26 @@ export default function AdminPage() {
                             />
                           </div>
                           <Input
-                            placeholder="e.g. Red or #FF0000"
+                            placeholder="Color Code"
                             value={newColor}
                             onChange={(e) => setNewColor(e.target.value)}
+                            className="h-8 w-24 text-sm"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                addColor();
+                              }
+                            }}
+                          />
+                          <Input
+                            placeholder="Display Name"
+                            value={newColorName}
+                            onChange={(e) => setNewColorName(e.target.value)}
                             className="h-8 w-32 text-sm"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
-                                const current = form.getValues('availableColors') || [];
-                                if (newColor && !current.includes(newColor)) {
-                                  form.setValue('availableColors', [...current, newColor]);
-                                  setNewColor('');
-                                }
+                                addColor();
                               }
                             }}
                           />
@@ -3111,13 +3138,7 @@ export default function AdminPage() {
                           size="sm"
                           variant="outline"
                           className="h-8"
-                          onClick={() => {
-                            const current = form.getValues('availableColors') || [];
-                            if (newColor && !current.includes(newColor)) {
-                              form.setValue('availableColors', [...current, newColor]);
-                              setNewColor('');
-                            }
-                          }}
+                          onClick={addColor}
                         >
                           Add
                         </Button>
@@ -3125,25 +3146,28 @@ export default function AdminPage() {
                     </div>
                     <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
                       {(form.watch('availableColors') || []).length > 0 ? (
-                        form.watch('availableColors')?.map((color, idx) => (
-                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
-                            <div 
-                              className="w-3 h-3 rounded-full border border-gray-200" 
-                              style={{ backgroundColor: color }}
-                            />
-                            {color}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const current = form.getValues('availableColors') || [];
-                                form.setValue('availableColors', current.filter((_, i) => i !== idx));
-                              }}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </Badge>
-                        ))
+                        form.watch('availableColors')?.map((colorVal, idx) => {
+                          const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
+                          return (
+                            <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                              <div 
+                                className="w-3 h-3 rounded-full border border-gray-200" 
+                                style={{ backgroundColor: hex }}
+                              />
+                              <span className="text-xs">{name}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const current = form.getValues('availableColors') || [];
+                                  form.setValue('availableColors', current.filter((_, i) => i !== idx));
+                                }}
+                                className="text-gray-500 hover:text-red-500 ml-1"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </Badge>
+                          );
+                        })
                       ) : (
                         <div className="flex items-center gap-2 text-xs text-gray-400">
                           <X className="w-4 h-4 text-red-400" />

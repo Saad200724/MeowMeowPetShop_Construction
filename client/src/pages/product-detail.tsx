@@ -516,18 +516,22 @@ export default function ProductDetailPage() {
                 <div className="mb-6">
                   <span className="text-sm font-medium text-gray-900 block mb-3">Available Colors:</span>
                   <div className="flex flex-wrap gap-2">
-                    {product.availableColors.map((color, index) => (
-                      <div 
-                        key={index}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md"
-                      >
+                    {product.availableColors.map((colorVal, index) => {
+                      const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
+                      return (
                         <div 
-                          className="w-4 h-4 rounded-full border border-gray-300" 
-                          style={{ backgroundColor: color.toLowerCase() }}
-                        />
-                        <span className="text-sm text-gray-700 capitalize">{color}</span>
-                      </div>
-                    ))}
+                          key={index}
+                          className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md"
+                          title={name}
+                        >
+                          <div 
+                            className="w-4 h-4 rounded-full border border-gray-300" 
+                            style={{ backgroundColor: hex }}
+                          />
+                          <span className="text-sm text-gray-700 capitalize">{name}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
