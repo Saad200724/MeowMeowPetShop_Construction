@@ -43,6 +43,7 @@ interface CartContextType {
   applyCoupon: (coupon: AppliedCoupon) => void;
   removeCoupon: () => void;
   getFinalTotal: () => number;
+  calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka') => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -245,6 +246,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     applyCoupon,
     removeCoupon,
     getFinalTotal,
+    calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka') => {
+      const totalWeight = state.items.reduce((sum, item) => {
+        const weightNum = parseFloat(item.weight?.replace(/[^0-9.]/g, '') || '0');
+        return sum + (weightNum * (item.quantity || 1));
+      }, 0);
+
+      if (location === 'Inside Dhaka') {
+        const baseLimit = 2;
+        const baseFee = 80;
+        if (totalWeight <= baseLimit) return baseFee;
+        const extraWeight = Math.ceil(totalWeight - baseLimit);
+        return baseFee + (extraWeight * 20);
+      } else {
+        const baseLimit = 1;
+        const baseFee = 130;
+        if (totalWeight <= baseLimit) return baseFee;
+        const extraWeight = Math.ceil(totalWeight - baseLimit);
+        return baseFee + (extraWeight * 20);
+      }
+    }
   };
 
   return (

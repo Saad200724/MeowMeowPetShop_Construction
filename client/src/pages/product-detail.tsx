@@ -35,15 +35,22 @@ export default function ProductDetailPage() {
   const { id: slug } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isShareOpen, setIsShareOpen] = useState(false);
-  const [userRating, setUserRating] = useState(0);
-  const [reviewText, setReviewText] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [selectedWeight, setSelectedWeight] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
+
+  // Set default selections when product loads
+  useEffect(() => {
+    if (product) {
+      if (product.availableWeights && product.availableWeights.length > 0) {
+        setSelectedWeight(product.availableWeights[0]);
+      }
+      if (product.availableColors && product.availableColors.length > 0) {
+        setSelectedColor(product.availableColors[0]);
+      }
+    }
+  }, [product]);
 
   // Fetch product directly by slug from the new API endpoint, with fallback to repack products
   const { data: product, isLoading } = useQuery<DetailProduct>({ 
@@ -136,30 +143,32 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product || isOutOfStock) return;
 
-    const productId = product.id ?? product._id;
     const maxStock = product.stockQuantity || 100;
     
-    // Check if item already exists in cart
-    const existingItem = state.items.find(item => item.id === productId);
+    // Create a unique cart key that includes selected variations
+    const cartItemId = `${productId}-${selectedWeight || 'default'}-${selectedColor || 'default'}`;
+    
+    // Check if item with same variations already exists in cart
+    const existingItem = state.items.find(item => item.id === cartItemId);
     
     if (existingItem) {
-      // If item exists, update its quantity
       const newQuantity = Math.min(existingItem.quantity + quantity, maxStock);
-      updateQuantity(productId, newQuantity);
+      updateQuantity(cartItemId, newQuantity);
     } else {
-      // Add new item once
       addItem({
-        id: productId,
+        id: cartItemId,
+        productId: productId,
         name: product.name,
         price: product.price,
         image: product.image,
         maxStock: maxStock,
+        weight: selectedWeight,
+        color: selectedColor,
       });
       
-      // If quantity > 1, update to the desired quantity
       if (quantity > 1) {
         setTimeout(() => {
-          updateQuantity(productId, Math.min(quantity, maxStock));
+          updateQuantity(cartItemId, Math.min(quantity, maxStock));
         }, 0);
       }
     }
@@ -518,10 +527,15 @@ export default function ProductDetailPage() {
                   <div className="flex flex-wrap gap-2">
                     {product.availableColors.map((colorVal, index) => {
                       const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
+                      const isSelected = selectedColor === colorVal;
                       return (
-                        <div 
+                        <button 
                           key={index}
-                          className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md"
+                          onClick={() => setSelectedColor(colorVal)}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-1.5 bg-gray-50 border rounded-md transition-all hover:border-[#26732d]",
+                            isSelected ? "border-[#26732d] ring-1 ring-[#26732d] bg-[#26732d]/5" : "border-gray-200"
+                          )}
                           title={name}
                         >
                           <div 
@@ -529,7 +543,7 @@ export default function ProductDetailPage() {
                             style={{ backgroundColor: hex }}
                           />
                           <span className="text-sm text-gray-700 capitalize">{name}</span>
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
@@ -541,15 +555,21 @@ export default function ProductDetailPage() {
                 <div className="mb-6">
                   <span className="text-sm font-medium text-gray-900 block mb-3">Available Weights:</span>
                   <div className="flex flex-wrap gap-2">
-                    {product.availableWeights.map((weight, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="outline" 
-                        className="px-3 py-1 text-sm font-normal text-gray-700 border-gray-300 bg-white"
-                      >
-                        {weight}
-                      </Badge>
-                    ))}
+                    {product.availableWeights.map((weight, index) => {
+                      const isSelected = selectedWeight === weight;
+                      return (
+                        <button
+                          key={index} 
+                          onClick={() => setSelectedWeight(weight)}
+                          className={cn(
+                            "px-3 py-1 text-sm font-normal border rounded-md transition-all hover:border-[#26732d]",
+                            isSelected ? "border-[#26732d] ring-1 ring-[#26732d] bg-[#26732d]/5 text-[#26732d]" : "border-gray-300 bg-white text-gray-700"
+                          )}
+                        >
+                          {weight}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}

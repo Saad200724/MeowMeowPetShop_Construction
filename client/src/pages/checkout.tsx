@@ -43,7 +43,7 @@ interface BillingDetails {
 }
 
 export default function CheckoutPage() {
-  const { state: cartState, clearCart, applyCoupon, removeCoupon, getFinalTotal } = useCart();
+  const { state: cartState, clearCart, applyCoupon, removeCoupon, getFinalTotal, calculateDeliveryFee: calculateWeightedDeliveryFee } = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -80,18 +80,13 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
-  const [weight, setWeight] = useState('1');
 
-  const calculateDeliveryFee = (district: string): number => {
-    if (!district) return 0;
-    const isDhaka = district.toLowerCase() === 'dhaka';
-    return isDhaka ? 80 : 130;
-  };
+  const deliveryFee = calculateWeightedDeliveryFee(
+    billingDetails.district.toLowerCase() === 'dhaka' ? 'Inside Dhaka' : 'Outside Dhaka'
+  );
 
-  const calculatedDeliveryFee = calculateDeliveryFee(billingDetails.district);
-  // If a free_delivery coupon is applied, waive the delivery fee
-  const deliveryFee = cartState.appliedCoupon?.code?.includes('FREE') || 
-    (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code) ? 0 : calculatedDeliveryFee;
+  const finalDeliveryFee = cartState.appliedCoupon?.code?.includes('FREE') || 
+    (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code) ? 0 : deliveryFee;
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -271,7 +266,7 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    const finalTotal = getFinalTotal() + deliveryFee;
+    const finalTotal = getFinalTotal() + finalDeliveryFee;
 
     const orderData = {
       userId: user?.id || 'guest',
@@ -290,11 +285,13 @@ export default function CheckoutPage() {
         }
       },
       items: cartState.items.map(item => ({
-        productId: item.id,
+        productId: item.productId || item.id,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-        image: item.image
+        image: item.image,
+        weight: item.weight,
+        color: item.color
       })),
       discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
       paymentMethod,
@@ -305,7 +302,7 @@ export default function CheckoutPage() {
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
       },
-      deliveryFee,
+      deliveryFee: finalDeliveryFee,
       orderNotes
     };
 
