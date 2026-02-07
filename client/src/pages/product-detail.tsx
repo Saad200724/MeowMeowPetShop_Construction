@@ -40,18 +40,6 @@ export default function ProductDetailPage() {
   const { addItem, updateQuantity, state } = useCart();
   const { toast } = useToast();
 
-  // Set default selections when product loads
-  useEffect(() => {
-    if (product) {
-      if (product.availableWeights && product.availableWeights.length > 0) {
-        setSelectedWeight(product.availableWeights[0]);
-      }
-      if (product.availableColors && product.availableColors.length > 0) {
-        setSelectedColor(product.availableColors[0]);
-      }
-    }
-  }, [product]);
-
   // Fetch product directly by slug from the new API endpoint, with fallback to repack products
   const { data: product, isLoading } = useQuery<DetailProduct>({ 
     queryKey: ['/api/products/slug', slug],
@@ -87,6 +75,18 @@ export default function ProductDetailPage() {
     },
     enabled: !!slug, // Only run query if slug exists
   });
+
+  // Set default selections when product loads
+  useEffect(() => {
+    if (product) {
+      if (product.availableWeights && product.availableWeights.length > 0) {
+        setSelectedWeight(product.availableWeights[0]);
+      }
+      if (product.availableColors && product.availableColors.length > 0) {
+        setSelectedColor(product.availableColors[0]);
+      }
+    }
+  }, [product]);
 
   // Get productId from product data
   const productId = product?.id ?? product?._id;
@@ -487,6 +487,13 @@ export default function ProductDetailPage() {
                   ({product.reviews || 0} reviews)
                 </span>
               </div>
+
+              {/* Product Description */}
+              {product.description && (
+                <div className="mb-6 prose prose-sm max-w-none text-gray-600">
+                  <p>{product.description}</p>
+                </div>
+              )}
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-6">

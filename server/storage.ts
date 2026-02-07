@@ -623,6 +623,8 @@ export class DatabaseStorage implements IStorage {
         },
         items: orderData.items || [],
         subtotal: orderData.total || 0,
+        deliveryFee: orderData.deliveryFee || 0,
+        totalWeight: orderData.totalWeight || 0,
         total: orderData.total || 0,
         paymentMethod: orderData.paymentMethod || 'COD',
         paymentStatus: orderData.paymentMethod === 'COD' ? 'Pending' : 'Paid',

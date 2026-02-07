@@ -276,9 +276,15 @@ export default function CheckoutPage() {
 
     const finalTotal = getFinalTotal() + finalDeliveryFee;
 
+    const totalWeight = cartState.items.reduce((sum, item) => {
+      const weightNum = parseFloat(item.weight?.replace(/[^0-9.]/g, '') || '0');
+      return sum + (weightNum * (item.quantity || 1));
+    }, 0);
+
     const orderData = {
       userId: user?.id || 'guest',
       total: finalTotal,
+      totalWeight,
       customerInfo: {
         name: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
         email: billingDetails.email,
@@ -606,74 +612,31 @@ export default function CheckoutPage() {
                           value={billingDetails.district}
                           onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value }))}
                           data-testid="select-district"
+                          required
                         >
                           <option value="">Select District</option>
-                          <option value="bagerhat">Bagerhat</option>
-                          <option value="bandarban">Bandarban</option>
-                          <option value="barguna">Barguna</option>
-                          <option value="barisal">Barisal</option>
-                          <option value="bhola">Bhola</option>
-                          <option value="bogura">Bogura</option>
-                          <option value="brahmanbaria">Brahmanbaria</option>
-                          <option value="chandpur">Chandpur</option>
-                          <option value="chapainawabganj">Chapainawabganj</option>
-                          <option value="chattogram">Chattogram</option>
-                          <option value="chuadanga">Chuadanga</option>
-                          <option value="cumilla">Cumilla</option>
-                          <option value="coxs-bazar">Cox's Bazar</option>
                           <option value="dhaka">Dhaka</option>
-                          <option value="dinajpur">Dinajpur</option>
-                          <option value="faridpur">Faridpur</option>
-                          <option value="feni">Feni</option>
-                          <option value="gaibandha">Gaibandha</option>
-                          <option value="gazipur">Gazipur</option>
-                          <option value="gopalganj">Gopalganj</option>
-                          <option value="habiganj">Habiganj</option>
-                          <option value="jamalpur">Jamalpur</option>
-                          <option value="jashore">Jashore</option>
-                          <option value="jhalokati">Jhalokati</option>
-                          <option value="jhenaidah">Jhenaidah</option>
-                          <option value="joypurhat">Joypurhat</option>
-                          <option value="khagrachhari">Khagrachhari</option>
-                          <option value="khulna">Khulna</option>
-                          <option value="kishoreganj">Kishoreganj</option>
-                          <option value="kurigram">Kurigram</option>
-                          <option value="kushtia">Kushtia</option>
-                          <option value="lakshmipur">Lakshmipur</option>
-                          <option value="lalmonirhat">Lalmonirhat</option>
-                          <option value="madaripur">Madaripur</option>
-                          <option value="magura">Magura</option>
-                          <option value="manikganj">Manikganj</option>
-                          <option value="meherpur">Meherpur</option>
-                          <option value="moulvibazar">Moulvibazar</option>
-                          <option value="munshiganj">Munshiganj</option>
-                          <option value="mymensingh">Mymensingh</option>
-                          <option value="naogaon">Naogaon</option>
-                          <option value="narail">Narail</option>
-                          <option value="narayanganj">Narayanganj</option>
-                          <option value="narsingdi">Narsingdi</option>
-                          <option value="natore">Natore</option>
-                          <option value="netrokona">Netrokona</option>
-                          <option value="nilphamari">Nilphamari</option>
-                          <option value="noakhali">Noakhali</option>
-                          <option value="pabna">Pabna</option>
-                          <option value="panchagarh">Panchagarh</option>
-                          <option value="patuakhali">Patuakhali</option>
-                          <option value="pirojpur">Pirojpur</option>
-                          <option value="rajbari">Rajbari</option>
-                          <option value="rajshahi">Rajshahi</option>
-                          <option value="rangamati">Rangamati</option>
-                          <option value="rangpur">Rangpur</option>
-                          <option value="satkhira">Satkhira</option>
-                          <option value="shariatpur">Shariatpur</option>
-                          <option value="sherpur">Sherpur</option>
-                          <option value="sirajganj">Sirajganj</option>
-                          <option value="sunamganj">Sunamganj</option>
+                          <option value="chattogram">Chattogram</option>
                           <option value="sylhet">Sylhet</option>
-                          <option value="tangail">Tangail</option>
-                          <option value="thakurgaon">Thakurgaon</option>
+                          <option value="rajshahi">Rajshahi</option>
+                          <option value="khulna">Khulna</option>
+                          <option value="barisal">Barisal</option>
+                          <option value="rangpur">Rangpur</option>
+                          <option value="mymensingh">Mymensingh</option>
+                          <option value="other">Other</option>
                         </select>
                       </div>
+                    </div>
+
+                    <div className="bg-green-50 p-3 rounded-md border border-green-100 mb-2">
+                      <p className="text-xs sm:text-sm text-green-800 font-medium">
+                        Delivery Information:
+                      </p>
+                      <ul className="text-[10px] sm:text-xs text-green-700 mt-1 list-disc pl-4 space-y-0.5">
+                        <li>Inside Dhaka: ৳80 (up to 2kg)</li>
+                        <li>Outside Dhaka: ৳130 (up to 1kg)</li>
+                        <li>Additional weight: ৳20 per kg</li>
+                      </ul>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
