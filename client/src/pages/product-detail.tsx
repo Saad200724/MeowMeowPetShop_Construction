@@ -175,7 +175,7 @@ export default function ProductDetailPage() {
 
     toast({
       title: "Added to Cart",
-      description: `${quantity} x ${product.name} added to your cart.`,
+      description: `${quantity} x ${product.name}${selectedWeight ? ` (${selectedWeight})` : ''}${selectedColor ? ` [${selectedColor.split(':')[0]}]` : ''} added to your cart.`,
     });
   };
 
