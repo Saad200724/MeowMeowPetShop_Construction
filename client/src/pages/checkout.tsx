@@ -749,12 +749,12 @@ export default function CheckoutPage() {
                   <div className="space-y-2 py-2 border-b border-gray-100">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Delivery Charge</span>
-                      <span className={`font-medium ${deliveryFee > 0 ? 'text-[#26732d]' : 'text-gray-400'}`}>
-                        ৳ {deliveryFee.toLocaleString()}
+                      <span className={`font-medium ${finalDeliveryFee > 0 ? 'text-[#26732d]' : 'text-gray-400'}`}>
+                        ৳ {finalDeliveryFee.toLocaleString()}
                       </span>
                     </div>
-                    <div className={`rounded-lg p-3 ${billingDetails.district && weight ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-200'}`}>
-                      <p className={`text-xs font-semibold mb-2 ${billingDetails.district && weight ? 'text-blue-900' : 'text-gray-700'}`}>
+                    <div className={`rounded-lg p-3 ${billingDetails.district ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-200'}`}>
+                      <p className={`text-xs font-semibold mb-2 ${billingDetails.district ? 'text-blue-900' : 'text-gray-700'}`}>
                         Shipping Details:
                       </p>
                       <div className="space-y-1 text-xs text-gray-700">
@@ -766,22 +766,11 @@ export default function CheckoutPage() {
                             {billingDetails.district === 'dhaka' ? (
                               <>
                                 <p>• Base: ৳80 (up to 2kg)</p>
-                                {weight && parseFloat(weight) > 2 && (
-                                  <p>• Extra: ৳{((Math.ceil(parseFloat(weight) - 2)) * 20)} for {(parseFloat(weight) - 2).toFixed(1)}kg</p>
-                                )}
                               </>
                             ) : (
                               <>
                                 <p>• Base: ৳130 (up to 1kg)</p>
-                                {weight && parseFloat(weight) > 1 && (
-                                  <p>• Extra: ৳{((Math.ceil(parseFloat(weight) - 1)) * 20)} for {(parseFloat(weight) - 1).toFixed(1)}kg</p>
-                                )}
                               </>
-                            )}
-                            {weight && (
-                              <p className="text-[10px] text-gray-600 mt-2 italic">
-                                Package weight: {weight}kg
-                              </p>
                             )}
                           </>
                         ) : (
@@ -807,14 +796,14 @@ export default function CheckoutPage() {
                         <span className="font-medium text-green-600">-৳ {cartState.appliedCoupon.discount.toLocaleString()}</span>
                       )}
                       {cartState.appliedCoupon.discount === 0 && (
-                        <span className="font-medium text-green-600">-৳ {calculatedDeliveryFee.toLocaleString()}</span>
+                        <span className="font-medium text-green-600">-৳ {finalDeliveryFee.toLocaleString()}</span>
                       )}
                     </div>
                   )}
 
                   <div className="flex justify-between py-2 text-lg font-bold text-[#26732d] border-t-2 border-[#26732d]/20 pt-3">
                     <span>Grand Total</span>
-                    <span>৳ {(getFinalTotal() + deliveryFee).toLocaleString()}</span>
+                    <span>৳ {(getFinalTotal() + finalDeliveryFee).toLocaleString()}</span>
                   </div>
 
                   <Separator />
