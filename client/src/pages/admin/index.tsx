@@ -305,13 +305,6 @@ export default function AdminPage() {
     form.setValue('availableWeights', availableWeights.filter(w => w !== weight));
   };
 
-  const addColor = () => {
-    if (newColor && !availableColors.includes(newColor)) {
-      form.setValue('availableColors', [...availableColors, newColor]);
-      setNewColor('');
-    }
-  };
-
   const removeColor = (color: string) => {
     form.setValue('availableColors', availableColors.filter(c => c !== color));
   };

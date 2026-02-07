@@ -393,7 +393,7 @@ export default function ProductDetailPage() {
               data-testid="product-image-main"
             >
               {(() => {
-                const allImages = [product.image, ...(product.images || [])].filter(Boolean);
+                const allImages = [product.image, ...((product as any).images || [])].filter(Boolean);
                 const currentImage = allImages[selectedImage] || product.image;
                 return (
                   <img
@@ -434,7 +434,7 @@ export default function ProductDetailPage() {
 
             {/* Thumbnail Images Gallery */}
             {(() => {
-              const allImages = [product.image, ...(product.images || [])].filter(Boolean);
+              const allImages = [product.image, ...((product as any).images || [])].filter(Boolean);
               if (allImages.length > 1) {
                 return (
                   <div className="grid grid-cols-4 gap-2">
