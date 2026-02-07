@@ -520,6 +520,13 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
+              {/* Product Specifications/Info */}
+              {product.description && (
+                <div className="mb-6 prose prose-sm max-w-none text-gray-600">
+                  <p>{product.description}</p>
+                </div>
+              )}
+
               {/* Color Variations */}
               {product.availableColors && product.availableColors.length > 0 && (
                 <div className="mb-6">

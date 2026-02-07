@@ -81,12 +81,20 @@ export default function CheckoutPage() {
   const [showPayment, setShowPayment] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
 
-  const deliveryFee = calculateWeightedDeliveryFee(
-    billingDetails.district.toLowerCase() === 'dhaka' ? 'Inside Dhaka' : 'Outside Dhaka'
-  );
+  const calculateFinalDeliveryFee = () => {
+    const district = billingDetails.district.toLowerCase();
+    const location = district === 'dhaka' ? 'Inside Dhaka' : 'Outside Dhaka';
+    
+    // Check for free delivery coupon
+    if (cartState.appliedCoupon?.code?.includes('FREE') || 
+        (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code)) {
+      return 0;
+    }
+    
+    return calculateWeightedDeliveryFee(location);
+  };
 
-  const finalDeliveryFee = cartState.appliedCoupon?.code?.includes('FREE') || 
-    (cartState.appliedCoupon?.discount === 0 && cartState.appliedCoupon?.code) ? 0 : deliveryFee;
+  const finalDeliveryFee = calculateFinalDeliveryFee();
 
   // Redirect if cart is empty
   useEffect(() => {
