@@ -2,11 +2,14 @@ import { createContext, useContext, useReducer, useEffect } from 'react';
 
 export interface CartItem {
   id: string;
+  productId?: string;
   name: string;
   price: number;
   image: string;
   quantity: number;
   maxStock: number;
+  weight?: string | null;
+  color?: string | null;
 }
 
 export interface AppliedCoupon {
