@@ -625,7 +625,11 @@ export default function CheckoutPage() {
                         <select 
                           className="w-full h-11 sm:h-auto p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white text-base"
                           value={billingDetails.district}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value }))}
+                          onChange={(e) => setBillingDetails(prev => ({ 
+                            ...prev, 
+                            district: e.target.value,
+                            thanaUpazilla: "" 
+                          }))}
                           data-testid="select-district"
                           required
                         >
