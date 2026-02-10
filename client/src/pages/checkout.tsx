@@ -712,14 +712,30 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <Label htmlFor="billing-thana" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Thana/Upazilla</Label>
-                        <Input
-                          id="billing-thana"
-                          value={billingDetails.thanaUpazilla}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
-                          placeholder="Enter your thana/upazilla"
-                          className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
-                          data-testid="input-thana"
-                        />
+                        {billingDetails.district === "Dhaka City" ? (
+                          <select
+                            id="billing-thana"
+                            value={billingDetails.thanaUpazilla}
+                            onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
+                            className="flex h-11 sm:h-10 w-full rounded-md border border-gray-300 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#26732d] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            required
+                            data-testid="select-thana"
+                          >
+                            <option value="">Select Thana</option>
+                            {dhakaThanas.map(thana => (
+                              <option key={thana} value={thana}>{thana}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <Input
+                            id="billing-thana"
+                            value={billingDetails.thanaUpazilla}
+                            onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
+                            placeholder="Enter your thana/upazilla"
+                            className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
+                            data-testid="input-thana"
+                          />
+                        )}
                       </div>
                       <div>
                         <Label htmlFor="billing-postcode" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Post Code</Label>
