@@ -132,7 +132,7 @@ export default function ProductDetailPage() {
     if (product) {
       document.title = `${product.name} - Meow Meow Pet Shop`;
       const metaDescription = document.querySelector('meta[name="description"]');
-      const description = product.description || `Buy ${product.name} at Meow Meow Pet Shop. Quality pet products with delivery in Dhaka and across Bangladesh.`;
+      const description = product.description || `Buy ${product.name} at Meow Meow Pet Shop. Quality pet products with delivery in Dhaka City and across Bangladesh.`;
       if (metaDescription) {
         metaDescription.setAttribute('content', description);
       } else {

@@ -9,11 +9,11 @@ export default function ShippingPolicyPage() {
     document.title = 'Shipping Policy - Meow Meow Pet Shop';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80, Outside Dhaka ৳130. Fast and reliable delivery.');
+      metaDescription.setAttribute('content', 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka City ৳80, Outside Dhaka City ৳130. Fast and reliable delivery.');
     } else {
       const meta = document.createElement('meta');
       meta.name = 'description';
-      meta.content = 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80, Outside Dhaka ৳130. Fast and reliable delivery.';
+      meta.content = 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka City ৳80, Outside Dhaka City ৳130. Fast and reliable delivery.';
       document.head.appendChild(meta);
     }
   }, []);
@@ -43,22 +43,23 @@ export default function ShippingPolicyPage() {
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <h3 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
-                    Inside Dhaka
+                    Inside Dhaka City
                   </h3>
                   <ul className="list-disc list-inside text-green-800 space-y-1 ml-4">
-                    <li>Savar and surrounding areas</li>
                     <li>Mirpur, Mohammadpur, Dhanmondi</li>
                     <li>Uttara, Gulshan, Banani</li>
                     <li>All major areas of Dhaka city</li>
+                    <li className="text-red-600 font-semibold">Excluding Savar area</li>
                   </ul>
                 </div>
                 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
-                    Outside Dhaka
+                    Outside Dhaka City
                   </h3>
                   <ul className="list-disc list-inside text-blue-800 space-y-1 ml-4">
+                    <li>Savar and surrounding areas</li>
                     <li>Major cities (Chittagong, Sylhet, Rajshahi)</li>
                     <li>District headquarters</li>
                     <li>Available through courier services</li>
@@ -74,18 +75,13 @@ export default function ShippingPolicyPage() {
               </h2>
               <div className="space-y-4">
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Inside Dhaka (Savar Area)</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">Inside Dhaka City</h3>
                   <p className="text-gray-700">1-2 business days</p>
                 </div>
                 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Inside Dhaka (Other Areas)</h3>
-                  <p className="text-gray-700">2-3 business days</p>
-                </div>
-                
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Outside Dhaka</h3>
-                  <p className="text-gray-700">3-5 business days</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Outside Dhaka City (Including Savar)</h3>
+                  <p className="text-gray-700">2-5 business days</p>
                 </div>
               </div>
               <p className="text-gray-600 mt-4 text-sm">
@@ -108,16 +104,16 @@ export default function ShippingPolicyPage() {
                         Inside Dhaka City
                       </h4>
                       <p className="text-blue-800 font-medium text-lg">৳80 (up to 2kg)</p>
-                      <p className="text-sm text-blue-700 mt-1">Perfect for most orders within Dhaka city</p>
+                      <p className="text-sm text-blue-700 mt-1">Perfect for most orders within Dhaka city (Excluding Savar)</p>
                     </div>
                     
                     <div className="bg-white rounded-lg p-4 border border-blue-200">
                       <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                         <CheckCircle className="w-5 h-5 text-blue-600" />
-                        Outside Dhaka & Sub-Urban
+                        Outside Dhaka City
                       </h4>
                       <p className="text-blue-800 font-medium text-lg">৳130 (up to 1kg)</p>
-                      <p className="text-sm text-blue-700 mt-1">Includes Dhaka Sub-Urban areas and all other districts</p>
+                      <p className="text-sm text-blue-700 mt-1">Includes Savar, Dhaka Sub-Urban areas and all other districts</p>
                     </div>
                     
                     <div className="bg-orange-50 border border-orange-300 rounded-lg p-4 mt-3">
@@ -141,7 +137,7 @@ export default function ShippingPolicyPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>Package to Dhaka Sub-Urban/Outside:</strong> ৳130 (up to 1kg)</span>
+                      <span><strong>Package to Outside Dhaka City:</strong> ৳130 (up to 1kg)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>

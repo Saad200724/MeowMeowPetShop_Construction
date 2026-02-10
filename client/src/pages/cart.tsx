@@ -80,6 +80,11 @@ export default function CartPage() {
 
   const finalTotal = getFinalTotal();
 
+  const deliveryFeeInfo = {
+    inside: 80,
+    outside: 130
+  };
+
   if (state.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -165,9 +170,8 @@ export default function CartPage() {
 
                         {/* Product Description Snippet - Add Shipping Info Here */}
                         <div className="text-xs text-gray-500 mb-3 line-clamp-2">
-                          {item.description}
                           <p className="mt-1 font-semibold text-gray-700">
-                            Shipping: Inside Dhaka: ৳80 (up to 2kg), Outside Dhaka: ৳130 (up to 1kg). Additional ৳20 per kg.
+                            Shipping: Inside Dhaka City: ৳80 (up to 2kg), Outside Dhaka City (Incl. Savar): ৳130 (up to 1kg). Additional ৳20 per kg.
                           </p>
                         </div>
 
@@ -237,8 +241,8 @@ export default function CartPage() {
                       <span className="text-gray-600">Delivery</span>
                       <div className="text-right">
                         <span className="font-medium text-gray-600">Calculated at checkout</span>
-                        <p className="text-xs text-gray-500 mt-1">Inside Dhaka: ৳80 (up to 2kg)</p>
-                        <p className="text-xs text-gray-500">Outside Dhaka: ৳130 (up to 1kg)</p>
+                        <p className="text-xs text-gray-500 mt-1">Inside Dhaka City: ৳80 (up to 2kg)</p>
+                        <p className="text-xs text-gray-500">Outside Dhaka City (Incl. Savar): ৳130 (up to 1kg)</p>
                         <p className="text-xs text-gray-500 mt-1">Additional: ৳20/kg</p>
                       </div>
                     </div>

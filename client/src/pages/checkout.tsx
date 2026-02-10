@@ -95,6 +95,7 @@ export default function CheckoutPage() {
     "Ashulia", "Dhamrai", "Dohar", "Hemayetpur", "Keraniganj Model", "Nawabganj", 
     "Savar", "South Keraniganj"
   ];
+
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -102,8 +103,13 @@ export default function CheckoutPage() {
 
   const calculateFinalDeliveryFee = () => {
     const district = billingDetails.district.toLowerCase();
-    const isDhaka = district === 'dhaka city' || district === 'dhaka sub-urban';
-    const location = isDhaka ? 'Inside Dhaka' : 'Outside Dhaka';
+    const thana = (billingDetails.thanaUpazilla || "").toLowerCase();
+    
+    // Savar is outside Dhaka City
+    const isSavar = thana === 'savar';
+    const isDhakaCity = district === 'dhaka city' && !isSavar;
+    
+    const location = isDhakaCity ? 'Inside Dhaka' : 'Outside Dhaka';
     
     // Check for free delivery coupon
     if (cartState.appliedCoupon?.code?.includes('FREE') || 
@@ -142,7 +148,6 @@ export default function CheckoutPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login functionality
     toast({
       title: "Login functionality coming soon",
       description: "Please proceed as guest for now.",
@@ -223,7 +228,6 @@ export default function CheckoutPage() {
     },
     onSuccess: (data) => {
       if (paymentMethod === 'RupantorPay') {
-        // For online payment, store invoice ID (not order ID) and show payment processor
         setCreatedOrderId(data.invoice._id);
         setShowPayment(true);
         toast({
@@ -231,7 +235,6 @@ export default function CheckoutPage() {
           description: "Please complete your payment to confirm the order.",
         });
       } else {
-        // For COD and other methods, proceed as usual
         clearCart();
         toast({
           title: "Order placed successfully!",
@@ -252,7 +255,6 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Comprehensive form validation
     const missingFields = [];
     if (!billingDetails.firstName.trim()) missingFields.push("First Name");
     if (!billingDetails.phone.trim()) missingFields.push("Phone Number");
@@ -270,7 +272,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(billingDetails.email)) {
       toast({
@@ -281,7 +282,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Phone validation (Bangladesh mobile number)
     const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
     if (!phoneRegex.test(billingDetails.phone.replace(/\s/g, ''))) {
       toast({
@@ -297,7 +297,7 @@ export default function CheckoutPage() {
     const finalTotal = getFinalTotal() + finalDeliveryFee;
 
     const totalWeight = cartState.items.reduce((sum, item) => {
-      const weightNum = parseFloat(item.weight?.replace(/[^0-9.]/g, '') || '0');
+      const weightNum = parseFloat((item as any).weight?.replace(/[^0-9.]/g, '') || '0');
       return sum + (weightNum * (item.quantity || 1));
     }, 0);
 
@@ -319,13 +319,13 @@ export default function CheckoutPage() {
         }
       },
       items: cartState.items.map(item => ({
-        productId: item.productId || item.id,
+        productId: (item as any).productId || item.id,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
         image: item.image,
-        weight: item.weight,
-        color: item.color
+        weight: (item as any).weight,
+        color: (item as any).color
       })),
       discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
       paymentMethod,
@@ -356,7 +356,7 @@ export default function CheckoutPage() {
       title: "Payment successful!",
       description: `Payment completed successfully. Transaction ID: ${transactionId}`,
     });
-    setLocation(`/invoice/${createdOrderId}`); // createdOrderId now stores invoice._id
+    setLocation(`/invoice/${createdOrderId}`);
   };
 
   const handlePaymentError = (error: string) => {
@@ -369,10 +369,9 @@ export default function CheckoutPage() {
   };
 
   if (cartState.items.length === 0) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
-  // Show payment processor if payment is required
   if (showPayment && createdOrderId) {
     const finalTotal = getFinalTotal();
     return (
@@ -429,7 +428,6 @@ export default function CheckoutPage() {
       
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header with logo and phone - Mobile Optimized */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-4 sm:mb-8">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 sm:gap-4">
@@ -447,10 +445,7 @@ export default function CheckoutPage() {
           </div>
           
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left Column - Forms */}
             <div className="lg:col-span-2 space-y-6">
-              
-              {/* Login Section - Mobile Optimized */}
               {!user && (
                 <Card className="border-[#ffde59] border-2">
                   <CardHeader className="bg-[#ffde59]/10 p-4 sm:p-6">
@@ -525,9 +520,6 @@ export default function CheckoutPage() {
                 </Card>
               )}
 
-              
-
-              {/* Customer Information - Mobile Optimized */}
               <Card className="border-[#26732d]/30">
                 <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
@@ -590,455 +582,147 @@ export default function CheckoutPage() {
                         />
                       </div>
                     </div>
-                  </form>
-                </CardContent>
-              </Card>
-
-              {/* Select Location - Mobile Optimized */}
-              <Card className="border-[#26732d]/30">
-                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Select Location</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 sm:pt-6 sm:px-6">
-                  <form className="space-y-3 sm:space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                      <div>
-                        <Label htmlFor="billing-division" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Division *</Label>
-                        <select 
-                          className="w-full h-11 sm:h-auto p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white text-base"
-                          value={billingDetails.division}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, division: e.target.value }))}
-                          data-testid="select-division"
-                        >
-                          <option value="">Select Division</option>
-                          <option value="dhaka">Dhaka</option>
-                          <option value="chittagong">Chittagong</option>
-                          <option value="sylhet">Sylhet</option>
-                          <option value="rajshahi">Rajshahi</option>
-                          <option value="khulna">Khulna</option>
-                          <option value="barisal">Barisal</option>
-                          <option value="rangpur">Rangpur</option>
-                          <option value="mymensingh">Mymensingh</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="billing-district" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">District *</Label>
-                        <select 
-                          className="w-full h-11 sm:h-auto p-3 border border-gray-300 rounded-md focus:border-[#26732d] focus:ring-[#26732d] bg-white text-base"
-                          value={billingDetails.district}
-                          onChange={(e) => setBillingDetails(prev => ({ 
-                            ...prev, 
-                            district: e.target.value,
-                            thanaUpazilla: "" 
-                          }))}
-                          data-testid="select-district"
-                          required
-                        >
-                          <option value="">Select District</option>
-                          <option value="Dhaka City">Dhaka City</option>
-                          <option value="Dhaka Sub-Urban">Dhaka Sub-Urban</option>
-                          <option value="Bagerhat">Bagerhat</option>
-                          <option value="Bandarban">Bandarban</option>
-                          <option value="Barguna">Barguna</option>
-                          <option value="Barishal">Barishal</option>
-                          <option value="Bhola">Bhola</option>
-                          <option value="Bogura">Bogura</option>
-                          <option value="Brahmanbaria">Brahmanbaria</option>
-                          <option value="Chandpur">Chandpur</option>
-                          <option value="Chattogram">Chattogram</option>
-                          <option value="Chuadanga">Chuadanga</option>
-                          <option value="Cox's Bazar">Cox's Bazar</option>
-                          <option value="Cumilla">Cumilla</option>
-                          <option value="Dinajpur">Dinajpur</option>
-                          <option value="Faridpur">Faridpur</option>
-                          <option value="Feni">Feni</option>
-                          <option value="Gaibandha">Gaibandha</option>
-                          <option value="Gazipur">Gazipur</option>
-                          <option value="Gopalganj">Gopalganj</option>
-                          <option value="Habiganj">Habiganj</option>
-                          <option value="Jamalpur">Jamalpur</option>
-                          <option value="Jashore">Jashore</option>
-                          <option value="Jhalokati">Jhalokati</option>
-                          <option value="Jhenaidah">Jhenaidah</option>
-                          <option value="Joypurhat">Joypurhat</option>
-                          <option value="Khagrachhari">Khagrachhari</option>
-                          <option value="Khulna">Khulna</option>
-                          <option value="Kishoreganj">Kishoreganj</option>
-                          <option value="Kurigram">Kurigram</option>
-                          <option value="Kushtia">Kushtia</option>
-                          <option value="Lakshmipur">Lakshmipur</option>
-                          <option value="Lalmonirhat">Lalmonirhat</option>
-                          <option value="Madaripur">Madaripur</option>
-                          <option value="Magura">Magura</option>
-                          <option value="Manikganj">Manikganj</option>
-                          <option value="Meherpur">Meherpur</option>
-                          <option value="Moulvibazar">Moulvibazar</option>
-                          <option value="Munshiganj">Munshiganj</option>
-                          <option value="Mymensingh">Mymensingh</option>
-                          <option value="Naogaon">Naogaon</option>
-                          <option value="Narail">Narail</option>
-                          <option value="Narayanganj">Narayanganj</option>
-                          <option value="Narsingdi">Narsingdi</option>
-                          <option value="Natore">Natore</option>
-                          <option value="Netrokona">Netrokona</option>
-                          <option value="Nilphamari">Nilphamari</option>
-                          <option value="Noakhali">Noakhali</option>
-                          <option value="Pabna">Pabna</option>
-                          <option value="Panchagarh">Panchagarh</option>
-                          <option value="Patuakhali">Patuakhali</option>
-                          <option value="Pirojpur">Pirojpur</option>
-                          <option value="Rajbari">Rajbari</option>
-                          <option value="Rajshahi">Rajshahi</option>
-                          <option value="Rangamati">Rangamati</option>
-                          <option value="Rangpur">Rangpur</option>
-                          <option value="Satkhira">Satkhira</option>
-                          <option value="Shariatpur">Shariatpur</option>
-                          <option value="Sherpur">Sherpur</option>
-                          <option value="Sirajganj">Sirajganj</option>
-                          <option value="Sunamganj">Sunamganj</option>
-                          <option value="Sylhet">Sylhet</option>
-                          <option value="Tangail">Tangail</option>
-                          <option value="Thakurgaon">Thakurgaon</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="bg-green-50 p-3 rounded-md border border-green-100 mb-2">
-                      <p className="text-xs sm:text-sm text-green-800 font-medium">
-                        Delivery Information:
-                      </p>
-                      <ul className="text-[10px] sm:text-xs text-green-700 mt-1 list-disc pl-4 space-y-0.5">
-                        <li>Inside Dhaka: ৳80 (up to 2kg)</li>
-                        <li>Outside Dhaka: ৳130 (up to 1kg)</li>
-                        <li>Additional weight: ৳20 per kg</li>
-                      </ul>
-                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="billing-thana" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Thana/Upazilla</Label>
-                        {billingDetails.district === "Dhaka City" || billingDetails.district === "Dhaka Sub-Urban" ? (
-                          <select
-                            id="billing-thana"
-                            value={billingDetails.thanaUpazilla}
-                            onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
-                            className="flex h-11 sm:h-10 w-full rounded-md border border-gray-300 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#26732d] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            required
-                            data-testid="select-thana"
-                          >
-                            <option value="">Select Thana</option>
-                            {(billingDetails.district === "Dhaka City" ? dhakaThanas : subUrbanThanas).map(thana => (
-                              <option key={thana} value={thana}>{thana}</option>
-                            ))}
-                          </select>
-                        ) : (
-                          <Input
-                            id="billing-thana"
-                            value={billingDetails.thanaUpazilla}
-                            onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))}
-                            placeholder="Enter your thana/upazilla"
-                            className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
-                            data-testid="input-thana"
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <Label htmlFor="billing-postcode" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Post Code</Label>
+                        <Label htmlFor="customer-email" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Email Address *</Label>
                         <Input
-                          id="billing-postcode"
-                          value={billingDetails.postCode}
-                          onChange={(e) => setBillingDetails(prev => ({ ...prev, postCode: e.target.value }))}
-                          placeholder="Enter post code"
+                          id="customer-email"
+                          type="email"
+                          value={billingDetails.email}
+                          onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="Enter your email"
+                          required
                           className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
-                          data-testid="input-postcode"
+                          data-testid="input-email"
                         />
+                      </div>
+                      <div>
+                        <Label htmlFor="district" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">District *</Label>
+                        <RadioGroup
+                          value={billingDetails.district}
+                          onValueChange={(val) => setBillingDetails(prev => ({ ...prev, district: val }))}
+                          className="flex flex-col gap-2 mt-1"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="Dhaka City" id="dhaka-city" />
+                            <Label htmlFor="dhaka-city">Dhaka City</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="Outside Dhaka City" id="outside-dhaka" />
+                            <Label htmlFor="outside-dhaka">Outside Dhaka City</Label>
+                          </div>
+                        </RadioGroup>
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="billing-address" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Full Address *</Label>
+                      <Label htmlFor="customer-address" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Full Address *</Label>
                       <Textarea
-                        id="billing-address"
+                        id="customer-address"
                         value={billingDetails.address}
                         onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))}
-                        placeholder="Your full address"
-                        className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base min-h-[88px]"
-                        rows={3}
+                        placeholder="House number, street name, area, etc."
+                        required
+                        className="min-h-[100px] border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
                         data-testid="input-address"
                       />
                     </div>
-
-                    <div>
-                      <Label htmlFor="billing-email" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Email *</Label>
-                      <Input
-                        id="billing-email"
-                        type="email"
-                        value={billingDetails.email}
-                        onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))}
-                        placeholder="your.email@example.com"
-                        required
-                        className="h-11 sm:h-10 border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base"
-                        data-testid="input-email"
-                      />
-                    </div>
                   </form>
                 </CardContent>
               </Card>
 
-              {/* Order Notes - Mobile Optimized */}
               <Card className="border-[#26732d]/30">
                 <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
                   <div className="flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Order Notes</CardTitle>
+                    <CreditCard className="h-5 w-5 text-[#26732d]" />
+                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Payment Method</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 sm:pt-6 sm:px-6">
-                  <Textarea
-                    placeholder="Notes about your order, e.g. special notes for delivery."
-                    value={orderNotes}
-                    onChange={(e) => setOrderNotes(e.target.value)}
-                    className="border-gray-300 focus:border-[#26732d] focus:ring-[#26732d] text-base min-h-[100px]"
-                    rows={4}
-                  />
+                <CardContent className="p-4 sm:p-6">
+                  <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-4">
+                    <div className="flex items-center space-x-3 space-y-0 bg-gray-50 p-4 rounded-lg border hover:border-[#26732d] transition-colors cursor-pointer">
+                      <RadioGroupItem value="COD" id="cod" />
+                      <Label htmlFor="cod" className="flex flex-1 items-center gap-3 cursor-pointer">
+                        <Truck className="h-5 w-5 text-[#26732d]" />
+                        <div>
+                          <p className="font-semibold text-gray-900">Cash on Delivery</p>
+                          <p className="text-xs text-gray-500">Pay when you receive your order</p>
+                        </div>
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 space-y-0 bg-gray-50 p-4 rounded-lg border hover:border-[#26732d] transition-colors cursor-pointer">
+                      <RadioGroupItem value="RupantorPay" id="rupantor" />
+                      <Label htmlFor="rupantor" className="flex flex-1 items-center gap-3 cursor-pointer">
+                        <CreditCard className="h-5 w-5 text-[#26732d]" />
+                        <div>
+                          <p className="font-semibold text-gray-900">Online Payment</p>
+                          <p className="text-xs text-gray-500">Pay securely via RupantorPay (bKash, Nagad, Card)</p>
+                        </div>
+                      </Label>
+                    </div>
+                  </RadioGroup>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Right Column - Order Summary - Mobile Optimized */}
-            <div className="space-y-4 sm:space-y-6">
-              <Card className="border-[#26732d]/30 lg:sticky lg:top-4">
-                <CardHeader className="bg-[#26732d]/5 p-4 sm:p-6">
-                  <div className="flex items-center gap-2">
-                    <ShoppingBag className="h-5 w-5 text-[#26732d]" />
-                    <CardTitle className="text-lg sm:text-xl text-[#26732d]">Order Overview</CardTitle>
-                  </div>
+            <div className="lg:col-span-1">
+              <Card className="sticky top-20 border-[#26732d]/30 shadow-md">
+                <CardHeader className="bg-[#26732d] text-white p-4">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ShoppingBag className="h-5 w-5" />
+                    Order Summary
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 sm:pt-6 sm:px-6 space-y-3 sm:space-y-4">
-                  <div className="flex justify-between font-semibold border-b pb-3 text-[#26732d]">
-                    <span>Product</span>
-                    <span>Total</span>
-                  </div>
-
-                  {cartState.items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
-                      <div className="flex-1">
-                        <span className="font-medium text-gray-800 text-sm">{item.name}</span>
-                        <span className="text-gray-500 ml-2">× {item.quantity}</span>
+                <CardContent className="p-4 sm:p-6 space-y-4">
+                  <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    {cartState.items.map((item) => (
+                      <div key={item.id} className="flex gap-3 py-3 border-b last:border-0">
+                        <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover border" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+                          <p className="text-xs text-gray-500">{item.quantity} x ৳{item.price}</p>
+                        </div>
+                        <p className="text-sm font-bold text-gray-900">৳{item.price * item.quantity}</p>
                       </div>
-                      <span className="font-medium text-[#26732d]">৳ {(item.price * item.quantity).toLocaleString()}</span>
-                    </div>
-                  ))}
-
-                  <Separator />
-
-                  <div className="flex justify-between py-2">
-                    <span className="text-gray-600">SubTotal</span>
-                    <span className="font-medium">৳ {cartState.total.toLocaleString()}</span>
+                    ))}
                   </div>
 
-                  <div className="space-y-2 py-2 border-b border-gray-100">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Delivery Charge</span>
-                      <span className={`font-medium ${finalDeliveryFee > 0 ? 'text-[#26732d]' : 'text-gray-400'}`}>
-                        ৳ {finalDeliveryFee.toLocaleString()}
-                      </span>
+                  <div className="space-y-2 pt-2">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Subtotal</span>
+                      <span>৳{cartState.total}</span>
                     </div>
-                    <div className={`rounded-lg p-3 ${billingDetails.district ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-200'}`}>
-                      <p className={`text-xs font-semibold mb-2 ${billingDetails.district ? 'text-blue-900' : 'text-gray-700'}`}>
-                        Shipping Details:
-                      </p>
-                      <div className="space-y-1 text-xs text-gray-700">
-                        {billingDetails.district ? (
-                          <>
-                            <p className="font-medium">
-                              {billingDetails.district === 'dhaka' ? '✓ Inside Dhaka' : '✓ Outside Dhaka'}
-                            </p>
-                            {billingDetails.district === 'dhaka' ? (
-                              <>
-                                <p>• Base: ৳80 (up to 2kg)</p>
-                              </>
-                            ) : (
-                              <>
-                                <p>• Base: ৳130 (up to 1kg)</p>
-                              </>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            <p className="font-medium text-orange-600">⚠ Select a district above</p>
-                            <p>• Inside Dhaka: ৳80 (up to 2kg)</p>
-                            <p>• Outside Dhaka: ৳130 (up to 1kg)</p>
-                            <p className="text-[10px] text-gray-600 mt-2 italic">
-                              Additional ৳20/kg will be charged for extra weight
-                            </p>
-                          </>
-                        )}
-                      </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Delivery Fee</span>
+                      <span>৳{finalDeliveryFee}</span>
                     </div>
-                  </div>
-
-                  {cartState.appliedCoupon && (
-                    <div className="flex justify-between py-2">
-                      <span className="text-green-600">
-                        {cartState.appliedCoupon.discount === 0 ? `Free Delivery (${cartState.appliedCoupon.code})` : `Discount (${cartState.appliedCoupon.code})`}
-                      </span>
-                      {cartState.appliedCoupon.discount > 0 && (
-                        <span className="font-medium text-green-600">-৳ {cartState.appliedCoupon.discount.toLocaleString()}</span>
-                      )}
-                      {cartState.appliedCoupon.discount === 0 && (
-                        <span className="font-medium text-green-600">-৳ {finalDeliveryFee.toLocaleString()}</span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex justify-between py-2 text-lg font-bold text-[#26732d] border-t-2 border-[#26732d]/20 pt-3">
-                    <span>Grand Total</span>
-                    <span>৳ {(getFinalTotal() + finalDeliveryFee).toLocaleString()}</span>
-                  </div>
-
-                  <Separator />
-
-                  {/* Coupon Section */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-[#26732d]">Have a coupon?</h4>
-                      <Button 
-                        variant="link" 
-                        onClick={() => setShowCoupon(!showCoupon)}
-                        className="text-[#26732d] hover:text-[#1e5d26] font-medium p-0"
-                        data-testid="button-toggle-coupon"
-                      >
-                        {showCoupon ? 'Hide' : 'Apply coupon'}
-                        {showCoupon ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
-                      </Button>
-                    </div>
-                    
-                    {showCoupon && (
-                      <div className="space-y-3">
-                        {!cartState.appliedCoupon ? (
-                          <div className="space-y-2">
-                            <div className="flex gap-2">
-                              <Input
-                                placeholder="Enter coupon code"
-                                value={couponCode}
-                                onChange={(e) => setCouponCode(e.target.value)}
-                                className="flex-1 text-sm border-gray-300 focus:border-[#26732d] focus:ring-[#26732d]"
-                                onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                                data-testid="input-coupon-code"
-                              />
-                              <Button
-                                onClick={handleApplyCoupon}
-                                disabled={isCouponLoading || !couponCode.trim()}
-                                size="sm"
-                                className="bg-[#26732d] hover:bg-[#1e5d26] text-white px-4"
-                                data-testid="button-apply-coupon"
-                              >
-                                {isCouponLoading ? 'Applying...' : 'Apply'}
-                              </Button>
-                            </div>
-                            {couponError && (
-                              <p className="text-xs text-red-500" data-testid="text-coupon-error">{couponError}</p>
-                            )}
-                            <p className="text-xs text-gray-500">
-                              Enter your coupon code to apply discount
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <span className="text-green-600">🏷️</span>
-                                <span className="text-sm font-medium text-green-800" data-testid="text-applied-coupon">
-                                  {cartState.appliedCoupon.code} Applied
-                                </span>
-                              </div>
-                              <button
-                                onClick={handleRemoveCoupon}
-                                className="text-xs text-green-600 hover:text-green-800 underline"
-                                data-testid="button-remove-coupon"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                            <p className="text-xs text-green-600 mt-1">
-                              You saved ৳{cartState.appliedCoupon.discount.toLocaleString()}!
-                            </p>
-                          </div>
-                        )}
+                    {cartState.appliedCoupon && (
+                      <div className="flex justify-between text-green-600">
+                        <span>Discount ({cartState.appliedCoupon.code})</span>
+                        <span>-৳{cartState.appliedCoupon.discount}</span>
                       </div>
                     )}
-                  </div>
-
-                  <Separator />
-
-                  {/* Payment Methods - Mobile Optimized */}
-                  <div className="space-y-3 sm:space-y-4">
-                    <h4 className="font-semibold text-[#26732d] text-base sm:text-lg">Payment Method</h4>
-                    <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border-2 border-[#ffde59] rounded-lg bg-[#ffde59]/10 min-h-[56px] sm:min-h-[60px]">
-                        <RadioGroupItem value="COD" id="cod" className="border-[#26732d] text-[#26732d] w-5 h-5" />
-                        <Label htmlFor="cod" className="flex items-center cursor-pointer font-medium text-[#26732d] text-sm sm:text-base flex-1">
-                          <Truck className="mr-2 h-5 w-5 flex-shrink-0" />
-                          Cash On Delivery
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border border-gray-300 rounded-lg min-h-[56px] sm:min-h-[60px]">
-                        <RadioGroupItem value="Bkash" id="bkash" className="border-[#26732d] text-[#26732d] w-5 h-5" />
-                        <Label htmlFor="bkash" className="flex items-center cursor-pointer font-medium text-[#26732d] text-sm sm:text-base flex-1">
-                          <img 
-                            src="https://upload.wikimedia.org/wikipedia/en/thumb/6/68/BKash_logo.svg/250px-BKash_logo.svg.png" 
-                            alt="Bkash" 
-                            className="mr-2 h-5 w-auto flex-shrink-0"
-                          />
-                          Bkash
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3.5 sm:p-4 border border-blue-300 rounded-lg bg-blue-50/30 min-h-[56px] sm:min-h-[60px]">
-                        <RadioGroupItem value="RupantorPay" id="rupantorpay" className="border-[#26732d] text-[#26732d] w-5 h-5 flex-shrink-0" />
-                        <Label htmlFor="rupantorpay" className="flex items-center cursor-pointer font-medium text-[#26732d] flex-wrap flex-1">
-                          <img 
-                            src="https://rupantorpay.com/public/assets/img/logo.webp" 
-                            alt="RupantorPay" 
-                            className="mr-2 h-3 w-auto flex-shrink-0"
-                          />
-                          <span className="text-xs sm:text-sm">RupantorPay(Online Payment)</span>
-                        </Label>
-                      </div>
-                    </RadioGroup>
+                    <Separator />
+                    <div className="flex justify-between text-xl font-bold text-[#26732d]">
+                      <span>Total</span>
+                      <span>৳{getFinalTotal() + finalDeliveryFee}</span>
+                    </div>
                   </div>
 
                   <Button 
+                    className="w-full h-12 bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold text-lg shadow-lg"
                     onClick={handlePlaceOrder}
-                    className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold py-3.5 sm:py-4 text-base sm:text-lg border-2 border-[#26732d] rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-h-[52px] sm:min-h-auto"
-                    disabled={isProcessing || cartState.items.length === 0}
-                    data-testid="button-place-order"
+                    disabled={isProcessing}
                   >
-                    {isProcessing ? (
-                      <div className="flex items-center justify-center">
-                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
-                        <span className="text-sm sm:text-base">Processing Order...</span>
-                      </div>
-                    ) : (
-                      'Place Order'
-                    )}
+                    {isProcessing ? 'Processing...' : 'PLACE ORDER NOW'}
                   </Button>
 
-                  {/* Bottom Info */}
-                  <div className="mt-6 p-4 bg-[#26732d]/5 rounded-lg">
-                    <h5 className="font-semibold text-[#26732d] mb-2">Meow Meow Pet Shop</h5>
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>ADDRESS:</strong> Pakiza Bus Stand, Chapra Mosjid Road<br />Bank Colony, Savar, Dhaka
-                    </p>
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>Hotline:</strong> 01405-045023
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <strong>Email:</strong> meowmeowpetshop1@gmail.com
+                  <div className="text-center">
+                    <p className="text-[10px] text-gray-500 flex items-center justify-center gap-1">
+                      <Truck className="h-3 w-3" />
+                      Safe and Secure Delivery
                     </p>
                   </div>
                 </CardContent>
@@ -1047,7 +731,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );
