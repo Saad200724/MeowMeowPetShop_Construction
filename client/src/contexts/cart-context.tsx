@@ -43,7 +43,7 @@ interface CartContextType {
   applyCoupon: (coupon: AppliedCoupon) => void;
   removeCoupon: () => void;
   getFinalTotal: () => number;
-  calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka') => number;
+  calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka', district?: string) => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -246,20 +246,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     applyCoupon,
     removeCoupon,
     getFinalTotal,
-    calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka') => {
+    calculateDeliveryFee: (location: 'Inside Dhaka' | 'Outside Dhaka', district?: string) => {
       const totalWeight = state.items.reduce((sum, item) => {
         const weightNum = parseFloat(item.weight?.replace(/[^0-9.]/g, '') || '0');
         return sum + (weightNum * (item.quantity || 1));
       }, 0);
 
-      if (location === 'Inside Dhaka') {
-        const baseLimit = 100; // Effectively no limit for standard items
+      const normalizedDistrict = district?.toLowerCase() || '';
+      const isDhakaCity = normalizedDistrict === 'dhaka city';
+      const isDhakaSubUrban = normalizedDistrict === 'dhaka sub-urban';
+
+      if (isDhakaCity) {
         const baseFee = 80;
         if (totalWeight <= 2) return baseFee;
         const extraWeight = Math.ceil(totalWeight - 2);
         return baseFee + (extraWeight * 20);
       } else {
-        const baseLimit = 100;
+        // Dhaka Sub-Urban or Outside Dhaka
         const baseFee = 130;
         if (totalWeight <= 1) return baseFee;
         const extraWeight = Math.ceil(totalWeight - 1);

@@ -111,7 +111,7 @@ export default function CheckoutPage() {
       return 0;
     }
     
-    return calculateWeightedDeliveryFee(location);
+    return calculateWeightedDeliveryFee(location, district);
   };
 
   const finalDeliveryFee = calculateFinalDeliveryFee();

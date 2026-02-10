@@ -105,19 +105,19 @@ export default function ShippingPolicyPage() {
                     <div className="bg-white rounded-lg p-4 border border-blue-200">
                       <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                         <CheckCircle className="w-5 h-5 text-blue-600" />
-                        Inside Dhaka
+                        Inside Dhaka City
                       </h4>
-                      <p className="text-blue-800 font-medium text-lg">৳80</p>
+                      <p className="text-blue-800 font-medium text-lg">৳80 (up to 2kg)</p>
                       <p className="text-sm text-blue-700 mt-1">Perfect for most orders within Dhaka city</p>
                     </div>
                     
                     <div className="bg-white rounded-lg p-4 border border-blue-200">
                       <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                         <CheckCircle className="w-5 h-5 text-blue-600" />
-                        Outside Dhaka
+                        Outside Dhaka & Sub-Urban
                       </h4>
-                      <p className="text-blue-800 font-medium text-lg">৳130</p>
-                      <p className="text-sm text-blue-700 mt-1">Nationwide delivery to all districts</p>
+                      <p className="text-blue-800 font-medium text-lg">৳130 (up to 1kg)</p>
+                      <p className="text-sm text-blue-700 mt-1">Includes Dhaka Sub-Urban areas and all other districts</p>
                     </div>
                     
                     <div className="bg-orange-50 border border-orange-300 rounded-lg p-4 mt-3">
@@ -137,15 +137,15 @@ export default function ShippingPolicyPage() {
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>Package to Dhaka:</strong> ৳80</span>
+                      <span><strong>Package to Dhaka City:</strong> ৳80 (up to 2kg)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>Package to Dhaka:</strong> ৳80 + ৳20 = ৳100 (if exceeds base limit)</span>
+                      <span><strong>Package to Dhaka Sub-Urban/Outside:</strong> ৳130 (up to 1kg)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>Package to Outside Dhaka:</strong> ৳130</span>
+                      <span><strong>Additional Weight:</strong> ৳20 per kg extra</span>
                     </li>
                   </ul>
                 </div>
