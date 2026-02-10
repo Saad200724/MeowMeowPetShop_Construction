@@ -76,6 +76,20 @@ export default function CheckoutPage() {
     email: ''
   });
   const [orderNotes, setOrderNotes] = useState('');
+
+  const dhakaThanas = [
+    "Adabar", "Airport", "Ati Bazar (Keraniganj)", "Azompur", "Badda", "Banani", 
+    "Bangshal", "Bashundhara R/A", "Battery Section", "Bhashantek", "Cantonment", 
+    "Chalkbazar", "Dakshin Khan", "Darus Salam", "Demra", "Dhanmondi", "Gendaria", 
+    "Gulistan", "Hatirjheel", "Hazaribag", "Jattrabari", "Kadamtali", "Kafrul", 
+    "Kalabagan", "Kamrangirchar", "Khilgaon", "Khilkhet", "Kotwali", "Lalbagh", 
+    "Mirpur", "Mohammadpur", "Motijheel", "Mugda", "New Market", "Pallabi", 
+    "Paltan", "Panthapath", "Purbachal", "Ramna", "Rampura", "Rupnagar", 
+    "Sabujbag", "Shah Ali", "Shah Ali Market", "Shahbag", "Shahjahanpur", 
+    "Sher-e-Bangla Nagar", "Shyampur", "Sutrapur", "Tejgaon", 
+    "Tejgaon Industrial Area", "Turag", "Uttara", "Uttarkhan", "Vasantek", 
+    "Vatara", "Wari", "Zone not clear"
+  ];
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
