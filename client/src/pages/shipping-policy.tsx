@@ -9,11 +9,11 @@ export default function ShippingPolicyPage() {
     document.title = 'Shipping Policy - Meow Meow Pet Shop';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80 (up to 2kg), Outside Dhaka ৳130 (up to 1kg). Fast and reliable delivery.');
+      metaDescription.setAttribute('content', 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80, Outside Dhaka ৳130. Fast and reliable delivery.');
     } else {
       const meta = document.createElement('meta');
       meta.name = 'description';
-      meta.content = 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80 (up to 2kg), Outside Dhaka ৳130 (up to 1kg). Fast and reliable delivery.';
+      meta.content = 'Meow Meow Pet Shop shipping policy. Delivery across Bangladesh - Inside Dhaka ৳80, Outside Dhaka ৳130. Fast and reliable delivery.';
       document.head.appendChild(meta);
     }
   }, []);
@@ -107,7 +107,7 @@ export default function ShippingPolicyPage() {
                         <CheckCircle className="w-5 h-5 text-blue-600" />
                         Inside Dhaka
                       </h4>
-                      <p className="text-blue-800 font-medium text-lg">৳80 (up to 2kg)</p>
+                      <p className="text-blue-800 font-medium text-lg">৳80</p>
                       <p className="text-sm text-blue-700 mt-1">Perfect for most orders within Dhaka city</p>
                     </div>
                     
@@ -116,7 +116,7 @@ export default function ShippingPolicyPage() {
                         <CheckCircle className="w-5 h-5 text-blue-600" />
                         Outside Dhaka
                       </h4>
-                      <p className="text-blue-800 font-medium text-lg">৳130 (up to 1kg)</p>
+                      <p className="text-blue-800 font-medium text-lg">৳130</p>
                       <p className="text-sm text-blue-700 mt-1">Nationwide delivery to all districts</p>
                     </div>
                     
@@ -137,19 +137,15 @@ export default function ShippingPolicyPage() {
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>1.5kg package to Dhaka:</strong> ৳80 (within base limit)</span>
+                      <span><strong>Package to Dhaka:</strong> ৳80</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>3kg package to Dhaka:</strong> ৳80 + ৳20 = ৳100 (1kg extra)</span>
+                      <span><strong>Package to Dhaka:</strong> ৳80 + ৳20 = ৳100 (if exceeds base limit)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>0.8kg package to Chittagong:</strong> ৳130 (within base limit)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#26732d] font-bold">•</span>
-                      <span><strong>2.5kg package to Sylhet:</strong> ৳130 + (1.5kg × ৳20) = ৳160</span>
+                      <span><strong>Package to Outside Dhaka:</strong> ৳130</span>
                     </li>
                   </ul>
                 </div>

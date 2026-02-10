@@ -253,16 +253,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }, 0);
 
       if (location === 'Inside Dhaka') {
-        const baseLimit = 2;
+        const baseLimit = 100; // Effectively no limit for standard items
         const baseFee = 80;
-        if (totalWeight <= baseLimit) return baseFee;
-        const extraWeight = Math.ceil(totalWeight - baseLimit);
+        if (totalWeight <= 2) return baseFee;
+        const extraWeight = Math.ceil(totalWeight - 2);
         return baseFee + (extraWeight * 20);
       } else {
-        const baseLimit = 1;
+        const baseLimit = 100;
         const baseFee = 130;
-        if (totalWeight <= baseLimit) return baseFee;
-        const extraWeight = Math.ceil(totalWeight - baseLimit);
+        if (totalWeight <= 1) return baseFee;
+        const extraWeight = Math.ceil(totalWeight - 1);
         return baseFee + (extraWeight * 20);
       }
     }
