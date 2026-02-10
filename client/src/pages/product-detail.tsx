@@ -796,7 +796,7 @@ export default function ProductDetailPage() {
                               <MapPin className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
-                              <h4 className="font-semibold text-blue-900 mb-1">Inside Dhaka</h4>
+                              <h4 className="font-semibold text-blue-900 mb-1">Inside Dhaka City</h4>
                               <p className="text-2xl font-bold text-blue-600">৳80</p>
                               <p className="text-sm text-blue-700 mt-1">Up to 2kg</p>
                             </div>

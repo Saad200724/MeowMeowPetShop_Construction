@@ -112,6 +112,7 @@ const bannerFormSchema = z.object({
 const popupPosterFormSchema = z.object({
   imageUrl: z.string().min(1, 'Image is required'),
   title: z.string().optional(),
+  linkUrl: z.string().optional(),
 });
 
 const brandFormSchema = z.object({
@@ -2927,19 +2928,37 @@ export default function AdminPage() {
                 )}
               />
 
-              <FormField
-                control={popupPosterForm.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Popup title" {...field} data-testid="input-popup-title" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={popupPosterForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Popup title" {...field} data-testid="input-popup-title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={popupPosterForm.control}
+                  name="linkUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Link URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. /category/cat-food" {...field} data-testid="input-popup-link" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-2 italic">
+                Note: For best resolution, please upload a square image (1:1 aspect ratio).
+              </p>
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setShowPopupDialog(false)}>

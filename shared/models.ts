@@ -406,6 +406,7 @@ const bannerSchema = new Schema<IBanner>({
 export interface IPopupPoster extends Document {
   imageUrl: string;
   title?: string;
+  linkUrl?: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -414,6 +415,7 @@ export interface IPopupPoster extends Document {
 const popupPosterSchema = new Schema<IPopupPoster>({
   imageUrl: { type: String, required: true },
   title: String,
+  linkUrl: String,
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
