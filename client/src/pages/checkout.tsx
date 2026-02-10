@@ -90,6 +90,11 @@ export default function CheckoutPage() {
     "Tejgaon Industrial Area", "Turag", "Uttara", "Uttarkhan", "Vasantek", 
     "Vatara", "Wari", "Zone not clear"
   ];
+
+  const subUrbanThanas = [
+    "Ashulia", "Dhamrai", "Dohar", "Hemayetpur", "Keraniganj Model", "Nawabganj", 
+    "Savar", "South Keraniganj"
+  ];
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -716,7 +721,7 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <Label htmlFor="billing-thana" className="text-[#26732d] font-medium text-sm sm:text-base mb-1.5 block">Thana/Upazilla</Label>
-                        {billingDetails.district === "Dhaka City" ? (
+                        {billingDetails.district === "Dhaka City" || billingDetails.district === "Dhaka Sub-Urban" ? (
                           <select
                             id="billing-thana"
                             value={billingDetails.thanaUpazilla}
@@ -726,7 +731,7 @@ export default function CheckoutPage() {
                             data-testid="select-thana"
                           >
                             <option value="">Select Thana</option>
-                            {dhakaThanas.map(thana => (
+                            {(billingDetails.district === "Dhaka City" ? dhakaThanas : subUrbanThanas).map(thana => (
                               <option key={thana} value={thana}>{thana}</option>
                             ))}
                           </select>
