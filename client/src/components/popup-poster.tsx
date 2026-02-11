@@ -77,8 +77,9 @@ export default function PopupPoster() {
             {poster.linkUrl ? (
               <a 
                 href={poster.linkUrl} 
-                className="block w-full h-full cursor-pointer"
+                className="block w-full h-full cursor-pointer z-[10001]"
                 onClick={(e) => {
+                  console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
                   if (poster.linkUrl?.startsWith('/')) {
                     e.preventDefault();
                     window.location.href = poster.linkUrl;
@@ -88,7 +89,7 @@ export default function PopupPoster() {
                 <img
                   src={poster.imageUrl}
                   alt={poster.title || 'Special Offer'}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover pointer-events-none"
                   data-testid="img-popup-poster"
                 />
               </a>
