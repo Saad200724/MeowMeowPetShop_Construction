@@ -55,7 +55,7 @@ export default function PopupPoster() {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); }}>
       <DialogPortal>
-        <DialogOverlay className="bg-black/50" />
+        <DialogOverlay className="bg-black/50 z-[9998]" />
         <DialogPrimitive.Content
           onPointerDownOutside={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}
@@ -66,41 +66,31 @@ export default function PopupPoster() {
           data-testid="popup-poster-dialog"
         >
           <button
-            onClick={handleClose}
-            className="absolute top-3 right-3 z-[10000] rounded-full bg-white/90 dark:bg-gray-800/90 p-2 text-gray-700 dark:text-gray-200 shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-105"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClose();
+            }}
+            className="absolute top-3 right-3 z-[10010] rounded-full bg-white/90 dark:bg-gray-800/90 p-2 text-gray-700 dark:text-gray-200 shadow-md backdrop-blur-sm transition-all duration-200 hover:scale-105"
             aria-label="Close popup"
             data-testid="button-close-popup"
           >
             <X className="w-5 h-5" />
           </button>
-          <div className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
-            {poster.linkUrl ? (
-              <a 
-                href={poster.linkUrl} 
-                className="block w-full h-full cursor-pointer z-[10001]"
-                onClick={(e) => {
-                  console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
-                  if (poster.linkUrl?.startsWith('/')) {
-                    e.preventDefault();
-                    window.location.href = poster.linkUrl;
-                  }
-                }}
-              >
-                <img
-                  src={poster.imageUrl}
-                  alt={poster.title || 'Special Offer'}
-                  className="w-full h-full object-cover pointer-events-none"
-                  data-testid="img-popup-poster"
-                />
-              </a>
-            ) : (
-              <img
-                src={poster.imageUrl}
-                alt={poster.title || 'Special Offer'}
-                className="w-full h-full object-cover"
-                data-testid="img-popup-poster"
-              />
-            )}
+          <div 
+            className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden aspect-square flex items-center justify-center cursor-pointer"
+            onClick={() => {
+              if (poster.linkUrl) {
+                console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
+                window.location.href = poster.linkUrl;
+              }
+            }}
+          >
+            <img
+              src={poster.imageUrl}
+              alt={poster.title || 'Special Offer'}
+              className="w-full h-full object-cover"
+              data-testid="img-popup-poster"
+            />
           </div>
         </DialogPrimitive.Content>
       </DialogPortal>
