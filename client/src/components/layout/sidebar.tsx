@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { X, Cat, Dog, Rabbit, Bird, Package, Stethoscope, Shirt, Gem, Bone, Gamepad2, ChevronRight, Facebook, Instagram, Twitter, Youtube, Linkedin, Pill, ShoppingBag } from 'lucide-react';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
