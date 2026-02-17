@@ -178,7 +178,7 @@ export default function Header() {
     { name: 'Cat Litter', path: '/cat-litter' },
     { name: 'Bird', path: '/bird' },
     { name: 'Rabbit', path: '/rabbit' },
-    { name: 'Reflex', path: '/brands/reflex' },
+    { name: 'Medicine', path: '/subcategory/medicine' },
     { name: 'Blog', path: '/blog' }
   ];
 

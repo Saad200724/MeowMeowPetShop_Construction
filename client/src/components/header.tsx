@@ -190,8 +190,8 @@ export default function Header() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/reflex" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
-                    Reflex
+                  <Link href="/subcategory/medicine" className="text-gray-700 hover:text-accent-green font-medium transition-colors">
+                    Medicine
                   </Link>
                 </li>
                 <li>

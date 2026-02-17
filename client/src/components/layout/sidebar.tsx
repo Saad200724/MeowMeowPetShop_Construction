@@ -24,30 +24,52 @@ export default function NavigationSidebar() {
 
   // Desktop categories (with icons and subcategories)
   const desktopCategories = [
-    { icon: Cat, label: 'Cat Food', href: '/cat-food', hasSubCategories: true },
-    { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: true },
+    { 
+      icon: Cat, 
+      label: 'Cat Food', 
+      href: '/cat-food', 
+      hasSubCategories: true,
+      subCategories: [
+        { label: 'Cat Food', href: '/cat-food' },
+        { label: 'Kitten Dry Food', href: '/subcategory/kitten-dry-food' },
+        { label: 'Adult Dry Food', href: '/subcategory/adult-dry-food' },
+        { label: 'Kitten Wet Food', href: '/subcategory/kitten-wet-food' },
+        { label: 'Adult Wet Food', href: '/subcategory/adult-wet-food' },
+      ]
+    },
+    { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: false },
     { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
-    { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: true },
+    { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: false },
     { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
-    { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier', hasSubCategories: true },
-    { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: true },
-    { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: true },
-    { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: true },
-    { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: true },
+    { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier', hasSubCategories: false },
+    { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: false },
+    { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: false },
+    { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: false },
+    { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: false },
   ];
+
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const handleCloseSidebar = () => {
     setIsVisible(false);
+    setExpandedCategory(null);
   };
 
   const handleBackdropClick = () => {
     if (!isHomePage) {
       setIsVisible(false);
+      setExpandedCategory(null);
     }
   };
 
   const handleSidebarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const toggleCategory = (e: React.MouseEvent, label: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpandedCategory(expandedCategory === label ? null : label);
   };
 
   if (!isVisible) return null;
@@ -155,18 +177,48 @@ export default function NavigationSidebar() {
             <nav className="space-y-1">
               {desktopCategories.map((category) => {
                 const IconComponent = category.icon;
+                const isExpanded = expandedCategory === category.label;
+                const hasSub = category.hasSubCategories && category.subCategories;
+                
                 return (
-                  <Link 
-                    key={category.label} 
-                    href={category.href}
-                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#26732d] rounded-lg transition-colors group"
-                  >
-                    <IconComponent className="w-5 h-5 mr-3 text-gray-500 group-hover:text-[#26732d]" />
-                    <span className="font-medium">{category.label}</span>
-                    {category.hasSubCategories && (
-                      <ChevronRight className="w-4 h-4 ml-auto text-gray-400 group-hover:text-[#26732d]" />
+                  <div key={category.label}>
+                    <div className="group relative flex items-center">
+                      <Link 
+                        href={category.href}
+                        className="flex-1 flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#26732d] rounded-lg transition-colors group"
+                        onClick={() => !hasSub && handleCloseSidebar()}
+                      >
+                        <IconComponent className="w-5 h-5 mr-3 text-gray-500 group-hover:text-[#26732d]" />
+                        <span className="font-medium">{category.label}</span>
+                      </Link>
+                      {hasSub && (
+                        <button
+                          onClick={(e) => toggleCategory(e, category.label)}
+                          className="p-2 ml-auto text-gray-400 hover:text-[#26732d] transition-colors"
+                        >
+                          <ChevronRight className={cn(
+                            "w-4 h-4 transition-transform duration-200",
+                            isExpanded && "rotate-90"
+                          )} />
+                        </button>
+                      )}
+                    </div>
+                    
+                    {hasSub && isExpanded && (
+                      <div className="ml-8 mt-1 space-y-1 border-l-2 border-gray-100 pl-4">
+                        {category.subCategories.map((sub) => (
+                          <Link
+                            key={sub.label}
+                            href={sub.href}
+                            className="block px-3 py-2 text-sm text-gray-600 hover:text-[#26732d] hover:bg-gray-50 rounded-md transition-colors"
+                            onClick={handleCloseSidebar}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
                     )}
-                  </Link>
+                  </div>
                 );
               })}
             </nav>
