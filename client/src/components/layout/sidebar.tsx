@@ -57,10 +57,12 @@ export default function NavigationSidebar() {
   const categoriesWithProducts = desktopCategories.filter(category => {
     // Check if any product matches this category label or is in its subcategories
     const hasProducts = allProducts.some((product: any) => 
-      product.categoryName === category.label || 
-      product.category === category.label ||
+      product.categoryName?.toLowerCase() === category.label.toLowerCase() || 
+      product.category?.toLowerCase() === category.label.toLowerCase() ||
+      product.categoryName?.toLowerCase() === category.href.replace('/', '').toLowerCase() ||
       (category.subCategories && category.subCategories.some((sub: any) => 
-        product.subcategory === sub.label || product.categoryName === sub.label
+        product.subcategory?.toLowerCase() === sub.label.toLowerCase() || 
+        product.categoryName?.toLowerCase() === sub.label.toLowerCase()
       ))
     );
     return hasProducts;
@@ -68,9 +70,10 @@ export default function NavigationSidebar() {
 
   const filteredMobileCategories = mobileCategories.filter((category: any) => {
     return allProducts.some((product: any) => 
-      product.categoryName === category.label || 
-      product.category === category.label ||
-      product.subcategory === category.label
+      product.categoryName?.toLowerCase() === category.label.toLowerCase() || 
+      product.category?.toLowerCase() === category.label.toLowerCase() ||
+      product.subcategory?.toLowerCase() === category.label.toLowerCase() ||
+      product.categoryName?.toLowerCase() === category.href.replace('/', '').toLowerCase()
     );
   });
 

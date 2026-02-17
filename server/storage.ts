@@ -610,6 +610,20 @@ export class DatabaseStorage implements IStorage {
           }
         }
       }
+
+      // Update coupon usage count if a coupon was used
+      if (orderData.discountCode) {
+        try {
+          const { Coupon } = await import("@shared/models");
+          await Coupon.findOneAndUpdate(
+            { code: orderData.discountCode.toUpperCase() },
+            { $inc: { usedCount: 1 } }
+          );
+          console.log(`Coupon ${orderData.discountCode} usage count incremented`);
+        } catch (couponError) {
+          console.error(`Failed to update coupon usage for ${orderData.discountCode}:`, couponError);
+        }
+      }
       
       // Also create an invoice
       const invoiceData = {

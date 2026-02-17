@@ -2546,10 +2546,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const newBlogPost = await storage.createBlogPost(blogPostData);
       res.status(201).json(newBlogPost);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating blog post:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to create blog post" });
     }
@@ -2587,10 +2587,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(updatedBlogPost);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating blog post:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to update blog post" });
     }
@@ -2648,10 +2648,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = bannerSchema.parse(req.body);
       const newBanner = await storage.createBanner(validatedData);
       res.json(newBanner);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating banner:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to create banner" });
     }
@@ -2675,10 +2675,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(updatedBanner);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating banner:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       if (error instanceof Error && error.message.includes('Maximum 3 banners')) {
         return res.status(400).json({ message: error.message });
@@ -2734,10 +2734,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = posterSchema.parse(req.body);
       const newPoster = await storage.createPopupPoster(validatedData);
       res.json(newPoster);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating popup poster:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to create popup poster" });
     }
@@ -2760,10 +2760,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(updatedPoster);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating popup poster:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to update popup poster" });
     }
@@ -2878,10 +2878,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await newCoupon.save();
       res.status(201).json(newCoupon);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating coupon:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to create coupon" });
     }
@@ -2955,10 +2955,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(updatedCoupon);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating coupon:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ message: "Validation error", errors: (error as any).errors });
       }
       res.status(500).json({ message: "Failed to update coupon" });
     }
@@ -3613,12 +3613,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Review submitted successfully",
         review
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting review:', error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
           message: "Validation failed", 
-          errors: error.errors 
+          errors: (error as any).errors 
         });
       }
       res.status(500).json({ message: "Failed to submit review" });
