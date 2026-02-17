@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { X, Cat, Dog, Rabbit, Bird, Package, Stethoscope, Shirt, Gem, Bone, Gamepad2, ChevronRight, Facebook, Instagram, Twitter, Youtube, Linkedin, Pill, ShoppingBag } from 'lucide-react';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
@@ -21,9 +22,9 @@ export default function NavigationSidebar() {
     { label: 'Dog Health & Accessories', href: '/dog-accessories' },
     { label: 'Rabbit Food & Accessories', href: '/rabbit' },
     { label: 'Bird Food & Accessories', href: '/bird' },
+    { label: 'Medicine', href: '/subcategory/medicine' },
   ];
 
-  // Desktop categories (with icons and subcategories)
   const desktopCategories = [
     { 
       icon: Cat, 
@@ -47,7 +48,31 @@ export default function NavigationSidebar() {
     { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: false },
     { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: false },
     { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: false },
+    { icon: Pill, label: 'Medicine', href: '/subcategory/medicine', hasSubCategories: false },
   ];
+  const { data: allProducts = [] } = useQuery<any[]>({
+    queryKey: ['/api/products'],
+  });
+
+  const categoriesWithProducts = desktopCategories.filter(category => {
+    // Check if any product matches this category label or is in its subcategories
+    const hasProducts = allProducts.some((product: any) => 
+      product.categoryName === category.label || 
+      product.category === category.label ||
+      (category.subCategories && category.subCategories.some((sub: any) => 
+        product.subcategory === sub.label || product.categoryName === sub.label
+      ))
+    );
+    return hasProducts;
+  });
+
+  const filteredMobileCategories = mobileCategories.filter((category: any) => {
+    return allProducts.some((product: any) => 
+      product.categoryName === category.label || 
+      product.category === category.label ||
+      product.subcategory === category.label
+    );
+  });
 
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
@@ -117,7 +142,7 @@ export default function NavigationSidebar() {
                 </div>
                 
                 <nav className="space-y-0">
-                  {mobileCategories.map((category) => (
+                  {filteredMobileCategories.map((category) => (
                     <Link 
                       key={category.label} 
                       href={category.href}
@@ -176,7 +201,7 @@ export default function NavigationSidebar() {
           <div className="p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-800">Categories</h2>
             <nav className="space-y-1">
-              {desktopCategories.map((category) => {
+              {categoriesWithProducts.map((category) => {
                 const IconComponent = category.icon;
                 const isExpanded = expandedCategory === category.label;
                 const hasSub = category.hasSubCategories && category.subCategories;

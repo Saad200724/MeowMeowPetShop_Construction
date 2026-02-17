@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRoute } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
@@ -9,6 +9,7 @@ import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { useQuery } from '@tanstack/react-query';
+import { cn } from '@/lib/utils';
 
 interface InvoiceItem {
   productId: string;
@@ -46,31 +47,14 @@ export default function InvoicePage() {
   const [match, params] = useRoute('/invoice/:invoiceId');
   const { toast } = useToast();
 
-  const { data: invoice, isLoading, error } = useQuery({
+  const { data: invoice, isLoading, error } = useQuery<Invoice>({
     queryKey: [`/api/invoices/${params?.invoiceId}`],
     enabled: !!params?.invoiceId,
   });
 
   const handlePrint = () => {
-    const printContents = document.querySelectorAll('.print-invoice');
-    if (printContents.length === 0) return;
-    
-    const originalContent = document.body.innerHTML;
-    let combinedHTML = '';
-    
-    printContents.forEach((element, index) => {
-      combinedHTML += element.outerHTML;
-      if (index < printContents.length - 1) {
-        combinedHTML += '<div style="page-break-after: always;"></div>';
-      }
-    });
-    
-    document.body.innerHTML = combinedHTML;
     window.print();
-    document.body.innerHTML = originalContent;
-    window.location.reload();
   };
-
 
   if (isLoading) {
     return (
@@ -113,14 +97,14 @@ export default function InvoicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-10">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-[210mm] mx-auto">
           
           {/* Success Message */}
-          <Card className="mb-6 bg-green-50 border-green-200">
+          <Card className="mb-6 bg-green-50 border-green-200 print:hidden">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
                 <CheckCircle className="h-8 w-8 text-green-600" />
@@ -135,7 +119,7 @@ export default function InvoicePage() {
           </Card>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-1 mb-6">
+          <div className="flex flex-wrap gap-1 mb-6 print:hidden">
             <Button 
               onClick={() => window.history.back()}
               className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
@@ -151,50 +135,50 @@ export default function InvoicePage() {
               data-testid="button-print-invoice"
             >
               <Printer className="h-4 w-4" />
-              <span>Print Invoice</span>
+              <span>Print Invoice (A4)</span>
             </Button>
           </div>
 
-          {/* Invoice */}
-          <Card className="print-invoice print:shadow-none print:border-none">
-            <CardHeader className="border-b">
+          {/* Invoice A4 Container */}
+          <div className="print-invoice w-[210mm] min-h-[297mm] mx-auto bg-white p-[20mm] box-border shadow-lg print:shadow-none mb-10 print:m-0 print:border-none">
+            <div className="border-b pb-6 mb-6">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center mb-3">
                     <img src="/logo.png" alt="Meow Meow Pet Shop Logo" className="h-12 w-12 mr-3" />
-                    <CardTitle className="text-3xl font-bold text-[#26732d]">
+                    <h1 className="text-3xl font-bold text-[#26732d]">
                       Meow Meow Pet Shop
-                    </CardTitle>
+                    </h1>
                   </div>
-                  <p className="text-gray-600 mt-2">
+                  <p className="text-gray-600 mt-2 text-sm">
                     Savar, Bangladesh<br />
                     Email: meowmeowpetshop1@gmail.com<br />
                     Phone: 01405-045023
                   </p>
                 </div>
                 <div className="text-right">
-                  <h2 className="text-2xl font-bold text-gray-900">INVOICE</h2>
-                  <p className="text-lg font-semibold text-[#26732d]">
+                  <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-wider">Invoice</h2>
+                  <p className="text-lg font-semibold text-[#26732d] mt-1">
                     #{invoice.invoiceNumber}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 mt-1 text-sm">
                     Date: {new Date(invoice.orderDate).toLocaleDateString()}
                   </p>
                 </div>
               </div>
-            </CardHeader>
+            </div>
 
-            <CardContent className="p-6">
+            <div className="p-0">
               {/* Customer Information */}
-              <div className="grid md:grid-cols-2 gap-1 mb-8">
+              <div className="grid grid-cols-2 gap-12 mb-10">
                 <div>
-                  <h3 className="font-bold text-lg mb-3">Bill To:</h3>
-                  <div className="space-y-1">
-                    <p className="font-semibold">{invoice.customerInfo.name}</p>
-                    <p>{invoice.customerInfo.email}</p>
-                    <p>{invoice.customerInfo.phone}</p>
+                  <h3 className="font-bold text-gray-900 border-b pb-2 mb-3 uppercase text-xs tracking-wider">Bill To</h3>
+                  <div className="space-y-1 text-gray-700">
+                    <p className="font-bold text-gray-900">{invoice.customerInfo.name}</p>
+                    <p className="text-sm">{invoice.customerInfo.email}</p>
+                    <p className="text-sm">{invoice.customerInfo.phone}</p>
                     {invoice.customerInfo.address && (
-                      <div className="text-gray-600 space-y-1">
+                      <div className="mt-2 text-sm leading-relaxed">
                         {typeof invoice.customerInfo.address === 'string' ? (
                           <p>{invoice.customerInfo.address}</p>
                         ) : (
@@ -215,105 +199,133 @@ export default function InvoicePage() {
                 </div>
                 
                 <div>
-                  <h3 className="font-bold text-lg mb-3">Order Details:</h3>
-                  <div className="space-y-1">
-                    <p><span className="font-medium">Order ID:</span> {invoice.orderId}</p>
-                    <p><span className="font-medium">Payment Method:</span> {invoice.paymentMethod}</p>
-                    <p>
-                      <span className="font-medium">Payment Status:</span>
-                      <Badge 
-                        variant={invoice.paymentStatus === 'Paid' ? 'default' : 'secondary'}
-                        className="ml-2"
-                      >
+                  <h3 className="font-bold text-gray-900 border-b pb-2 mb-3 uppercase text-xs tracking-wider">Order Info</h3>
+                  <div className="space-y-2 text-gray-700">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium">Order ID:</span>
+                      <span>{invoice.orderId}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium">Payment:</span>
+                      <span>{invoice.paymentMethod}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium">Status:</span>
+                      <span className={cn(
+                        "px-2 py-0.5 rounded text-xs font-bold uppercase",
+                        invoice.paymentStatus === 'Paid' ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+                      )}>
                         {invoice.paymentStatus}
-                      </Badge>
-                    </p>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Items Table */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Items Ordered:</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border border-gray-300 p-3 text-left">Product</th>
-                        <th className="border border-gray-300 p-3 text-center">Quantity</th>
-                        <th className="border border-gray-300 p-3 text-right">Price</th>
-                        <th className="border border-gray-300 p-3 text-right">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoice.items.map((item, index) => (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 p-3">
-                            <div className="flex items-center space-x-3">
-                              <img 
-                                src={item.image} 
-                                alt={item.name}
-                                className="w-12 h-12 object-cover rounded"
-                              />
-                              <span className="font-medium">{item.name}</span>
+              <div className="mb-10">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-y-2 border-gray-200">
+                      <th className="py-4 font-bold text-gray-900 uppercase text-xs tracking-wider">Description</th>
+                      <th className="py-4 px-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-center">Qty</th>
+                      <th className="py-4 px-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-right">Price</th>
+                      <th className="py-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {invoice.items.map((item, index) => (
+                      <tr key={index}>
+                        <td className="py-4">
+                          <div className="flex items-center">
+                            <img 
+                              src={item.image} 
+                              alt={item.name}
+                              className="w-10 h-10 object-cover rounded mr-3 print:hidden"
+                            />
+                            <div>
+                              <p className="font-bold text-gray-900 text-sm">{item.name}</p>
+                              <p className="text-[10px] text-gray-500 uppercase">Unit Price: ৳ {item.price.toLocaleString()}</p>
                             </div>
-                          </td>
-                          <td className="border border-gray-300 p-3 text-center">
-                            {item.quantity}
-                          </td>
-                          <td className="border border-gray-300 p-3 text-right">
-                            ৳ {item.price.toLocaleString()}
-                          </td>
-                          <td className="border border-gray-300 p-3 text-right font-medium">
-                            ৳ {(item.price * item.quantity).toLocaleString()}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4 text-center text-sm font-medium">{item.quantity}</td>
+                        <td className="py-4 px-4 text-right text-sm">৳ {item.price.toLocaleString()}</td>
+                        <td className="py-4 text-right text-sm font-bold">৳ {(item.price * item.quantity).toLocaleString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
               {/* Totals */}
-              <div className="flex justify-end">
-                <div className="w-full md:w-1/2 lg:w-1/3 space-y-2">
-                  <Separator />
-                  <div className="flex justify-between">
-                    <span>Subtotal:</span>
-                    <span>৳ {invoice.subtotal.toLocaleString()}</span>
+              <div className="flex justify-end pt-4 border-t-2 border-gray-100">
+                <div className="w-1/2 space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-bold">৳ {invoice.subtotal.toLocaleString()}</span>
                   </div>
                   {invoice.deliveryFee !== undefined && invoice.deliveryFee > 0 && (
-                    <div className="flex justify-between">
-                      <span>Delivery Fee:</span>
-                      <span>৳ {invoice.deliveryFee.toLocaleString()}</span>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Shipping Fee</span>
+                      <span className="font-bold">৳ {invoice.deliveryFee.toLocaleString()}</span>
                     </div>
                   )}
                   {invoice.discount !== undefined && invoice.discount > 0 && (
-                    <div className="flex justify-between">
-                      <span>Discount {invoice.discountCode && `(${invoice.discountCode})`}:</span>
-                      <span className="text-green-600">-৳ {invoice.discount.toLocaleString()}</span>
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount :-৳ {invoice.discount.toLocaleString()} {invoice.discountCode && `(${invoice.discountCode})`}</span>
+                      <span className="font-bold"></span>
                     </div>
                   )}
-                  <div className="flex justify-between text-lg font-bold border-t pt-2">
-                    <span>Total:</span>
-                    <span className="text-[#26732d]">৳ {invoice.total.toLocaleString()}</span>
+                  <div className="flex justify-between items-center pt-3 border-t border-gray-200">
+                    <span className="text-lg font-bold text-gray-900">Total Amount</span>
+                    <span className="text-2xl font-black text-[#26732d]">৳ {invoice.total.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="mt-8 pt-6 border-t text-center text-gray-600">
-                <p>Thank you for shopping with Meow Meow Pet Shop!</p>
-                <p className="text-sm mt-2">
-                  For any queries, please contact us at meowmeowpetshop1@gmail.com
+              {/* Notes / Footer */}
+              <div className="mt-20 pt-10 border-t border-gray-100 text-center">
+                <p className="text-gray-900 font-bold mb-1 italic text-sm">Thank you for your purchase!</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-widest">
+                  Meow Meow Pet Shop • Savar, Bangladesh • meowmeowpetshop1@gmail.com
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
 
       <Footer />
+      
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          .print-invoice, .print-invoice * {
+            visibility: visible;
+          }
+          .print-invoice {
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: 0 !important;
+            padding: 20mm !important;
+            box-shadow: none !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            border: none !important;
+          }
+          @page {
+            size: A4;
+            margin: 0;
+          }
+          header, footer, .print:hidden {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
