@@ -55,26 +55,39 @@ export default function NavigationSidebar() {
   });
 
   const categoriesWithProducts = desktopCategories.filter(category => {
-    // Check if any product matches this category label or is in its subcategories
-    const hasProducts = allProducts.some((product: any) => 
-      product.categoryName?.toLowerCase() === category.label.toLowerCase() || 
-      product.category?.toLowerCase() === category.label.toLowerCase() ||
-      product.categoryName?.toLowerCase() === category.href.replace('/', '').toLowerCase() ||
-      (category.subCategories && category.subCategories.some((sub: any) => 
-        product.subcategory?.toLowerCase() === sub.label.toLowerCase() || 
-        product.categoryName?.toLowerCase() === sub.label.toLowerCase()
-      ))
-    );
+    // We want to show the category if at least one product belongs to it
+    const hasProducts = allProducts.some((product: any) => {
+      const pCatSlug = product.category?.toLowerCase();
+      const pCatName = product.categoryName?.toLowerCase();
+      const cLabel = category.label.toLowerCase();
+      const cSlug = category.href.replace('/', '').toLowerCase();
+
+      // Broad matching to ensure visibility
+      return pCatSlug === cSlug || 
+             pCatName === cLabel ||
+             pCatSlug?.includes(cSlug) ||
+             pCatName?.includes(cLabel.replace(' & health', '').replace(' & accessories', '').trim().toLowerCase()) ||
+             product.subcategory?.toLowerCase() === cLabel || 
+             product.subcategory?.toLowerCase() === cSlug;
+    });
     return hasProducts;
   });
 
   const filteredMobileCategories = mobileCategories.filter((category: any) => {
-    return allProducts.some((product: any) => 
-      product.categoryName?.toLowerCase() === category.label.toLowerCase() || 
-      product.category?.toLowerCase() === category.label.toLowerCase() ||
-      product.subcategory?.toLowerCase() === category.label.toLowerCase() ||
-      product.categoryName?.toLowerCase() === category.href.replace('/', '').toLowerCase()
-    );
+    return allProducts.some((product: any) => {
+      const pCatSlug = product.category?.toLowerCase();
+      const pCatName = product.categoryName?.toLowerCase();
+      const pSub = product.subcategory?.toLowerCase();
+      const cLabel = category.label.toLowerCase();
+      const cSlug = category.href.replace('/', '').toLowerCase();
+
+      return pCatSlug === cSlug || 
+             pCatName === cLabel ||
+             pCatSlug?.includes(cSlug) ||
+             pCatName?.includes(cLabel.replace(' & health', '').replace(' & accessories', '').trim().toLowerCase()) ||
+             pSub === cLabel || 
+             pSub === cSlug;
+    });
   });
 
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
