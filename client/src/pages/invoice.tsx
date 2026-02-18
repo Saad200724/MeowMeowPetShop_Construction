@@ -202,18 +202,18 @@ export default function InvoicePage() {
                   <h3 className="font-bold text-gray-900 border-b pb-2 mb-3 uppercase text-xs tracking-wider">Order Info</h3>
                   <div className="space-y-2 text-gray-700">
                     <div className="flex justify-between text-sm">
-                      <span className="font-bold text-black">Order ID:</span>
-                      <span className="text-black">{invoice.orderId}</span>
+                      <span className="font-medium">Order ID:</span>
+                      <span>{invoice.orderId}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="font-bold text-black">Payment:</span>
-                      <span className="text-black">{invoice.paymentMethod}</span>
+                      <span className="font-medium">Payment:</span>
+                      <span>{invoice.paymentMethod}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="font-bold text-black">Status:</span>
+                      <span className="font-medium">Status:</span>
                       <span className={cn(
                         "px-2 py-0.5 rounded text-xs font-bold uppercase",
-                        invoice.paymentStatus === 'Paid' ? "bg-green-100 text-green-700" : "bg-gray-100 text-black"
+                        invoice.paymentStatus === 'Paid' ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
                       )}>
                         {invoice.paymentStatus}
                       </span>
@@ -227,10 +227,10 @@ export default function InvoicePage() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-y-2 border-gray-200">
-                      <th className="py-4 font-bold text-black uppercase text-xs tracking-wider">Description</th>
-                      <th className="py-4 px-4 font-bold text-black uppercase text-xs tracking-wider text-center">Qty</th>
-                      <th className="py-4 px-4 font-bold text-black uppercase text-xs tracking-wider text-right">Price</th>
-                      <th className="py-4 font-bold text-black uppercase text-xs tracking-wider text-right">Total</th>
+                      <th className="py-4 font-bold text-gray-900 uppercase text-xs tracking-wider">Description</th>
+                      <th className="py-4 px-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-center">Qty</th>
+                      <th className="py-4 px-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-right">Price</th>
+                      <th className="py-4 font-bold text-gray-900 uppercase text-xs tracking-wider text-right">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -244,14 +244,14 @@ export default function InvoicePage() {
                               className="w-10 h-10 object-cover rounded mr-3 print:hidden"
                             />
                             <div>
-                              <p className="font-bold text-black text-sm">{item.name}</p>
-                              <p className="text-[10px] text-black uppercase">Unit Price: ৳ {item.price.toLocaleString()}</p>
+                              <p className="font-bold text-gray-900 text-sm">{item.name}</p>
+                              <p className="text-[10px] text-gray-500 uppercase">Unit Price: ৳ {item.price.toLocaleString()}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-center text-sm font-bold text-black">{item.quantity}</td>
-                        <td className="py-4 px-4 text-right text-sm text-black">৳ {item.price.toLocaleString()}</td>
-                        <td className="py-4 text-right text-sm font-bold text-black">৳ {(item.price * item.quantity).toLocaleString()}</td>
+                        <td className="py-4 px-4 text-center text-sm font-medium">{item.quantity}</td>
+                        <td className="py-4 px-4 text-right text-sm">৳ {item.price.toLocaleString()}</td>
+                        <td className="py-4 text-right text-sm font-bold">৳ {(item.price * item.quantity).toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -259,34 +259,26 @@ export default function InvoicePage() {
               </div>
 
               {/* Totals */}
-              <div className="flex justify-between pt-4 border-t-2 border-gray-100">
-                <div className="w-1/2">
-                  {invoice.customerInfo?.orderNotes && (
-                    <div className="text-sm">
-                      <h4 className="font-bold text-black uppercase text-xs mb-1">Additional Notes:</h4>
-                      <p className="text-black italic">{invoice.customerInfo.orderNotes}</p>
-                    </div>
-                  )}
-                </div>
+              <div className="flex justify-end pt-4 border-t-2 border-gray-100">
                 <div className="w-1/2 space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-black font-medium">Subtotal</span>
-                    <span className="font-bold text-black">৳ {invoice.subtotal.toLocaleString()}</span>
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-bold">৳ {invoice.subtotal.toLocaleString()}</span>
                   </div>
                   {invoice.deliveryFee !== undefined && invoice.deliveryFee > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-black font-medium">Shipping Fee</span>
-                      <span className="font-bold text-black">৳ {invoice.deliveryFee.toLocaleString()}</span>
+                      <span className="text-gray-600">Shipping Fee</span>
+                      <span className="font-bold">৳ {invoice.deliveryFee.toLocaleString()}</span>
                     </div>
                   )}
                   {invoice.discount !== undefined && invoice.discount > 0 && (
-                    <div className="flex justify-between text-sm text-green-700">
-                      <span className="font-medium">Discount :-৳ {invoice.discount.toLocaleString()} {invoice.discountCode && `(${invoice.discountCode})`}</span>
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount :-৳ {invoice.discount.toLocaleString()} {invoice.discountCode && `(${invoice.discountCode})`}</span>
                       <span className="font-bold"></span>
                     </div>
                   )}
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-                    <span className="text-lg font-bold text-black">Total Amount</span>
+                    <span className="text-lg font-bold text-gray-900">Total Amount</span>
                     <span className="text-2xl font-black text-[#26732d]">৳ {invoice.total.toLocaleString()}</span>
                   </div>
                 </div>
