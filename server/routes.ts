@@ -15,9 +15,12 @@ import { generateOTP, sendOTPEmail } from "./email-service";
 
 // Generate unique order number to ensure no duplicates
 function generateUniqueOrderNumber(): string {
-  const timestamp = Date.now().toString(36); // Convert timestamp to base36
-  const randomPart = Math.random().toString(36).substring(2, 8); // Random 6 chars
-  return `INV-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
+  const chars = '0123456789';
+  let result = '';
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
