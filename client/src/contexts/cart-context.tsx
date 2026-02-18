@@ -254,15 +254,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       const normalizedDistrict = district?.toLowerCase() || '';
       const isDhakaCity = normalizedDistrict === 'dhaka city';
-      const isDhakaSubUrban = normalizedDistrict === 'dhaka sub-urban';
-
+      
+      // Dhaka City: 80tk up to 2kg, +20tk per additional kg
+      // Dhaka City: 80tk up to 2kg, +20tk per additional kg
       if (isDhakaCity) {
         const baseFee = 80;
         if (totalWeight <= 2) return baseFee;
         const extraWeight = Math.ceil(totalWeight - 2);
         return baseFee + (extraWeight * 20);
       } else {
-        // Dhaka Sub-Urban or Outside Dhaka
+        // Others (including Dhaka Sub-Urban): 130tk up to 1kg, +20tk per additional kg
         const baseFee = 130;
         if (totalWeight <= 1) return baseFee;
         const extraWeight = Math.ceil(totalWeight - 1);
