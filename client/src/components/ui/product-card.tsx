@@ -241,11 +241,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               size="sm"
               className={cn(
                 "w-full rounded-full py-1.5 text-xs transition-all duration-200 border-2",
-                showInfoOnly
-                  ? "border-[#26732d] text-[#26732d] hover:bg-[#26732d]/10"
-                  : (isInCart
-                    ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
-                    : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5"),
+                isInCart
+                  ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+                  : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
               )}
               disabled={
                 !showInfoOnly && (
