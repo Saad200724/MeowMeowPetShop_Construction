@@ -40,6 +40,7 @@ interface Invoice {
   total: number;
   paymentMethod: string;
   paymentStatus: string;
+  orderNotes?: string;
   orderDate: string;
   createdAt: string;
   updatedAt: string;

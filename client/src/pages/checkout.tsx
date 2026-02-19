@@ -297,7 +297,7 @@ export default function CheckoutPage() {
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
       },
-      orderNotes
+      orderNotes: orderNotes
     };
     try { await createOrderMutation.mutateAsync(orderData); } catch (error) { console.error('Order creation failed:', error); } finally { setIsProcessing(false); }
   };
@@ -377,9 +377,9 @@ export default function CheckoutPage() {
                         <div><Label>District *</Label><select value={billingDetails.district} onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value, thanaUpazilla: '' }))} className="w-full h-10 border rounded px-2 bg-white text-black" required><option value="">Select District</option>{districts.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
                         <div><Label>Upazilla/Thana *</Label>{(billingDetails.district === 'Dhaka City' || billingDetails.district === 'Dhaka Sub-Urban') ? (<select value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} className="w-full h-10 border rounded px-2 bg-white text-black" required><option value="">Select Thana</option>{(billingDetails.district === 'Dhaka City' ? dhakaThanas : subUrbanThanas).map(t => <option key={t} value={t}>{t}</option>)}</select>) : (<Input value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} className="bg-white text-black" required />)}</div>
                       </div>
-                      <div><Label>Full Address *</Label><Textarea value={billingDetails.address} onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))} required /></div>
-                      <div><Label>Additional Notes (Optional)</Label><Textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} /></div>
-                    </div>
+                          <div><Label>Full Address *</Label><Textarea value={billingDetails.address} onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))} required /></div>
+                          <div><Label>Order Notes (Optional)</Label><Textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} placeholder="Add any special instructions for your order" /></div>
+                        </div>
                   </div>
                 </CardContent>
               </Card>
