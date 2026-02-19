@@ -248,13 +248,13 @@ export default function InvoicePage() {
                             />
                             <div>
                               <p className="font-bold text-black text-sm">{item.name}</p>
-                              {((item as any).weight || (item as any).color) && (
+                              {(item.weight || item.color) && (
                                 <div className="flex gap-2 mt-0.5">
-                                  {(item as any).weight && (
-                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">W: {(item as any).weight}</span>
+                                  {item.weight && (
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">W: {item.weight}</span>
                                   )}
-                                  {(item as any).color && (
-                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">C: {(item as any).color}</span>
+                                  {item.color && (
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">C: {item.color}</span>
                                   )}
                                 </div>
                               )}

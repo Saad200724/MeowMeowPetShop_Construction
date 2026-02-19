@@ -209,6 +209,8 @@ export interface ICartItem {
   price: number;
   quantity: number;
   image: string;
+  weight?: string;
+  color?: string;
 }
 
 // Cart Schema
@@ -254,6 +256,7 @@ export interface IInvoice extends Document {
   paymentMethod: string;
   paymentStatus: string;
   orderDate: Date;
+  orderNotes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -273,7 +276,9 @@ const invoiceSchema = new Schema<IInvoice>({
     name: { type: String, required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
-    image: { type: String, required: true }
+    image: { type: String, required: true },
+    weight: String,
+    color: String
   }],
   subtotal: { type: Number, required: true },
   deliveryFee: { type: Number, default: 0 },
@@ -282,7 +287,8 @@ const invoiceSchema = new Schema<IInvoice>({
   total: { type: Number, required: true },
   paymentMethod: { type: String, required: true },
   paymentStatus: { type: String, default: 'Pending' },
-  orderDate: { type: Date, default: Date.now }
+  orderDate: { type: Date, default: Date.now },
+  orderNotes: String
 }, { timestamps: true });
 
 // Coupon Schema

@@ -2044,14 +2044,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         orderId: orderId,
         userId,
         customerInfo,
-        items: validatedItems,
+        items: validatedItems.map((item: any) => ({
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image,
+          weight: item.weight,
+          color: item.color
+        })),
         subtotal: serverSubtotal, // Use server-computed subtotal
         discount: serverDiscount, // Use server-computed discount
         discountCode: validatedCouponCode,
         total: serverTotal, // Use server-computed total
         paymentMethod,
         paymentStatus: order.paymentStatus,
-        orderNotes: orderData.orderNotes
+        orderNotes: req.body.orderNotes
       });
 
       await invoice.save({ session });
