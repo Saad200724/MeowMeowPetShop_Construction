@@ -204,6 +204,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         orderData.userId = "guest_" + Date.now();
       }
 
+      // Add subtotal if not present
+      if (orderData.subtotal === undefined) {
+        orderData.subtotal = orderData.items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+      }
+
       console.log("Creating order with data:", JSON.stringify(orderData, null, 2));
       const result = await storage.createOrder(orderData);
       

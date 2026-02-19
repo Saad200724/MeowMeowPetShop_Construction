@@ -636,7 +636,9 @@ export class DatabaseStorage implements IStorage {
           phone: "0000000000"
         },
         items: orderData.items || [],
-        subtotal: orderData.total || 0,
+        subtotal: orderData.subtotal || orderData.total || 0,
+        discount: orderData.discount || 0,
+        discountCode: orderData.discountCode || '',
         deliveryFee: orderData.deliveryFee || 0,
         totalWeight: orderData.totalWeight || 0,
         total: orderData.total || 0,

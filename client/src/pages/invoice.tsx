@@ -263,18 +263,18 @@ export default function InvoicePage() {
                 <div className="w-1/2 space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-black font-medium">Subtotal</span>
-                    <span className="font-bold text-black">৳{invoice.subtotal.toLocaleString()}</span>
+                    <span className="font-bold text-black">৳{(invoice as any).subtotal?.toLocaleString() || (invoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)).toLocaleString()}</span>
                   </div>
-                  {invoice.discount !== undefined && invoice.discount > 0 && (
+                  {(invoice as any).discount !== undefined && (invoice as any).discount > 0 && (
                     <div className="flex justify-between text-sm text-red-600">
-                      <span className="font-medium">Discount ({invoice.discountCode})</span>
-                      <span className="font-bold">-৳{invoice.discount.toLocaleString()}</span>
+                      <span className="font-medium">Discount ({(invoice as any).discountCode})</span>
+                      <span className="font-bold">-৳{(invoice as any).discount.toLocaleString()}</span>
                     </div>
                   )}
-                  {invoice.deliveryFee !== undefined && (
+                  {(invoice as any).deliveryFee !== undefined && (
                     <div className="flex justify-between text-sm">
                       <span className="text-black font-medium">Delivery Fee</span>
-                      <span className="font-bold text-black">৳{invoice.deliveryFee.toLocaleString()}</span>
+                      <span className="font-bold text-black">৳{(invoice as any).deliveryFee.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200">

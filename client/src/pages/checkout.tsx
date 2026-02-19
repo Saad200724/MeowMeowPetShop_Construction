@@ -262,6 +262,10 @@ export default function CheckoutPage() {
     const orderData = {
       userId: user?.id || 'guest',
       total: finalTotal,
+      subtotal: cartState.total,
+      deliveryFee: finalDeliveryFee,
+      discount: cartState.appliedCoupon ? cartState.appliedCoupon.discount : 0,
+      discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
       totalWeight,
       customerInfo: {
         name: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
@@ -285,7 +289,6 @@ export default function CheckoutPage() {
         weight: (item as any).weight,
         color: (item as any).color
       })),
-      discountCode: cartState.appliedCoupon ? cartState.appliedCoupon.code : null,
       paymentMethod,
       shippingAddress: {
         address: billingDetails.address,
@@ -294,7 +297,6 @@ export default function CheckoutPage() {
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
       },
-      deliveryFee: finalDeliveryFee,
       orderNotes
     };
     try { await createOrderMutation.mutateAsync(orderData); } catch (error) { console.error('Order creation failed:', error); } finally { setIsProcessing(false); }
