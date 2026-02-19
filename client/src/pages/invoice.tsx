@@ -17,6 +17,8 @@ interface InvoiceItem {
   price: number;
   quantity: number;
   image: string;
+  weight?: string;
+  color?: string;
 }
 
 interface Invoice {
@@ -245,6 +247,16 @@ export default function InvoicePage() {
                             />
                             <div>
                               <p className="font-bold text-black text-sm">{item.name}</p>
+                              {((item as any).weight || (item as any).color) && (
+                                <div className="flex gap-2 mt-0.5">
+                                  {(item as any).weight && (
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">W: {(item as any).weight}</span>
+                                  )}
+                                  {(item as any).color && (
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">C: {(item as any).color}</span>
+                                  )}
+                                </div>
+                              )}
                               <p className="text-[10px] text-gray-500 uppercase">Unit Price: ৳{item.price.toLocaleString()}</p>
                             </div>
                           </div>

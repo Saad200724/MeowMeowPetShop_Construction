@@ -159,14 +159,28 @@ export default function CartPage() {
                         />
                       </div>
 
-                      {/* Product Details */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm md:text-base text-gray-900 line-clamp-2 mb-1">
-                          {item.name}
-                        </h3>
-                        <p className="text-[#26732d] font-bold text-sm md:text-base mb-3">
-                          {formatPrice(item.price)}
-                        </p>
+                        {/* Product Details */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-sm md:text-base text-gray-900 line-clamp-2 mb-1">
+                            {item.name}
+                          </h3>
+                          {((item as any).weight || (item as any).color) && (
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              {(item as any).weight && (
+                                <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-gray-300">
+                                  Weight: {(item as any).weight}
+                                </Badge>
+                              )}
+                              {(item as any).color && (
+                                <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-gray-300">
+                                  Color: {(item as any).color}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+                          <p className="text-[#26732d] font-bold text-sm md:text-base mb-3">
+                            {formatPrice(item.price)}
+                          </p>
 
                         {/* Product Description Snippet - Add Shipping Info Here */}
                         <div className="text-xs text-gray-500 mb-3 line-clamp-2">
