@@ -4,13 +4,13 @@ import { Search, ShoppingCart, User, Menu, Phone, MapPin, Truck, LogIn, LogOut }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/contexts/cart-context";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { cartCount } = useCart();
+  const { state: { itemCount: cartCount } } = useCart();
   const { user, loading, signOut: authSignOut } = useAuth();
   const { toast } = useToast();
 

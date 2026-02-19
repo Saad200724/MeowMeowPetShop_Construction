@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@shared/schema";
 
@@ -12,11 +12,19 @@ export default function BestSellers() {
     queryKey: ['/api/products/best-sellers'],
   });
   
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const { toast } = useToast();
 
-  const handleAddToCart = (product: Product) => {
-    addToCart(product.id);
+  const handleAddToCart = (product: any) => {
+    addItem({
+      id: product.id.toString(),
+      productId: product.id.toString(),
+      name: product.name,
+      price: parseFloat(product.price),
+      image: product.image || "",
+      maxStock: product.stock || 100,
+      weight: product.weight || "",
+    });
     toast({
       title: "Added to cart!",
       description: `${product.name} has been added to your cart.`,
