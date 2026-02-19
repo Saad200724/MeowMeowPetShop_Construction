@@ -151,7 +151,7 @@ export default function InvoicePage() {
                     </h1>
                   </div>
                   <p className="text-gray-600 mt-2 text-sm">
-                    Savar, Bangladesh<br />
+                    Savar,Dhaka, Bangladesh<br />
                     Email: meowmeowpetshop1@gmail.com<br />
                     Phone: 01405-045023
                   </p>
