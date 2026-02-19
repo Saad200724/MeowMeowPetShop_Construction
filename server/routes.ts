@@ -2050,7 +2050,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         discountCode: validatedCouponCode,
         total: serverTotal, // Use server-computed total
         paymentMethod,
-        paymentStatus: order.paymentStatus
+        paymentStatus: order.paymentStatus,
+        orderNotes: orderData.orderNotes
       });
 
       await invoice.save({ session });
