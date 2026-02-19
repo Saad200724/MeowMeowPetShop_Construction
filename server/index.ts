@@ -1,16 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-// Validate required environment variables
-if (!process.env.MONGODB_URI) {
-  console.error('❌ MONGODB_URI not found in environment variables!');
-  console.error('Please make sure .env file exists and contains:');
-  console.error('MONGODB_URI=your_mongodb_connection_string_here');
-  process.exit(1);
-}
-
-console.log('✅ Environment configuration validated');
-
+import path from "path";
 import express, { type Request, Response, NextFunction } from "express";
 import { connectDB } from "./mongodb";
 import { registerRoutes } from "./routes";
@@ -21,6 +12,13 @@ import sitemapRouter from "./sitemap";
 import { setSecurityHeaders, corsConfig, securityHeaders } from "./security-config";
 
 const app = express();
+
+// SEO Sitemap routes
+app.use(sitemapRouter);
+
+// Add static serving for uploads and attached_assets
+app.use("/api/uploads", express.static(path.resolve(process.cwd(), "uploads")));
+app.use("/api/attached_assets", express.static(path.resolve(process.cwd(), "attached_assets")));
 
 // Security: Set secure headers
 app.use((req, res, next) => {
@@ -55,9 +53,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-// SEO Sitemap routes
-app.use(sitemapRouter);
 
 app.use((req, res, next) => {
   const start = Date.now();
