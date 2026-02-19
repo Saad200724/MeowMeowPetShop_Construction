@@ -368,9 +368,9 @@ export default function CheckoutPage() {
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-[#26732d]">Customer Address</h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div><Label>Division *</Label><select value={billingDetails.division} onChange={(e) => setBillingDetails(prev => ({ ...prev, division: e.target.value, district: '', thanaUpazilla: '' }))} className="w-full h-10 border rounded px-2" required><option value="">Select Division</option>{divisions.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
-                        <div><Label>District *</Label><select value={billingDetails.district} onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value, thanaUpazilla: '' }))} className="w-full h-10 border rounded px-2" required><option value="">Select District</option>{districts.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
-                        <div><Label>Upazilla/Thana *</Label>{(billingDetails.district === 'Dhaka City' || billingDetails.district === 'Dhaka Sub-Urban') ? (<select value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} className="w-full h-10 border rounded px-2" required><option value="">Select Thana</option>{(billingDetails.district === 'Dhaka City' ? dhakaThanas : subUrbanThanas).map(t => <option key={t} value={t}>{t}</option>)}</select>) : (<Input value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} required />)}</div>
+                        <div><Label>Division *</Label><select value={billingDetails.division} onChange={(e) => setBillingDetails(prev => ({ ...prev, division: e.target.value, district: '', thanaUpazilla: '' }))} className="w-full h-10 border rounded px-2 bg-white text-black" required><option value="">Select Division</option>{divisions.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
+                        <div><Label>District *</Label><select value={billingDetails.district} onChange={(e) => setBillingDetails(prev => ({ ...prev, district: e.target.value, thanaUpazilla: '' }))} className="w-full h-10 border rounded px-2 bg-white text-black" required><option value="">Select District</option>{districts.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
+                        <div><Label>Upazilla/Thana *</Label>{(billingDetails.district === 'Dhaka City' || billingDetails.district === 'Dhaka Sub-Urban') ? (<select value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} className="w-full h-10 border rounded px-2 bg-white text-black" required><option value="">Select Thana</option>{(billingDetails.district === 'Dhaka City' ? dhakaThanas : subUrbanThanas).map(t => <option key={t} value={t}>{t}</option>)}</select>) : (<Input value={billingDetails.thanaUpazilla} onChange={(e) => setBillingDetails(prev => ({ ...prev, thanaUpazilla: e.target.value }))} className="bg-white text-black" required />)}</div>
                       </div>
                       <div><Label>Full Address *</Label><Textarea value={billingDetails.address} onChange={(e) => setBillingDetails(prev => ({ ...prev, address: e.target.value }))} required /></div>
                       <div><Label>Additional Notes (Optional)</Label><Textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} /></div>
@@ -396,7 +396,43 @@ export default function CheckoutPage() {
                     <Separator />
                     <div className="space-y-2">
                       <div className="flex justify-between"><span>Subtotal</span><span>৳{cartState.total}</span></div>
-                      {cartState.appliedCoupon && <div className="flex justify-between text-red-600"><span>Discount ({cartState.appliedCoupon.code})</span><span>-৳{cartState.appliedCoupon.discount}</span></div>}
+                      {cartState.appliedCoupon ? (
+                        <div className="flex justify-between text-red-600">
+                          <span>Discount ({cartState.appliedCoupon.code})</span>
+                          <div className="flex items-center gap-2">
+                            <span>-৳{cartState.appliedCoupon.discount}</span>
+                            <Button variant="ghost" size="sm" onClick={handleRemoveCoupon} className="h-6 w-6 p-0 text-red-600 hover:text-red-800">×</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="pt-2">
+                          <Button 
+                            variant="link" 
+                            onClick={() => setShowCoupon(!showCoupon)}
+                            className="p-0 h-auto text-[#26732d] hover:text-[#1e5d26] text-sm font-medium"
+                          >
+                            Have a coupon? Click here to enter your code
+                          </Button>
+                          {showCoupon && (
+                            <div className="mt-2 flex gap-2">
+                              <Input 
+                                placeholder="Coupon code" 
+                                value={couponCode} 
+                                onChange={(e) => setCouponCode(e.target.value)}
+                                className="h-9 text-sm"
+                              />
+                              <Button 
+                                onClick={handleApplyCoupon} 
+                                disabled={isCouponLoading}
+                                className="bg-[#26732d] hover:bg-[#1e5d26] h-9 text-sm px-3"
+                              >
+                                {isCouponLoading ? "..." : "Apply"}
+                              </Button>
+                            </div>
+                          )}
+                          {couponError && <p className="text-xs text-red-600 mt-1">{couponError}</p>}
+                        </div>
+                      )}
                       <div className="flex justify-between"><span>Delivery Fee</span><span>৳{finalDeliveryFee}</span></div>
                       <div className="flex justify-between font-bold text-lg text-[#26732d]"><span>Total</span><span>৳{getFinalTotal() + finalDeliveryFee}</span></div>
                     </div>
@@ -405,7 +441,7 @@ export default function CheckoutPage() {
                       <Label className="font-bold">Payment Method</Label>
                       <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-2">
                         <div className="flex items-center space-x-2 border p-3 rounded hover:border-[#26732d]"><RadioGroupItem value="COD" id="sum-cod" /><Label htmlFor="sum-cod">Cash on Delivery</Label></div>
-                        <div className="flex items-center space-x-2 border p-3 rounded hover:border-[#26732d]"><RadioGroupItem value="RupantorPay" id="sum-rp" /><Label htmlFor="sum-rp">Online Payment</Label></div>
+                        <div className="flex items-center space-x-2 border p-3 rounded hover:border-[#26732d]"><RadioGroupItem value="RupantorPay" id="sum-rp" /><Label htmlFor="sum-rp">RupantorPay(Bkash, Nagad, Rocket)</Label></div>
                       </RadioGroup>
                     </div>
                     <Button className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold h-12 text-lg" onClick={handlePlaceOrder} disabled={isProcessing}>{isProcessing ? "Processing..." : "Place Order Now"}</Button>
