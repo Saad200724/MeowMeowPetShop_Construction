@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { ChevronDown, ChevronUp, CreditCard, Truck, User, MapPin, MessageSquare, ShoppingBag, Tag } from 'lucide-react';
+import { ChevronDown, ChevronUp, CreditCard, Truck, User, MapPin, MessageSquare, ShoppingBag, Tag, Phone } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useMutation } from '@tanstack/react-query';
 import PaymentProcessor from '@/components/ui/payment-processor';
@@ -345,7 +345,10 @@ export default function CheckoutPage() {
                 <img src="/logo.png" alt="Meow Meow Pet Shop" className="w-10 h-10 sm:w-12 sm:h-12" />
                 <h1 className="text-xl sm:text-3xl font-bold text-[#26732d]">Checkout</h1>
               </div>
-              <p className="text-sm sm:text-lg font-semibold text-[#26732d]">📞 01405-045023</p>
+              <p className="text-sm sm:text-lg font-semibold text-[#26732d] flex items-center gap-2">
+                <Phone size={18} className="text-[#26732d]" />
+                01405-045023
+              </p>
             </div>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">

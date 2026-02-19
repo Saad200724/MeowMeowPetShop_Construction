@@ -98,15 +98,9 @@ export default function ContactPage() {
         {/* Header Section */}
         <div className="text-center mb-6 sm:mb-8 lg:mb-12 px-2">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-4">Contact Us</h1>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
-            Get in touch with our friendly team
-          </p>
         </div>
 
-        {/* Mobile & Tablet: Stack Layout for Contact Info */}
         <div className="lg:hidden space-y-4">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 px-1">Get In Touch</h2>
-
           <div className="grid grid-cols-2 gap-3">
             {/* Store Address */}
             <Card className="border-0 shadow-md hover-elevate transition-shadow">
@@ -207,178 +201,156 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Desktop: Original Layout */}
-        <div className="hidden lg:grid lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
-          {/* Contact Information */}
-          <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6 px-1">Get In Touch</h2>
+        {/* Desktop Layout */}
+        <div className="hidden lg:grid lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
+          {/* Contact Information Cards - Left Side */}
+          <div className="lg:col-span-4 space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h2>
 
-            {/* Store Address */}
-            <Card className="border-0 shadow-md hover-elevate transition-shadow">
-              <CardContent className="p-3.5 sm:p-4 lg:p-6">
-                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
-                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Store Address</h3>
-                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed break-words">
-                      Pakiza Bus Stand, Chapra Mosjid Road<br />
-                      Bank Colony, Savar, Dhaka
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Phone */}
-            <Card className="border-0 shadow-md hover-elevate transition-shadow">
-              <CardContent className="p-3.5 sm:p-4 lg:p-6">
-                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
-                    <Phone className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Phone</h3>
-                    <a href="tel:+8801405045023" className="text-gray-600 text-xs sm:text-sm hover:text-emerald-600 transition-colors">
-                      +880 1405-045023
-                    </a>
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-0.5 sm:mt-1">Call us for orders and inquiries</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Facebook Messenger */}
-            <Card className="border-0 shadow-md hover-elevate transition-shadow">
-              <CardContent className="p-3.5 sm:p-4 lg:p-6">
-                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
-                    <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Facebook Messenger</h3>
-                    <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-2.5 lg:mb-3 break-words">Meow.meow.pet.shop</p>
-                    <Button
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md text-xs sm:text-sm py-2 sm:py-2.5 h-auto min-h-[44px] sm:min-h-0"
-                      onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
-                    >
-                      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-                      Message Us
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Opening Hours */}
-            <Card className="border-0 shadow-md hover-elevate transition-shadow">
-              <CardContent className="p-3.5 sm:p-4 lg:p-6">
-                <div className="flex items-start space-x-3 sm:space-x-3.5 lg:space-x-4">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg overflow-visible">
-                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 sm:mb-1.5 lg:mb-2 text-sm sm:text-base">Opening Hours</h3>
-                    <div className="text-gray-600 text-xs sm:text-sm space-y-0.5 sm:space-y-1">
-                      <p>Every Day: 10:00 AM - 10:00 PM</p>
-                      <p className="text-gray-500 text-[11px] sm:text-xs">We're always here for your pets!</p>
+            <div className="grid grid-cols-1 gap-4">
+              {/* Store Address */}
+              <Card className="border-0 shadow-lg hover-elevate transition-all duration-300 bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+                      <MapPin className="w-6 h-6 text-white" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-1">Store Address</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Pakiza Bus Stand, Chapra Mosjid Road<br />
+                        Bank Colony, Savar, Dhaka
+                      </p>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Follow Us */}
-            <div className="px-1">
-              <h3 className="font-semibold text-gray-900 mb-2.5 sm:mb-3 lg:mb-4 text-sm sm:text-base">Follow Us</h3>
-              <div className="flex space-x-2.5 sm:space-x-3">
-                <a
-                  href="https://facebook.com/meow.meow.pet.shop1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 sm:w-10 sm:h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors active:scale-95"
-                >
-                  <Facebook size={20} className="sm:w-5 sm:h-5" />
-                </a>
-                <a
-                  href="https://www.instagram.com/meow_meow_pet_shop"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 sm:w-10 sm:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-colors active:scale-95"
-                >
-                  <Instagram size={20} className="sm:w-5 sm:h-5" />
-                </a>
-                <button
-                  onClick={() => window.dispatchEvent(new CustomEvent('toggleChat'))}
-                  className="w-11 h-11 sm:w-10 sm:h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-colors active:scale-95"
-                >
-                  <MessageCircle size={20} className="sm:w-5 sm:h-5" />
-                </button>
-              </div>
+              {/* Phone */}
+              <Card className="border-0 shadow-lg hover-elevate transition-all duration-300 bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-1">Phone</h3>
+                      <a href="tel:+8801405045023" className="text-gray-600 text-sm hover:text-emerald-600 transition-colors font-medium">
+                        +880 1405-045023
+                      </a>
+                      <p className="text-gray-500 text-xs mt-1">Call us for orders and inquiries</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Facebook Messenger */}
+              <Card className="border-0 shadow-lg hover-elevate transition-all duration-300 bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+                      <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-900 mb-1">Messenger</h3>
+                      <p className="text-gray-600 text-sm mb-3">Meow.meow.pet.shop</p>
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm text-sm"
+                        onClick={() => window.open('https://facebook.com/meow.meow.pet.shop1', '_blank')}
+                      >
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        Message Us
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Opening Hours */}
+              <Card className="border-0 shadow-lg hover-elevate transition-all duration-300 bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Clock className="w-6 h-6 text-white" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-1">Opening Hours</h3>
+                      <div className="text-gray-600 text-sm space-y-1">
+                        <p className="font-medium">Every Day: 10:00 AM - 10:00 PM</p>
+                        <p className="text-gray-500 text-xs">Always here for your pets!</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <Card className="border-0 shadow-md">
-              <CardHeader className="p-3.5 sm:p-4 lg:p-6">
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Send us a Message</CardTitle>
+          {/* Contact Form - Right Side */}
+          <div className="lg:col-span-8">
+            <Card className="border-0 shadow-xl overflow-hidden bg-white h-full">
+              <CardHeader className="bg-gray-50/50 border-b border-gray-100 p-8">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-[#26732d]/10 rounded-xl flex items-center justify-center">
+                    <Send className="w-5 h-5 text-[#26732d]" />
+                  </div>
+                  <CardTitle className="text-2xl font-bold text-gray-900">Get in touch</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent className="p-3.5 sm:p-4 lg:p-6">
-                <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 lg:space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                        Your Name <span className="text-red-500">*</span>
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700">
+                        Full Name <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="text"
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
-                        placeholder="Enter your full name"
+                        className="h-12 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20"
+                        placeholder="John Doe"
                         required
                         data-testid="input-contact-name"
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700">
                         Phone Number <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
-                        placeholder="01700-000000"
+                        className="h-12 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20"
+                        placeholder="017XX-XXXXXX"
                         required
                         data-testid="input-contact-phone"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-                      Email (Optional)
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700">
+                      Email Address (Optional)
                     </label>
                     <Input
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full text-sm sm:text-base h-11 sm:h-10 touch-manipulation"
-                      placeholder="your.email@example.com"
+                      className="h-12 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20"
+                      placeholder="john@example.com"
                       data-testid="input-contact-email"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700">
                       Subject <span className="text-red-500">*</span>
                     </label>
                     <Select onValueChange={(value) => handleInputChange('subject', value)} required>
-                      <SelectTrigger className="w-full h-11 sm:h-10 text-sm sm:text-base touch-manipulation" data-testid="select-contact-subject">
-                        <SelectValue placeholder="Select a subject" />
+                      <SelectTrigger className="h-12 border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20" data-testid="select-contact-subject">
+                        <SelectValue placeholder="What are you inquiring about?" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="general">General Inquiry</SelectItem>
@@ -391,15 +363,15 @@ export default function ContactPage() {
                     </Select>
                   </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700">
                       Message <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       value={formData.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
-                      className="w-full h-32 sm:h-28 lg:h-32 resize-none text-sm sm:text-base touch-manipulation"
-                      placeholder="Tell us how we can help you..."
+                      className="min-h-[160px] border-gray-200 focus:border-[#26732d] focus:ring-[#26732d]/20 resize-none"
+                      placeholder="How can we help you today?"
                       required
                       data-testid="textarea-contact-message"
                     />
@@ -408,19 +380,19 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white py-3 sm:py-2.5 lg:py-3 text-sm sm:text-base lg:text-lg font-medium min-h-[48px] sm:min-h-0 touch-manipulation active:scale-[0.98] transition-all duration-200"
+                    className="w-full h-14 bg-[#26732d] hover:bg-[#1e5d26] text-white text-lg font-bold shadow-lg shadow-[#26732d]/20 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]"
                     data-testid="button-send-message"
                   >
                     {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Sending...
-                      </>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Sending...</span>
+                      </div>
                     ) : (
-                      <>
-                        <Send className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        Send Message
-                      </>
+                      <div className="flex items-center space-x-2">
+                        <Send className="w-5 h-5" />
+                        <span>Send</span>
+                      </div>
                     )}
                   </Button>
                 </form>
