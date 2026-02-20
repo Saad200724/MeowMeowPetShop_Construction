@@ -156,7 +156,7 @@ export default function NewlyLaunchedProducts() {
                     {newlyLaunchedProducts.length} newly launched {newlyLaunchedProducts.length === 1 ? 'product' : 'products'} found
                   </p>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                   {newlyLaunchedProducts.map((product: any) => (
                     <div key={product.id || product._id} className="relative">
                       <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">

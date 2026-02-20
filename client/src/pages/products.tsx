@@ -150,7 +150,7 @@ export default function ProductsPage() {
             </div>
 
             {/* Quick Stats - Enhanced Mobile Layout */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
               <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300">
                 <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs mb-1">
                   <Package size={14} className="sm:w-4 sm:h-4" />
@@ -545,7 +545,7 @@ export default function ProductsPage() {
               <div className={cn(
                 'grid gap-3 sm:gap-4 lg:gap-6',
                 viewMode === 'grid' 
-                  ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+                  ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' 
                   : 'grid-cols-1'
               )}>
                 {Array.from({ length: 8 }).map((_, i) => (

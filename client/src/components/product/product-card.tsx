@@ -103,7 +103,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-xl w-full h-full min-h-[320px] md:min-h-[400px] flex flex-col cursor-pointer p-0",
+          "group hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-xl w-full h-full min-h-[280px] md:min-h-[400px] flex flex-col cursor-pointer p-0",
           className,
         )}
       >
