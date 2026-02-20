@@ -64,7 +64,7 @@ export default function FlashSale() {
 
   if (isLoading) {
     return (
-      <section className="section-spacing bg-red-50">
+      <section className="section-spacing bg-red-50 px-4 md:px-0">
         <div className="responsive-container">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
@@ -94,9 +94,9 @@ export default function FlashSale() {
   }
 
   return (
-    <section className="section-spacing bg-red-50">
-      <div className="responsive-container">
-        <div className="text-center mb-8">
+    <section className="section-spacing bg-red-50 px-0 md:px-0 overflow-hidden">
+      <div className="responsive-container px-0 md:px-0">
+        <div className="text-center mb-8 px-4">
           <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
             <Flame className="text-red-600 md:w-8 md:h-8" size={20} />
             <span className="text-red-600 font-bold text-lg md:text-3xl">FLASH SALE</span>
@@ -115,12 +115,12 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-3 pb-1 md:grid md:grid-cols-4 md:w-full md:gap-4" style={{ width: 'max-content' }}>
-            {flashSaleProducts.slice(0, 4).map((product: any, index: number) => (
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-0 md:px-0">
+          <div className="flex gap-2 pb-1 md:grid md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-4 md:px-0" style={{ width: 'max-content' }}>
+            {flashSaleProducts.slice(0, 5).map((product: any, index: number) => (
               <div 
                 key={product.id} 
-                className="flex-shrink-0 animate-fade-in"
+                className="flex-shrink-0 w-[calc(50vw-12px)] md:w-full animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <ProductCard product={product} />

@@ -61,12 +61,12 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-      <div className="flex gap-[0.5cm] pb-1 md:grid md:grid-cols-4 md:w-full md:gap-[0.5cm]" style={{ width: 'max-content' }}>
-        {products.slice(0, 4).map((product: any) => (
+    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-0 md:px-0">
+      <div className="flex gap-2 pb-1 md:grid md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-4 md:px-0" style={{ width: 'max-content' }}>
+        {products.slice(0, 5).map((product: any) => (
           <div 
             key={product.id || product._id} 
-            className="flex-shrink-0 relative w-full"
+            className="flex-shrink-0 relative w-[calc(50vw-12px)] md:w-full"
             style={{ minWidth: 'auto' }}
           >
             <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
@@ -90,7 +90,7 @@ export default function NewlyLaunched() {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-[#f0f8ff]">
+      <section className="py-12 bg-[#f0f8ff] px-4 md:px-0">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-lg font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
@@ -121,9 +121,9 @@ export default function NewlyLaunched() {
   }
 
   return (
-    <section className="py-12 bg-[#f0f8ff]">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
+    <section className="py-12 bg-[#f0f8ff] px-0 md:px-0 overflow-hidden">
+      <div className="container mx-auto px-0 md:px-0">
+        <div className="text-center mb-8 px-4">
           <h2 className="text-lg md:text-3xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
             <Sparkles size={20} className="text-[#26732d] md:w-8 md:h-8" />
             NEWLY LAUNCHED

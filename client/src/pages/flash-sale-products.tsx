@@ -137,7 +137,7 @@ export default function FlashSaleProducts() {
                     {flashSaleProducts.length} flash sale {flashSaleProducts.length === 1 ? 'product' : 'products'} found
                   </p>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4 px-0 md:px-0">
                   {flashSaleProducts.map((product: any) => (
                     <ProductCard key={product.id || product._id} product={product} />
                   ))}

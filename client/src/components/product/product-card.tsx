@@ -103,7 +103,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-xl w-full h-full min-h-[280px] md:min-h-[400px] flex flex-col cursor-pointer p-0",
+          "group hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-xl w-full h-full min-h-[200px] md:min-h-[400px] flex flex-col cursor-pointer p-0",
           className,
         )}
       >
@@ -183,12 +183,12 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           </div>
 
           {/* Price Section */}
-          <div className="flex items-baseline flex-wrap gap-1.5">
-            <span className="text-sm md:text-base font-bold text-[#26732d]">
+          <div className="flex items-baseline flex-wrap gap-1 md:gap-1.5">
+            <span className="text-xs md:text-base font-bold text-[#26732d]">
               ৳{product.price.toLocaleString()}
             </span>
             {product.originalPrice && (
-              <span className="text-[10px] md:text-xs text-gray-400 line-through decoration-red-400/50">
+              <span className="text-[9px] md:text-xs text-gray-400 line-through decoration-red-400/50">
                 ৳{product.originalPrice.toLocaleString()}
               </span>
             )}
