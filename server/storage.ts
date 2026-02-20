@@ -643,7 +643,7 @@ export class DatabaseStorage implements IStorage {
         totalWeight: orderData.totalWeight || 0,
         total: orderData.total || 0,
         paymentMethod: orderData.paymentMethod || 'COD',
-        paymentStatus: orderData.paymentMethod === 'COD' ? 'Pending' : 'Paid',
+        status: 'Pending', // Order status should be Pending by default
         orderDate: new Date(),
         orderNotes: orderData.orderNotes || ""
       };

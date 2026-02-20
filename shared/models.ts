@@ -286,7 +286,7 @@ const invoiceSchema = new Schema<IInvoice>({
   discountCode: { type: String },
   total: { type: Number, required: true },
   paymentMethod: { type: String, required: true },
-  paymentStatus: { type: String, default: 'Pending' },
+  status: { type: String, default: 'Pending' },
   orderDate: { type: Date, default: Date.now },
   orderNotes: String
 }, { timestamps: true });

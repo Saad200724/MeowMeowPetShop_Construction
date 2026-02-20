@@ -213,12 +213,14 @@ export default function InvoicePage() {
                       <span>{invoice.paymentMethod}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="font-medium">Status:</span>
+                      <span className="font-medium">Order Status:</span>
                       <span className={cn(
                         "px-2 py-0.5 rounded text-xs font-bold uppercase",
-                        invoice.paymentStatus === 'Paid' ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+                        invoice.status === 'Delivered' ? "bg-green-100 text-green-700" : 
+                        invoice.status === 'Canceled' ? "bg-red-100 text-red-700" :
+                        "bg-yellow-100 text-yellow-700"
                       )}>
-                        {invoice.paymentStatus}
+                        {invoice.status || 'Pending'}
                       </span>
                     </div>
                     {invoice.orderNotes && (
