@@ -103,13 +103,13 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     <Link href={`/product/${productSlug}`}>
       <Card
         className={cn(
-          "group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-2xl w-[170px] min-h-[420px] flex flex-col cursor-pointer p-0",
+          "group hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden bg-white border border-gray-100 rounded-xl w-full h-full min-h-[320px] md:min-h-[400px] flex flex-col cursor-pointer p-0",
           className,
         )}
       >
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold bg-red-500 text-white z-10">
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white z-10 shadow-sm">
           -৳{(product.originalPrice! - product.price).toLocaleString()}
         </div>
       )}
@@ -118,7 +118,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       {badgeText && !hasDiscount && (
         <div
           className={cn(
-            "absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold z-10",
+            "absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold z-10 shadow-sm",
             getBadgeColor(product),
           )}
         >
@@ -134,7 +134,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             e.stopPropagation();
             setIsLiked(!isLiked);
           }}
-          className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white hover:bg-opacity-100 active:scale-95"
+          className="bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white active:scale-95"
         >
           <Heart
             size={14}
@@ -147,7 +147,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Image */}
-      <div className="relative overflow-hidden bg-white rounded-t-2xl h-32 lg:h-40 flex-shrink-0 p-2">
+      <div className="relative overflow-hidden bg-white aspect-square md:h-48 flex-shrink-0 p-3">
         <img
           src={product.image}
           alt={product.name}
@@ -155,57 +155,55 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
       </div>
 
-      <CardContent className="px-3 pt-1 pb-2 flex flex-col flex-1 gap-1">
-        <div className="space-y-0.5">
+      <CardContent className="p-3 flex flex-col flex-1 justify-between gap-2">
+        <div className="space-y-1.5">
           {/* Category Tag */}
           {product.tags && product.tags.length > 0 && (
-            <div className="text-[10px] text-gray-500 font-medium uppercase tracking-wide">
+            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
               {product.tags[0]}
             </div>
           )}
 
           {/* Product Name */}
-          <h3 className="font-semibold text-sm text-gray-900 leading-tight line-clamp-2 group-hover:text-[#26732d] transition-colors text-left min-h-[2.5rem]">
+          <h3 className="font-medium text-xs md:text-sm text-gray-800 leading-snug line-clamp-2 group-hover:text-[#26732d] transition-colors text-left h-8 md:h-10">
             {product.name}
           </h3>
 
-          {/* Rating - Always show */}
-          <div className="flex items-center gap-1">
+          {/* Rating & Reviews */}
+          <div className="flex items-center gap-1.5">
             <div className="flex items-center">
               {renderStars(product.rating || 0, product.reviews || 0)}
             </div>
             {product.reviews > 0 && (
-              <span className="text-[10px] text-gray-500">({product.reviews})</span>
+              <span className="text-[10px] text-gray-400 font-medium">({product.reviews})</span>
             )}
           </div>
 
           {/* Price Section */}
-          <div className="text-left">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold text-[#26732d]">
-                ৳{product.price.toLocaleString()}
+          <div className="flex items-baseline flex-wrap gap-1.5">
+            <span className="text-sm md:text-base font-bold text-[#26732d]">
+              ৳{product.price.toLocaleString()}
+            </span>
+            {product.originalPrice && (
+              <span className="text-[10px] md:text-xs text-gray-400 line-through decoration-red-400/50">
+                ৳{product.originalPrice.toLocaleString()}
               </span>
-              {product.originalPrice && (
-                <span className="text-[10px] text-gray-400 line-through">
-                  ৳{product.originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
         {/* Add to Cart Button */}
-        <div className="mt-auto">
+        <div className="pt-1">
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"
             className={cn(
-              "w-full rounded-full h-7 py-0 text-xs transition-all duration-200 border-2",
+              "w-full rounded-lg h-8 md:h-9 text-[10px] md:text-xs font-semibold transition-all duration-300",
               isInCart
-                ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26]"
+                ? "bg-[#26732d] border-[#26732d] text-white hover:bg-[#1e5d26] shadow-sm"
                 : "border-gray-200 text-gray-700 hover:border-[#26732d] hover:text-[#26732d] hover:bg-[#26732d]/5",
             )}
             disabled={product.stock === 0 || isAddingToCart}
@@ -216,15 +214,15 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             }}
           >
             {isAddingToCart ? (
-              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : isInCart ? (
               <>
-                <Check size={16} className="mr-1" />
-                Added
+                <Check size={14} className="mr-1.5" />
+                In Cart
               </>
             ) : (
               <>
-                <ShoppingCart size={16} className="mr-1" />
+                <ShoppingCart size={14} className="mr-1.5" />
                 Add to Cart
               </>
             )}
