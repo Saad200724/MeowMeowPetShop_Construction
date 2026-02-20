@@ -644,7 +644,8 @@ export class DatabaseStorage implements IStorage {
         total: orderData.total || 0,
         paymentMethod: orderData.paymentMethod || 'COD',
         paymentStatus: orderData.paymentMethod === 'COD' ? 'Pending' : 'Paid',
-        orderDate: new Date()
+        orderDate: new Date(),
+        orderNotes: orderData.orderNotes || ""
       };
       
       const invoice = new Invoice(invoiceData);

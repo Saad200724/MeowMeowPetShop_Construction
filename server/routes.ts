@@ -212,6 +212,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Creating order with data:", JSON.stringify(orderData, null, 2));
       const result = await storage.createOrder(orderData);
       
+      // Update the invoice with orderNotes explicitly if needed, 
+      // though storage.createOrder should handle it now.
+      if (orderData.orderNotes && result.invoice) {
+        result.invoice.orderNotes = orderData.orderNotes;
+        await result.invoice.save();
+      }
+      
       // Return the result containing both order and invoice for the frontend
       res.status(201).json(result);
     } catch (error) {
