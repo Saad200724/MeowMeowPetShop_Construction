@@ -289,15 +289,14 @@ export default function CheckoutPage() {
         weight: (item as any).weight,
         color: (item as any).color
       })),
-      paymentMethod,
+      orderNotes: orderNotes,
       shippingAddress: {
         address: billingDetails.address,
         division: billingDetails.division,
         district: billingDetails.district,
         thanaUpazilla: billingDetails.thanaUpazilla,
         postCode: billingDetails.postCode
-      },
-      orderNotes: orderNotes
+      }
     };
     try { await createOrderMutation.mutateAsync(orderData); } catch (error) { console.error('Order creation failed:', error); } finally { setIsProcessing(false); }
   };

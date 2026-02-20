@@ -2059,7 +2059,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         total: serverTotal, // Use server-computed total
         paymentMethod,
         paymentStatus: order.paymentStatus,
-        orderNotes: req.body.orderNotes
+        orderNotes: (req.body as any).orderNotes || ""
       });
 
       await invoice.save({ session });
