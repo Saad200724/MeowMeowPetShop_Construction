@@ -2310,11 +2310,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const { status } = req.body;
       
-      const order = await Order.findByIdAndUpdate(id, { status, updatedAt: new Date() }, { new: true });
-      if (!order) return res.status(404).json({ message: "Order not found" });
+      console.log(`Updating order ${id} status to ${status}`);
+      
+      let order;
+      // Handle potential MongoDB ID vs String ID issues
+      const mongoose = (await import('mongoose')).default;
+      const isValidId = mongoose.Types.ObjectId.isValid(id);
+      
+      if (isValidId) {
+        order = await Order.findByIdAndUpdate(id, { status, updatedAt: new Date() }, { new: true });
+      }
+      
+      if (!order) {
+        order = await Order.findOneAndUpdate({ orderNumber: id }, { status, updatedAt: new Date() }, { new: true });
+      }
+      
+      if (!order) {
+        // Final fallback: try finding by any field that might be used as 'id'
+        const query: any = { $or: [] };
+        query.$or.push({ orderNumber: id });
+        if (isValidId) query.$or.push({ _id: id });
+        
+        order = await Order.findOneAndUpdate(
+          query,
+          { status, updatedAt: new Date() },
+          { new: true }
+        );
+      }
+      
+      if (!order) {
+        console.log(`Order ${id} not found after all attempts`);
+        return res.status(404).json({ message: "Order not found" });
+      }
 
-      // Sync with invoice if it exists
-      await Invoice.findOneAndUpdate({ orderId: id }, { status, updatedAt: new Date() });
+      // Sync with invoice if it exists - link by orderId or orderNumber
+      await Invoice.findOneAndUpdate(
+        { $or: [{ orderId: order._id }, { orderNumber: order.orderNumber }] }, 
+        { status, updatedAt: new Date() }
+      );
       
       res.json(order);
     } catch (error) {

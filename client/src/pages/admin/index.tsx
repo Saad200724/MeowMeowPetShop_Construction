@@ -923,12 +923,16 @@ export default function AdminPage() {
 
   const updateOrderStatusMutation = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+      console.log(`Mutation: Updating order ${orderId} to ${status}`);
       const response = await fetch(`/api/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      if (!response.ok) throw new Error('Failed to update order status');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to update order status');
+      }
       return response.json();
     },
     onSuccess: () => {
