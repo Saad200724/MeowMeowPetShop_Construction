@@ -495,13 +495,6 @@ export default function ProductDetailPage() {
                 </span>
               </div>
 
-              {/* Product Description */}
-              {product.description && (
-                <div className="mb-6 prose prose-sm max-w-none text-gray-600">
-                  <p>{product.description}</p>
-                </div>
-              )}
-
               {/* Price */}
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl font-bold text-green-600" data-testid="product-price">
@@ -533,13 +526,6 @@ export default function ProductDetailPage() {
                   </div>
                 )}
               </div>
-
-              {/* Product Specifications/Info */}
-              {product.description && (
-                <div className="mb-6 prose prose-sm max-w-none text-gray-600">
-                  <p>{product.description}</p>
-                </div>
-              )}
 
               {/* Color Variations */}
               {product.availableColors && product.availableColors.length > 0 && (
