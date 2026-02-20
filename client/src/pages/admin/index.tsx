@@ -924,7 +924,7 @@ export default function AdminPage() {
   const updateOrderStatusMutation = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
       const response = await fetch(`/api/orders/${orderId}/status`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
@@ -1603,18 +1603,18 @@ export default function AdminPage() {
                           </>
                         )}
                         <Select
-                          value={order.status || 'pending'}
+                          value={order.status || 'Pending'}
                           onValueChange={(newStatus) => handleUpdateOrderStatus(order._id, newStatus)}
                         >
                           <SelectTrigger className="w-32 bg-white border-gray-300 text-sm text-black">
                             <SelectValue className="text-black" />
                           </SelectTrigger>
                           <SelectContent className="bg-white border border-gray-300">
-                            <SelectItem value="pending" className="text-black hover:bg-gray-100">Pending</SelectItem>
-                            <SelectItem value="processing" className="text-black hover:bg-gray-100">Processing</SelectItem>
-                            <SelectItem value="shipped" className="text-black hover:bg-gray-100">Shipped</SelectItem>
-                            <SelectItem value="delivered" className="text-black hover:bg-gray-100">Delivered</SelectItem>
-                            <SelectItem value="cancelled" className="text-black hover:bg-gray-100">Cancelled</SelectItem>
+                            <SelectItem value="Pending" className="text-black hover:bg-gray-100">Pending</SelectItem>
+                            <SelectItem value="Processing" className="text-black hover:bg-gray-100">Processing</SelectItem>
+                            <SelectItem value="Shipped" className="text-black hover:bg-gray-100">Shipped</SelectItem>
+                            <SelectItem value="Delivered" className="text-black hover:bg-gray-100">Delivered</SelectItem>
+                            <SelectItem value="Canceled" className="text-black hover:bg-gray-100">Canceled</SelectItem>
                           </SelectContent>
                         </Select>
                         <Button 

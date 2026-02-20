@@ -2305,6 +2305,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/orders/:id/status", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      const order = await Order.findByIdAndUpdate(id, { status, updatedAt: new Date() }, { new: true });
+      if (!order) return res.status(404).json({ message: "Order not found" });
+
+      // Sync with invoice if it exists
+      await Invoice.findOneAndUpdate({ orderId: id }, { status, updatedAt: new Date() });
+      
+      res.json(order);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      res.status(500).json({ message: "Failed to update order status" });
+    }
+  });
+
   app.get("/api/invoices/:invoiceId", async (req, res) => {
     try {
       const { invoiceId } = req.params;

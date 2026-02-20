@@ -39,7 +39,7 @@ interface Invoice {
   deliveryFee?: number;
   total: number;
   paymentMethod: string;
-  paymentStatus: string;
+  status: string;
   orderNotes?: string;
   orderDate: string;
   createdAt: string;

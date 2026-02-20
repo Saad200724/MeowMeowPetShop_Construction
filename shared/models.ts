@@ -178,7 +178,7 @@ export interface IOrder extends Document {
 const orderSchema = new Schema<IOrder>({
   userId: { type: String, required: true },
   orderNumber: { type: String, required: true, unique: true }, // Unique order number
-  status: { type: String, default: 'Processing' },
+  status: { type: String, default: 'Pending' },
   total: { type: Number, required: true },
   items: [{ type: Schema.Types.Mixed }],
   shippingAddress: Schema.Types.Mixed,
@@ -254,7 +254,7 @@ export interface IInvoice extends Document {
   discountCode?: string;
   total: number;
   paymentMethod: string;
-  paymentStatus: string;
+  status: string;
   orderDate: Date;
   orderNotes?: string;
   createdAt: Date;
