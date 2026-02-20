@@ -221,6 +221,12 @@ export default function InvoicePage() {
                         {invoice.paymentStatus}
                       </span>
                     </div>
+                    {invoice.orderNotes && (
+                      <div className="pt-2 mt-2 border-t border-gray-100">
+                        <span className="block font-bold text-gray-900 uppercase text-[10px] tracking-wider mb-1">Additional Notes:</span>
+                        <p className="text-xs text-gray-600 italic whitespace-pre-wrap">{invoice.orderNotes}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -298,12 +304,6 @@ export default function InvoicePage() {
               </div>
 
               {/* Notes / Footer */}
-              {invoice.orderNotes && (
-                <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg text-left">
-                  <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wider mb-2">Order Notes</h3>
-                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{invoice.orderNotes}</p>
-                </div>
-              )}
               <div className="mt-20 pt-10 border-t border-gray-100 text-center">
                 <p className="text-gray-900 font-bold mb-1 italic text-sm">Thank you for your purchase!</p>
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest">
