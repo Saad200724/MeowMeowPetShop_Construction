@@ -116,7 +116,7 @@ export default function FlashSale() {
         </div>
 
         <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2 pb-1 md:grid md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-4" style={{ width: 'max-content' }}>
+          <div className="flex gap-2 pb-1 md:grid md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-0" style={{ width: 'max-content' }}>
             {flashSaleProducts.slice(0, 5).map((product: any, index: number) => (
               <div 
                 key={product.id} 
