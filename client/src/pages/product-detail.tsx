@@ -955,9 +955,9 @@ export default function ProductDetailPage() {
         {getFilteredRelatedProducts().length > 0 && (
           <div className="border-t pt-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-8 px-4">Recommended Products</h2>
-            <div className="flex overflow-x-auto scrollbar-hide space-x-2 pb-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:space-x-0 px-0">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-6 px-4 md:px-0">
               {getFilteredRelatedProducts().map((relatedProduct) => (
-                <div key={relatedProduct.id ?? relatedProduct._id} className="flex-shrink-0 w-[calc(50vw-12px)] sm:w-auto">
+                <div key={relatedProduct.id ?? relatedProduct._id} className="w-full">
                   <ProductCard
                     product={relatedProduct}
                   />
