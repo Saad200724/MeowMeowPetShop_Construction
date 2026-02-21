@@ -95,7 +95,7 @@ export default function FlashSale() {
 
   return (
     <section className="section-spacing bg-red-50 px-0 md:px-0 overflow-hidden">
-      <div className="responsive-container px-0 md:px-0">
+      <div className="responsive-container px-0 md:px-0 lg:pl-12">
         <div className="text-center mb-8 px-4">
           <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
             <Flame className="text-red-600 md:w-8 md:h-8" size={20} />
