@@ -22,33 +22,20 @@ export default function PopupPoster() {
   });
 
   useEffect(() => {
-    const closedTimestamp = localStorage.getItem('popup-poster-closed');
-    const today = new Date().toDateString();
-
-    if (closedTimestamp) {
-      const closedDate = new Date(closedTimestamp).toDateString();
-      if (closedDate === today) {
-        setHasClosedToday(true);
-        return;
-      }
-    }
-
-    if (poster && poster.isActive && !hasClosedToday) {
+    if (poster && poster.isActive) {
       const timer = setTimeout(() => {
         setIsOpen(true);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [poster, hasClosedToday]);
+  }, [poster]);
 
   const handleClose = () => {
     setIsOpen(false);
-    setHasClosedToday(true);
-    localStorage.setItem('popup-poster-closed', new Date().toISOString());
   };
 
-  if (!poster || !poster.isActive || hasClosedToday) {
+  if (!poster || !poster.isActive) {
     return null;
   }
 
@@ -78,10 +65,16 @@ export default function PopupPoster() {
           </button>
           <div 
             className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden aspect-square flex items-center justify-center cursor-pointer"
-            onClick={() => {
+            onClick={(e) => {
               if (poster.linkUrl) {
                 console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
-                window.location.href = poster.linkUrl;
+                // Pure redirection using a hidden anchor tag to ensure standard browser behavior
+                const a = document.createElement('a');
+                a.href = poster.linkUrl;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
               }
             }}
           >

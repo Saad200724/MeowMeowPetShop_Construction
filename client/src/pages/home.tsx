@@ -19,6 +19,8 @@ import Testimonials from "@/components/sections/testimonials";
 import { useSidebar } from "@/contexts/sidebar-context";
 
 
+import PopupPoster from "@/components/popup-poster";
+
 export default function Home() {
   const { isVisible: sidebarVisible } = useSidebar();
 
@@ -54,6 +56,7 @@ export default function Home() {
           <BlogPreview />
           <Testimonials />
         </div>
+        <PopupPoster />
       </main>
 
       {/* Footer - Full width, overlays sidebar */}
