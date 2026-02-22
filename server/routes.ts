@@ -1166,12 +1166,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/repack-products", async (req, res) => {
     try {
       const data = req.body;
-      const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now();
+      const slug = (data.name || 'repack').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now();
       
       const newProduct = new Product({
         ...data,
         slug,
-        tags: [...(data.tags || []), 'repack-food', 'repack'],
+        tags: Array.isArray(data.tags) ? [...data.tags, 'repack-food', 'repack'] : ['repack-food', 'repack'],
         isActive: true
       });
       
@@ -1179,7 +1179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(newProduct);
     } catch (error) {
       console.error("Error creating repack product:", error);
-      res.status(500).json({ message: "Failed to create repack product" });
+      res.status(500).json({ message: "Failed to create repack product", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -1192,7 +1192,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(product);
     } catch (error) {
       console.error("Error updating repack product:", error);
-      res.status(500).json({ message: "Failed to update repack product" });
+      res.status(500).json({ message: "Failed to update repack product", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
