@@ -62,12 +62,12 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
 
   return (
     <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-4 md:px-0">
-      <div className="grid grid-cols-2 gap-2 pb-1 md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-0" style={{ width: 'auto' }}>
-        {products.slice(0, 6).map((product: any) => (
+      <div className="flex gap-2 pb-1 md:gap-4 px-0">
+        {products.slice(0, 10).map((product: any, index: number) => (
           <div 
             key={product.id || product._id} 
-            className="relative"
-            style={{ minWidth: 'auto' }}
+            className="animate-fade-in relative flex-shrink-0 w-[170px] md:w-[220px]"
+            style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">
               <Sparkles size={12} />
