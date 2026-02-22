@@ -23,6 +23,8 @@ interface BlogPost {
   updatedAt: Date;
 }
 
+import { setSEO } from '@/lib/seo';
+
 export default function BlogDetailPage() {
   const [match, params] = useRoute('/blog/:slug');
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
@@ -58,6 +60,39 @@ export default function BlogDetailPage() {
 
     fetchBlogPost();
   }, [match, params?.slug]);
+
+  useEffect(() => {
+    if (blogPost) {
+      setSEO({
+        title: `${blogPost.title} - Pet Care Blog | Meow Meow Pet Shop`,
+        description: blogPost.excerpt || blogPost.content.substring(0, 160),
+        keywords: `${blogPost.tags?.join(', ')}, pet care tips, pet blog Bangladesh`,
+        ogImage: blogPost.image,
+        ogUrl: `https://www.meowshopbd.com/blog/${blogPost.slug}`,
+        canonical: `https://www.meowshopbd.com/blog/${blogPost.slug}`,
+        schema: {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "headline": blogPost.title,
+          "image": blogPost.image,
+          "author": {
+            "@type": "Person",
+            "name": blogPost.author
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Meow Meow Pet Shop",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.meowshopbd.com/logo.png"
+            }
+          },
+          "datePublished": blogPost.publishedAt || blogPost.createdAt,
+          "description": blogPost.excerpt
+        }
+      });
+    }
+  }, [blogPost]);
 
   if (loading) {
     return (

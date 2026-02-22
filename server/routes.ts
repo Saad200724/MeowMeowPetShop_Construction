@@ -186,6 +186,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(filepath);
   });
 
+  // Sitemap endpoint
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const baseUrl = 'https://www.meowshopbd.com';
+      const [products, categories, brands, posts] = await Promise.all([
+        Product.find({ isActive: true }),
+        Category.find({}),
+        Brand.find({ isActive: true }),
+        BlogPost.find({ isPublished: true })
+      ]);
+
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${baseUrl}/</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
+  <url><loc>${baseUrl}/products</loc><priority>0.8</priority><changefreq>daily</changefreq></url>
+  <url><loc>${baseUrl}/about</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>${baseUrl}/contact</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>${baseUrl}/blog</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>`;
+
+      // Add dynamic routes
+      categories.forEach(cat => {
+        xml += `\n  <url><loc>${baseUrl}/${cat.slug}</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>`;
+      });
+
+      brands.forEach(brand => {
+        xml += `\n  <url><loc>${baseUrl}/brands/${brand.slug}</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>`;
+      });
+
+      products.forEach(prod => {
+        xml += `\n  <url><loc>${baseUrl}/product/${prod._id}</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>`;
+      });
+
+      posts.forEach(post => {
+        xml += `\n  <url><loc>${baseUrl}/blog/${post.slug}</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>`;
+      });
+
+      xml += '\n</urlset>';
+      res.header('Content-Type', 'application/xml');
+      res.send(xml);
+    } catch (error) {
+      res.status(500).send('Error generating sitemap');
+    }
+  });
+
+  // Robots.txt endpoint
+  app.get("/robots.txt", (req, res) => {
+    const robots = `User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /payment-success
+Disallow: /api/
+
+Sitemap: https://www.meowshopbd.com/sitemap.xml`;
+    res.header('Content-Type', 'text/plain');
+    res.send(robots);
+  });
+
   // Orders API
   app.post("/api/orders", async (req, res) => {
     try {

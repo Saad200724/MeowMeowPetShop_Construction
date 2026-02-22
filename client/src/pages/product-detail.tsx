@@ -133,19 +133,35 @@ export default function ProductDetailPage() {
   // SEO meta tags
   useEffect(() => {
     if (product) {
-      document.title = `${product.name} - Meow Meow Pet Shop`;
-      const metaDescription = document.querySelector('meta[name="description"]');
-      const description = product.description || `Buy ${product.name} at Meow Meow Pet Shop. Quality pet products with delivery in Dhaka City and across Bangladesh.`;
-      if (metaDescription) {
-        metaDescription.setAttribute('content', description);
-      } else {
-        const meta = document.createElement('meta');
-        meta.name = 'description';
-        meta.content = description;
-        document.head.appendChild(meta);
-      }
+      setSEO({
+        title: `${product.name} - ${product.brandName || 'Pet Supplies'} | Meow Meow Pet Shop`,
+        description: product.description?.substring(0, 160) || `Buy ${product.name} at the best price in Bangladesh. Premium quality pet food and accessories.`,
+        keywords: `${product.name}, ${product.categoryName}, ${product.brandName}, pet food BD, pet shop Bangladesh`,
+        ogImage: product.image,
+        ogUrl: `https://www.meowshopbd.com/product/${slug}`,
+        canonical: `https://www.meowshopbd.com/product/${slug}`,
+        schema: {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": product.name,
+          "image": product.image,
+          "description": product.description,
+          "brand": {
+            "@type": "Brand",
+            "name": product.brandName
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": `https://www.meowshopbd.com/product/${slug}`,
+            "priceCurrency": "BDT",
+            "price": product.price,
+            "availability": product.stockStatus === 'In Stock' ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }
+      });
     }
-  }, [product]);
+  }, [product, slug]);
 
   const isInCart = state.items.some((item) => item.id === productId);
   const isOutOfStock = product?.stockQuantity === 0 || product?.stockStatus === "Out of Stock";

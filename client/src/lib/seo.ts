@@ -118,7 +118,47 @@ export const seoMetadata = {
   home: {
     title: 'Meow Meow Pet Shop - Premium Pet Food & Accessories in Savar, Bangladesh',
     description: 'Shop premium cat food, dog food, and pet accessories at Meow Meow Pet Shop. Quality products, fast delivery across Dhaka, and guaranteed customer satisfaction. Best prices for pet lovers in Bangladesh.',
-    keywords: 'pet shop, cat food, dog food, pet toys, pet accessories, Savar, Dhaka, Bangladesh, pet care, pet supplies, quality pet products',
+    keywords: 'pet shop, cat food, dog food, pet toys, pet accessories, Savar, Dhaka, Bangladesh, pet care, pet supplies, quality pet products, online pet shop BD, Meow Meow Pet Shop Savar',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "PetStore",
+      "name": "Meow Meow Pet Shop",
+      "image": "https://www.meowshopbd.com/logo.png",
+      "@id": "https://www.meowshopbd.com",
+      "url": "https://www.meowshopbd.com",
+      "telephone": "+880123456789",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Savar",
+        "addressLocality": "Dhaka",
+        "addressRegion": "Dhaka",
+        "postalCode": "1340",
+        "addressCountry": "BD"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 23.8583,
+        "longitude": 90.2667
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "09:00",
+        "closes": "21:00"
+      },
+      "sameAs": [
+        "https://www.facebook.com/meowshopbd",
+        "https://www.instagram.com/meowshopbd"
+      ]
+    }
   },
   products: {
     title: 'Cat & Dog Food Products | Pet Accessories - Meow Meow Pet Shop',
