@@ -54,7 +54,9 @@ export default function ProductDetailPage() {
       // Try to fetch from regular products first
       const response = await fetch(`/api/products/slug/${slug}`);
       if (response.ok) {
-        return response.json();
+        const data = await response.json();
+        // If it's a regular product, return it
+        return data;
       }
       
       // Fallback: Search in repack products
@@ -72,8 +74,8 @@ export default function ProductDetailPage() {
             ...foundProduct,
             id: foundProduct._id || foundProduct.id,
             slug: foundProduct.slug || slug,
-            categoryName: foundProduct.categoryId || 'Repack Products',
-            category: foundProduct.categoryId || 'Repack Products',
+            categoryName: foundProduct.categoryName || foundProduct.categoryId || 'Repack Products',
+            category: foundProduct.category || foundProduct.categoryId || 'Repack Products',
             tags: foundProduct.tags || ['repack']
           };
         }

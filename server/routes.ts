@@ -1206,7 +1206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           { description: { $regex: /repack/i } }
         ],
         isActive: true
-      }).select('name price originalPrice image rating stockQuantity tags description isNew isBestseller isOnSale discount subcategory categoryId').lean();
+      }).select('name price originalPrice image rating stockQuantity tags description isNew isBestseller isOnSale discount subcategory categoryId slug').lean();
 
       console.log(`Successfully fetched ${repackProducts.length} repack products`);
       res.json(repackProducts);
