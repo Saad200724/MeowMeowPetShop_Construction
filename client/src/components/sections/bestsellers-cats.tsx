@@ -61,7 +61,7 @@ function BestsellerDisplay({ products }: { products: any[] }) {
   }
 
   return (
-    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-4 md:px-0">
+    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-2 md:px-0">
       <div className="flex gap-2 pb-1 md:gap-4 px-0">
         {products.slice(0, 10).map((product: any, index: number) => (
           <div 
@@ -91,12 +91,12 @@ export default function BestsellersCats() {
   return (
     <section className="section-spacing bg-gray-50 px-0 md:px-0 overflow-hidden">
       <div className="responsive-container px-0 md:px-0 lg:pl-5">
-        <div className="text-center mb-8 px-4">
+        <div className="text-center mb-8 px-2">
           <h2 className="text-lg md:text-3xl font-bold text-[#26732d] mb-4 flex items-center justify-center gap-2">
             <Cat size={20} className="text-[#26732d] md:w-8 md:h-8" />
             BESTSELLERS FOR CATS
           </h2>
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end mb-4 px-2">
             <a 
               href="/cat-best-seller" 
               className="inline-flex items-center gap-2 text-[#26732d] hover:text-[#1d5a22] font-medium text-sm md:text-lg transition-colors"
@@ -109,7 +109,7 @@ export default function BestsellersCats() {
           </div>
         </div>
         {isLoading ? (
-          <div className="overflow-x-auto scrollbar-hide">
+          <div className="overflow-x-auto scrollbar-hide px-2">
             <div className="flex gap-4 pb-1" style={{ width: 'max-content' }}>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex-shrink-0 w-[170px] bg-white rounded-lg shadow-md min-h-[340px] animate-pulse">

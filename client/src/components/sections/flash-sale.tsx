@@ -96,13 +96,13 @@ export default function FlashSale() {
   return (
     <section className="section-spacing bg-red-50 px-0 md:px-0 overflow-hidden">
       <div className="responsive-container px-0 md:px-0 lg:pl-5">
-        <div className="text-center mb-8 px-4">
+        <div className="text-center mb-8 px-2">
           <div className="flex items-center justify-center gap-2 sm:gap-4 bg-red-100 px-6 sm:px-8 py-3 rounded-lg mb-6 w-full max-w-md mx-auto border-2 border-red-200 animate-scale-up">
             <Flame className="text-red-600 md:w-8 md:h-8" size={20} />
             <span className="text-red-600 font-bold text-lg md:text-3xl">FLASH SALE</span>
             <span className="text-sm text-red-600 font-medium hidden sm:inline">Limited Time Offers</span>
           </div>
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end mb-4 px-2">
             <a 
               href="/flash-sale-products" 
               className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium text-sm md:text-lg transition-colors"
@@ -115,7 +115,7 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-4 md:px-0">
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-2 md:px-0">
           <div className="flex gap-2 pb-1 md:gap-4 px-0">
             {flashSaleProducts.slice(0, 10).map((product: any, index: number) => (
               <div 
