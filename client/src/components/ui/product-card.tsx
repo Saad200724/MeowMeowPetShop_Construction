@@ -155,15 +155,15 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={`/product/${productSlug}`}
       data-testid={`product-link-${productSlug}`}
     >
-      <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-full h-full min-h-[200px] md:min-h-[400px] cursor-pointer">
+      <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group border border-gray-100 flex flex-col w-full h-full min-h-[280px] md:min-h-[400px] cursor-pointer">
         {/* Discount Badge */}
         {product.discount && (
-          <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full text-[8px] font-bold bg-red-500 text-white z-10 shadow-sm">
+          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white z-10 shadow-sm">
             {product.discount}
           </div>
         )}
         {hasDiscount && !product.discount && (
-          <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full text-[8px] font-bold bg-red-500 text-white z-10 shadow-sm">
+          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white z-10 shadow-sm">
             -৳{Math.round(originalPriceValue! - currentPrice).toLocaleString()}
           </div>
         )}
@@ -172,7 +172,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {product.badge && !hasDiscount && (
           <div
             className={cn(
-              "absolute top-2 left-2 px-1.5 py-0.5 rounded-full text-[8px] font-bold z-10 shadow-sm",
+              "absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold z-10 shadow-sm",
               getBadgeStyles(product.badgeColor)
             )}
           >
@@ -184,15 +184,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="absolute top-2 right-2 z-10">
           <button
             onClick={handleLikeClick}
-            className="bg-white/90 backdrop-blur-sm p-1 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white active:scale-95"
+            className="bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm hover:shadow-md hover:bg-white active:scale-95"
             data-testid="like-button"
           >
-            <Heart size={10} />
+            <Heart size={14} />
           </button>
         </div>
 
         {/* Product Image - Professional E-commerce Standard */}
-        <div className="relative overflow-hidden bg-white aspect-square md:h-48 flex items-center justify-center flex-shrink-0 p-1.5 md:p-3">
+        <div className="relative overflow-hidden bg-white aspect-square md:h-48 flex items-center justify-center flex-shrink-0 p-3">
           <img
             src={product.image}
             alt={product.name}
@@ -204,10 +204,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Product Content - Improved Professional Layout */}
-        <div className="p-1.5 md:p-3 flex flex-col flex-1 justify-between gap-1 md:gap-2">
-          <div className="space-y-0.5 md:space-y-1.5">
+        <div className="p-3 flex flex-col flex-1 justify-between gap-2">
+          <div className="space-y-1.5">
             {/* Product Name - Balanced Weight */}
-            <h4 className="font-medium text-[9px] md:text-sm text-gray-800 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-tight text-left h-5 md:h-10">
+            <h4 className="font-medium text-xs md:text-sm text-gray-800 group-hover:text-[#26732d] transition-colors line-clamp-2 leading-snug text-left h-8 md:h-10">
               {product.name}
             </h4>
 
