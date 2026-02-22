@@ -1166,10 +1166,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/repack-products", async (req, res) => {
     try {
       const data = req.body;
-      const slug = (data.name || 'repack').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now();
+      const name = data.name || 'repack';
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now();
       
       const newProduct = new Product({
         ...data,
+        name,
         slug,
         tags: Array.isArray(data.tags) ? [...data.tags, 'repack-food', 'repack'] : ['repack-food', 'repack'],
         isActive: true
