@@ -116,12 +116,12 @@ export default function RepackFood() {
           </div>
         </div>
 
-        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-4 md:px-0">
-          <div className="grid grid-cols-2 gap-2 pb-1 md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-0" style={{ width: 'auto' }}>
-            {(products as any[]).slice(0, 6).map((product: any, index: number) => (
+        <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide px-0 md:px-0">
+          <div className="flex gap-2 pb-1 md:grid md:grid-cols-4 lg:grid-cols-5 md:w-full md:gap-4 px-0" style={{ width: 'max-content' }}>
+            {(products as any[]).slice(0, 10).map((product: any, index: number) => (
               <div 
                 key={product.id || product._id} 
-                className="animate-fade-in"
+                className="flex-shrink-0 w-[calc(50vw-12px)] md:w-full animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <ProductCard product={product} />
