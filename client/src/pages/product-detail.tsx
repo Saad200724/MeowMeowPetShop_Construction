@@ -61,18 +61,19 @@ export default function ProductDetailPage() {
       const repackResponse = await fetch('/api/repack-products');
       if (repackResponse.ok) {
         const repackProducts = await repackResponse.json();
-        // Find product by ID (treating slug as ID for repack products)
+        // Find product by ID or slug (handle the case where slug might be the MongoDB ID)
         const foundProduct = repackProducts.find((p: any) => 
-          (p._id === slug || p.id === slug || 
-           p.name?.toLowerCase().replace(/\s+/g, '-') === slug?.toLowerCase())
+          p.slug === slug || p._id === slug || p.id === slug ||
+          p.name?.toLowerCase().replace(/\s+/g, '-') === slug?.toLowerCase()
         );
         if (foundProduct) {
           // Enrich with full details
           return {
             ...foundProduct,
             id: foundProduct._id || foundProduct.id,
-            slug: slug,
-            categoryName: 'Repack Products',
+            slug: foundProduct.slug || slug,
+            categoryName: foundProduct.categoryId || 'Repack Products',
+            category: foundProduct.categoryId || 'Repack Products',
             tags: foundProduct.tags || ['repack']
           };
         }
@@ -390,7 +391,7 @@ export default function ProductDetailPage() {
           <div className="flex items-center space-x-2 text-gray-500">
             <span>Home</span>
             <span>/</span>
-            <span>{product.category}</span>
+            <span>{product.category || product.categoryName || 'Products'}</span>
             <span>/</span>
             <span className="text-gray-900">{product.name}</span>
           </div>
