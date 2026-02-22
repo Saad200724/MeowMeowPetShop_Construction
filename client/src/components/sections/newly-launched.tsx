@@ -66,7 +66,7 @@ function NewlyLaunchedDisplay({ products }: { products: any[] }) {
         {products.slice(0, 10).map((product: any, index: number) => (
           <div 
             key={product.id || product._id} 
-            className="animate-fade-in relative flex-shrink-0 w-[170px] md:w-[220px]"
+            className="animate-fade-in relative flex-shrink-0 w-[calc(50%-4px)] md:w-[220px]"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1 z-10">

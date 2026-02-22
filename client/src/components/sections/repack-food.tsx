@@ -121,7 +121,7 @@ export default function RepackFood() {
             {(products as any[]).slice(0, 10).map((product: any, index: number) => (
               <div 
                 key={product.id || product._id} 
-                className="animate-fade-in flex-shrink-0 w-[170px] md:w-[220px]"
+                className="animate-fade-in flex-shrink-0 w-[calc(50%-4px)] md:w-[220px]"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <ProductCard product={product} />
