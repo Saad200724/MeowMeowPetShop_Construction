@@ -11,19 +11,19 @@ import { Response } from 'express';
  */
 export const securityHeaders = {
   // Prevent clickjacking attacks
-  'X-Frame-Options': 'ALLOWALL',
+  'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
   
   // Prevent XSS (Cross-Site Scripting) attacks
   'X-XSS-Protection': '1; mode=block',
   'Content-Security-Policy': `
-    default-src 'self' * data: blob: 'unsafe-inline' 'unsafe-eval';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
-    style-src 'self' 'unsafe-inline' *;
-    img-src 'self' https: data: *;
-    font-src 'self' https: data: *;
-    connect-src 'self' https: *;
-    frame-ancestors *;
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.tailwindcss.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com;
+    img-src 'self' https: data:;
+    font-src 'self' https://fonts.gstatic.com;
+    connect-src 'self' https:;
+    frame-ancestors 'none';
   `.replace(/\n/g, ' '),
   
   // Enforce HTTPS

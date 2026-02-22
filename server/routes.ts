@@ -474,8 +474,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                    brandByNameMap.get(product.brandId);
           }
 
-          const productObj = {
-            id: product.id || product._id.toString(),
+          products.push({
+            id: product.id,
             name: product.name,
             slug: product.slug,
             price: product.price,
@@ -502,15 +502,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             specifications: product.specifications || {},
             availableWeights: product.availableWeights || [],
             availableColors: product.availableColors || [],
-          };
-          products.push(productObj);
+          });
         } catch (err: any) {
-          // Skip products with invalid data
+          // Skip products with invalid data or bulk products that might have slipped through
           console.warn('Skipping product with invalid data:', product.name || 'Unknown', err.message);
         }
       }
 
-      console.log(`Successfully fetched ${products.length} products`);
+      console.log(`Successfully fetched ${products.length} products (including repack products)`);
       res.json(products);
     } catch (error) {
       console.error('Error fetching products:', error);

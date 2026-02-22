@@ -26,7 +26,6 @@ export async function setupVite(app: Express, server: Server) {
       server
     },
     allowedHosts: true as const,
-    cors: true,
   };
 
   const vite = await createViteServer({
@@ -77,6 +76,10 @@ export async function setupVite(app: Express, server: Server) {
       );
       const page = await vite.transformIndexHtml(url, template);
       
+      // Add Content Security Policy to allow softhut.app in iframes
+      res.setHeader("Content-Security-Policy", "frame-ancestors 'self' https://www.softhut.app https://softhut.app;");
+      res.setHeader("X-Frame-Options", "ALLOW-FROM https://www.softhut.app/");
+      
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
@@ -98,6 +101,9 @@ export function serveStatic(app: Express) {
 
   // fall through to index.html if the file doesn't exist
   app.use((_req, res) => {
+    // Add Content Security Policy to allow softhut.app in iframes
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'self' https://www.softhut.app https://softhut.app;");
+    res.setHeader("X-Frame-Options", "ALLOW-FROM https://www.softhut.app/");
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
