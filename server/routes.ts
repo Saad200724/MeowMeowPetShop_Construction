@@ -1163,12 +1163,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get repack food products specifically (for public display)
+  app.post("/api/repack-products", async (req, res) => {
+    try {
+      const data = req.body;
+      const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now();
+      
+      const newProduct = new Product({
+        ...data,
+        slug,
+        tags: [...(data.tags || []), 'repack-food', 'repack'],
+        isActive: true
+      });
+      
+      await newProduct.save();
+      res.status(201).json(newProduct);
+    } catch (error) {
+      console.error("Error creating repack product:", error);
+      res.status(500).json({ message: "Failed to create repack product" });
+    }
+  });
+
+  app.put("/api/repack-products/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      const product = await Product.findByIdAndUpdate(id, data, { new: true });
+      if (!product) return res.status(404).json({ message: "Product not found" });
+      res.json(product);
+    } catch (error) {
+      console.error("Error updating repack product:", error);
+      res.status(500).json({ message: "Failed to update repack product" });
+    }
+  });
   app.get("/api/repack-products", async (req, res) => {
     try {
-      // Set cache headers for better performance
-      res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache
-
       const repackProducts = await Product.find({
         $or: [
           { tags: { $in: ['repack-food', 'repack'] } },
@@ -1176,7 +1204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           { description: { $regex: /repack/i } }
         ],
         isActive: true
-      }).select('name price originalPrice image rating stockQuantity tags description isNew isBestseller isOnSale discount').lean();
+      }).select('name price originalPrice image rating stockQuantity tags description isNew isBestseller isOnSale discount subcategory categoryId').lean();
 
       console.log(`Successfully fetched ${repackProducts.length} repack products`);
       res.json(repackProducts);

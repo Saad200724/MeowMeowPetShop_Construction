@@ -386,6 +386,13 @@ export default function AdminPage() {
     },
   });
 
+  const repackCategories = [
+    "Cat Food", "Dog Food", "Cat Toys", "Cat Litter", 
+    "Cat Care & Health", "Clothing", "Beds & Carrier", 
+    "Cat Accessories", "Dog Health & Accessories", 
+    "Rabbit Food & Accessories", "Bird Food & Accessories"
+  ];
+
   const announcementForm = useForm<AnnouncementFormData>({
     resolver: zodResolver(announcementFormSchema),
     defaultValues: {
@@ -685,20 +692,14 @@ export default function AdminPage() {
 
   const createRepackMutation = useMutation({
     mutationFn: async (data: RepackFormData) => {
-      // Add repack-food tag automatically
-      const repackData = {
-        ...data,
-        tags: 'repack-food',
-        isActive: true,
-      };
-      return await apiRequest('/api/products', {
+      return await apiRequest('/api/repack-products', {
         method: 'POST',
-        body: JSON.stringify(repackData),
+        body: JSON.stringify(data),
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/repack-products'] });
       setShowRepackDialog(false);
       repackForm.reset();
       toast({
@@ -717,19 +718,14 @@ export default function AdminPage() {
 
   const updateRepackMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: RepackFormData }) => {
-      // Ensure repack-food tag is maintained
-      const repackData = {
-        ...data,
-        tags: 'repack-food',
-      };
-      return await apiRequest(`/api/products/${id}`, {
+      return await apiRequest(`/api/repack-products/${id}`, {
         method: 'PUT',
-        body: JSON.stringify(repackData),
+        body: JSON.stringify(data),
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/repack-products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/repack-products'] });
       setEditingRepackProduct(null);
       setShowRepackDialog(false);
       repackForm.reset();

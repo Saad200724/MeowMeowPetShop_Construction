@@ -11,6 +11,8 @@ export default function RepackFood() {
   // Fetch repack products from API
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['/api/repack-products'],
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   useEffect(() => {
