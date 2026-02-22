@@ -13,6 +13,10 @@ export default function NavigationSidebar() {
   // Mobile categories (simple list)
   const mobileCategories = [
     { label: 'Cat Food', href: '/cat-food' },
+    { label: 'Kitten Dry Food', href: '/subcategory/kitten-dry-food' },
+    { label: 'Adult Dry Food', href: '/subcategory/adult-dry-food' },
+    { label: 'Kitten Wet Food', href: '/subcategory/kitten-wet-food' },
+    { label: 'Adult Wet Food', href: '/subcategory/adult-wet-food' },
     { label: 'Dog Food', href: '/dog-food' },
     { label: 'Cat Toys', href: '/cat-toys' },
     { label: 'Cat Litter', href: '/cat-litter' },
@@ -22,7 +26,6 @@ export default function NavigationSidebar() {
     { label: 'Dog Health & Accessories', href: '/dog-accessories' },
     { label: 'Rabbit Food & Accessories', href: '/rabbit' },
     { label: 'Bird Food & Accessories', href: '/bird' },
-    { label: 'Medicine', href: '/subcategory/medicine' },
   ];
 
   const desktopCategories = [
@@ -48,47 +51,14 @@ export default function NavigationSidebar() {
     { icon: Bone, label: 'Dog Health & Accessories', href: '/dog-accessories', hasSubCategories: false },
     { icon: Rabbit, label: 'Rabbit Food & Accessories', href: '/rabbit', hasSubCategories: false },
     { icon: Bird, label: 'Bird Food & Accessories', href: '/bird', hasSubCategories: false },
-    { icon: Pill, label: 'Medicine', href: '/subcategory/medicine', hasSubCategories: false },
   ];
   const { data: allProducts = [] } = useQuery<any[]>({
     queryKey: ['/api/products'],
   });
 
-  const categoriesWithProducts = desktopCategories.filter(category => {
-    // We want to show the category if at least one product belongs to it
-    const hasProducts = allProducts.some((product: any) => {
-      const pCatSlug = product.category?.toLowerCase();
-      const pCatName = product.categoryName?.toLowerCase();
-      const cLabel = category.label.toLowerCase();
-      const cSlug = category.href.replace('/', '').toLowerCase();
+  const categoriesWithProducts = desktopCategories;
 
-      // Broad matching to ensure visibility
-      return pCatSlug === cSlug || 
-             pCatName === cLabel ||
-             pCatSlug?.includes(cSlug) ||
-             pCatName?.includes(cLabel.replace(' & health', '').replace(' & accessories', '').trim().toLowerCase()) ||
-             product.subcategory?.toLowerCase() === cLabel || 
-             product.subcategory?.toLowerCase() === cSlug;
-    });
-    return hasProducts;
-  });
-
-  const filteredMobileCategories = mobileCategories.filter((category: any) => {
-    return allProducts.some((product: any) => {
-      const pCatSlug = product.category?.toLowerCase();
-      const pCatName = product.categoryName?.toLowerCase();
-      const pSub = product.subcategory?.toLowerCase();
-      const cLabel = category.label.toLowerCase();
-      const cSlug = category.href.replace('/', '').toLowerCase();
-
-      return pCatSlug === cSlug || 
-             pCatName === cLabel ||
-             pCatSlug?.includes(cSlug) ||
-             pCatName?.includes(cLabel.replace(' & health', '').replace(' & accessories', '').trim().toLowerCase()) ||
-             pSub === cLabel || 
-             pSub === cSlug;
-    });
-  });
+  const filteredMobileCategories = mobileCategories;
 
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
