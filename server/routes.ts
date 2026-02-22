@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { storage } from "./storage";
 import { User, Product, Category, Brand, Announcement, Cart, Order, Invoice, BlogPost, Coupon, PaymentTransaction, PaymentWebhook, OTP, Review } from "@shared/models";
 import { generateUniqueProductSlug, findProductBySlug, migrateProductSlugs } from "./slug-utils";
-import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon } from "@shared/models";
+import type { IUser, ICart, ICartItem, IOrder, IInvoice, IBlogPost, ICoupon, IProduct } from "@shared/models";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import multer from "multer";
@@ -215,7 +215,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       products.forEach(prod => {
-        xml += `\n  <url><loc>${baseUrl}/product/${prod._id}</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>`;
+        const p = prod as unknown as IProduct;
+        xml += `\n  <url><loc>${baseUrl}/product/${p.slug || p._id}</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>`;
       });
 
       posts.forEach(post => {

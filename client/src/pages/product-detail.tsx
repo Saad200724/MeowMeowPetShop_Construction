@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useCart } from '@/contexts/cart-context';
 import { useToast } from '@/hooks/use-toast';
+import { setSEO } from '@/lib/seo';
 import ProductCard from '@/components/ui/product-card';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
@@ -22,6 +23,7 @@ type DetailProduct = BaseProduct & {
   _id?: string;
   categorySlug?: string;
   categoryName?: string;
+  brandName?: string;
   stockStatus?: string;
   stockQuantity?: number;
   weight?: string;
