@@ -1195,6 +1195,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update repack product" });
     }
   });
+
+  // Get repack food products specifically (for public display)
   app.get("/api/repack-products", async (req, res) => {
     try {
       const repackProducts = await Product.find({

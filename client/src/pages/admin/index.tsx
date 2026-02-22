@@ -3558,15 +3558,11 @@ export default function AdminPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-white border border-gray-300 shadow-lg">
-                          <SelectItem value="Kitten Dry Food" className="text-black hover:bg-gray-100">Kitten Dry Food</SelectItem>
-                          <SelectItem value="Adult Dry Food" className="text-black hover:bg-gray-100">Adult Dry Food</SelectItem>
-                          <SelectItem value="Kitten Wet Food" className="text-black hover:bg-gray-100">Kitten Wet Food</SelectItem>
-                          <SelectItem value="Adult Wet Food" className="text-black hover:bg-gray-100">Adult Wet Food</SelectItem>
-                          <SelectItem value="Litter Box" className="text-black hover:bg-gray-100">Litter Box</SelectItem>
-                          <SelectItem value="Accessories" className="text-black hover:bg-gray-100">Accessories</SelectItem>
-                          <SelectItem value="Medicine" className="text-black hover:bg-gray-100">Medicine</SelectItem>
-                          <SelectItem value="Toys" className="text-black hover:bg-gray-100">Toys</SelectItem>
-                          <SelectItem value="Shampoo" className="text-black hover:bg-gray-100">Shampoo</SelectItem>
+                          {repackCategories.map((cat) => (
+                            <SelectItem key={cat} value={cat} className="text-black hover:bg-gray-100">
+                              {cat}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
