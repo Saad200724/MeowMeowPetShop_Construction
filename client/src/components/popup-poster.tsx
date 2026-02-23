@@ -31,6 +31,7 @@ export default function PopupPoster() {
         const thirtyHoursInMs = 30 * 60 * 60 * 1000;
 
         if (currentTime - lastClosedTime < thirtyHoursInMs) {
+          setIsOpen(false);
           return;
         }
       }
@@ -38,7 +39,16 @@ export default function PopupPoster() {
       // Logic 1: Time-Based Trigger (The 10-Second Rule)
       // logic: Show popup 10-15 seconds after landing on home page.
       const timer = setTimeout(() => {
-        setIsOpen(true);
+        // Re-check localStorage before opening to handle multiple tabs/instances
+        const stillCoolingDown = (() => {
+          const lc = localStorage.getItem('popup-last-closed');
+          if (!lc) return false;
+          return (Date.now() - parseInt(lc, 10)) < (30 * 60 * 60 * 1000);
+        })();
+
+        if (!stillCoolingDown) {
+          setIsOpen(true);
+        }
       }, 10000); // 10 seconds
 
       return () => clearTimeout(timer);

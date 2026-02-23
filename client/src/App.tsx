@@ -176,7 +176,6 @@ function App() {
                 <div className="min-h-screen bg-white mobile-safe-bottom">
                   <AppRoutes />
                   <FloatingCart />
-                  <PopupPoster />
                   <Toaster />
                 </div>
               </SidebarProvider>
