@@ -15,7 +15,6 @@ interface PopupPoster {
 
 export default function PopupPoster() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasClosedToday, setHasClosedToday] = useState(false);
 
   const { data: poster } = useQuery<PopupPoster | null>({
     queryKey: ['/api/popup-posters/active'],
@@ -23,9 +22,24 @@ export default function PopupPoster() {
 
   useEffect(() => {
     if (poster && poster.isActive) {
+      // Logic 2: Frequency Control (LocalStorage Logic)
+      // logic: If user closes the popup, don't show it for the next 30 hours.
+      const lastClosed = localStorage.getItem('popup-last-closed');
+      if (lastClosed) {
+        const lastClosedTime = parseInt(lastClosed, 10);
+        const currentTime = Date.now();
+        const thirtyHoursInMs = 30 * 60 * 60 * 1000;
+
+        if (currentTime - lastClosedTime < thirtyHoursInMs) {
+          return;
+        }
+      }
+
+      // Logic 1: Time-Based Trigger (The 10-Second Rule)
+      // logic: Show popup 10-15 seconds after landing on home page.
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 1000);
+      }, 10000); // 10 seconds
 
       return () => clearTimeout(timer);
     }
@@ -33,6 +47,8 @@ export default function PopupPoster() {
 
   const handleClose = () => {
     setIsOpen(false);
+    // Logic 2: Save timestamp when closed
+    localStorage.setItem('popup-last-closed', Date.now().toString());
   };
 
   if (!poster || !poster.isActive) {
