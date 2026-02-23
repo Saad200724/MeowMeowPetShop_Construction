@@ -539,7 +539,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async createPopupPoster(posterData: { imageUrl: string; title?: string }): Promise<IPopupPoster> {
+  async createPopupPoster(posterData: { imageUrl: string; title?: string; linkUrl?: string }): Promise<IPopupPoster> {
     try {
       await PopupPoster.updateMany({}, { isActive: false });
       const newPoster = new PopupPoster({
@@ -554,7 +554,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async updatePopupPoster(id: string, posterData: Partial<{ imageUrl: string; title?: string; isActive: boolean }>): Promise<IPopupPoster | undefined> {
+  async updatePopupPoster(id: string, posterData: Partial<{ imageUrl: string; title?: string; linkUrl?: string; isActive: boolean }>): Promise<IPopupPoster | undefined> {
     try {
       if (posterData.isActive) {
         await PopupPoster.updateMany({ _id: { $ne: id } }, { isActive: false });

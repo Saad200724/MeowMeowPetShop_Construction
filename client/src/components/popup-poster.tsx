@@ -92,25 +92,17 @@ export default function PopupPoster() {
           <div 
             className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden aspect-square flex items-center justify-center cursor-pointer"
             onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               if (poster.linkUrl) {
                 console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
                 // Ensure the URL is absolute
-                let targetUrl = poster.linkUrl;
+                let targetUrl = poster.linkUrl.trim();
                 if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://') && !targetUrl.startsWith('/')) {
                   targetUrl = 'https://' + targetUrl;
                 }
                 
-                // Pure redirection using a hidden anchor tag to ensure standard browser behavior
-                const a = document.createElement('a');
-                a.href = targetUrl;
-                if (targetUrl.startsWith('http')) {
-                  a.target = '_blank';
-                  a.rel = 'noopener noreferrer';
-                }
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                window.open(targetUrl, '_blank', 'noopener,noreferrer');
               }
             }}
           >
