@@ -1,7 +1,7 @@
 modules = ["nodejs-20", "web"]
 [nix]
 channel = "stable-25_05"
-packages = ["unzip"]
+packages = ["unzip", "xorg.libxcb", "xorg.libX11", "xorg.libXcomposite", "cacert", "vips"]
 
 [agent]
 expertMode = true
