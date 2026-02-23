@@ -94,9 +94,19 @@ export default function PopupPoster() {
             onClick={(e) => {
               if (poster.linkUrl) {
                 console.log('Popup poster clicked, redirecting to:', poster.linkUrl);
+                // Ensure the URL is absolute
+                let targetUrl = poster.linkUrl;
+                if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://') && !targetUrl.startsWith('/')) {
+                  targetUrl = 'https://' + targetUrl;
+                }
+                
                 // Pure redirection using a hidden anchor tag to ensure standard browser behavior
                 const a = document.createElement('a');
-                a.href = poster.linkUrl;
+                a.href = targetUrl;
+                if (targetUrl.startsWith('http')) {
+                  a.target = '_blank';
+                  a.rel = 'noopener noreferrer';
+                }
                 a.style.display = 'none';
                 document.body.appendChild(a);
                 a.click();
