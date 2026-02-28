@@ -756,7 +756,10 @@ export default function ProductDetailPage() {
                   {product.description && (
                     <div>
                       <h3 className="font-semibold mb-2 text-lg">Product Description</h3>
-                      <p className="text-gray-700">{product.description}</p>
+                      <div 
+                        className="text-gray-700 prose prose-sm max-w-none dark:prose-invert"
+                        dangerouslySetInnerHTML={{ __html: product.description }}
+                      />
                     </div>
                   )}
                   
