@@ -26,6 +26,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from '@/components/ui/image-upload';
 import { MultipleImageUpload } from '@/components/ui/multiple-image-upload';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
   Package, FileEdit, Plus, Trash2, ArrowLeft, Search, 
@@ -1151,15 +1152,28 @@ export default function AdminPage() {
     setShowRepackDialog(true);
   };
 
-  const handleCreateBlog = (data: BlogFormData) => {
-    createBlogMutation.mutate(data);
-  };
+  const handleSaveBlogInternal = () => {
+    if (!editingBlog) return;
 
-  const handleUpdateBlog = (data: BlogFormData) => {
-    if (editingBlog && editingBlog._id !== 'new') {
-      updateBlogMutation.mutate({ id: editingBlog._id, data });
+    const blogData = {
+      title: editingBlog.title,
+      excerpt: editingBlog.excerpt,
+      content: editingBlog.content,
+      image: editingBlog.image || undefined,
+      author: editingBlog.author,
+      category: (editingBlog as any).category,
+      isPublished: editingBlog.isPublished,
+      slug: editingBlog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    };
+
+    if (editingBlog._id === 'new') {
+      createBlogMutation.mutate(blogData);
+    } else {
+      updateBlogMutation.mutate({ id: editingBlog._id, data: blogData });
     }
   };
+
+  const blogCategoriesInternal = ["Pet Care", "Nutrition", "Training", "Health", "Lifestyle", "Events"];
 
   const handleDeleteBlog = (blogId: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
@@ -1311,39 +1325,6 @@ export default function AdminPage() {
   const calculateInvoiceTotal = () => {
     return calculateInvoiceSubtotal() + invoiceDeliveryFee - invoiceDiscount;
   };
-
-  const handleSaveBlog = () => {
-    if (!editingBlog) return;
-
-    const blogData = {
-      title: editingBlog.title,
-      excerpt: editingBlog.excerpt,
-      content: editingBlog.content,
-      image: editingBlog.image || undefined,
-      author: editingBlog.author,
-      category: (editingBlog as any).category,
-      isPublished: editingBlog.isPublished,
-      slug: editingBlog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-    };
-
-    if (editingBlog._id === 'new') {
-      createBlogMutation.mutate(blogData);
-    } else {
-      updateBlogMutation.mutate({ id: editingBlog._id, data: blogData });
-    }
-  };
-
-  // Blog categories
-  const blogCategories = [
-    'Pet Care Tips',
-    'Cat Health', 
-    'Dog Health',
-    'Training',
-    'Nutrition',
-    'Grooming',
-    'Behavior',
-    'Product Reviews'
-  ];
 
   // Show loading state while session is being checked
   if (!isSessionChecked) {
@@ -3028,11 +3009,10 @@ export default function AdminPage() {
                   <FormItem>
                     <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Description</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Enter product description" 
-                        rows={3} 
-                        className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
-                        {...field} 
+                      <RichTextEditor 
+                        value={field.value} 
+                        onChange={field.onChange} 
+                        placeholder="Enter product description"
                       />
                     </FormControl>
                     <FormMessage />
@@ -3532,11 +3512,10 @@ export default function AdminPage() {
                   <FormItem>
                     <FormLabel className="text-gray-900 font-semibold text-sm mb-2 block">Product Description</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Enter product description" 
-                        rows={3} 
-                        className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
-                        {...field} 
+                      <RichTextEditor 
+                        value={field.value} 
+                        onChange={field.onChange} 
+                        placeholder="Enter product description"
                       />
                     </FormControl>
                     <FormMessage />
@@ -3743,14 +3722,10 @@ export default function AdminPage() {
 
               <div>
                 <Label htmlFor="blog-content">Content</Label>
-                <Textarea
-                  id="blog-content"
-                  value={editingBlog.content}
-                  onChange={(e) => setEditingBlog({...editingBlog, content: e.target.value})}
+                <RichTextEditor 
+                  value={editingBlog.content} 
+                  onChange={(content) => setEditingBlog({...editingBlog, content})} 
                   placeholder="Write your blog content here..."
-                  rows={8}
-                  className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500"
-                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                 />
               </div>
 
@@ -3762,7 +3737,7 @@ export default function AdminPage() {
                       <SelectValue placeholder="Select a category" className="text-gray-900" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-300">
-                      {blogCategories.map(category => (
+                      {blogCategoriesInternal.map(category => (
                         <SelectItem key={category} value={category} className="text-gray-900 hover:bg-gray-100">
                           {category}
                         </SelectItem>
@@ -3801,7 +3776,7 @@ export default function AdminPage() {
             <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50" onClick={() => setShowBlogDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSaveBlog} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button onClick={handleSaveBlogInternal} className="bg-purple-600 hover:bg-purple-700 text-white">
               <Save className="w-4 h-4 mr-2" />
               Save Blog Post
             </Button>
@@ -3836,12 +3811,10 @@ export default function AdminPage() {
                   <FormItem>
                     <FormLabel>Announcement Text</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Enter announcement message..." 
-                        rows={3} 
-                        className="text-gray-900 bg-white border-gray-300 placeholder:text-gray-500 !text-gray-900 !bg-white"
-                        style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
-                        {...field} 
+                      <RichTextEditor 
+                        value={field.value} 
+                        onChange={field.onChange} 
+                        placeholder="Enter announcement message..."
                       />
                     </FormControl>
                     <FormMessage />
@@ -3966,11 +3939,10 @@ export default function AdminPage() {
                   <FormItem>
                     <FormLabel className="text-gray-900 font-semibold">Description (Optional)</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Brief description of the coupon" 
-                        rows={2} 
-                        className="text-gray-900 bg-white border-gray-300" 
-                        {...field} 
+                      <RichTextEditor 
+                        value={field.value || ''} 
+                        onChange={field.onChange} 
+                        placeholder="Brief description of the coupon"
                       />
                     </FormControl>
                     <FormMessage />
