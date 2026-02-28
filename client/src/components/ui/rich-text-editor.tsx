@@ -7,7 +7,7 @@ import { Color } from '@tiptap/extension-color';
 import { 
   Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, 
   AlignLeft, AlignCenter, AlignRight, Type, Undo, Redo, Eraser,
-  Type as TypeIcon
+  Type as TypeIcon, Image as ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { apiRequest } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
+
+import Image from '@tiptap/extension-image';
 
 interface RichTextEditorProps {
   value: string;
@@ -26,6 +30,36 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const data = await response.json();
+      if (data.imageUrl) {
+        editor?.chain().focus().setImage({ src: data.imageUrl }).run();
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to upload image',
+        variant: 'destructive',
+      });
+    }
+  };
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -43,6 +77,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       Color,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
+      }),
+      Image.configure({
+        allowBase64: true,
       }),
     ],
     content: value,
@@ -161,6 +198,23 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           >
             <UnderlineIcon className="h-4 w-4" />
           </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            className="h-8 w-8 p-0"
+            title="Insert Image"
+          >
+            <ImageIcon className="h-4 w-4" />
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            className="hidden"
+          />
         </div>
 
         <div className="h-6 w-px bg-border mx-1" />

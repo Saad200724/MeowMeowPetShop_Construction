@@ -52,6 +52,7 @@ const productFormSchema = z.object({
   isActive: z.boolean().optional(),
   availableWeights: z.array(z.string()).optional(),
   availableColors: z.array(z.string()).optional(),
+  availablePieces: z.array(z.string()).optional(),
 });
 
 // Simplified schema for repack food products
@@ -261,12 +262,30 @@ export default function AdminPage() {
       isActive: true,
       availableWeights: [],
       availableColors: [],
+      availablePieces: [],
     },
   });
 
   const [newWeight, setNewWeight] = useState('');
   const [newColor, setNewColor] = useState('');
   const [newColorName, setNewColorName] = useState('');
+  const [newPiece, setNewPiece] = useState('');
+
+  const addPiece = () => {
+    const current = form.getValues('availablePieces') || [];
+    if (newPiece) {
+      const pieceValue = `${newPiece} Piece`;
+      if (!current.includes(pieceValue)) {
+        form.setValue('availablePieces', [...current, pieceValue]);
+        setNewPiece('');
+      }
+    }
+  };
+
+  const removePiece = (piece: string) => {
+    const current = form.getValues('availablePieces') || [];
+    form.setValue('availablePieces', current.filter(p => p !== piece));
+  };
 
   const addColor = () => {
     const current = form.getValues('availableColors') || [];
@@ -3022,6 +3041,56 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b">
+                  <div className="space-y-4 pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-gray-900 font-semibold text-sm">Available Pieces</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="e.g. 10, 30, 50"
+                          value={newPiece}
+                          onChange={(e) => setNewPiece(e.target.value)}
+                          className="h-8 w-32 text-sm"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              addPiece();
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                          onClick={addPiece}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                      {(form.watch('availablePieces') || []).length > 0 ? (
+                        form.watch('availablePieces')?.map((piece, idx) => (
+                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                            {piece}
+                            <button
+                              type="button"
+                              onClick={() => removePiece(piece)}
+                              className="text-gray-500 hover:text-red-500"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))
+                      ) : (
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                          <X className="w-4 h-4 text-red-400" />
+                          <span>None added</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-gray-900 font-semibold text-sm">Available Weights</Label>

@@ -31,6 +31,7 @@ type DetailProduct = BaseProduct & {
   features?: string[];
   availableWeights?: string[];
   availableColors?: string[];
+  availablePieces?: string[];
 };
 
 export default function ProductDetailPage() {
@@ -39,6 +40,7 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedWeight, setSelectedWeight] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -96,6 +98,9 @@ export default function ProductDetailPage() {
       }
       if (product.availableColors && product.availableColors.length > 0) {
         setSelectedColor(product.availableColors[0]);
+      }
+      if (product.availablePieces && product.availablePieces.length > 0) {
+        setSelectedPiece(product.availablePieces[0]);
       }
     }
   }, [product]);
@@ -174,7 +179,7 @@ export default function ProductDetailPage() {
     const maxStock = product.stockQuantity || 100;
     
     // Create a unique cart key that includes selected variations
-    const cartItemId = `${productId}-${selectedWeight || 'default'}-${selectedColor || 'default'}`;
+    const cartItemId = `${productId}-${selectedWeight || 'default'}-${selectedColor || 'default'}-${selectedPiece || 'default'}`;
     
     // Check if item with same variations already exists in cart
     const existingItem = state.items.find(item => item.id === cartItemId);
@@ -192,6 +197,7 @@ export default function ProductDetailPage() {
         maxStock: maxStock,
         weight: selectedWeight,
         color: selectedColor,
+        piece: selectedPiece,
       });
       
       if (quantity > 1) {
@@ -203,7 +209,7 @@ export default function ProductDetailPage() {
 
     toast({
       title: "Added to Cart",
-      description: `${quantity} x ${product.name}${selectedWeight ? ` (${selectedWeight})` : ''}${selectedColor ? ` [${selectedColor.split(':')[0]}]` : ''} added to your cart.`,
+      description: `${quantity} x ${product.name}${selectedWeight ? ` (${selectedWeight})` : ''}${selectedColor ? ` [${selectedColor.split(':')[0]}]` : ''}${selectedPiece ? ` {${selectedPiece}}` : ''} added to your cart.`,
     });
   };
 
@@ -571,6 +577,30 @@ export default function ProductDetailPage() {
                             style={{ backgroundColor: hex }}
                           />
                           <span className="text-sm text-gray-700 capitalize">{name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Piece Variations */}
+              {product.availablePieces && product.availablePieces.length > 0 && (
+                <div className="mb-6">
+                  <span className="text-sm font-medium text-gray-900 block mb-3">Available Pieces:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {product.availablePieces.map((piece, index) => {
+                      const isSelected = selectedPiece === piece;
+                      return (
+                        <button
+                          key={index} 
+                          onClick={() => setSelectedPiece(piece)}
+                          className={cn(
+                            "px-3 py-1 text-sm font-normal border rounded-md transition-all hover:border-[#26732d]",
+                            isSelected ? "border-[#26732d] ring-1 ring-[#26732d] bg-[#26732d]/5" : "border-gray-200 text-gray-600"
+                          )}
+                        >
+                          {piece}
                         </button>
                       );
                     })}

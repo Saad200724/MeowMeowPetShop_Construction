@@ -552,6 +552,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
             specifications: product.specifications || {},
             availableWeights: product.availableWeights || [],
             availableColors: product.availableColors || [],
+            availablePieces: product.availablePieces || [],
           });
         } catch (err: any) {
           // Skip products with invalid data or bulk products that might have slipped through
