@@ -124,9 +124,9 @@ const productSchema = new Schema<IProduct>({
   isBestseller: { type: Boolean, default: false },
   isOnSale: { type: Boolean, default: false },
   discount: { type: Number, default: 0 },
-  availableWeights: [String],
-  availableColors: [String],
-  availablePieces: [String],
+  availableWeights: { type: [String], default: [] },
+  availableColors: { type: [String], default: [] },
+  availablePieces: { type: [String], default: [] },
   isActive: { type: Boolean, default: true },
 } as any, { 
   timestamps: true,

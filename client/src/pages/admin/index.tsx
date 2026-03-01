@@ -274,9 +274,15 @@ export default function AdminPage() {
   const addPiece = () => {
     const current = form.getValues('availablePieces') || [];
     if (newPiece) {
-      const pieceValue = `${newPiece} Piece`;
+      const pieceValue = newPiece.toLowerCase().includes('piece') 
+        ? newPiece 
+        : `${newPiece} Piece`;
       if (!current.includes(pieceValue)) {
-        form.setValue('availablePieces', [...current, pieceValue], { shouldDirty: true });
+        const newValue = [...current, pieceValue];
+        form.setValue('availablePieces', newValue, { 
+          shouldDirty: true,
+          shouldValidate: true 
+        });
         setNewPiece('');
       }
     }
@@ -284,7 +290,11 @@ export default function AdminPage() {
 
   const removePiece = (piece: string) => {
     const current = form.getValues('availablePieces') || [];
-    form.setValue('availablePieces', current.filter(p => p !== piece), { shouldDirty: true });
+    const newValue = current.filter(p => p !== piece);
+    form.setValue('availablePieces', newValue, { 
+      shouldDirty: true,
+      shouldValidate: true 
+    });
   };
 
   const addColor = () => {
@@ -292,14 +302,20 @@ export default function AdminPage() {
     if (newColor && newColorName) {
       const colorValue = `${newColorName}:${newColor}`;
       if (!current.includes(colorValue)) {
-        form.setValue('availableColors', [...current, colorValue], { shouldDirty: true });
+        form.setValue('availableColors', [...current, colorValue], { 
+          shouldDirty: true,
+          shouldValidate: true 
+        });
         setNewColor('');
         setNewColorName('');
       }
     } else if (newColor && !newColorName) {
       // Fallback if name is empty
       if (!current.includes(newColor)) {
-        form.setValue('availableColors', [...current, newColor], { shouldDirty: true });
+        form.setValue('availableColors', [...current, newColor], { 
+          shouldDirty: true,
+          shouldValidate: true 
+        });
         setNewColor('');
       }
     }
@@ -307,6 +323,7 @@ export default function AdminPage() {
 
   const availableWeights = form.watch('availableWeights') || [];
   const availableColors = form.watch('availableColors') || [];
+  const availablePieces = form.watch('availablePieces') || [];
 
   const addWeight = () => {
     if (newWeight) {
@@ -314,8 +331,12 @@ export default function AdminPage() {
       const numericWeight = newWeight.replace(/[^0-9.]/g, '');
       if (numericWeight) {
         const weightWithUnit = `${numericWeight}kg`;
-        if (!availableWeights.includes(weightWithUnit)) {
-          form.setValue('availableWeights', [...availableWeights, weightWithUnit], { shouldDirty: true });
+        const currentWeights = form.getValues('availableWeights') || [];
+        if (!currentWeights.includes(weightWithUnit)) {
+          form.setValue('availableWeights', [...currentWeights, weightWithUnit], { 
+            shouldDirty: true,
+            shouldValidate: true 
+          });
           setNewWeight('');
         }
       }
@@ -323,11 +344,17 @@ export default function AdminPage() {
   };
 
   const removeWeight = (weight: string) => {
-    form.setValue('availableWeights', availableWeights.filter(w => w !== weight), { shouldDirty: true });
+    form.setValue('availableWeights', availableWeights.filter(w => w !== weight), { 
+      shouldDirty: true,
+      shouldValidate: true 
+    });
   };
 
   const removeColor = (color: string) => {
-    form.setValue('availableColors', availableColors.filter(c => c !== color), { shouldDirty: true });
+    form.setValue('availableColors', availableColors.filter(c => c !== color), { 
+      shouldDirty: true,
+      shouldValidate: true 
+    });
   };
 
   // All queries declared at the top level (not conditionally)
@@ -1097,18 +1124,20 @@ export default function AdminPage() {
   const handleCreateProduct = (data: ProductFormData) => {
     const finalData = {
       ...data,
-      availablePieces: data.availablePieces || [],
+      availableWeights: form.getValues('availableWeights') || [],
+      availableColors: form.getValues('availableColors') || [],
+      availablePieces: form.getValues('availablePieces') || [],
     };
     createProductMutation.mutate(finalData);
   };
 
   const handleUpdateProduct = (data: ProductFormData) => {
     if (editingProduct) {
-      console.log('Updating product with form data:', data);
-      console.log('Editing product ID:', editingProduct.id);
       const finalData = {
         ...data,
-        availablePieces: data.availablePieces || [],
+        availableWeights: form.getValues('availableWeights') || [],
+        availableColors: form.getValues('availableColors') || [],
+        availablePieces: form.getValues('availablePieces') || [],
       };
       updateProductMutation.mutate({ id: editingProduct.id, data: finalData });
     }
@@ -1125,25 +1154,26 @@ export default function AdminPage() {
   };
 
   const handleEditProduct = (product: any) => {
+    console.log('Editing product:', product);
     setEditingProduct(product);
     form.reset({
-      name: product.name,
+      name: product.name || '',
       description: product.description || '',
-      price: product.price.toString(),
+      price: product.price?.toString() || '',
       originalPrice: product.originalPrice?.toString() || '',
-      categoryId: product.category || product.categoryId || '',
+      categoryId: product.categoryId || product.category || '',
       brandId: product.brandId || '',
-      image: product.image,
+      image: product.image || '',
       images: product.images || [],
-      stockQuantity: product.stock || product.stockQuantity || 0,
+      stockQuantity: product.stockQuantity ?? product.stock ?? 0,
       subcategory: product.subcategory || 'none',
-      isNew: product.isNew || false,
-      isBestseller: product.isBestseller || false,
-      isOnSale: product.isOnSale || false,
+      isNew: !!product.isNew,
+      isBestseller: !!product.isBestseller,
+      isOnSale: !!product.isOnSale,
       isActive: product.isActive !== false,
-      availableWeights: product.availableWeights || [],
-      availableColors: product.availableColors || [],
-      availablePieces: product.availablePieces || [],
+      availableWeights: Array.isArray(product.availableWeights) ? product.availableWeights : [],
+      availableColors: Array.isArray(product.availableColors) ? product.availableColors : [],
+      availablePieces: Array.isArray(product.availablePieces) ? product.availablePieces : [],
     });
     setShowProductDialog(true);
   };
@@ -3051,200 +3081,235 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b">
                   <div className="space-y-4 pt-4 border-t">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-gray-900 font-semibold text-sm">Available Pieces</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="e.g. 10, 30, 50"
-                          value={newPiece}
-                          onChange={(e) => setNewPiece(e.target.value)}
-                          className="h-8 w-32 text-sm text-black bg-white border-gray-300"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              addPiece();
-                            }
-                          }}
-                        />
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="h-8"
-                          onClick={addPiece}
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
-                      {(form.watch('availablePieces') || []).length > 0 ? (
-                        form.watch('availablePieces')?.map((piece, idx) => (
-                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
-                            {piece}
-                            <button
-                              type="button"
-                              onClick={() => removePiece(piece)}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </Badge>
-                        ))
-                      ) : (
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <X className="w-4 h-4 text-red-400" />
-                          <span>None added</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-gray-900 font-semibold text-sm">Available Weights</Label>
-                      <div className="flex gap-2">
-                        <div className="relative">
-                          <Input
-                            placeholder="e.g. 1.5"
-                            value={newWeight}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/[^0-9.]/g, '');
-                              setNewWeight(val);
-                            }}
-                            className="h-8 w-24 pr-6 text-sm text-black bg-white border-gray-300"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                addWeight();
-                              }
-                            }}
-                          />
-                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none font-bold">
-                            kg
-                          </span>
-                        </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="h-8"
-                          onClick={addWeight}
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
-                      {(form.watch('availableWeights') || []).length > 0 ? (
-                        form.watch('availableWeights')?.map((weight, idx) => (
-                          <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
-                            {weight}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const current = form.getValues('availableWeights') || [];
-                                form.setValue('availableWeights', current.filter((_, i) => i !== idx));
-                              }}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </Badge>
-                        ))
-                      ) : (
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <X className="w-4 h-4 text-red-400" />
-                          <span>Not applicable / None added</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-gray-900 font-semibold text-sm">Available Colors</Label>
-                      <div className="flex gap-2">
-                        <div className="relative flex gap-2">
-                          <div className="relative h-8 w-8 flex-shrink-0">
-                            <input
-                              type="color"
-                              value={newColor.startsWith('#') && newColor.length === 7 ? newColor : '#000000'}
-                              onChange={(e) => setNewColor(e.target.value)}
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                            <div 
-                              className="w-full h-full rounded border border-gray-300"
-                              style={{ backgroundColor: newColor || '#000000' }}
-                            />
-                          </div>
-                          <Input
-                            placeholder="Color Code"
-                            value={newColor}
-                            onChange={(e) => setNewColor(e.target.value)}
-                            className="h-8 w-24 text-sm text-black bg-white border-gray-300"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                addColor();
-                              }
-                            }}
-                          />
-                          <Input
-                            placeholder="Display Name"
-                            value={newColorName}
-                            onChange={(e) => setNewColorName(e.target.value)}
-                            className="h-8 w-32 text-sm text-black bg-white border-gray-300"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                addColor();
-                              }
-                            }}
-                          />
-                        </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="h-8"
-                          onClick={addColor}
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
-                      {(form.watch('availableColors') || []).length > 0 ? (
-                        form.watch('availableColors')?.map((colorVal, idx) => {
-                          const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
-                          return (
-                            <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
-                              <div 
-                                className="w-3 h-3 rounded-full border border-gray-200" 
-                                style={{ backgroundColor: hex }}
-                              />
-                              <span className="text-xs">{name}</span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const current = form.getValues('availableColors') || [];
-                                  form.setValue('availableColors', current.filter((_, i) => i !== idx));
+                    <FormField
+                      control={form.control}
+                      name="availablePieces"
+                      render={({ field }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <Label className="text-gray-900 font-semibold text-sm">Available Pieces</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="e.g. 10, 30, 50"
+                                value={newPiece}
+                                onChange={(e) => setNewPiece(e.target.value)}
+                                className="h-8 w-32 text-sm text-black bg-white border-gray-300"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    addPiece();
+                                  }
                                 }}
-                                className="text-gray-500 hover:text-red-500 ml-1"
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                className="h-8"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  addPiece();
+                                }}
                               >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </Badge>
-                          );
-                        })
-                      ) : (
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <X className="w-4 h-4 text-red-400" />
-                          <span>Not applicable / None added</span>
-                        </div>
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                            {field.value && field.value.length > 0 ? (
+                              field.value.map((piece: string, idx: number) => (
+                                <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                                  {piece}
+                                  <button
+                                    type="button"
+                                    onClick={() => removePiece(piece)}
+                                    className="text-gray-500 hover:text-red-500"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </Badge>
+                              ))
+                            ) : (
+                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <X className="w-4 h-4 text-red-400" />
+                                <span>None added</span>
+                              </div>
+                            )}
+                          </div>
+                        </>
                       )}
-                    </div>
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="availableWeights"
+                      render={({ field }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <Label className="text-gray-900 font-semibold text-sm">Available Weights</Label>
+                            <div className="flex gap-2">
+                              <div className="relative">
+                                <Input
+                                  placeholder="e.g. 1.5"
+                                  value={newWeight}
+                                  onChange={(e) => {
+                                    const val = e.target.value.replace(/[^0-9.]/g, '');
+                                    setNewWeight(val);
+                                  }}
+                                  className="h-8 w-24 pr-6 text-sm text-black bg-white border-gray-300"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      addWeight();
+                                    }
+                                  }}
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none font-bold">
+                                  kg
+                                </span>
+                              </div>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                className="h-8"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  addWeight();
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                            {field.value && field.value.length > 0 ? (
+                              field.value.map((weight: string, idx: number) => (
+                                <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border">
+                                  {weight}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const current = form.getValues('availableWeights') || [];
+                                      form.setValue('availableWeights', current.filter((_, i) => i !== idx), {
+                                        shouldDirty: true,
+                                        shouldValidate: true
+                                      });
+                                    }}
+                                    className="text-gray-500 hover:text-red-500"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </Badge>
+                              ))
+                            ) : (
+                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <X className="w-4 h-4 text-red-400" />
+                                <span>Not applicable / None added</span>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="availableColors"
+                      render={({ field }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <Label className="text-gray-900 font-semibold text-sm">Available Colors</Label>
+                            <div className="flex gap-2">
+                              <div className="relative flex gap-2">
+                                <div className="relative h-8 w-8 flex-shrink-0">
+                                  <input
+                                    type="color"
+                                    value={newColor.startsWith('#') && newColor.length === 7 ? newColor : '#000000'}
+                                    onChange={(e) => setNewColor(e.target.value)}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                  />
+                                  <div 
+                                    className="w-full h-full rounded border border-gray-300"
+                                    style={{ backgroundColor: newColor || '#000000' }}
+                                  />
+                                </div>
+                                <Input
+                                  placeholder="Color Code"
+                                  value={newColor}
+                                  onChange={(e) => setNewColor(e.target.value)}
+                                  className="h-8 w-24 text-sm text-black bg-white border-gray-300"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      addColor();
+                                    }
+                                  }}
+                                />
+                                <Input
+                                  placeholder="Display Name"
+                                  value={newColorName}
+                                  onChange={(e) => setNewColorName(e.target.value)}
+                                  className="h-8 w-32 text-sm text-black bg-white border-gray-300"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      addColor();
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                className="h-8"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  addColor();
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-md border border-dashed border-gray-300">
+                            {field.value && field.value.length > 0 ? (
+                              field.value.map((colorVal: string, idx: number) => {
+                                const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
+                                return (
+                                  <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border" style={{ borderLeft: `4px solid ${hex}` }}>
+                                    {name}
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const current = form.getValues('availableColors') || [];
+                                        form.setValue('availableColors', current.filter((_, i) => i !== idx), {
+                                          shouldDirty: true,
+                                          shouldValidate: true
+                                        });
+                                      }}
+                                      className="text-gray-500 hover:text-red-500 ml-1"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  </Badge>
+                                );
+                              })
+                            ) : (
+                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <X className="w-4 h-4 text-red-400" />
+                                <span>Not applicable / None added</span>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    />
                   </div>
                 </div>
                 <FormField
