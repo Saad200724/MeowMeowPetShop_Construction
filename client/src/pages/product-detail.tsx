@@ -597,7 +597,7 @@ export default function ProductDetailPage() {
                           onClick={() => setSelectedPiece(piece)}
                           className={cn(
                             "px-3 py-1 text-sm font-normal border rounded-md transition-all hover:border-[#26732d]",
-                            isSelected ? "border-[#26732d] ring-1 ring-[#26732d] bg-[#26732d]/5" : "border-gray-200 text-gray-600"
+                            isSelected ? "border-[#26732d] ring-1 ring-[#26732d] bg-[#26732d]/5 text-[#26732d]" : "border-gray-200 text-gray-600"
                           )}
                         >
                           {piece}

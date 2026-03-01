@@ -857,6 +857,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
         isActive: productData.isActive !== false,
         availableWeights: productData.availableWeights || [],
         availableColors: productData.availableColors || [],
+        availablePieces: productData.availablePieces || [],
         slug: productSlug,
       });
 
@@ -1024,6 +1025,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
           isActive: productData.isActive !== false,
           availableWeights: productData.availableWeights || [],
           availableColors: productData.availableColors || [],
+          availablePieces: productData.availablePieces || [],
           slug: productSlug,
         },
         { new: true }

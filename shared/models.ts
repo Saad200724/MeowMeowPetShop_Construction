@@ -96,6 +96,7 @@ export interface IProduct extends Document {
   discount: number;
   availableWeights?: string[];
   availableColors?: string[];
+  availablePieces?: string[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -276,7 +276,7 @@ export default function AdminPage() {
     if (newPiece) {
       const pieceValue = `${newPiece} Piece`;
       if (!current.includes(pieceValue)) {
-        form.setValue('availablePieces', [...current, pieceValue]);
+        form.setValue('availablePieces', [...current, pieceValue], { shouldDirty: true });
         setNewPiece('');
       }
     }
@@ -284,7 +284,7 @@ export default function AdminPage() {
 
   const removePiece = (piece: string) => {
     const current = form.getValues('availablePieces') || [];
-    form.setValue('availablePieces', current.filter(p => p !== piece));
+    form.setValue('availablePieces', current.filter(p => p !== piece), { shouldDirty: true });
   };
 
   const addColor = () => {
@@ -292,14 +292,14 @@ export default function AdminPage() {
     if (newColor && newColorName) {
       const colorValue = `${newColorName}:${newColor}`;
       if (!current.includes(colorValue)) {
-        form.setValue('availableColors', [...current, colorValue]);
+        form.setValue('availableColors', [...current, colorValue], { shouldDirty: true });
         setNewColor('');
         setNewColorName('');
       }
     } else if (newColor && !newColorName) {
       // Fallback if name is empty
       if (!current.includes(newColor)) {
-        form.setValue('availableColors', [...current, newColor]);
+        form.setValue('availableColors', [...current, newColor], { shouldDirty: true });
         setNewColor('');
       }
     }
@@ -315,7 +315,7 @@ export default function AdminPage() {
       if (numericWeight) {
         const weightWithUnit = `${numericWeight}kg`;
         if (!availableWeights.includes(weightWithUnit)) {
-          form.setValue('availableWeights', [...availableWeights, weightWithUnit]);
+          form.setValue('availableWeights', [...availableWeights, weightWithUnit], { shouldDirty: true });
           setNewWeight('');
         }
       }
@@ -323,11 +323,11 @@ export default function AdminPage() {
   };
 
   const removeWeight = (weight: string) => {
-    form.setValue('availableWeights', availableWeights.filter(w => w !== weight));
+    form.setValue('availableWeights', availableWeights.filter(w => w !== weight), { shouldDirty: true });
   };
 
   const removeColor = (color: string) => {
-    form.setValue('availableColors', availableColors.filter(c => c !== color));
+    form.setValue('availableColors', availableColors.filter(c => c !== color), { shouldDirty: true });
   };
 
   // All queries declared at the top level (not conditionally)
@@ -1095,14 +1095,22 @@ export default function AdminPage() {
   });
 
   const handleCreateProduct = (data: ProductFormData) => {
-    createProductMutation.mutate(data);
+    const finalData = {
+      ...data,
+      availablePieces: data.availablePieces || [],
+    };
+    createProductMutation.mutate(finalData);
   };
 
   const handleUpdateProduct = (data: ProductFormData) => {
     if (editingProduct) {
       console.log('Updating product with form data:', data);
       console.log('Editing product ID:', editingProduct.id);
-      updateProductMutation.mutate({ id: editingProduct.id, data });
+      const finalData = {
+        ...data,
+        availablePieces: data.availablePieces || [],
+      };
+      updateProductMutation.mutate({ id: editingProduct.id, data: finalData });
     }
   };
 
@@ -1135,6 +1143,7 @@ export default function AdminPage() {
       isActive: product.isActive !== false,
       availableWeights: product.availableWeights || [],
       availableColors: product.availableColors || [],
+      availablePieces: product.availablePieces || [],
     });
     setShowProductDialog(true);
   };
@@ -3049,7 +3058,7 @@ export default function AdminPage() {
                           placeholder="e.g. 10, 30, 50"
                           value={newPiece}
                           onChange={(e) => setNewPiece(e.target.value)}
-                          className="h-8 w-32 text-sm"
+                          className="h-8 w-32 text-sm text-black bg-white border-gray-300"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               e.preventDefault();
@@ -3103,7 +3112,7 @@ export default function AdminPage() {
                               const val = e.target.value.replace(/[^0-9.]/g, '');
                               setNewWeight(val);
                             }}
-                            className="h-8 w-24 pr-6 text-sm"
+                            className="h-8 w-24 pr-6 text-sm text-black bg-white border-gray-300"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
@@ -3173,7 +3182,7 @@ export default function AdminPage() {
                             placeholder="Color Code"
                             value={newColor}
                             onChange={(e) => setNewColor(e.target.value)}
-                            className="h-8 w-24 text-sm"
+                            className="h-8 w-24 text-sm text-black bg-white border-gray-300"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
@@ -3185,7 +3194,7 @@ export default function AdminPage() {
                             placeholder="Display Name"
                             value={newColorName}
                             onChange={(e) => setNewColorName(e.target.value)}
-                            className="h-8 w-32 text-sm"
+                            className="h-8 w-32 text-sm text-black bg-white border-gray-300"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault();
