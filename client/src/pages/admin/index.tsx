@@ -284,6 +284,8 @@ export default function AdminPage() {
           shouldValidate: true 
         });
         setNewPiece('');
+        // Force sync for handleSubmit
+        form.trigger('availablePieces');
       }
     }
   };
@@ -308,6 +310,7 @@ export default function AdminPage() {
         });
         setNewColor('');
         setNewColorName('');
+        form.trigger('availableColors');
       }
     } else if (newColor && !newColorName) {
       // Fallback if name is empty
@@ -317,6 +320,7 @@ export default function AdminPage() {
           shouldValidate: true 
         });
         setNewColor('');
+        form.trigger('availableColors');
       }
     }
   };
@@ -338,6 +342,7 @@ export default function AdminPage() {
             shouldValidate: true 
           });
           setNewWeight('');
+          form.trigger('availableWeights');
         }
       }
     }
@@ -1122,6 +1127,7 @@ export default function AdminPage() {
   });
 
   const handleCreateProduct = (data: ProductFormData) => {
+    // Explicitly pull from form state to bypass any internal r-h-f lag
     const finalData = {
       ...data,
       availableWeights: form.getValues('availableWeights') || [],
@@ -1133,6 +1139,7 @@ export default function AdminPage() {
 
   const handleUpdateProduct = (data: ProductFormData) => {
     if (editingProduct) {
+      // Explicitly pull from form state to bypass any internal r-h-f lag
       const finalData = {
         ...data,
         availableWeights: form.getValues('availableWeights') || [],
@@ -3216,7 +3223,7 @@ export default function AdminPage() {
                     />
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4 pt-4 border-t">
                     <FormField
                       control={form.control}
                       name="availableColors"
@@ -3282,7 +3289,7 @@ export default function AdminPage() {
                               field.value.map((colorVal: string, idx: number) => {
                                 const [name, hex] = colorVal.includes(':') ? colorVal.split(':') : [colorVal, colorVal];
                                 return (
-                                  <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border" style={{ borderLeft: `4px solid ${hex}` }}>
+                                  <Badge key={idx} variant="secondary" className="flex items-center gap-1 bg-white border text-black" style={{ borderLeft: `4px solid ${hex}` }}>
                                     {name}
                                     <button
                                       type="button"
@@ -3292,6 +3299,7 @@ export default function AdminPage() {
                                           shouldDirty: true,
                                           shouldValidate: true
                                         });
+                                        form.trigger('availableColors');
                                       }}
                                       className="text-gray-500 hover:text-red-500 ml-1"
                                     >
@@ -3303,7 +3311,7 @@ export default function AdminPage() {
                             ) : (
                               <div className="flex items-center gap-2 text-xs text-gray-400">
                                 <X className="w-4 h-4 text-red-400" />
-                                <span>Not applicable / None added</span>
+                                <span>None added</span>
                               </div>
                             )}
                           </div>
