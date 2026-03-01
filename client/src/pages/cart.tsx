@@ -182,13 +182,6 @@ export default function CartPage() {
                             {formatPrice(item.price)}
                           </p>
 
-                        {/* Product Description Snippet - Add Shipping Info Here */}
-                        <div className="text-xs text-gray-500 mb-3 line-clamp-2">
-                          <p className="mt-1 font-semibold text-gray-700">
-                            Shipping: Inside Dhaka City: ৳80 (up to 2kg), Outside Dhaka City (Incl. Savar): ৳130 (up to 1kg). Additional ৳20 per kg.
-                          </p>
-                        </div>
-
                         {/* Quantity and Remove Controls */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -250,14 +243,12 @@ export default function CartPage() {
                       <span className="font-medium">{formatPrice(state.total)}</span>
                     </div>
 
-                    {/* Updated Delivery Section */}
-                    <div className="flex justify-between py-2">
+                    {/* Order Summary - Delivery Charges */}
+                    <div className="flex justify-between py-3 border-b border-gray-100">
                       <span className="text-gray-600">Delivery</span>
                       <div className="text-right">
-                        <span className="font-medium text-gray-600">Calculated at checkout</span>
-                        <p className="text-xs text-gray-500 mt-1">Inside Dhaka City: ৳80 (up to 2kg)</p>
-                        <p className="text-xs text-gray-500">Outside Dhaka City (Incl. Savar): ৳130 (up to 1kg)</p>
-                        <p className="text-xs text-gray-500 mt-1">Additional: ৳20/kg</p>
+                        <p className="text-sm font-bold text-gray-900">Inside Dhaka City: ৳80</p>
+                        <p className="text-sm font-bold text-gray-900">Outside Dhaka City: ৳130</p>
                       </div>
                     </div>
 

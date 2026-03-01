@@ -827,8 +827,8 @@ export default function ProductDetailPage() {
                     <details className="group border rounded-lg overflow-hidden transition-all duration-200">
                       <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 bg-white list-none">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                            <Clock className="w-5 h-5 text-purple-600" />
+                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                            <Truck className="w-5 h-5 text-green-600" />
                           </div>
                           <span className="font-bold text-gray-900">Delivery Charges</span>
                         </div>
@@ -837,11 +837,11 @@ export default function ProductDetailPage() {
                       <div className="p-4 pt-0 space-y-3 border-t bg-white">
                         <div className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                           <span className="text-gray-600">Inside Dhaka City</span>
-                          <span className="font-bold text-gray-900">BDT 70</span>
+                          <span className="font-bold text-gray-900">BDT 80</span>
                         </div>
                         <div className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                           <span className="text-gray-600">Outside Dhaka City</span>
-                          <span className="font-bold text-gray-900">BDT 120</span>
+                          <span className="font-bold text-gray-900">BDT 130</span>
                         </div>
                         <div className="mt-4 p-3 bg-blue-50/50 rounded-md border border-blue-100">
                           <p className="text-xs text-blue-700 leading-relaxed">
