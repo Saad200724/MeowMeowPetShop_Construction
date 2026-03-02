@@ -128,7 +128,7 @@ export default function CategoriesGrid() {
                 href={`/subcategory/${category.id}`}
                 className={cn(
                   "group cursor-pointer block animate-fade-in",
-                  category.id === 'sunglass' && "hidden"
+                  category.id === 'shampoo-perfume' && "hidden"
                 )}
                 style={
                   { animationDelay: `${index * 0.05}s` } as React.CSSProperties

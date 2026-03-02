@@ -159,7 +159,7 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
                   <span>Avg Rating</span>
                 </div>
                 <div className="text-xl sm:text-2xl font-bold">
-                  {products.length > 0 ? (products.reduce((sum, p) => sum + p.rating, 0) / products.length).toFixed(1) : '0.0'}
+                  {products.length > 0 ? (products.reduce((sum, p) => sum + (p.rating || 5), 0) / products.length).toFixed(1) : '5.0'}
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/20">
