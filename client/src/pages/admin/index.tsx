@@ -3445,12 +3445,12 @@ export default function AdminPage() {
                           <SelectItem value="adult-dry-food" className="text-black hover:bg-gray-100">Adult Dry Food</SelectItem>
                           <SelectItem value="kitten-wet-food" className="text-black hover:bg-gray-100">Kitten Wet Food</SelectItem>
                           <SelectItem value="adult-wet-food" className="text-black hover:bg-gray-100">Adult Wet Food</SelectItem>
+                          <SelectItem value="litter" className="text-black hover:bg-gray-100">Litter</SelectItem>
                           <SelectItem value="litter-box" className="text-black hover:bg-gray-100">Litter Box</SelectItem>
                           <SelectItem value="accessories" className="text-black hover:bg-gray-100">Accessories</SelectItem>
-                          <SelectItem value="medicine" className="text-black hover:bg-gray-100">Medicine</SelectItem>
                           <SelectItem value="toys" className="text-black hover:bg-gray-100">Toys</SelectItem>
-                          <SelectItem value="shampoo" className="text-black hover:bg-gray-100">Shampoo</SelectItem>
-                          <SelectItem value="sunglass" className="text-black hover:bg-gray-100">Sunglass</SelectItem>
+                          <SelectItem value="medicine" className="text-black hover:bg-gray-100">Medicine</SelectItem>
+                          <SelectItem value="shampoo-perfume" className="text-black hover:bg-gray-100">Shampoo & Perfume</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
