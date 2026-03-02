@@ -20,6 +20,8 @@ export default function NavigationSidebar() {
     { label: 'Dog Food', href: '/dog-food' },
     { label: 'Cat Toys', href: '/cat-toys' },
     { label: 'Cat Litter', href: '/cat-litter' },
+    { label: 'Litter', href: '/subcategory/litter'},
+    { label: 'Litter Box', href: '/subcategory/litter-box'},
     { label: 'Cat Care & Health', href: '/cat-care' },
     { label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier' },
     { label: 'Cat Accessories', href: '/cat-accessories' },
@@ -44,7 +46,16 @@ export default function NavigationSidebar() {
     },
     { icon: Dog, label: 'Dog Food', href: '/dog-food', hasSubCategories: false },
     { icon: Gamepad2, label: 'Cat Toys', href: '/cat-toys', hasSubCategories: false },
-    { icon: Package, label: 'Cat Litter', href: '/cat-litter', hasSubCategories: false },
+    { 
+      icon: Package, 
+      label: 'Cat Litter', 
+      href: '/cat-litter', 
+      hasSubCategories: true,
+      subCategories: [
+        { label: 'Litter', href: '/subcategory/litter'},
+        { label: 'Litter Box', href: '/subcategory/litter-box'},
+      ]
+    },
     { icon: Stethoscope, label: 'Cat Care & Health', href: '/cat-care', hasSubCategories: false },
     { icon: Shirt, label: 'Clothing, Beds & Carrier', href: '/clothing-beds-carrier', hasSubCategories: false },
     { icon: Gem, label: 'Cat Accessories', href: '/cat-accessories', hasSubCategories: false },
