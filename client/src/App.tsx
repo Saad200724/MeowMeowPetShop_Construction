@@ -89,20 +89,23 @@ function AppRoutes() {
         <Route path="/subcategory/adult-wet-food">
           <SubcategoryPage subcategoryId="adult-wet-food" subcategoryName="Adult Wet Food" icon="🥘" />
         </Route>
+        <Route path="/subcategory/litter">
+          <SubcategoryPage subcategoryId="litter" subcategoryName="Litter" icon="🐱" />
+        </Route>
         <Route path="/subcategory/litter-box">
           <SubcategoryPage subcategoryId="litter-box" subcategoryName="Litter Box" icon="🧽" />
         </Route>
         <Route path="/subcategory/accessories">
           <SubcategoryPage subcategoryId="accessories" subcategoryName="Accessories" icon="🦮" />
         </Route>
-        <Route path="/subcategory/medicine">
-          <SubcategoryPage subcategoryId="medicine" subcategoryName="Medicine" icon="💊" />
-        </Route>
         <Route path="/subcategory/toys">
           <SubcategoryPage subcategoryId="toys" subcategoryName="Toys" icon="🎾" />
         </Route>
-        <Route path="/subcategory/shampoo">
-          <SubcategoryPage subcategoryId="shampoo" subcategoryName="Shampoo" icon="🧴" />
+        <Route path="/subcategory/medicine">
+          <SubcategoryPage subcategoryId="medicine" subcategoryName="Medicine" icon="💊" />
+        </Route>
+        <Route path="/subcategory/shampoo-perfume">
+          <SubcategoryPage subcategoryId="shampoo-perfume" subcategoryName="Shampoo & Perfume" icon="🧴" />
         </Route>
         <Route path="/subcategory/sunglass">
           <SubcategoryPage subcategoryId="sunglass" subcategoryName="Sunglass" icon="🕶️" />

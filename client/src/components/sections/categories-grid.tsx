@@ -50,6 +50,14 @@ export default function CategoriesGrid() {
       color: "bg-orange-100 text-orange-600",
     },
     {
+      id: "litter",
+      name: "Litter",
+      icon: Package,
+      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-litter-accessaries-1747508179.png",
+      count: "Premium Quality",
+      color: "bg-amber-100 text-emerald-600",
+    },
+    {
       id: "litter-box",
       name: "Litter Box",
       icon: Package,
@@ -66,14 +74,6 @@ export default function CategoriesGrid() {
       color: "bg-cyan-100 text-cyan-600",
     },
     {
-      id: "medicine",
-      name: "Medicine",
-      icon: Pill,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-tick-and-flea-control-1747508541.png",
-      count: "Health Protection",
-      color: "bg-red-100 text-red-600",
-    },
-    {
       id: "toys",
       name: "Toys",
       icon: Gamepad2,
@@ -82,20 +82,20 @@ export default function CategoriesGrid() {
       color: "bg-green-100 text-green-600",
     },
     {
-      id: "shampoo",
-      name: "Shampoo",
+      id: "medicine",
+      name: "Medicine",
+      icon: Pill,
+      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-tick-and-flea-control-1747508541.png",
+      count: "Health Protection",
+      color: "bg-red-100 text-red-600",
+    },
+    {
+      id: "shampoo-perfume",
+      name: "Shampoo & Perfume",
       icon: ShoppingBag,
       image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-litter-accessaries-1747508179.png",
       count: "Wellness Care",
       color: "bg-emerald-100 text-emerald-600",
-    },
-    {
-      id: "sunglass",
-      name: "Sunglass",
-      icon: Glasses,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/sunglass-1747508365.png",
-      count: "Pet Fashion",
-      color: "bg-yellow-100 text-yellow-600",
     },
   ];
 
