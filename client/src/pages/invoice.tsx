@@ -55,8 +55,13 @@ export default function InvoicePage() {
     enabled: !!params?.invoiceId,
   });
 
-  const handlePrint = () => {
-    window.print();
+  const [printType, setPrintType] = useState<'A4' | 'Thermal'>('A4');
+
+  const handlePrint = (type: 'A4' | 'Thermal') => {
+    setPrintType(type);
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   if (isLoading) {
@@ -133,17 +138,29 @@ export default function InvoicePage() {
             </Button>
             
             <Button 
-              onClick={handlePrint}
+              onClick={() => handlePrint('A4')}
               className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
-              data-testid="button-print-invoice"
+              data-testid="button-print-invoice-a4"
             >
               <Printer className="h-4 w-4" />
               <span>Print Invoice (A4)</span>
             </Button>
+
+            <Button 
+              onClick={() => handlePrint('Thermal')}
+              className="bg-[#26732d] hover:bg-[#1e5d26] text-white hover:text-white flex items-center space-x-2"
+              data-testid="button-print-invoice-thermal"
+            >
+              <Printer className="h-4 w-4" />
+              <span>Print Thermal (3")</span>
+            </Button>
           </div>
 
           {/* Invoice A4 Container */}
-          <div className="print-invoice w-[210mm] min-h-[297mm] mx-auto bg-white p-[20mm] box-border shadow-lg print:shadow-none mb-10 print:m-0 print:border-none">
+          <div className={cn(
+            "print-invoice w-[210mm] min-h-[297mm] mx-auto bg-white p-[20mm] box-border shadow-lg print:shadow-none mb-10 print:m-0 print:border-none",
+            printType === 'Thermal' ? "print:hidden" : "block"
+          )}>
             <div className="border-b pb-6 mb-6">
               <div className="flex justify-between items-start">
                 <div>
@@ -154,9 +171,9 @@ export default function InvoicePage() {
                     </h1>
                   </div>
                   <p className="text-gray-600 mt-2 text-sm">
-                    Savar, Dhaka, Bangladesh<br />
+                    Chapra Masjid Road, Bank Colony, Savar, Dhaka<br />
                     Email: meowmeowpetshop1@gmail.com<br />
-                    Phone: 01405-045023
+                    Phone: 01838511583
                   </p>
                 </div>
                 <div className="text-right">
@@ -314,6 +331,103 @@ export default function InvoicePage() {
               </div>
             </div>
           </div>
+
+          {/* Thermal Invoice Container */}
+          <div className={cn(
+            "thermal-invoice hidden print:block w-[3in] mx-auto bg-white p-4 text-black font-mono text-xs",
+            printType === 'Thermal' ? "print:block" : "print:hidden"
+          )}>
+            <div className="text-center mb-4">
+              <img src="/logo.png" alt="Logo" className="h-12 w-12 mx-auto mb-1" />
+              <h2 className="font-bold text-sm uppercase">Meow Meow Pet Shop</h2>
+              <p className="text-[10px]">Chapra Masjid Road, Bank Colony, Savar, Dhaka</p>
+              <p className="text-[10px]">Phone: 01838511583</p>
+            </div>
+
+            <div className="border-t border-dashed py-2 space-y-1">
+              <div className="flex justify-between">
+                <span>Inv ID:</span>
+                <span>#{invoice.invoiceNumber}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Date:</span>
+                <span>{new Date(invoice.orderDate).toLocaleDateString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Customer:</span>
+                <span className="text-right">{invoice.customerInfo.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Contact:</span>
+                <span>{invoice.customerInfo.phone}</span>
+              </div>
+              {invoice.customerInfo.address && (
+                <div className="flex justify-between">
+                  <span>Addr:</span>
+                  <span className="text-right truncate ml-2">
+                    {typeof invoice.customerInfo.address === 'string' 
+                      ? invoice.customerInfo.address 
+                      : invoice.customerInfo.address.address}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span>Payment:</span>
+                <span>{invoice.paymentMethod}</span>
+              </div>
+            </div>
+
+            <div className="border-t border-dashed py-2">
+              <table className="w-full text-[10px]">
+                <thead>
+                  <tr className="border-b border-dashed">
+                    <th className="text-left py-1">Item</th>
+                    <th className="text-center px-1">Qty</th>
+                    <th className="text-right">Price</th>
+                    <th className="text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoice.items.map((item, index) => (
+                    <tr key={index} className="border-b border-dotted border-gray-200">
+                      <td className="py-1 max-w-[1.2in] truncate">{item.name}</td>
+                      <td className="text-center">{item.quantity}</td>
+                      <td className="text-right">৳{item.price}</td>
+                      <td className="text-right font-bold">৳{item.price * item.quantity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="border-t border-dashed py-2 space-y-1">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>৳{(invoice as any).subtotal || (invoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0))}</span>
+              </div>
+              {(invoice as any).deliveryFee > 0 && (
+                <div className="flex justify-between">
+                  <span>Delivery:</span>
+                  <span>৳{(invoice as any).deliveryFee}</span>
+                </div>
+              )}
+              {(invoice as any).discount > 0 && (
+                <div className="flex justify-between text-red-600">
+                  <span>Discount:</span>
+                  <span>-৳{(invoice as any).discount}</span>
+                </div>
+              )}
+              <div className="flex justify-between font-bold text-sm border-t border-double pt-1 mt-1">
+                <span>TOTAL:</span>
+                <span>৳{invoice.total}</span>
+              </div>
+            </div>
+
+            <div className="text-center mt-6 border-t border-dashed pt-2">
+              <p className="font-bold">Thank you for your purchase!</p>
+              <p className="text-[9px] mt-1 italic">Please visit us again</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -324,24 +438,47 @@ export default function InvoicePage() {
           body * {
             visibility: hidden;
           }
-          .print-invoice, .print-invoice * {
-            visibility: visible;
+          .thermal-invoice {
+             display: none;
           }
-          .print-invoice {
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin: 0 !important;
-            padding: 20mm !important;
-            box-shadow: none !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            border: none !important;
-          }
-          @page {
-            size: A4;
-            margin: 0;
-          }
+          ${printType === 'Thermal' ? `
+            .thermal-invoice, .thermal-invoice * {
+              visibility: visible;
+              display: block !important;
+            }
+            .thermal-invoice {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 3in !important;
+              margin: 0 !important;
+              padding: 10px !important;
+              box-shadow: none !important;
+            }
+            @page {
+              size: 3in auto;
+              margin: 0;
+            }
+          ` : `
+            .print-invoice, .print-invoice * {
+              visibility: visible;
+            }
+            .print-invoice {
+              position: absolute;
+              left: 0;
+              top: 0;
+              margin: 0 !important;
+              padding: 20mm !important;
+              box-shadow: none !important;
+              width: 210mm !important;
+              height: 297mm !important;
+              border: none !important;
+            }
+            @page {
+              size: A4;
+              margin: 0;
+            }
+          `}
           header, footer, .print:hidden {
             display: none !important;
           }
