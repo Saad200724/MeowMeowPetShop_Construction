@@ -334,73 +334,75 @@ export default function InvoicePage() {
 
           {/* Thermal Invoice Container */}
           <div className={cn(
-            "thermal-invoice hidden print:block w-[3in] mx-auto bg-white p-4 text-black font-mono text-xs",
+            "thermal-invoice hidden print:block w-[72mm] mx-auto bg-white text-black font-mono text-[10px] leading-tight",
             printType === 'Thermal' ? "print:block" : "print:hidden"
           )}>
-            <div className="text-center mb-4">
-              <img src="/logo.png" alt="Logo" className="h-12 w-12 mx-auto mb-1" />
-              <h2 className="font-bold text-sm uppercase">Meow Meow Pet Shop</h2>
-              <p className="text-[10px]">Chapra Masjid Road, Bank Colony, Savar, Dhaka</p>
-              <p className="text-[10px]">Phone: 01838511583</p>
+            <div className="text-center mb-2">
+              <img src="/logo.png" alt="Logo" className="h-10 w-10 mx-auto mb-1 grayscale" />
+              <h2 className="font-bold text-sm uppercase tracking-tighter">Meow Meow Pet Shop</h2>
+              <p className="text-[8px] leading-none">Chapra Masjid Road, Bank Colony</p>
+              <p className="text-[8px] leading-none text-nowrap">Savar, Dhaka | 01838511583</p>
+              <div className="border-b border-black border-double my-1"></div>
+              <p className="font-bold text-[11px]">CASH MEMO / INVOICE</p>
             </div>
 
-            <div className="border-t border-dashed py-2 space-y-1">
+            <div className="space-y-0.5 mb-2">
               <div className="flex justify-between">
-                <span>Inv ID:</span>
+                <span className="font-bold">INV:</span>
                 <span>#{invoice.invoiceNumber}</span>
               </div>
               <div className="flex justify-between">
                 <span>Date:</span>
-                <span>{new Date(invoice.orderDate).toLocaleDateString()}</span>
+                <span>{new Date(invoice.orderDate).toLocaleDateString('en-GB')}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Customer:</span>
-                <span className="text-right">{invoice.customerInfo.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Contact:</span>
-                <span>{invoice.customerInfo.phone}</span>
-              </div>
-              {invoice.customerInfo.address && (
-                <div className="flex justify-between">
-                  <span>Addr:</span>
-                  <span className="text-right truncate ml-2">
+              <div className="border-b border-black border-dashed my-1"></div>
+              <div>
+                <p className="font-bold">Customer:</p>
+                <p className="pl-2">{invoice.customerInfo.name}</p>
+                <p className="pl-2">{invoice.customerInfo.phone}</p>
+                {invoice.customerInfo.address && (
+                  <p className="pl-2 text-[9px] italic line-clamp-2 leading-none">
                     {typeof invoice.customerInfo.address === 'string' 
                       ? invoice.customerInfo.address 
-                      : invoice.customerInfo.address.address}
-                  </span>
-                </div>
-              )}
+                      : `${invoice.customerInfo.address.address}, ${invoice.customerInfo.address.district}`}
+                  </p>
+                )}
+              </div>
               <div className="flex justify-between">
                 <span>Payment:</span>
-                <span>{invoice.paymentMethod}</span>
+                <span className="font-bold uppercase">{invoice.paymentMethod}</span>
               </div>
             </div>
 
-            <div className="border-t border-dashed py-2">
-              <table className="w-full text-[10px]">
-                <thead>
-                  <tr className="border-b border-dashed">
-                    <th className="text-left py-1">Item</th>
-                    <th className="text-center px-1">Qty</th>
-                    <th className="text-right">Price</th>
-                    <th className="text-right">Total</th>
+            <table className="w-full mb-2">
+              <thead>
+                <tr className="border-y border-black border-dashed">
+                  <th className="text-left py-0.5">Item</th>
+                  <th className="text-right py-0.5">Qty</th>
+                  <th className="text-right py-0.5">Price</th>
+                  <th className="text-right py-0.5">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black divide-dotted">
+                {invoice.items.map((item, index) => (
+                  <tr key={index}>
+                    <td className="py-1 pr-1 align-top">
+                      <div className="font-bold leading-none break-words max-w-[35mm]">{item.name}</div>
+                      {(item.weight || item.color) && (
+                        <div className="text-[8px] text-gray-700 italic">
+                          {item.weight && `${item.weight}`} {item.color && `| ${item.color}`}
+                        </div>
+                      )}
+                    </td>
+                    <td className="text-right align-top py-1 px-0.5">{item.quantity}</td>
+                    <td className="text-right align-top py-1 px-0.5">{item.price}</td>
+                    <td className="text-right align-top py-1 font-bold">{(item.price * item.quantity)}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {invoice.items.map((item, index) => (
-                    <tr key={index} className="border-b border-dotted border-gray-200">
-                      <td className="py-1 max-w-[1.2in] truncate">{item.name}</td>
-                      <td className="text-center">{item.quantity}</td>
-                      <td className="text-right">৳{item.price}</td>
-                      <td className="text-right font-bold">৳{item.price * item.quantity}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
 
-            <div className="border-t border-dashed py-2 space-y-1">
+            <div className="space-y-0.5 pt-1 border-t border-black">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
                 <span>৳{(invoice as any).subtotal || (invoice.items.reduce((sum, item) => sum + (item.price * item.quantity), 0))}</span>
@@ -412,21 +414,25 @@ export default function InvoicePage() {
                 </div>
               )}
               {(invoice as any).discount > 0 && (
-                <div className="flex justify-between text-red-600">
+                <div className="flex justify-between">
                   <span>Discount:</span>
                   <span>-৳{(invoice as any).discount}</span>
                 </div>
               )}
-              <div className="flex justify-between font-bold text-sm border-t border-double pt-1 mt-1">
+              <div className="flex justify-between font-bold text-sm border-t-2 border-black pt-1 mt-1">
                 <span>TOTAL:</span>
-                <span>৳{invoice.total}</span>
+                <span className="text-lg underline underline-offset-2 decoration-double font-black">৳{invoice.total}</span>
               </div>
             </div>
 
-            <div className="text-center mt-6 border-t border-dashed pt-2">
-              <p className="font-bold">Thank you for your purchase!</p>
-              <p className="text-[9px] mt-1 italic">Please visit us again</p>
+            <div className="text-center mt-4 border-t border-black border-dashed pt-2">
+              <p className="font-bold text-[11px] uppercase tracking-widest">Thank You!</p>
+              <p className="text-[9px] mt-0.5">Software by Replit</p>
+              <div className="mt-2 text-[8px] italic">
+                *** No return without this memo ***
+              </div>
             </div>
+            <div className="h-10"></div> {/* Bottom margin for easy tearing */}
           </div>
         </div>
       </div>
@@ -435,11 +441,16 @@ export default function InvoicePage() {
       
       <style>{`
         @media print {
+          body {
+            margin: 0;
+            padding: 0;
+            background: white;
+          }
+          header, footer, .print:hidden, [data-testid="button-back-shopping"], .bg-green-50 {
+            display: none !important;
+          }
           body * {
             visibility: hidden;
-          }
-          .thermal-invoice {
-             display: none;
           }
           ${printType === 'Thermal' ? `
             .thermal-invoice, .thermal-invoice * {
@@ -450,13 +461,14 @@ export default function InvoicePage() {
               position: absolute;
               left: 0;
               top: 0;
-              width: 3in !important;
+              width: 72mm !important;
               margin: 0 !important;
-              padding: 10px !important;
+              padding: 4mm !important;
               box-shadow: none !important;
+              background: white !important;
             }
             @page {
-              size: 3in auto;
+              size: 80mm auto;
               margin: 0;
             }
           ` : `
@@ -473,15 +485,13 @@ export default function InvoicePage() {
               width: 210mm !important;
               height: 297mm !important;
               border: none !important;
+              background: white !important;
             }
             @page {
               size: A4;
               margin: 0;
             }
           `}
-          header, footer, .print:hidden {
-            display: none !important;
-          }
         }
       `}</style>
     </div>
