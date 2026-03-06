@@ -432,7 +432,6 @@ export default function InvoicePage() {
                 *** No return without this memo ***
               </div>
             </div>
-            <div className="h-10"></div> {/* Bottom margin for easy tearing */}
           </div>
         </div>
       </div>
@@ -441,6 +440,9 @@ export default function InvoicePage() {
       
       <style>{`
         @media print {
+          @page {
+            margin: 0;
+          }
           body {
             margin: 0;
             padding: 0;
