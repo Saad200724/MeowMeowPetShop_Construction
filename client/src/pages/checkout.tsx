@@ -366,7 +366,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><Label>Phone *</Label><Input value={billingDetails.phone} onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))} required /></div>
-                        <div><Label>Email Address *</Label><Input value={billingDetails.email} onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))} required /></div>
+                        <div><Label>Email Address</Label><Input value={billingDetails.email} onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))} /></div>
                       </div>
                     </div>
                     <Separator />

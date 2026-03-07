@@ -19,6 +19,7 @@ interface InvoiceItem {
   image: string;
   weight?: string;
   color?: string;
+  piece?: string;
 }
 
 interface Invoice {
