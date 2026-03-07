@@ -427,7 +427,7 @@ export default function InvoicePage() {
 
             <div className="text-center mt-4 border-t border-black border-dashed pt-2">
               <p className="font-bold text-[11px] uppercase tracking-widest">Thank You!</p>
-              <p className="text-[9px] mt-0.5">Software by Replit</p>
+              <p className="text-[9px] mt-0.5">Software by ZnForge</p>
               <div className="mt-2 text-[8px] italic">
                 *** No return without this memo ***
               </div>
