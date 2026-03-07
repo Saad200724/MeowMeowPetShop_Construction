@@ -287,7 +287,8 @@ export default function CheckoutPage() {
         quantity: item.quantity,
         image: item.image,
         weight: (item as any).weight,
-        color: (item as any).color
+        color: (item as any).color,
+        piece: (item as any).piece
       })),
       orderNotes: orderNotes,
       shippingAddress: {
@@ -393,7 +394,7 @@ export default function CheckoutPage() {
                         <img src={item.image} className="w-16 h-16 rounded object-cover" />
                         <div className="flex-1">
                           <p className="font-medium">{item.name}</p>
-                          {(item as any).weight || (item as any).color ? (
+                          {(item as any).weight || (item as any).color || (item as any).piece ? (
                             <div className="flex flex-wrap gap-2 mt-1">
                               {(item as any).weight && (
                                 <Badge variant="outline" className="text-[10px] h-4 px-1 border-gray-300">
@@ -403,6 +404,11 @@ export default function CheckoutPage() {
                               {(item as any).color && (
                                 <Badge variant="outline" className="text-[10px] h-4 px-1 border-gray-300">
                                   { (item as any).color }
+                                </Badge>
+                              )}
+                              {(item as any).piece && (
+                                <Badge variant="outline" className="text-[10px] h-4 px-1 border-gray-300">
+                                  { (item as any).piece }
                                 </Badge>
                               )}
                             </div>

@@ -10,6 +10,7 @@ export interface CartItem {
   maxStock: number;
   weight?: string | null;
   color?: string | null;
+  piece?: string | null;
 }
 
 export interface AppliedCoupon {

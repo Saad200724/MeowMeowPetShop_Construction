@@ -273,13 +273,16 @@ export default function InvoicePage() {
                             />
                             <div>
                               <p className="font-bold text-black text-sm">{item.name}</p>
-                              {(item.weight || item.color) && (
+                              {(item.weight || item.color || (item as any).piece) && (
                                 <div className="flex gap-2 mt-0.5">
                                   {item.weight && (
                                     <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">W: {item.weight}</span>
                                   )}
                                   {item.color && (
                                     <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">C: {item.color}</span>
+                                  )}
+                                  {(item as any).piece && (
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">P: {(item as any).piece}</span>
                                   )}
                                 </div>
                               )}
@@ -388,9 +391,9 @@ export default function InvoicePage() {
                   <tr key={index}>
                     <td className="py-1 pr-1 align-top">
                       <div className="font-bold leading-none break-words max-w-[35mm]">{item.name}</div>
-                      {(item.weight || item.color) && (
+                      {(item.weight || item.color || (item as any).piece) && (
                         <div className="text-[8px] text-gray-700 italic">
-                          {item.weight && `${item.weight}`} {item.color && `| ${item.color}`}
+                          {item.weight && `${item.weight}`} {item.color && `| ${item.color}`} {(item as any).piece && `| ${(item as any).piece}`}
                         </div>
                       )}
                     </td>

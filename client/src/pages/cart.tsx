@@ -164,7 +164,7 @@ export default function CartPage() {
                           <h3 className="font-medium text-sm md:text-base text-gray-900 line-clamp-2 mb-1">
                             {item.name}
                           </h3>
-                          {((item as any).weight || (item as any).color) && (
+                          {((item as any).weight || (item as any).color || (item as any).piece) && (
                             <div className="flex flex-wrap gap-2 mb-2">
                               {(item as any).weight && (
                                 <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-gray-300">
@@ -174,6 +174,11 @@ export default function CartPage() {
                               {(item as any).color && (
                                 <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-gray-300">
                                   Color: {(item as any).color}
+                                </Badge>
+                              )}
+                              {(item as any).piece && (
+                                <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-gray-300">
+                                  Piece: {(item as any).piece}
                                 </Badge>
                               )}
                             </div>
