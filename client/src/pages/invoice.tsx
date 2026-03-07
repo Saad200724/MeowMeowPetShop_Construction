@@ -282,7 +282,7 @@ export default function InvoicePage() {
                                     <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">C: {item.color}</span>
                                   )}
                                   {(item as any).piece && (
-                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">P: {(item as any).piece}</span>
+                                    <span className="text-[9px] text-gray-500 uppercase border border-gray-200 px-1 rounded">Pc: {(item as any).piece}</span>
                                   )}
                                 </div>
                               )}
@@ -393,7 +393,7 @@ export default function InvoicePage() {
                       <div className="font-bold leading-none break-words max-w-[35mm]">{item.name}</div>
                       {(item.weight || item.color || (item as any).piece) && (
                         <div className="text-[8px] text-gray-700 italic">
-                          {item.weight && `${item.weight}`} {item.color && `| ${item.color}`} {(item as any).piece && `| ${(item as any).piece}`}
+                          {item.weight && `W:${item.weight}`} {item.color && `| C:${item.color}`} {(item as any).piece && `| Pc:${(item as any).piece}`}
                         </div>
                       )}
                     </td>
