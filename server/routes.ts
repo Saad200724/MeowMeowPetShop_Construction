@@ -2146,7 +2146,8 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
           quantity: item.quantity,
           image: item.image,
           weight: item.weight,
-          color: item.color
+          color: item.color,
+          piece: item.piece
         })),
         subtotal: serverSubtotal, // Use server-computed subtotal
         discount: serverDiscount, // Use server-computed discount

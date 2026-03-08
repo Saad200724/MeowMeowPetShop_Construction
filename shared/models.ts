@@ -213,6 +213,7 @@ export interface ICartItem {
   image: string;
   weight?: string;
   color?: string;
+  piece?: string;
 }
 
 // Cart Schema
@@ -280,7 +281,8 @@ const invoiceSchema = new Schema<IInvoice>({
     quantity: { type: Number, required: true },
     image: { type: String, required: true },
     weight: String,
-    color: String
+    color: String,
+    piece: String
   }],
   subtotal: { type: Number, required: true },
   deliveryFee: { type: Number, default: 0 },
