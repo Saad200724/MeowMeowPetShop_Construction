@@ -1996,7 +1996,10 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
             name: product.name,
             price: product.price, // Use current price from database
             quantity: item.quantity,
-            image: item.image || product.image
+            image: item.image || product.image,
+            weight: item.weight,
+            color: item.color,
+            piece: item.piece
           });
         } catch (error) {
           console.error(`Error validating product ${item.productId}:`, error);
