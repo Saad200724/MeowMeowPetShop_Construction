@@ -2472,15 +2472,18 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
         return res.status(400).json({ message: "Order ID and phone number are required" });
       }
 
-      orderId = orderId.trim().replace(/^#/, '').toUpperCase();
+      orderId = orderId.trim().replace(/^#/, '');
 
-      let order = await Order.findOne({ 
-        $or: [
-          { orderNumber: orderId },
-          { invoiceNumber: orderId },
-          { _id: orderId }
-        ]
-      });
+      const orConditions: any[] = [
+        { orderNumber: { $regex: new RegExp(`^${orderId}$`, 'i') } },
+        { invoiceNumber: { $regex: new RegExp(`^${orderId}$`, 'i') } }
+      ];
+
+      if (/^[a-fA-F0-9]{24}$/.test(orderId)) {
+        orConditions.push({ _id: orderId });
+      }
+
+      let order = await Order.findOne({ $or: orConditions });
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
