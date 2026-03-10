@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { Package, CheckCircle, Truck, MapPin, Clock } from 'lucide-react';
+import { Package, CheckCircle, XCircle, Truck, MapPin, Clock } from 'lucide-react';
 
 interface OrderTrack {
   orderNumber: string;
@@ -57,7 +57,11 @@ export default function TrackOrderPage() {
     }
   };
 
-  const statusSteps = orderData ? ['pending', 'processing', 'shipped', 'delivered'].map((s, i) => ({ status: s, completed: ['pending', 'processing', 'shipped', 'delivered'].indexOf(orderData.status?.toLowerCase() || 'pending') >= i })) : [];
+  const isCancelled = orderData?.status?.toLowerCase() === 'cancelled';
+  const statusSteps = orderData ? (isCancelled 
+    ? [{ status: 'cancelled', completed: true }]
+    : ['pending', 'processing', 'shipped', 'delivered'].map((s, i) => ({ status: s, completed: ['pending', 'processing', 'shipped', 'delivered'].indexOf(orderData.status?.toLowerCase() || 'pending') >= i }))
+  ) : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -99,7 +103,7 @@ export default function TrackOrderPage() {
                       <CardTitle className="text-[#26732d]">Order #{orderData.orderNumber}</CardTitle>
                       <p className="text-sm text-gray-600 mt-1">Invoice: {orderData.invoiceNumber}</p>
                     </div>
-                    <Badge className={orderData.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-800' : orderData.status?.toLowerCase() === 'shipped' ? 'bg-blue-100 text-blue-800' : orderData.status?.toLowerCase() === 'processing' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}>
+                    <Badge className={orderData.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-800' : orderData.status?.toLowerCase() === 'shipped' ? 'bg-blue-100 text-blue-800' : orderData.status?.toLowerCase() === 'processing' ? 'bg-yellow-100 text-yellow-800' : orderData.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}>
                       {orderData.status?.charAt(0).toUpperCase() + orderData.status?.slice(1) || 'Pending'}
                     </Badge>
                   </div>
@@ -120,8 +124,8 @@ export default function TrackOrderPage() {
                   <div className="space-y-4">
                     {statusSteps.map((step) => (
                       <div key={step.status} className="flex items-start gap-4">
-                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${step.completed ? 'bg-[#26732d] text-white' : 'bg-gray-200 text-gray-500'}`}>
-                          {step.completed ? <CheckCircle size={24} /> : <Clock size={24} />}
+                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${step.status === 'cancelled' ? 'bg-red-500 text-white' : step.completed ? 'bg-[#26732d] text-white' : 'bg-gray-200 text-gray-500'}`}>
+                          {step.status === 'cancelled' ? <XCircle size={24} /> : step.completed ? <CheckCircle size={24} /> : <Clock size={24} />}
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold text-gray-900 capitalize">{step.status}</p>
