@@ -58,10 +58,17 @@ export default function TrackOrderPage() {
   };
 
   const isCancelled = orderData?.status?.toLowerCase() === 'cancelled';
-  const statusSteps = orderData ? (isCancelled 
-    ? [{ status: 'cancelled', completed: true }]
-    : ['pending', 'processing', 'shipped', 'delivered'].map((s, i) => ({ status: s, completed: ['pending', 'processing', 'shipped', 'delivered'].indexOf(orderData.status?.toLowerCase() || 'pending') >= i }))
-  ) : [];
+  const allStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+  const statusSteps = orderData ? allStatuses.map((s) => {
+    if (s === 'cancelled') {
+      return { status: s, completed: isCancelled };
+    }
+    if (isCancelled) {
+      return { status: s, completed: false };
+    }
+    const currentIndex = allStatuses.indexOf(orderData.status?.toLowerCase() || 'pending');
+    return { status: s, completed: allStatuses.indexOf(s) <= currentIndex };
+  }) : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
