@@ -398,7 +398,7 @@ export function FloatingCart() {
                 <div className="space-y-2 md:space-y-4">
                   <Link href="/cart">
                     <Button 
-                      className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white md:py-3 md:text-lg"
+                      className="w-full bg-[#1e5d26] hover:bg-[#16451c] text-white md:py-3 md:text-lg"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="view-cart-button"
                     >
@@ -407,8 +407,7 @@ export function FloatingCart() {
                   </Link>
                   <Link href="/checkout">
                     <Button 
-                      variant="outline" 
-                      className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white md:py-3 md:text-lg"
+                      className="w-full bg-[#ffde59] hover:bg-[#e6c950] text-black font-bold md:py-3 md:text-lg border-none"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="checkout-button"
                     >
