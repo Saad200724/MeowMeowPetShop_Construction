@@ -4791,25 +4791,12 @@ export default function AdminPage() {
                           <Label className="text-xs text-gray-600">Product Name</Label>
                           <Input
                             value={item.name}
-                            onChange={(e) => handleUpdateInvoiceItem(index, 'name', e.target.value)}
-                            className="bg-white text-black"
+                            readOnly
+                            className="bg-gray-100 text-gray-700 cursor-not-allowed"
                             placeholder="Product name"
                             data-testid={`input-item-name-${index}`}
                           />
                         </div>
-                      </div>
-
-                      {/* Product Image URL Row */}
-                      <div className="mb-4">
-                        <Label className="text-xs text-gray-600">Product Image URL</Label>
-                        <Input
-                          value={item.image || ''}
-                          onChange={(e) => handleUpdateInvoiceItem(index, 'image', e.target.value)}
-                          className="bg-white text-black text-sm"
-                          placeholder="https://example.com/image.jpg"
-                          data-testid={`input-item-image-${index}`}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Enter the product image URL</p>
                       </div>
 
                       {/* Price, Quantity, and Total Row */}
