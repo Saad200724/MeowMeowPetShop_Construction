@@ -74,7 +74,7 @@ export default function TrackOrderPage() {
               <form onSubmit={handleTrackOrder} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div><Label htmlFor="orderId">Order ID or Invoice Number *</Label><Input id="orderId" placeholder="e.g., XBEPO or INV-XXXX-XXXX" value={orderId} onChange={(e) => setOrderId(e.target.value)} data-testid="input-order-id" /></div>
-                  <div><Label htmlFor="phone">Phone Number *</Label><Input id="phone" placeholder="e.g., 01815410558" value={phone} onChange={(e) => setPhone(e.target.value)} data-testid="input-phone" /></div>
+                  <div><Label htmlFor="phone">Phone Number *</Label><Input id="phone" placeholder="01815XXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} data-testid="input-phone" /></div>
                 </div>
                 <Button type="submit" disabled={isLoading} className="w-full bg-[#26732d] hover:bg-[#1e5d26] h-10" data-testid="button-track-order">{isLoading ? 'Tracking...' : 'Track Order'}</Button>
               </form>
