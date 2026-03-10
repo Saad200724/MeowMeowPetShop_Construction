@@ -1371,8 +1371,9 @@ export default function AdminPage() {
   };
 
   const handleAddProductFromPicker = (product: any) => {
-    const qty = pickerQuantity[product._id] || 1;
-    const existing = invoiceItems.findIndex((i) => i.productId === product._id);
+    const pid = product.id || product._id;
+    const qty = pickerQuantity[pid] || 1;
+    const existing = invoiceItems.findIndex((i) => i.productId === pid);
     if (existing >= 0) {
       const updated = [...invoiceItems];
       updated[existing] = { ...updated[existing], quantity: updated[existing].quantity + qty };
@@ -1381,7 +1382,7 @@ export default function AdminPage() {
       setInvoiceItems([
         ...invoiceItems,
         {
-          productId: product._id,
+          productId: pid,
           name: product.name,
           price: parseFloat(product.price) || 0,
           quantity: qty,
@@ -4626,8 +4627,10 @@ export default function AdminPage() {
                   (p.name?.toLowerCase().includes(productPickerSearch.toLowerCase()) ||
                     p.sku?.toLowerCase().includes(productPickerSearch.toLowerCase()))
                 )
-                .map((product: any) => (
-                  <div key={product._id} className="flex items-center gap-3 border rounded-lg p-3 hover:bg-gray-50">
+                .map((product: any) => {
+                  const pid = product.id || product._id;
+                  return (
+                  <div key={pid} className="flex items-center gap-3 border rounded-lg p-3 hover:bg-gray-50">
                     <img
                       src={product.image || '/placeholder.png'}
                       alt={product.name}
@@ -4642,27 +4645,28 @@ export default function AdminPage() {
                       <Input
                         type="number"
                         min="1"
-                        value={pickerQuantity[product._id] || 1}
+                        value={pickerQuantity[pid] || 1}
                         onChange={(e) =>
                           setPickerQuantity((prev) => ({
                             ...prev,
-                            [product._id]: Math.max(1, parseInt(e.target.value) || 1),
+                            [pid]: Math.max(1, parseInt(e.target.value) || 1),
                           }))
                         }
                         className="w-16 bg-white text-black text-center"
-                        data-testid={`input-picker-qty-${product._id}`}
+                        data-testid={`input-picker-qty-${pid}`}
                       />
                       <Button
                         size="sm"
                         className="bg-green-600 hover:bg-green-700 text-white"
                         onClick={() => handleAddProductFromPicker(product)}
-                        data-testid={`button-picker-add-${product._id}`}
+                        data-testid={`button-picker-add-${pid}`}
                       >
                         Add
                       </Button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               {(products as any[]).filter((p: any) =>
                 p.isActive !== false &&
                 (p.name?.toLowerCase().includes(productPickerSearch.toLowerCase()) ||
