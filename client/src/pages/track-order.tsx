@@ -57,7 +57,7 @@ export default function TrackOrderPage() {
     }
   };
 
-  const isCancelled = orderData?.status?.toLowerCase() === 'cancelled';
+  const isCancelled = orderData?.status?.toLowerCase() === 'cancelled' || orderData?.status?.toLowerCase() === 'canceled';
   const allStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
   const statusSteps = orderData ? allStatuses.map((s) => {
     if (s === 'cancelled') {
@@ -110,7 +110,7 @@ export default function TrackOrderPage() {
                       <CardTitle className="text-[#26732d]">Order #{orderData.orderNumber}</CardTitle>
                       <p className="text-sm text-gray-600 mt-1">Invoice: {orderData.invoiceNumber}</p>
                     </div>
-                    <Badge className={orderData.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-800' : orderData.status?.toLowerCase() === 'shipped' ? 'bg-blue-100 text-blue-800' : orderData.status?.toLowerCase() === 'processing' ? 'bg-yellow-100 text-yellow-800' : orderData.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}>
+                    <Badge className={orderData.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-800' : orderData.status?.toLowerCase() === 'shipped' ? 'bg-blue-100 text-blue-800' : orderData.status?.toLowerCase() === 'processing' ? 'bg-yellow-100 text-yellow-800' : (orderData.status?.toLowerCase() === 'cancelled' || orderData.status?.toLowerCase() === 'canceled') ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}>
                       {orderData.status?.charAt(0).toUpperCase() + orderData.status?.slice(1) || 'Pending'}
                     </Badge>
                   </div>
