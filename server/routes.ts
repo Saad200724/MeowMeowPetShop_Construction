@@ -19,10 +19,10 @@ function generateInvoiceNumber(): string {
   return `INV-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
 }
 
-function generateShortOrderNumber(): string {
+function generateRandomId(length: number): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
@@ -30,13 +30,14 @@ function generateShortOrderNumber(): string {
 
 async function generateUniqueShortOrderNumber(): Promise<string> {
   const { Order } = await import("@shared/models");
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const orderNumber = generateShortOrderNumber();
-    const existing = await Order.findOne({ orderNumber });
-    if (!existing) return orderNumber;
+  for (let length = 5; length <= 20; length++) {
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const orderNumber = generateRandomId(length);
+      const existing = await Order.findOne({ orderNumber });
+      if (!existing) return orderNumber;
+    }
   }
-  const timestamp = Date.now().toString(36).toUpperCase().slice(-3);
-  return generateShortOrderNumber().slice(0, 2) + timestamp;
+  return generateRandomId(20);
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {

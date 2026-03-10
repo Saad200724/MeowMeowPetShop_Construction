@@ -590,17 +590,19 @@ export class DatabaseStorage implements IStorage {
       if (!orderData.userId) orderData.userId = "guest";
       if (!orderData.orderNumber) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        for (let attempt = 0; attempt < 10; attempt++) {
-          let shortId = '';
-          for (let i = 0; i < 5; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
-          const existing = await Order.findOne({ orderNumber: shortId });
-          if (!existing) { orderData.orderNumber = shortId; break; }
+        let found = false;
+        for (let length = 5; length <= 20 && !found; length++) {
+          for (let attempt = 0; attempt < 10; attempt++) {
+            let shortId = '';
+            for (let i = 0; i < length; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+            const existing = await Order.findOne({ orderNumber: shortId });
+            if (!existing) { orderData.orderNumber = shortId; found = true; break; }
+          }
         }
-        if (!orderData.orderNumber) {
-          const ts = Date.now().toString(36).toUpperCase().slice(-3);
-          let shortId = '';
-          for (let i = 0; i < 2; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
-          orderData.orderNumber = shortId + ts;
+        if (!found) {
+          let fallback = '';
+          for (let i = 0; i < 20; i++) fallback += chars.charAt(Math.floor(Math.random() * chars.length));
+          orderData.orderNumber = fallback;
         }
       }
       if (!orderData.status) orderData.status = 'Pending';
