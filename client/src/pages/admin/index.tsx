@@ -241,6 +241,9 @@ export default function AdminPage() {
   const [invoiceCustomerEmail, setInvoiceCustomerEmail] = useState('');
   const [invoiceCustomerAddress, setInvoiceCustomerAddress] = useState<any>({});
   const [invoicePaymentMethod, setInvoicePaymentMethod] = useState('');
+  const [showProductPicker, setShowProductPicker] = useState(false);
+  const [productPickerSearch, setProductPickerSearch] = useState('');
+  const [pickerQuantity, setPickerQuantity] = useState<Record<string, number>>({});
 
   // All forms declared at the top level
   const form = useForm<ProductFormData>({
@@ -1035,6 +1038,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/products'] });
       setShowInvoiceEditor(false);
       setEditingInvoice(null);
       toast({
@@ -1361,16 +1365,31 @@ export default function AdminPage() {
   };
 
   const handleAddInvoiceItem = () => {
-    setInvoiceItems([
-      ...invoiceItems,
-      {
-        productId: `new-${Date.now()}`,
-        name: 'New Product',
-        price: 0,
-        quantity: 1,
-        image: '/placeholder.png',
-      },
-    ]);
+    setProductPickerSearch('');
+    setPickerQuantity({});
+    setShowProductPicker(true);
+  };
+
+  const handleAddProductFromPicker = (product: any) => {
+    const qty = pickerQuantity[product._id] || 1;
+    const existing = invoiceItems.findIndex((i) => i.productId === product._id);
+    if (existing >= 0) {
+      const updated = [...invoiceItems];
+      updated[existing] = { ...updated[existing], quantity: updated[existing].quantity + qty };
+      setInvoiceItems(updated);
+    } else {
+      setInvoiceItems([
+        ...invoiceItems,
+        {
+          productId: product._id,
+          name: product.name,
+          price: parseFloat(product.price) || 0,
+          quantity: qty,
+          image: product.image || '/placeholder.png',
+        },
+      ]);
+    }
+    setShowProductPicker(false);
   };
 
   const handleRemoveInvoiceItem = (index: number) => {
@@ -4582,6 +4601,77 @@ export default function AdminPage() {
               </form>
             </Form>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Product Picker Dialog (within invoice editor) */}
+      <Dialog open={showProductPicker} onOpenChange={setShowProductPicker}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-gray-900">Select Product</DialogTitle>
+            <DialogDescription className="text-gray-600">Choose a product to add to the invoice</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              placeholder="Search products..."
+              value={productPickerSearch}
+              onChange={(e) => setProductPickerSearch(e.target.value)}
+              className="bg-white text-black"
+              data-testid="input-product-picker-search"
+            />
+            <div className="space-y-2">
+              {(products as any[])
+                .filter((p: any) =>
+                  p.isActive !== false &&
+                  (p.name?.toLowerCase().includes(productPickerSearch.toLowerCase()) ||
+                    p.sku?.toLowerCase().includes(productPickerSearch.toLowerCase()))
+                )
+                .map((product: any) => (
+                  <div key={product._id} className="flex items-center gap-3 border rounded-lg p-3 hover:bg-gray-50">
+                    <img
+                      src={product.image || '/placeholder.png'}
+                      alt={product.name}
+                      className="w-14 h-14 rounded object-cover flex-shrink-0 border"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 truncate">{product.name}</p>
+                      <p className="text-sm text-green-700 font-semibold">৳{parseFloat(product.price || 0).toLocaleString()}</p>
+                      <p className="text-xs text-gray-500">Stock: {product.stockQuantity ?? product.stock ?? 0}</p>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Input
+                        type="number"
+                        min="1"
+                        value={pickerQuantity[product._id] || 1}
+                        onChange={(e) =>
+                          setPickerQuantity((prev) => ({
+                            ...prev,
+                            [product._id]: Math.max(1, parseInt(e.target.value) || 1),
+                          }))
+                        }
+                        className="w-16 bg-white text-black text-center"
+                        data-testid={`input-picker-qty-${product._id}`}
+                      />
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        onClick={() => handleAddProductFromPicker(product)}
+                        data-testid={`button-picker-add-${product._id}`}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              {(products as any[]).filter((p: any) =>
+                p.isActive !== false &&
+                (p.name?.toLowerCase().includes(productPickerSearch.toLowerCase()) ||
+                  p.sku?.toLowerCase().includes(productPickerSearch.toLowerCase()))
+              ).length === 0 && (
+                <p className="text-center text-gray-500 py-6">No products found.</p>
+              )}
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 

@@ -2483,6 +2483,35 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
         return res.status(404).json({ message: "Invoice not found" });
       }
 
+      // Build a map of old item quantities by productId
+      const oldItemMap: Record<string, number> = {};
+      for (const oldItem of (invoice.items as any[]) || []) {
+        const pid = String(oldItem.productId);
+        oldItemMap[pid] = (oldItemMap[pid] || 0) + (oldItem.quantity || 0);
+      }
+
+      // Build a map of new item quantities by productId
+      const newItemMap: Record<string, number> = {};
+      for (const newItem of items || []) {
+        const pid = String(newItem.productId);
+        newItemMap[pid] = (newItemMap[pid] || 0) + (newItem.quantity || 0);
+      }
+
+      // Reduce stock for items whose quantity increased vs the old invoice
+      for (const [productId, newQty] of Object.entries(newItemMap)) {
+        const oldQty = oldItemMap[productId] || 0;
+        const diff = newQty - oldQty;
+        if (diff > 0) {
+          try {
+            await Product.findByIdAndUpdate(productId, {
+              $inc: { stockQuantity: -diff }
+            });
+          } catch (err) {
+            console.error(`Failed to update stock for product ${productId}:`, err);
+          }
+        }
+      }
+
       // Calculate new subtotal from items
       const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
       
