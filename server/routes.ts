@@ -2484,7 +2484,17 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
         return res.status(404).json({ message: "Invoice not found" });
       }
 
-      res.json(invoice);
+      const invoiceObj = invoice.toObject();
+      if (invoiceObj.orderId) {
+        try {
+          const order = await Order.findById(invoiceObj.orderId);
+          if (order?.orderNumber) {
+            invoiceObj.orderNumber = order.orderNumber;
+          }
+        } catch (e) {}
+      }
+
+      res.json(invoiceObj);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch invoice" });
     }

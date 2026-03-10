@@ -26,6 +26,7 @@ interface Invoice {
   _id: string;
   invoiceNumber: string;
   orderId: string;
+  orderNumber?: string;
   userId: string;
   customerInfo: {
     name: string;
@@ -224,7 +225,7 @@ export default function InvoicePage() {
                   <div className="space-y-2 text-gray-700">
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Order ID:</span>
-                      <span>{invoice.orderId}</span>
+                      <span>{invoice.orderNumber || invoice.orderId}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Payment:</span>
