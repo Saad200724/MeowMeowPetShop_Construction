@@ -2467,10 +2467,12 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
   // Track order by order number/invoice number and phone verification
   app.post("/api/track-order", async (req, res) => {
     try {
-      const { orderId, phone } = req.body;
+      let { orderId, phone } = req.body;
       if (!orderId || !phone) {
         return res.status(400).json({ message: "Order ID and phone number are required" });
       }
+
+      orderId = orderId.trim().replace(/^#/, '').toUpperCase();
 
       let order = await Order.findOne({ 
         $or: [
@@ -2494,6 +2496,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
       const orderObj = order.toObject();
       res.json(orderObj);
     } catch (error) {
+      console.error('Track order error:', error);
       res.status(500).json({ message: "Failed to track order" });
     }
   });

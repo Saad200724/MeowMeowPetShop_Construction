@@ -39,7 +39,8 @@ export default function TrackOrderPage() {
     }
     setIsLoading(true);
     try {
-      const response = await fetch('/api/track-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: orderId.trim(), phone: phone.trim().replace(/\s/g, '') }) });
+      const cleanOrderId = orderId.trim().replace(/^#/, '');
+      const response = await fetch('/api/track-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: cleanOrderId, phone: phone.trim().replace(/\s/g, '') }) });
       const data = await response.json();
       if (response.ok) {
         setOrderData(data);
