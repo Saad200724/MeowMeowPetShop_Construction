@@ -235,7 +235,6 @@ export default function CheckoutPage() {
     const missingFields = [];
     if (!billingDetails.firstName.trim()) missingFields.push("First Name");
     if (!billingDetails.phone.trim()) missingFields.push("Phone Number");
-    if (!billingDetails.email.trim()) missingFields.push("Email Address");
     if (!billingDetails.address.trim()) missingFields.push("Full Address");
     if (!billingDetails.division.trim()) missingFields.push("Division");
     if (!billingDetails.district.trim()) missingFields.push("District");
@@ -244,7 +243,7 @@ export default function CheckoutPage() {
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(billingDetails.email)) {
+    if (billingDetails.email.trim() && !emailRegex.test(billingDetails.email)) {
       toast({ title: "Invalid Email", description: "Please enter a valid email address.", variant: "destructive" });
       return;
     }
@@ -325,7 +324,7 @@ export default function CheckoutPage() {
             <PaymentProcessor
               orderId={createdOrderId}
               amount={getFinalTotal() + finalDeliveryFee}
-              customerInfo={{ fullname: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(), email: billingDetails.email, phone: billingDetails.phone }}
+              customerInfo={{ fullname: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(), email: billingDetails.email || 'guest@example.com', phone: billingDetails.phone }}
               onSuccess={handlePaymentSuccess}
               onError={handlePaymentError}
             />
@@ -366,7 +365,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><Label>Phone *</Label><Input value={billingDetails.phone} onChange={(e) => setBillingDetails(prev => ({ ...prev, phone: e.target.value }))} required /></div>
-                        <div><Label>Email Address</Label><Input value={billingDetails.email} onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))} /></div>
+                        <div><Label>Email Address (Optional)</Label><Input value={billingDetails.email} onChange={(e) => setBillingDetails(prev => ({ ...prev, email: e.target.value }))} /></div>
                       </div>
                     </div>
                     <Separator />

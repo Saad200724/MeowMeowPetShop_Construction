@@ -1955,7 +1955,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
         return res.status(400).json({ message: "Order items are required" });
       }
 
-      if (!customerInfo || !customerInfo.name || !customerInfo.phone || !customerInfo.email) {
+      if (!customerInfo || !customerInfo.name || !customerInfo.phone) {
         await session.abortTransaction();
         await session.endSession();
         return res.status(400).json({ message: "Customer information is required" });
@@ -2572,7 +2572,7 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
           <div class="customer-info">
             <h3>Bill To:</h3>
             <p>${invoice.customerInfo.name}<br>
-            Email: ${invoice.customerInfo.email}<br>
+            ${invoice.customerInfo.email ? `Email: ${invoice.customerInfo.email}<br>` : ''}
             Phone: ${invoice.customerInfo.phone}</p>
           </div>
 
