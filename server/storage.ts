@@ -588,7 +588,21 @@ export class DatabaseStorage implements IStorage {
       
       // Double check required fields for MongoDB
       if (!orderData.userId) orderData.userId = "guest";
-      if (!orderData.orderNumber) orderData.orderNumber = `ORD-${Date.now()}`;
+      if (!orderData.orderNumber) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        for (let attempt = 0; attempt < 10; attempt++) {
+          let shortId = '';
+          for (let i = 0; i < 5; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+          const existing = await Order.findOne({ orderNumber: shortId });
+          if (!existing) { orderData.orderNumber = shortId; break; }
+        }
+        if (!orderData.orderNumber) {
+          const ts = Date.now().toString(36).toUpperCase().slice(-3);
+          let shortId = '';
+          for (let i = 0; i < 2; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+          orderData.orderNumber = shortId + ts;
+        }
+      }
       if (!orderData.status) orderData.status = 'Pending';
       if (!orderData.paymentStatus) orderData.paymentStatus = 'Pending';
 
@@ -627,7 +641,7 @@ export class DatabaseStorage implements IStorage {
       
       // Also create an invoice
       const invoiceData = {
-        invoiceNumber: order.orderNumber, // Use same number
+        invoiceNumber: order.invoiceNumber || `INV-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
         orderId: order._id.toString(),
         userId: order.userId,
         customerInfo: orderData.customerInfo || {

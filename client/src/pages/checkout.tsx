@@ -221,7 +221,7 @@ export default function CheckoutPage() {
         setShowPayment(true);
       } else {
         clearCart();
-        toast({ title: "Order placed successfully!", description: `Order #${data.invoice.invoiceNumber} has been created.` });
+        toast({ title: "Order placed successfully!", description: `Your order has been created.` });
         setLocation(`/invoice/${data.invoice._id}`);
       }
     },

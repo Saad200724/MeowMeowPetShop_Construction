@@ -398,10 +398,10 @@ export default function DashboardPage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                <Link href={`/invoice/${order.orderNumber || order.invoiceNumber || order.id}`} className="flex-1">
+                <Link href={`/invoice/${order.invoiceNumber || order.id}`} className="flex-1">
                   <Button variant="outline" size="sm" className="w-full" data-testid={`button-view-invoice-${order.orderNumber}`}>
                     <File className="w-3 h-3 mr-2" />
-                    {order.orderNumber ? `View Invoice ${order.orderNumber}` : 'View Invoice'}
+                    View Invoice
                   </Button>
                 </Link>
               </div>

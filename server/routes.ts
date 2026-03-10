@@ -13,11 +13,30 @@ import { promises as fs } from "fs";
 import sharp from "sharp";
 import { generateOTP, sendOTPEmail } from "./email-service";
 
-// Generate unique order number to ensure no duplicates
-function generateUniqueOrderNumber(): string {
-  const timestamp = Date.now().toString(36); // Convert timestamp to base36
-  const randomPart = Math.random().toString(36).substring(2, 8); // Random 6 chars
+function generateInvoiceNumber(): string {
+  const timestamp = Date.now().toString(36);
+  const randomPart = Math.random().toString(36).substring(2, 8);
   return `INV-${timestamp.toUpperCase()}-${randomPart.toUpperCase()}`;
+}
+
+function generateShortOrderNumber(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 5; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+async function generateUniqueShortOrderNumber(): Promise<string> {
+  const { Order } = await import("@shared/models");
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const orderNumber = generateShortOrderNumber();
+    const existing = await Order.findOne({ orderNumber });
+    if (!existing) return orderNumber;
+  }
+  const timestamp = Date.now().toString(36).toUpperCase().slice(-3);
+  return generateShortOrderNumber().slice(0, 2) + timestamp;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -251,13 +270,13 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
     try {
       const orderData = req.body;
       
-      // Ensure orderNumber is set if not provided by frontend
       if (!orderData.orderNumber) {
-        orderData.orderNumber = generateUniqueOrderNumber();
+        orderData.orderNumber = await generateUniqueShortOrderNumber();
       }
 
-      // Ensure invoiceNumber matches orderNumber
-      orderData.invoiceNumber = orderData.orderNumber;
+      if (!orderData.invoiceNumber) {
+        orderData.invoiceNumber = generateInvoiceNumber();
+      }
 
       // Ensure userId is set (even if it's "guest")
       if (!orderData.userId) {
@@ -2072,9 +2091,8 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
       // SERVER-SIDE SECURITY: Calculate final total server-side
       const serverTotal = Math.max(0, serverSubtotal - serverDiscount);
 
-      // Generate unique order number (same as invoice number)
-      const orderNumber = generateUniqueOrderNumber();
-      const invoiceNumber = orderNumber; // Same as order number
+      const orderNumber = await generateUniqueShortOrderNumber();
+      const invoiceNumber = generateInvoiceNumber();
 
       // Create order with server-computed values (within transaction)
       const order = new Order({

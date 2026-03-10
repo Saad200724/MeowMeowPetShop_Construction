@@ -1575,19 +1575,19 @@ export default function AdminPage() {
                 .filter((order: any) => {
                   const searchTerm = orderSearchTerm.toLowerCase();
                   const invoiceNumber = order.invoiceNumber?.toLowerCase() || '';
+                  const orderNum = order.orderNumber?.toLowerCase() || '';
 
-                  // Remove # from search term if present for comparison
                   const cleanSearchTerm = searchTerm.startsWith('#') ? searchTerm.substring(1) : searchTerm;
 
                   const matchesSearch = 
                     order.customerInfo?.name?.toLowerCase().includes(searchTerm) ||
                     order._id.toLowerCase().includes(searchTerm) ||
-                    // Match invoice number with or without # prefix
+                    orderNum.includes(searchTerm) ||
+                    orderNum.includes(cleanSearchTerm) ||
                     invoiceNumber.includes(searchTerm) ||
                     invoiceNumber.includes(cleanSearchTerm) ||
-                    // Also check if invoice number starts with search term when # is added
-                    (searchTerm.startsWith('#') && invoiceNumber.includes(cleanSearchTerm)) ||
-                    (!searchTerm.startsWith('#') && invoiceNumber.includes(searchTerm));
+                    (searchTerm.startsWith('#') && (invoiceNumber.includes(cleanSearchTerm) || orderNum.includes(cleanSearchTerm))) ||
+                    (!searchTerm.startsWith('#') && (invoiceNumber.includes(searchTerm) || orderNum.includes(searchTerm)));
 
                   const matchesStatus = orderStatusFilter === 'all' || order.status?.toLowerCase() === orderStatusFilter;
                   return matchesSearch && matchesStatus;
@@ -1599,7 +1599,7 @@ export default function AdminPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <CardTitle className="text-lg font-bold text-red-700">
-                            Order #{order.invoiceNumber || order._id.slice(-8).toUpperCase()}
+                            Order #{order.orderNumber || order._id.slice(-8).toUpperCase()}
                           </CardTitle>
                           <Badge variant={order.status === 'delivered' ? 'default' : 'secondary'} 
                                  className={
