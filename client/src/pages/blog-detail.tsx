@@ -136,33 +136,6 @@ export default function BlogDetailPage() {
     );
   }
 
-  const formatContent = (content: string) => {
-    return content.split('\n').map((paragraph, index) => {
-      if (paragraph.trim() === '') return null;
-      
-      if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-        return (
-          <h3 key={index} className="text-xl font-bold mt-6 mb-3 text-gray-900">
-            {paragraph.slice(2, -2)}
-          </h3>
-        );
-      }
-      
-      if (paragraph.startsWith('- ')) {
-        return (
-          <li key={index} className="ml-4 mb-2 text-gray-700">
-            {paragraph.slice(2)}
-          </li>
-        );
-      }
-      
-      return (
-        <p key={index} className="mb-4 text-gray-700 leading-relaxed">
-          {paragraph}
-        </p>
-      );
-    });
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -243,9 +216,10 @@ export default function BlogDetailPage() {
         <Card className="mb-8">
           <CardContent className="p-8">
             <div className="prose prose-lg max-w-none">
-              <div className="text-base md:text-lg leading-relaxed">
-                {formatContent(blogPost.content)}
-              </div>
+              <div 
+                className="text-base md:text-lg leading-relaxed prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: blogPost.content }}
+              />
             </div>
           </CardContent>
         </Card>
