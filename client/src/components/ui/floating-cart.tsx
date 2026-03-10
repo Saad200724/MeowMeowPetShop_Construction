@@ -132,9 +132,8 @@ export function FloatingCart() {
 
   return (
     <>
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[9999] flex flex-row gap-2">
-        {/* Messenger Button */}
+      {/* Floating Messenger Button - middle right on desktop, bottom on mobile */}
+      <div className="fixed bottom-20 md:bottom-auto md:top-1/2 md:-translate-y-1/2 right-4 md:right-6 z-[9999]">
         <button
           onClick={toggleChat}
           className="text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110"
@@ -143,8 +142,10 @@ export function FloatingCart() {
         >
           <MessageCircle size={20} className="md:w-6 md:h-6" />
         </button>
-        
-        {/* Cart Button */}
+      </div>
+
+      {/* Floating Cart Button */}
+      <div className="fixed bottom-20 md:bottom-6 right-16 md:right-6 z-[9999]">
         <button
           onClick={() => setIsCartOpen(!isCartOpen)}
           className="bg-[#26732d] hover:bg-[#1e5d26] text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110 relative"
@@ -161,7 +162,7 @@ export function FloatingCart() {
 
       {/* Floating Chat Box */}
       {isChatOpen && (
-        <div className="fixed bottom-36 md:bottom-24 right-4 md:right-6 w-80 h-96 bg-white rounded-lg shadow-2xl z-[9999] flex flex-col">
+        <div className="fixed bottom-36 md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:mr-14 right-4 md:right-6 w-80 h-96 bg-white rounded-lg shadow-2xl z-[9999] flex flex-col">
           {/* Chat Header */}
           <div className="flex items-center justify-between p-3 bg-[#26732d] text-white rounded-t-lg">
             <div className="flex items-center gap-2">
