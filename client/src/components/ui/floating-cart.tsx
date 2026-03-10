@@ -393,25 +393,29 @@ export function FloatingCart() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t bg-gray-50 p-3 md:p-6 flex-shrink-0">
-                <div className="flex justify-between items-center mb-4 md:mb-6">
-                  <span className="text-lg md:text-xl font-bold text-gray-900">Total:</span>
-                  <span className="text-xl md:text-2xl font-bold text-[#26732d]">{formatPrice(total)}</span>
+              <div className="border-t bg-white p-4 md:p-6 shadow-2xl flex-shrink-0">
+                <div className="flex justify-between items-center mb-5">
+                  <span className="text-gray-600 font-medium">Total:</span>
+                  <span className="text-2xl font-bold text-gray-900 tracking-tight">{formatPrice(total)}</span>
                 </div>
-                <div className="space-y-2 md:space-y-4">
-                  <Link href="/cart">
+
+                <div className="flex flex-col gap-3">
+                  {/* Primary Button: View Cart */}
+                  <Link href="/cart" className="w-full">
                     <Button 
-                      className="w-full bg-[#26732d] hover:bg-[#1e5d26] text-white md:py-3 md:text-lg"
+                      className="w-full bg-[#26732d] hover:bg-[#1a501f] text-white py-6 text-lg rounded-xl transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98]"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="view-cart-button"
                     >
                       View Cart
                     </Button>
                   </Link>
-                  <Link href="/checkout">
+
+                  {/* Secondary Button: Checkout */}
+                  <Link href="/checkout" className="w-full">
                     <Button 
                       variant="outline" 
-                      className="w-full border-[#26732d] text-[#26732d] hover:bg-[#26732d] hover:text-white md:py-3 md:text-lg"
+                      className="w-full border-2 border-[#26732d] text-[#26732d] hover:border-[#1e5d26] hover:text-[#1e5d26] hover:bg-transparent py-6 text-lg rounded-xl transition-all duration-300 active:scale-[0.98]"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="checkout-button"
                     >
