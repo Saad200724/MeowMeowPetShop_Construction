@@ -268,7 +268,7 @@ export default function CheckoutPage() {
       totalWeight,
       customerInfo: {
         name: `${billingDetails.firstName} ${billingDetails.lastName}`.trim(),
-        email: billingDetails.email,
+        email: billingDetails.email.trim() || `guest-${Date.now()}@noemail.com`,
         phone: billingDetails.phone,
         alternativePhone: billingDetails.alternativePhone,
         address: {
