@@ -2464,6 +2464,40 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
     }
   });
 
+  // Track order by order number/invoice number and phone verification
+  app.post("/api/track-order", async (req, res) => {
+    try {
+      const { orderId, phone } = req.body;
+      if (!orderId || !phone) {
+        return res.status(400).json({ message: "Order ID and phone number are required" });
+      }
+
+      let order = await Order.findOne({ 
+        $or: [
+          { orderNumber: orderId },
+          { invoiceNumber: orderId },
+          { _id: orderId }
+        ]
+      });
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      const cleanPhone = phone.replace(/\s/g, '');
+      const orderPhone = order.customerInfo?.phone?.replace(/\s/g, '') || '';
+
+      if (cleanPhone !== orderPhone) {
+        return res.status(403).json({ message: "Phone number does not match this order" });
+      }
+
+      const orderObj = order.toObject();
+      res.json(orderObj);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to track order" });
+    }
+  });
+
   app.get("/api/invoices/:invoiceId", async (req, res) => {
     try {
       const { invoiceId } = req.params;
