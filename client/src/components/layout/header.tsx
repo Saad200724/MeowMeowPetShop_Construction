@@ -179,7 +179,8 @@ export default function Header() {
     { name: 'Bird', path: '/bird' },
     { name: 'Rabbit', path: '/rabbit' },
     { name: 'Medicine', path: '/subcategory/medicine' },
-    { name: 'Blog', path: '/blog' }
+    { name: 'Blog', path: '/blog' },
+    { name: 'Track Order', path: '/track-order' }
   ];
 
   const categories = [
