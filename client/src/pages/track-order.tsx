@@ -131,12 +131,12 @@ export default function TrackOrderPage() {
                   <div className="space-y-4">
                     {statusSteps.map((step) => (
                       <div key={step.status} className="flex items-start gap-4">
-                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${step.status === 'cancelled' ? 'bg-red-500 text-white' : step.completed ? 'bg-[#26732d] text-white' : 'bg-gray-200 text-gray-500'}`}>
-                          {step.status === 'cancelled' ? <XCircle size={24} /> : step.completed ? <CheckCircle size={24} /> : <Clock size={24} />}
+                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${step.status === 'cancelled' && step.completed ? 'bg-red-500 text-white' : step.status === 'cancelled' ? 'bg-gray-200 text-gray-500' : step.completed ? 'bg-[#26732d] text-white' : 'bg-gray-200 text-gray-500'}`}>
+                          {step.status === 'cancelled' && step.completed ? <XCircle size={24} /> : step.completed ? <CheckCircle size={24} /> : <Clock size={24} />}
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold text-gray-900 capitalize">{step.status}</p>
-                          <p className="text-sm text-gray-600">{step.completed && step.status === orderData.status?.toLowerCase() ? `Updated on ${new Date(orderData.updatedAt).toLocaleDateString()}` : step.completed ? 'Completed' : 'Pending'}</p>
+                          <p className="text-sm text-gray-600">{step.status === 'cancelled' && step.completed ? `Cancelled on ${new Date(orderData.updatedAt).toLocaleDateString()}` : step.completed && step.status === orderData.status?.toLowerCase() ? `Updated on ${new Date(orderData.updatedAt).toLocaleDateString()}` : step.completed ? 'Completed' : ''}</p>
                         </div>
                       </div>
                     ))}
