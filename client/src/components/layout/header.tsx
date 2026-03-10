@@ -237,10 +237,12 @@ export default function Header() {
                     <span>Our location</span>
                   </div>
                 </Link>
-                <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
-                  <Shield size={12} className="mr-1" />
-                  <span>Track Your Order</span>
-                </div>
+                <Link href="/track-order">
+                  <div className="flex items-center bg-[#2d4f31] px-3 py-1 rounded-full text-xs cursor-pointer hover:bg-[#224228] transition-colors">
+                    <Shield size={12} className="mr-1" />
+                    <span>Track Your Order</span>
+                  </div>
+                </Link>
               </div>
 
               {/* Desktop Announcement */}
