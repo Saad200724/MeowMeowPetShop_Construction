@@ -399,11 +399,11 @@ export function FloatingCart() {
                   <span className="text-2xl font-bold text-gray-900 tracking-tight">{formatPrice(total)}</span>
                 </div>
 
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   {/* Primary Button: View Cart */}
                   <Link href="/cart" className="w-full">
                     <Button 
-                      className="w-full bg-[#26732d] hover:bg-[#1a501f] text-white py-6 text-lg rounded-xl transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98]"
+                      className="w-full bg-[#26732d] hover:bg-[#1a501f] text-white py-2 text-lg rounded-xl transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98]"
                       onClick={() => setIsCartOpen(false)}
                       data-testid="view-cart-button"
                     >
