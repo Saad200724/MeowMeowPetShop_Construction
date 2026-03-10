@@ -2498,7 +2498,9 @@ Sitemap: https://www.meowshopbd.com/sitemap.xml`;
       }
 
       // Reduce stock for items whose quantity increased vs the old invoice
+      const mongoIdRegex = /^[a-f\d]{24}$/i;
       for (const [productId, newQty] of Object.entries(newItemMap)) {
+        if (!mongoIdRegex.test(productId)) continue;
         const oldQty = oldItemMap[productId] || 0;
         const diff = newQty - oldQty;
         if (diff > 0) {
