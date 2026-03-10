@@ -145,15 +145,17 @@ export function FloatingCart() {
       </div>
 
       {/* Floating Cart Button - middle right on desktop, bottom on mobile */}
-      <div className="fixed bottom-20 md:bottom-auto md:top-1/2 md:-translate-y-1/2 right-16 md:right-6 z-[9999]">
+      <div className="fixed bottom-20 md:bottom-auto md:top-1/2 md:-translate-y-1/2 right-16 md:right-0 z-[9999]">
         <button
           onClick={() => setIsCartOpen(!isCartOpen)}
-          className="bg-[#26732d] hover:bg-[#1e5d26] text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 hover:scale-110 relative"
+          className="bg-[#26732d] hover:bg-[#1e5d26] text-white rounded-full md:rounded-none md:rounded-l-xl p-2 md:px-3 md:py-4 shadow-lg transition-all duration-300 hover:scale-105 relative flex md:flex-col items-center gap-1"
           data-testid="floating-cart-button"
         >
-          <ShoppingCart size={20} className="md:w-6 md:h-6" />
+          <ShoppingCart size={20} className="md:w-5 md:h-5" />
+          <span className="hidden md:block text-[10px] font-semibold">Items</span>
+          <span className="hidden md:block text-xs font-bold">৳{total.toLocaleString()}</span>
           {itemCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-red-500 text-white min-w-[18px] h-4 md:min-w-[20px] md:h-5 flex items-center justify-center text-xs">
+            <Badge className="absolute -top-1 -right-1 md:-top-2 md:-left-2 md:right-auto bg-red-500 text-white min-w-[18px] h-4 md:min-w-[20px] md:h-5 flex items-center justify-center text-xs">
               {itemCount}
             </Badge>
           )}
