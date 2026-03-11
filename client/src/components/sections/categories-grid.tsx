@@ -186,11 +186,11 @@ export default function CategoriesGrid() {
               >
                 <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
                   {/* Image Container */}
-                  <div className="relative bg-gradient-to-br from-gray-50 to-white flex items-center justify-center h-48 lg:h-56 overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-gray-50 to-white flex items-center justify-center h-48 lg:h-56 overflow-hidden p-2">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-md"
                       loading="lazy"
                       decoding="async"
                     />
