@@ -14,6 +14,16 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+import kittenDryFood from "@assets/Kitten_dry_food_1773239679808.jpeg";
+import adultDryFood from "@assets/Adult_dry_food_1773239679805.jpeg";
+import kittenWetFood from "@assets/Kitten_wet_food_1773239679809.jpeg";
+import adultWetFood from "@assets/Adult_wet_food_1773239679806.jpeg";
+import litter from "@assets/Litter_1773239679813.jpeg";
+import litterBox from "@assets/Litter_box_1773239679810.jpeg";
+import accessories from "@assets/Accessories_1773239679803.jpeg";
+import toys from "@assets/Toys_1773239679818.jpeg";
+import medicine from "@assets/Medicine_1773239679814.jpeg";
+import shampoo from "@assets/Shampoo_1773239679815.jpeg";
 
 export default function CategoriesGrid() {
   const categories = [
@@ -21,7 +31,7 @@ export default function CategoriesGrid() {
       id: "kitten-dry-food",
       name: "Kitten Dry Food",
       icon: Cat,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/kitten-food-2-1747508016.png",
+      image: kittenDryFood,
       count: "Premium Quality",
       color: "bg-purple-100 text-purple-600",
     },
@@ -29,7 +39,7 @@ export default function CategoriesGrid() {
       id: "adult-dry-food",
       name: "Adult Dry Food",
       icon: Cat,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/adult-food-2-1747499026.png",
+      image: adultDryFood,
       count: "Growing Nutrition",
       color: "bg-pink-100 text-pink-600",
     },
@@ -37,7 +47,7 @@ export default function CategoriesGrid() {
       id: "kitten-wet-food",
       name: "Kitten Wet Food",
       icon: Cat,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/pouches-1-1747508038.png",
+      image: kittenWetFood,
       count: "Tasty & Nutritious",
       color: "bg-blue-100 text-blue-600",
     },
@@ -45,7 +55,7 @@ export default function CategoriesGrid() {
       id: "adult-wet-food",
       name: "Adult Wet Food",
       icon: Cat,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/pouches-1-1747508038.png",
+      image: adultWetFood,
       count: "Premium Quality",
       color: "bg-orange-100 text-orange-600",
     },
@@ -53,7 +63,7 @@ export default function CategoriesGrid() {
       id: "litter",
       name: "Litter",
       icon: Package,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-litter-accessaries-1747508179.png",
+      image: litter,
       count: "Premium Quality",
       color: "bg-amber-100 text-emerald-600",
     },
@@ -61,7 +71,7 @@ export default function CategoriesGrid() {
       id: "litter-box",
       name: "Litter Box",
       icon: Package,
-      image: "https://mewmewshopbd.com/uploads/category/2024/1718325625.png",
+      image: litterBox,
       count: "Easy Clean",
       color: "bg-gray-100 text-gray-600",
     },
@@ -69,7 +79,7 @@ export default function CategoriesGrid() {
       id: "accessories",
       name: "Accessories",
       icon: Gem,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/collar-1747508281.png",
+      image: accessories,
       count: "Style & Safety",
       color: "bg-cyan-100 text-cyan-600",
     },
@@ -77,7 +87,7 @@ export default function CategoriesGrid() {
       id: "toys",
       name: "Toys",
       icon: Gamepad2,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/kitten-food-2-1747508016.png",
+      image: toys,
       count: "Fun & Active",
       color: "bg-green-100 text-green-600",
     },
@@ -85,7 +95,7 @@ export default function CategoriesGrid() {
       id: "medicine",
       name: "Medicine",
       icon: Pill,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-tick-and-flea-control-1747508541.png",
+      image: medicine,
       count: "Health Protection",
       color: "bg-red-100 text-red-600",
     },
@@ -93,7 +103,7 @@ export default function CategoriesGrid() {
       id: "shampoo-perfume",
       name: "Shampoo & Perfume",
       icon: ShoppingBag,
-      image: "https://media.mewmewshopbd.com/uploads/media-manager/2025/05/cat-litter-accessaries-1747508179.png",
+      image: shampoo,
       count: "Wellness Care",
       color: "bg-emerald-100 text-emerald-600",
     },
@@ -141,7 +151,7 @@ export default function CategoriesGrid() {
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 drop-shadow-sm"
                       loading="lazy"
                       decoding="async"
                     />
@@ -176,11 +186,11 @@ export default function CategoriesGrid() {
               >
                 <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
                   {/* Image Container */}
-                  <div className="relative bg-gradient-to-br from-gray-50 to-white p-6 flex items-center justify-center h-48 lg:h-56 overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-gray-50 to-white flex items-center justify-center h-48 lg:h-56 overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
                       loading="lazy"
                       decoding="async"
                     />
