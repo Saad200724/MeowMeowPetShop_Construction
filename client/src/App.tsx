@@ -62,6 +62,16 @@ import RepackProductsPage from "@/pages/repack-products";
 import CatBestSellerPage from "@/pages/cat-best-seller";
 import DogBestSellerPage from "@/pages/dog-best-seller";
 import SubcategoryPage from "@/pages/subcategory";
+import imgKittenDryFood from "@assets/Kitten_dry_food_1773239679808.jpeg";
+import imgAdultDryFood from "@assets/Adult_dry_food_1773239679805.jpeg";
+import imgKittenWetFood from "@assets/Kitten_wet_food_1773239679809.jpeg";
+import imgAdultWetFood from "@assets/Adult_wet_food_1773239679806.jpeg";
+import imgLitter from "@assets/Litter_1773239679813.jpeg";
+import imgLitterBox from "@assets/Litter_box_1773239679810.jpeg";
+import imgAccessories from "@assets/Accessories_1773239679803.jpeg";
+import imgToys from "@assets/Toys_1773239679818.jpeg";
+import imgMedicine from "@assets/Medicine_1773239679814.jpeg";
+import imgShampoo from "@assets/Shampoo_1773239679815.jpeg";
 import ProductDetailPage from "@/pages/product-detail";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { ChatProvider } from "@/contexts/chat-context";
@@ -78,34 +88,34 @@ function AppRoutes() {
         <Route path="/products" component={ProductsPage} />
         <Route path="/product/:id" component={ProductDetailPage} />
         <Route path="/subcategory/kitten-dry-food">
-          <SubcategoryPage subcategoryId="kitten-dry-food" subcategoryName="Kitten Dry Food" icon="🐱" />
+          <SubcategoryPage subcategoryId="kitten-dry-food" subcategoryName="Kitten Dry Food" image={imgKittenDryFood} />
         </Route>
         <Route path="/subcategory/adult-dry-food">
-          <SubcategoryPage subcategoryId="adult-dry-food" subcategoryName="Adult Dry Food" icon="🐱" />
+          <SubcategoryPage subcategoryId="adult-dry-food" subcategoryName="Adult Dry Food" image={imgAdultDryFood} />
         </Route>
         <Route path="/subcategory/kitten-wet-food">
-          <SubcategoryPage subcategoryId="kitten-wet-food" subcategoryName="Kitten Wet Food" icon="🥘" />
+          <SubcategoryPage subcategoryId="kitten-wet-food" subcategoryName="Kitten Wet Food" image={imgKittenWetFood} />
         </Route>
         <Route path="/subcategory/adult-wet-food">
-          <SubcategoryPage subcategoryId="adult-wet-food" subcategoryName="Adult Wet Food" icon="🥘" />
+          <SubcategoryPage subcategoryId="adult-wet-food" subcategoryName="Adult Wet Food" image={imgAdultWetFood} />
         </Route>
         <Route path="/subcategory/litter">
-          <SubcategoryPage subcategoryId="litter" subcategoryName="Litter" icon="🐱" />
+          <SubcategoryPage subcategoryId="litter" subcategoryName="Litter" image={imgLitter} />
         </Route>
         <Route path="/subcategory/litter-box">
-          <SubcategoryPage subcategoryId="litter-box" subcategoryName="Litter Box" icon="🧽" />
+          <SubcategoryPage subcategoryId="litter-box" subcategoryName="Litter Box" image={imgLitterBox} />
         </Route>
         <Route path="/subcategory/accessories">
-          <SubcategoryPage subcategoryId="accessories" subcategoryName="Accessories" icon="🦮" />
+          <SubcategoryPage subcategoryId="accessories" subcategoryName="Accessories" image={imgAccessories} />
         </Route>
         <Route path="/subcategory/toys">
-          <SubcategoryPage subcategoryId="toys" subcategoryName="Toys" icon="🎾" />
+          <SubcategoryPage subcategoryId="toys" subcategoryName="Toys" image={imgToys} />
         </Route>
         <Route path="/subcategory/medicine">
-          <SubcategoryPage subcategoryId="medicine" subcategoryName="Medicine" icon="💊" />
+          <SubcategoryPage subcategoryId="medicine" subcategoryName="Medicine" image={imgMedicine} />
         </Route>
         <Route path="/subcategory/shampoo-perfume">
-          <SubcategoryPage subcategoryId="shampoo-perfume" subcategoryName="Shampoo & Perfume" icon="🧴" />
+          <SubcategoryPage subcategoryId="shampoo-perfume" subcategoryName="Shampoo & Perfume" image={imgShampoo} />
         </Route>
         <Route path="/subcategory/sunglass">
           <SubcategoryPage subcategoryId="sunglass" subcategoryName="Sunglass" icon="🕶️" />

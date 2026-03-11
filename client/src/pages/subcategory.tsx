@@ -20,6 +20,7 @@ interface SubcategoryPageProps {
   subcategoryId: string;
   subcategoryName: string;
   icon?: string;
+  image?: string;
 }
 
 interface Brand {
@@ -28,7 +29,7 @@ interface Brand {
   name: string;
 }
 
-export default function SubcategoryPage({ subcategoryId, subcategoryName, icon = '📦' }: SubcategoryPageProps) {
+export default function SubcategoryPage({ subcategoryId, subcategoryName, icon = '📦', image }: SubcategoryPageProps) {
   useEffect(() => {
     setSEO({
       title: `${subcategoryName} - Pet Shop | Meow Meow`,
@@ -125,8 +126,14 @@ export default function SubcategoryPage({ subcategoryId, subcategoryName, icon =
         <div className="mb-6 sm:mb-8 bg-[#26732d] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl sm:text-4xl shadow-lg">
-                {icon}
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden shadow-lg flex-shrink-0 border-2 border-white/30">
+                {image ? (
+                  <img src={image} alt={subcategoryName} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl sm:text-4xl">
+                    {icon}
+                  </div>
+                )}
               </div>
               <div className="flex-1 w-full sm:w-auto">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
